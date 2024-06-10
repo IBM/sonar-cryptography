@@ -6,7 +6,7 @@ from pyvis.network import Network
 # CONSTANTS
 
 cwd = os.getcwd()
-json_file_path = cwd + "/../java/target/rules.json"
+json_file_path = cwd + "/../target/rules.json"
 graph_file_name = "./java_graph.html"
 graph_height = "960px"
 # Can add buttons to play with the following things: ['nodes', 'edges', 'physics']
@@ -154,14 +154,9 @@ net.force_atlas_2based()
 net.show_buttons(filter_=graph_buttons)
 net.save_graph(graph_file_name)
 
-pagesPath = cwd + "/../docs"
-indexFile = pagesPath + "/index.html"
-libDir = pagesPath + "/lib"
 
+indexFile = "./index.html"
 if os.path.exists(indexFile):
     os.remove(indexFile)
-if os.path.exists(libDir):
-    shutil.rmtree(libDir)
 
 shutil.move(graph_file_name, indexFile)
-shutil.move("./lib", libDir)

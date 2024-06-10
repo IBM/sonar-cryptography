@@ -56,15 +56,15 @@
                 <version>3.3.0</version>
                 <executions>
                     <execution>
-                        <phase>test</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
-                    <executable>${basedir}/../rule-graph/run.sh</executable>
-                    <workingDirectory>${basedir}/../rule-graph</workingDirectory>
+                    <executable>${basedir}/rule-graph/build-graph.sh</executable>
+                    <workingDirectory>${basedir}/rule-graph</workingDirectory>
                 </configuration>
             </plugin>
         </plugins>

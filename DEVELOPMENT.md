@@ -22,10 +22,6 @@ Check for coding style
 mvn checkstyle::check
 ```
 
-## Development
-
-> To visulize the detection rules visit the github page https://pages.github.com/IBM/sonar-cryptography
-
 ## Build
 
 ### Build the Plugin
