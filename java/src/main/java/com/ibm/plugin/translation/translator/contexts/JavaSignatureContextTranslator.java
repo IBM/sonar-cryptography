@@ -34,6 +34,7 @@ import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.EllipticCurve;
 import com.ibm.mapper.model.EllipticCurveAlgorithm;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.ProbabilisticSignatureScheme;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.model.functionality.Verify;
@@ -83,6 +84,7 @@ public final class JavaSignatureContextTranslator extends AbstractContextTransla
             Algorithm algorithm;
             Signature signature;
             EllipticCurveAlgorithm eca;
+            ProbabilisticSignatureScheme pss;
             switch (kind) {
                 case EdDSA:
                     String curveName = JavaTranslator.UNKNOWN;
@@ -114,6 +116,12 @@ public final class JavaSignatureContextTranslator extends AbstractContextTransla
                 case SIGNATURE_NAME, DSA:
                     algorithm = new Algorithm(valueAction.asString(), detectionLocation);
                     signature = new Signature(algorithm, detectionLocation);
+                    return Optional.of(signature);
+                case PSS:
+                    pss = new ProbabilisticSignatureScheme(detectionLocation);
+                    algorithm = new Algorithm(JavaTranslator.UNKNOWN + "-PSS", detectionLocation);
+                    signature = new Signature(algorithm, detectionLocation);
+                    signature.append(pss);
                     return Optional.of(signature);
                 default:
                     // TODO: temporary translation that shouldn't be used

@@ -20,6 +20,7 @@
 package com.ibm.plugin.translation.reorganizer.rules;
 
 import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.IAsset;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
@@ -45,9 +46,12 @@ public final class SignerReorganizer {
             new ReorganizerRuleBuilder()
                     .createReorganizerRule()
                     .forNodeKind(Signature.class)
-                    .forNodeValue(JavaTranslator.UNKNOWN)
                     .withDetectionCondition(
                             (node, parent, roots) -> {
+                                // The node to rename must have an unknown part
+                                if (!node.asString().contains(JavaTranslator.UNKNOWN)) {
+                                    return false;
+                                }
                                 /*
                                  * The Signature node must have a MessageDigest child, and a child
                                  * which is one of the algorithm classes below and which has a name.
@@ -57,7 +61,10 @@ public final class SignerReorganizer {
                                     return false;
                                 }
                                 List<Class<? extends Algorithm>> algorithmClasses =
-                                        List.of(Algorithm.class, PublicKeyEncryption.class);
+                                        List.of(
+                                                Algorithm.class,
+                                                PublicKeyEncryption.class,
+                                                BlockCipher.class);
                                 for (Class<? extends Algorithm> clazz : algorithmClasses) {
                                     if (node.hasChildOfType(clazz).isPresent()
                                             && !node.hasChildOfType(clazz)
@@ -77,7 +84,8 @@ public final class SignerReorganizer {
                                         node.getChildren().entrySet()) {
                                     Class<? extends INode> kind = entry.getKey();
                                     if (kind.equals(Algorithm.class)
-                                            || kind.equals(PublicKeyEncryption.class)) {
+                                            || kind.equals(PublicKeyEncryption.class)
+                                            || kind.equals(BlockCipher.class)) {
                                         algoChild = entry.getValue();
                                     }
                                     if (kind.equals(MessageDigest.class)) {
@@ -85,10 +93,33 @@ public final class SignerReorganizer {
                                     }
                                 }
 
-                                String newSignatureName =
-                                        messageDigestChild.asString().replace("-", "")
-                                                + "with"
-                                                + algoChild.asString();
+                                if (algoChild == null) {
+                                    /* This case should never happen (given the detection condition) */
+                                    return roots;
+                                }
+
+                                String newSignatureName;
+                                if (node.asString().equals(JavaTranslator.UNKNOWN)) {
+                                    /* The node name is unknown: fully replace it */
+                                    if (messageDigestChild == null) {
+                                        /* This case should never happen (given the detection condition) */
+                                        return roots;
+                                    }
+                                    newSignatureName =
+                                            messageDigestChild.asString().replace("-", "")
+                                                    + "with"
+                                                    + algoChild.asString();
+                                } else {
+                                    /*
+                                     * Only a part of the node name is unknown:
+                                     * replace this part by the name of its child algorithm
+                                     */
+                                    newSignatureName =
+                                            node.asString()
+                                                    .replace(
+                                                            JavaTranslator.UNKNOWN,
+                                                            algoChild.asString());
+                                }
 
                                 // Create the new Signature node
                                 DetectionLocation detectionLocation =
