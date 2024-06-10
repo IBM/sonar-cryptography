@@ -35,6 +35,7 @@ import com.ibm.mapper.model.EllipticCurve;
 import com.ibm.mapper.model.EllipticCurveAlgorithm;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.ProbabilisticSignatureScheme;
+import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.model.functionality.Verify;
@@ -117,6 +118,10 @@ public final class JavaSignatureContextTranslator extends AbstractContextTransla
                     algorithm =
                             new Algorithm(JavaTranslator.UNKNOWN + "withRSA", detectionLocation);
                     signature = new Signature(algorithm, detectionLocation);
+                    PublicKeyEncryption pke =
+                            new PublicKeyEncryption(
+                                    new Algorithm("RSA", detectionLocation), detectionLocation);
+                    signature.append(pke);
                     return Optional.of(signature);
                 case SIGNATURE_NAME, DSA:
                     algorithm = new Algorithm(valueAction.asString(), detectionLocation);
