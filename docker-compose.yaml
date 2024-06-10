@@ -1,0 +1,15 @@
+version: "3"
+services:
+  sonarqube:
+    image: sonarqube
+    user: "${UID}:${GID}"
+    volumes:
+      - sonar-data:/opt/sonarqube/data
+      - ./.SonarQube/plugins/:/opt/sonarqube/extensions/plugins/
+      - sonar-logs:/opt/sonarqube/logs
+      - ./.SonarQube/conf/:/opt/sonarqube/conf/
+    ports:
+      - "9000:9000"
+volumes:
+  sonar-logs:
+  sonar-data:

@@ -1,0 +1,17 @@
+{
+  "title": "Crypto Inventory",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "5min"
+  },
+  "tags": [
+    "cryptography",
+    "algorithm",
+    "rules"
+  ],
+  "defaultSeverity": "Minor",
+  "scope": "Main",
+  "sqKey": "Inventory"
+}
