@@ -162,7 +162,7 @@ public class DetectionStoreLogger<R, T, S, P> {
 
     @Nonnull
     String getFormattedNumericString(
-            @Nonnull int hashInt, @Nonnull boolean canBeNegative, @Nullable Integer maxCharacters) {
+            int hashInt, boolean canBeNegative, @Nullable Integer maxCharacters) {
         String res = "";
         if (canBeNegative && hashInt >= 0) {
             res += "";

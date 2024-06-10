@@ -29,7 +29,7 @@ public record ReorganizerRule(
         @Nonnull Class<? extends INode> kind,
         @Nullable String value,
         @Nonnull List<IReorganizerRule> children,
-        @Nonnull boolean nonNullChildren,
+        boolean nonNullChildren,
         @Nullable Function3<INode, INode, List<INode>, Boolean> detectionConditionFunction,
         @Nullable Function3<INode, INode, List<INode>, List<INode>> performFunction)
         implements IReorganizerRule {

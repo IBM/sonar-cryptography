@@ -42,7 +42,7 @@ final class ReorganizerRuleBuilderImpl
     @Nullable private Class<? extends INode> kind;
     @Nullable private String value;
     @Nonnull private List<IReorganizerRule> children = new LinkedList<>();
-    @Nonnull private boolean nonNullChildren = false;
+    private boolean nonNullChildren = false;
     @Nullable private Function3<INode, INode, List<INode>, List<INode>> performFunction;
     @Nullable private Function3<INode, INode, List<INode>, Boolean> detectionConditionFunction;
 
@@ -52,7 +52,7 @@ final class ReorganizerRuleBuilderImpl
             @Nullable Class<? extends INode> kind,
             @Nullable String value,
             @Nonnull List<IReorganizerRule> children,
-            @Nonnull boolean nonNullChildren,
+            boolean nonNullChildren,
             @Nullable Function3<INode, INode, List<INode>, Boolean> detectionConditionFunction) {
         if (kind != null) {
             this.kind = kind;
