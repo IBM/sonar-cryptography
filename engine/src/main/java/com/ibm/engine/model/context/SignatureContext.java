@@ -27,6 +27,7 @@ public class SignatureContext implements IDetectionContext, ISupportKind<Signatu
         MGF1,
         PKCS1v15,
         DSA,
+        RSA,
         EdDSA,
         SIGNATURE_NAME,
         SIGNING_STATUS,

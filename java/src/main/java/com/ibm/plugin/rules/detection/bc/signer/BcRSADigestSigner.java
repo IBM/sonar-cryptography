@@ -43,7 +43,7 @@ public final class BcRSADigestSigner {
                     .shouldBeDetectedAs(new ValueActionFactory<>("RSADigest"))
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
-                    .buildForContext(new SignatureContext())
+                    .buildForContext(new SignatureContext(SignatureContext.Kind.RSA))
                     .inBundle(() -> "bcRSADigestSigner")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
@@ -56,7 +56,7 @@ public final class BcRSADigestSigner {
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
                     .withMethodParameter("org.bouncycastle.asn1.ASN1ObjectIdentifier")
-                    .buildForContext(new SignatureContext())
+                    .buildForContext(new SignatureContext(SignatureContext.Kind.RSA))
                     .inBundle(() -> "bcRSADigestSigner")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
