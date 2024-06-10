@@ -41,7 +41,7 @@
         <cyclonedx-maven-plugin.version>2.8.0</cyclonedx-maven-plugin.version>
         <checkstyle.version>10.15.0</checkstyle.version>
 
-        <sonar.version>9.8.0.63668</sonar.version>
+        <sonar.version>10.5.1.90531</sonar.version>
         <sonar.plugin.api.version>9.13.0.360</sonar.plugin.api.version>
         <!-- language parser versions -->
         <sonar.java.version>7.35.0.36271</sonar.java.version>
