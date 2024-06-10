@@ -51,7 +51,7 @@ public final class BcISO9796d2PSSSigner {
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new SaltSizeFactory<>(Size.UnitType.BIT))
                     .asChildOfParameterWithId(-1)
-                    .buildForContext(new SignatureContext())
+                    .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
                     .inBundle(() -> "bcISO9796d2PSSSigner")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
@@ -69,7 +69,7 @@ public final class BcISO9796d2PSSSigner {
                     .shouldBeDetectedAs(new SaltSizeFactory<>(Size.UnitType.BIT))
                     .asChildOfParameterWithId(-1)
                     .withMethodParameter("boolean")
-                    .buildForContext(new SignatureContext())
+                    .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
                     .inBundle(() -> "bcISO9796d2PSSSigner")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
