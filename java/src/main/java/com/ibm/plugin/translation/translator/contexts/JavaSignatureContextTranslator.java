@@ -111,15 +111,14 @@ public final class JavaSignatureContextTranslator extends AbstractContextTransla
                     algorithm = new Algorithm(JavaTranslator.UNKNOWN, detectionLocation);
                     signature = new Signature(algorithm, detectionLocation);
                     return Optional.of(signature);
-                case MESSAGE_SIGNER, DSA:
+                case SIGNATURE_NAME, DSA:
                     algorithm = new Algorithm(valueAction.asString(), detectionLocation);
                     signature = new Signature(algorithm, detectionLocation);
                     return Optional.of(signature);
                 default:
                     // TODO: temporary translation that shouldn't be used
                     algorithm = new Algorithm(valueAction.asString(), detectionLocation);
-                    signature = new Signature(algorithm, detectionLocation);
-                    return Optional.of(signature);
+                    return Optional.of(algorithm);
             }
         }
         return Optional.empty();

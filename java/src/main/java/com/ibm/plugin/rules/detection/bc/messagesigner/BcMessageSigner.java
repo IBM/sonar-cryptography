@@ -76,7 +76,7 @@ public final class BcMessageSigner {
                             // We want to capture all possible constructors (some have arguments)
                             .withAnyParameters()
                             .buildForContext(
-                                    new SignatureContext(SignatureContext.Kind.MESSAGE_SIGNER))
+                                    new SignatureContext(SignatureContext.Kind.SIGNATURE_NAME))
                             .inBundle(() -> "bcMessageSigner")
                             .withDependingDetectionRules(BcMessageSignerInit.rules()));
         }
@@ -96,7 +96,7 @@ public final class BcMessageSigner {
                         .addDependingDetectionRules(BcDigests.rules())
                         .withMethodParameter("org.bouncycastle.crypto.Digest")
                         .addDependingDetectionRules(BcDigests.rules())
-                        .buildForContext(new SignatureContext(SignatureContext.Kind.MESSAGE_SIGNER))
+                        .buildForContext(new SignatureContext(SignatureContext.Kind.SIGNATURE_NAME))
                         .inBundle(() -> "bcMessageSigner")
                         .withDependingDetectionRules(BcMessageSignerInit.rules()));
 

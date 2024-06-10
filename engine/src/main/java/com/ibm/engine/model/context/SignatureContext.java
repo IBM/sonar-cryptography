@@ -28,7 +28,7 @@ public class SignatureContext implements IDetectionContext, ISupportKind<Signatu
         PKCS1v15,
         DSA,
         EdDSA,
-        MESSAGE_SIGNER,
+        SIGNATURE_NAME,
         SIGNING_STATUS,
         DIGEST_MESSAGE_WRAPPER,
         ALGORITHM_AND_HASH_WRAPPER,
