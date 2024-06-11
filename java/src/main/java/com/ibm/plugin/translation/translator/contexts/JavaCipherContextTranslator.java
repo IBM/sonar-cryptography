@@ -128,6 +128,14 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
                                     null,
                                     null,
                                     detectionLocation));
+                case STREAM_CIPHER_ENGINE:
+                    return Optional.of(
+                            new StreamCipher(
+                                    new com.ibm.mapper.model.Algorithm(
+                                            valueAction.asString(), detectionLocation),
+                                    null,
+                                    null,
+                                    detectionLocation));
                 case HASH:
                     return Optional.of(
                             // TODO: Is `Cipher` right? (and we need something that
