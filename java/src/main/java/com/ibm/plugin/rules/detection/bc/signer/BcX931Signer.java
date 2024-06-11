@@ -41,12 +41,12 @@ public final class BcX931Signer {
                     .createDetectionRule()
                     .forObjectTypes("org.bouncycastle.crypto.signers.X931Signer")
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("X931"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>("X9.31"))
                     .withMethodParameter("org.bouncycastle.crypto.AsymmetricBlockCipher")
                     .addDependingDetectionRules(BcAsymmetricBlockCipher.rules())
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
-                    .buildForContext(new SignatureContext())
+                    .buildForContext(new SignatureContext(SignatureContext.Kind.SIGNATURE_NAME))
                     .inBundle(() -> "bcX931Signer")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
@@ -55,13 +55,13 @@ public final class BcX931Signer {
                     .createDetectionRule()
                     .forObjectTypes("org.bouncycastle.crypto.signers.X931Signer")
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("X931"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>("X9.31"))
                     .withMethodParameter("org.bouncycastle.crypto.AsymmetricBlockCipher")
                     .addDependingDetectionRules(BcAsymmetricBlockCipher.rules())
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
                     .withMethodParameter("boolean")
-                    .buildForContext(new SignatureContext())
+                    .buildForContext(new SignatureContext(SignatureContext.Kind.SIGNATURE_NAME))
                     .inBundle(() -> "bcX931Signer")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
