@@ -32,6 +32,7 @@ import com.ibm.mapper.AbstractContextTranslator;
 import com.ibm.mapper.IContextTranslationWithKind;
 import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.bc.BCOperationModeEncryptionMapper;
+import com.ibm.mapper.mapper.bc.BCOperationModeWrappingMapper;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.mapper.jca.JcaCipherOperationModeMapper;
 import com.ibm.mapper.model.AuthenticatedEncryption;
@@ -84,6 +85,12 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
                     return bcCipherOperationModeMapper
                             .parse(operationMode.asString(), detectionLocation, configuration)
                             .map(f -> f);
+                case WRAPPING_STATUS:
+                    BCOperationModeWrappingMapper bcOperationModeWrappingMapper =
+                            new BCOperationModeWrappingMapper();
+                    return bcOperationModeWrappingMapper
+                            .parse(operationMode.asString(), detectionLocation, configuration)
+                            .map(f -> f);
                 default:
                     JcaCipherOperationModeMapper jcaCipherOperationModeMapper =
                             new JcaCipherOperationModeMapper();
@@ -120,7 +127,7 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
                                     new com.ibm.mapper.model.Algorithm(
                                             valueAction.asString(), detectionLocation),
                                     detectionLocation));
-                case BLOCK_CIPHER_ENGINE:
+                case BLOCK_CIPHER_ENGINE, WRAP_ENGINE:
                     return Optional.of(
                             new BlockCipher(
                                     new com.ibm.mapper.model.Algorithm(

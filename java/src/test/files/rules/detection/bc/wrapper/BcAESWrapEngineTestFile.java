@@ -18,6 +18,8 @@ public class BcAESWrapEngineTestFile {
         KeyParameter keyParameter = new KeyParameter(wrappingKey);
         wrapper.init(true, keyParameter);
 
-        // ...
+        // Perform the wrapping
+        byte[] wrappedKey = wrapper.wrap(keyToWrap, 0, keyToWrap.length);
+        // The wrappedKey now contains the encrypted version of keyToWrap
     }
 }
