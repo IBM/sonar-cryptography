@@ -24,6 +24,7 @@ import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.mapper.reorganizer.builder.ReorganizerRuleBuilder;
+import com.ibm.plugin.translation.translator.JavaTranslator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,7 @@ public final class BlockCipherReorganizer {
             new ReorganizerRuleBuilder()
                     .createReorganizerRule()
                     .forNodeKind(BlockCipher.class)
+                    .forNodeValue(JavaTranslator.UNKNOWN)
                     .includingChildren(
                             List.of(
                                     new ReorganizerRuleBuilder()

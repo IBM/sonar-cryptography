@@ -135,6 +135,15 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
                                     null,
                                     null,
                                     detectionLocation));
+                case WRAP_RFC:
+                    /* TODO: Should I use the RFC value in the translation? Where? */
+                    return Optional.of(
+                            new BlockCipher(
+                                    new com.ibm.mapper.model.Algorithm(
+                                            JavaTranslator.UNKNOWN, detectionLocation),
+                                    null,
+                                    null,
+                                    detectionLocation));
                 case STREAM_CIPHER_ENGINE:
                     return Optional.of(
                             new StreamCipher(
@@ -386,7 +395,7 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
             return Optional.of(keyLength);
         } else if (value instanceof BlockSize<Tree> blockSize) {
             switch (kind) {
-                case BLOCK_CIPHER:
+                case BLOCK_CIPHER, WRAP_ENGINE:
                     return Optional.of(
                             new com.ibm.mapper.model.BlockSize(
                                     Integer.parseInt(blockSize.asString()), detectionLocation));

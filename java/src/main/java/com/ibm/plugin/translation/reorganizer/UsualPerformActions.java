@@ -30,7 +30,11 @@ import javax.annotation.Nonnull;
  * This class contains public static {@code Function3} implementing usual reorganization actions,
  * that can be called from other reorganizer files.
  */
-public class UsualPerformActions {
+public final class UsualPerformActions {
+
+    private UsualPerformActions() {
+        // nothing
+    }
 
     /**
      * When the current node is not a root node, this action will take all the node children and
