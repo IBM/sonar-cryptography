@@ -9,6 +9,16 @@ in source code and generates CBOM.
 | -------------- | -------------------- |
 | 1.x.x and up   | SonarQube 9.8 and up |
 
+## Latest supported languages and libraries
+
+| Language | Cryptographic Library | Coverage | 
+| -------- | --------------------- | -------- |
+| Java     | JCA                   | 100%     |
+|          | BouncyCastle          | 80%      |
+| Pyrhon   | pycrypto              | 100%     |
+
+> The plugin is designed so that it can be extended to support additional languages and recognition rules to support more libraries. Detailed instructions on how to add new languages and recognition rules will follow shortly.
+
 ## Development and Contribution
 
 See [development setup](DEVELOPMENT.md).
