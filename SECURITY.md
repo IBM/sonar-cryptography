@@ -1,9 +1,12 @@
 # Reporting Security Issues
 
-We and community take security bugs seriously. We appreciate your efforts to responsibly disclose your findings, and will make every effort to acknowledge your contributions.
+You can privately report a potential security issue via the GitHub security advisory feature. This can be done here:
 
-To report a security issue, email [nicklas.koertge1@ibm.com](mailto:nicklas.koertge1@ibm.com) and include the word "SECURITY" in the subject line.
+https://github.com/IBM/sonar-cryptography/security/advisories
 
-Wem will send a response indicating the next steps in handling your report. After the initial reply to your report, the security team will keep you informed of the progress towards a fix and full announcement, and may ask for additional information or guidance.
+Please do **not** open a public issue about a potential security vulnerability.
 
-Report security bugs in third-party modules to the person or team maintaining the module.
+You can find more details on the security vulnerability feature in the GitHub
+documentation here:
+
+https://docs.github.com/en/code-security/security-advisories/guidance-on-reporting-and-writing/privately-reporting-a-security-vulnerability
