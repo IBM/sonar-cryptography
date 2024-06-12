@@ -19,9 +19,11 @@
  */
 package com.ibm.plugin.translation.reorganizer.rules;
 
+import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.OptimalAsymmetricEncryptionPadding;
 import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.mapper.reorganizer.builder.ReorganizerRuleBuilder;
@@ -113,9 +115,41 @@ public final class AsymmetricBlockCipherReorganizer {
                                 return roots;
                             });
 
+    @Nonnull
+    private static final IReorganizerRule MOVE_HASH_UNDER_OAEP =
+            new ReorganizerRuleBuilder()
+                    .createReorganizerRule()
+                    .forNodeKind(BlockCipher.class)
+                    .includingChildren(
+                            List.of(
+                                    new ReorganizerRuleBuilder()
+                                            .createReorganizerRule()
+                                            .forNodeKind(OptimalAsymmetricEncryptionPadding.class)
+                                            .noAction(),
+                                    new ReorganizerRuleBuilder()
+                                            .createReorganizerRule()
+                                            .forNodeKind(MessageDigest.class)
+                                            .noAction()))
+                    .perform(
+                            (node, parent, roots) -> {
+                                INode oaepChild =
+                                        node.getChildren()
+                                                .get(OptimalAsymmetricEncryptionPadding.class)
+                                                .deepCopy();
+                                INode messageDigestChild =
+                                        node.getChildren().get(MessageDigest.class).deepCopy();
+
+                                // Add the message digest under the OAEP node
+                                oaepChild.append(messageDigestChild);
+                                // Remove the message digest from the BlockCipher's children
+                                node.removeChildOfType(MessageDigest.class);
+
+                                return roots;
+                            });
+
     @Unmodifiable
     @Nonnull
     public static List<IReorganizerRule> rules() {
-        return List.of(MERGE_PKE, INVERT_DIGEST_AND_ITS_SIZE);
+        return List.of(MERGE_PKE, INVERT_DIGEST_AND_ITS_SIZE, MOVE_HASH_UNDER_OAEP);
     }
 }
