@@ -168,7 +168,12 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
                     boolean addPadding = false;
 
                     List<String> isNotAModeList =
-                            List.of("Padded", "PaddedBuffered", "PaddedBuffered(PKCS7)");
+                            List.of(
+                                    "Buffered",
+                                    "DefaultBuffered",
+                                    "Padded",
+                                    "PaddedBuffered",
+                                    "PaddedBuffered(PKCS7)");
                     if (isNotAModeList.contains(modeString)) {
                         addMode = false;
 
