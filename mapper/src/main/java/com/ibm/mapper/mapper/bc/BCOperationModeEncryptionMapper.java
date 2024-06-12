@@ -29,7 +29,7 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class BCOperationModeEncryptionMapper implements IMapper {
+public class BcOperationModeEncryptionMapper implements IMapper {
 
     @Nonnull
     @Override

@@ -28,7 +28,7 @@ import com.ibm.engine.model.context.SignatureContext;
 import com.ibm.mapper.AbstractContextTranslator;
 import com.ibm.mapper.IContextTranslationWithKind;
 import com.ibm.mapper.configuration.Configuration;
-import com.ibm.mapper.mapper.bc.BCOperationModeSigningMapper;
+import com.ibm.mapper.mapper.bc.BcOperationModeSigningMapper;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.EllipticCurve;
@@ -72,8 +72,8 @@ public final class JavaSignatureContextTranslator extends AbstractContextTransla
         } else if (value instanceof OperationMode<Tree> operationMode) {
             switch (kind) {
                 case SIGNING_STATUS:
-                    BCOperationModeSigningMapper bcOperationModeSigningMapper =
-                            new BCOperationModeSigningMapper();
+                    BcOperationModeSigningMapper bcOperationModeSigningMapper =
+                            new BcOperationModeSigningMapper();
                     return bcOperationModeSigningMapper
                             .parse(operationMode.asString(), detectionLocation, configuration)
                             .map(f -> f);

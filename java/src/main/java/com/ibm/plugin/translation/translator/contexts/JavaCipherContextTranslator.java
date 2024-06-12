@@ -31,8 +31,8 @@ import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.mapper.AbstractContextTranslator;
 import com.ibm.mapper.IContextTranslationWithKind;
 import com.ibm.mapper.configuration.Configuration;
-import com.ibm.mapper.mapper.bc.BCOperationModeEncryptionMapper;
-import com.ibm.mapper.mapper.bc.BCOperationModeWrappingMapper;
+import com.ibm.mapper.mapper.bc.BcOperationModeEncryptionMapper;
+import com.ibm.mapper.mapper.bc.BcOperationModeWrappingMapper;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.mapper.jca.JcaCipherOperationModeMapper;
 import com.ibm.mapper.model.AuthenticatedEncryption;
@@ -80,14 +80,14 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
         } else if (value instanceof OperationMode<Tree> operationMode) {
             switch (kind) {
                 case ENCRYPTION_STATUS:
-                    BCOperationModeEncryptionMapper bcCipherOperationModeMapper =
-                            new BCOperationModeEncryptionMapper();
+                    BcOperationModeEncryptionMapper bcCipherOperationModeMapper =
+                            new BcOperationModeEncryptionMapper();
                     return bcCipherOperationModeMapper
                             .parse(operationMode.asString(), detectionLocation, configuration)
                             .map(f -> f);
                 case WRAPPING_STATUS:
-                    BCOperationModeWrappingMapper bcOperationModeWrappingMapper =
-                            new BCOperationModeWrappingMapper();
+                    BcOperationModeWrappingMapper bcOperationModeWrappingMapper =
+                            new BcOperationModeWrappingMapper();
                     return bcOperationModeWrappingMapper
                             .parse(operationMode.asString(), detectionLocation, configuration)
                             .map(f -> f);
