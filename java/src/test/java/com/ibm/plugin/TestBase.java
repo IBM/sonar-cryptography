@@ -49,10 +49,10 @@ public abstract class TestBase extends JavaInventoryRule {
     private static final Logger LOGGER = Loggers.get(TestBase.class);
 
     @Nonnull
-    private final DetectionStoreLogger<JavaCheck, Tree, Symbol, JavaFileScannerContext>
+    protected final DetectionStoreLogger<JavaCheck, Tree, Symbol, JavaFileScannerContext>
             detectionStoreLogger = new DetectionStoreLogger<>();
 
-    private int findingId = 0;
+    protected int findingId = 0;
 
     public TestBase(@NotNull List<IDetectionRule<Tree>> detectionRules) {
         super(detectionRules);
@@ -77,7 +77,7 @@ public abstract class TestBase extends JavaInventoryRule {
         _update(finding, this::testFinding);
     }
 
-    private void testFinding(
+    protected void testFinding(
             @Nonnull
                     DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext>
                             detectionStore) {

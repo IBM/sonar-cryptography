@@ -31,7 +31,7 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.functionality.Decrypt;
 import com.ibm.mapper.model.functionality.Encrypt;
-import com.ibm.plugin.TestBase;
+import com.ibm.plugin.TestBaseWithOutput;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +42,7 @@ import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
-class BcCBCBlockCipherTest extends TestBase {
+class BcCBCBlockCipherTest extends TestBaseWithOutput {
     @Test
     void test() {
         CheckVerifier.newVerifier()
