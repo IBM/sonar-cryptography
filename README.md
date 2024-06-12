@@ -19,7 +19,7 @@ in source code and generates [CBOM](https://cyclonedx.org/capabilities/cbom/).
 |----------|-----------------------------------------------------------------------------------------------|----------|
 | Java     | [JCA](https://docs.oracle.com/javase/8/docs/technotes/guides/security/crypto/CryptoSpec.html) | 100%     |
 |          | [BouncyCastle](https://github.com/bcgit/bc-java)                                              | 80%      |
-| Python   | pycrypto                                                                                      | 100%     |
+| Python   | [pyca/cryptography](https://cryptography.io/en/latest/)                                       | 100%     |
 
 > The plugin is designed so that it can be extended to support additional languages and recognition rules to support more libraries. Detailed instructions on how to add new languages and recognition rules will follow shortly.
 
