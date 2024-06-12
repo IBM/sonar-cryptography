@@ -42,7 +42,7 @@ import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
-public abstract class TestBaseWithOutput extends TestBase {
+public abstract class TestBaseWithAnnotations extends TestBase {
 
     private Map<Integer, Integer> addedLinesMap = new HashMap<>();
 
