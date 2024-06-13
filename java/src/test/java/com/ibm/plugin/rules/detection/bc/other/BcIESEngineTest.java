@@ -49,8 +49,8 @@ class BcIESEngineTest extends TestBase {
             @NotNull List<INode> nodes) {
         /*
          * TODO: Some problems must be resolved before correctly detecting/translating this example:
-         * - Duplicate detection of the hashes (probably the same problem as in `DuplicateParameterFindingsTest`)
-         * - Missing support of protocols like ECDH
+         * - [ ] Duplicate detection of the hashes (probably the same problem as in `DuplicateParameterFindingsTest`)
+         * - [x] Missing support of protocols like ECDH
          */
     }
 }

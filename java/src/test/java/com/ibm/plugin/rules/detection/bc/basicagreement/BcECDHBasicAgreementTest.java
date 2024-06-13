@@ -19,8 +19,14 @@
  */
 package com.ibm.plugin.rules.detection.bc.basicagreement;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.ibm.engine.detection.DetectionStore;
+import com.ibm.engine.model.IValue;
+import com.ibm.engine.model.ValueAction;
+import com.ibm.engine.model.context.KeyContext;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.KeyAgreement;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
 import java.util.List;
@@ -48,6 +54,36 @@ class BcECDHBasicAgreementTest extends TestBase {
             int findingId,
             @NotNull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
             @NotNull List<INode> nodes) {
-        // TODO:
+        /* This case is from JCA and is not tested here */
+        if (findingId == 0) {
+            return;
+        }
+
+        /*
+         * TODO: We can probably do better to link ECDH to other assets.
+         * Update the detection rules and translation to reflect it.
+         */
+
+        /*
+         * Detection Store
+         */
+
+        assertThat(detectionStore.getDetectionValues()).hasSize(1);
+        assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(KeyContext.class);
+        IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
+        assertThat(value0).isInstanceOf(ValueAction.class);
+        assertThat(value0.asString()).isEqualTo("ECDH");
+
+        /*
+         * Translation
+         */
+
+        assertThat(nodes).hasSize(1);
+
+        // KeyAgreement
+        INode keyAgreementNode = nodes.get(0);
+        assertThat(keyAgreementNode.getKind()).isEqualTo(KeyAgreement.class);
+        assertThat(keyAgreementNode.getChildren()).isEmpty();
+        assertThat(keyAgreementNode.asString()).isEqualTo("ECDH");
     }
 }

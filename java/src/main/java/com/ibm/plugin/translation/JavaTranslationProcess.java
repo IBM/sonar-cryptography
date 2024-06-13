@@ -50,7 +50,7 @@ public final class JavaTranslationProcess
         // 1. Translate
         JavaTranslator javaTranslator = new JavaTranslator(rule);
         List<INode> translatedValues = javaTranslator.translate(rootDetectionStore);
-        com.ibm.mapper.utils.Utils.printNodeTree(translatedValues);
+        // com.ibm.mapper.utils.Utils.printNodeTree(translatedValues);
 
         // 2. Reorganize
         Reorganizer javaReorganizer = new Reorganizer(reorganizerRules);

@@ -128,6 +128,7 @@ public final class JavaKeyContextTranslator extends AbstractContextTranslator
                     .map(a -> a);
         } else if (value instanceof ValueAction<Tree> valueAction) {
             com.ibm.mapper.model.Algorithm algorithm;
+            KeyAgreement ka;
             switch (kind) {
                 case KDF:
                     algorithm =
@@ -143,6 +144,13 @@ public final class JavaKeyContextTranslator extends AbstractContextTranslator
                             new com.ibm.mapper.model.Algorithm(
                                     valueAction.asString(), detectionLocation);
                     return Optional.of(new KeyEncapsulationMechanism(algorithm, detectionLocation));
+                case DH:
+                    ka =
+                            new KeyAgreement(
+                                    new com.ibm.mapper.model.Algorithm(
+                                            valueAction.asString(), detectionLocation),
+                                    detectionLocation);
+                    return Optional.of(ka);
                 default:
                     break;
             }
