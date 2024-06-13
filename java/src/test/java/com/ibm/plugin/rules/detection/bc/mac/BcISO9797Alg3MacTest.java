@@ -31,6 +31,7 @@ import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.Mode;
+import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Tag;
@@ -102,7 +103,7 @@ class BcISO9797Alg3MacTest extends TestBase {
         assertThat(store_3.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0_3 = store_3.getDetectionValues().get(0);
         assertThat(value0_3).isInstanceOf(ValueAction.class);
-        assertThat(value0_3.asString()).isEqualTo("ISO7816d4");
+        assertThat(value0_3.asString()).isEqualTo("ISO 7816-4:2020");
 
         /*
          * Translation
@@ -116,12 +117,6 @@ class BcISO9797Alg3MacTest extends TestBase {
         assertThat(macNode.getChildren()).hasSize(4);
         assertThat(macNode.asString()).isEqualTo("CBC-MAC-AES");
 
-        // TagLength under Mac
-        INode tagLengthNode = macNode.getChildren().get(TagLength.class);
-        assertThat(tagLengthNode).isNotNull();
-        assertThat(tagLengthNode.getChildren()).isEmpty();
-        assertThat(tagLengthNode.asString()).isEqualTo("64");
-
         // Digest under Mac
         INode digestNode = macNode.getChildren().get(Digest.class);
         assertThat(digestNode).isNotNull();
@@ -129,21 +124,33 @@ class BcISO9797Alg3MacTest extends TestBase {
         assertThat(digestNode.asString()).isEqualTo("DIGEST");
 
         // BlockCipher under Mac
-        INode blockCipherNode1 = macNode.getChildren().get(BlockCipher.class);
-        assertThat(blockCipherNode1).isNotNull();
-        assertThat(blockCipherNode1.getChildren()).hasSize(2);
-        assertThat(blockCipherNode1.asString()).isEqualTo("AES");
+        INode blockCipherNode = macNode.getChildren().get(BlockCipher.class);
+        assertThat(blockCipherNode).isNotNull();
+        assertThat(blockCipherNode.getChildren()).hasSize(3);
+        assertThat(blockCipherNode.asString()).isEqualTo("AES");
 
         // Mode under BlockCipher under Mac
-        INode modeNode = blockCipherNode1.getChildren().get(Mode.class);
+        INode modeNode = blockCipherNode.getChildren().get(Mode.class);
         assertThat(modeNode).isNotNull();
         assertThat(modeNode.getChildren()).isEmpty();
         assertThat(modeNode.asString()).isEqualTo("CBC");
+
+        // Padding under BlockCipher under Mac
+        INode paddingNode = blockCipherNode.getChildren().get(Padding.class);
+        assertThat(paddingNode).isNotNull();
+        assertThat(paddingNode.getChildren()).isEmpty();
+        assertThat(paddingNode.asString()).isEqualTo("ISO 7816-4:2020");
 
         // Tag under Mac
         INode tagNode = macNode.getChildren().get(Tag.class);
         assertThat(tagNode).isNotNull();
         assertThat(tagNode.getChildren()).isEmpty();
         assertThat(tagNode.asString()).isEqualTo("TAG");
+
+        // TagLength under Mac
+        INode tagLengthNode = macNode.getChildren().get(TagLength.class);
+        assertThat(tagLengthNode).isNotNull();
+        assertThat(tagLengthNode.getChildren()).isEmpty();
+        assertThat(tagLengthNode.asString()).isEqualTo("64");
     }
 }
