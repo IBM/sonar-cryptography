@@ -111,7 +111,7 @@ class BcKDFCounterBytesGeneratorTest extends TestBase {
         INode macNode = keyDerivationFunctionNode.getChildren().get(Mac.class);
         assertThat(macNode).isNotNull();
         assertThat(macNode.getChildren()).hasSize(3);
-        assertThat(macNode.asString()).isEqualTo("HMAC-SHA-256");
+        assertThat(macNode.asString()).isEqualTo("HMAC-SHA256");
 
         // Digest under Mac under KeyDerivationFunction
         INode digestNode = macNode.getChildren().get(Digest.class);

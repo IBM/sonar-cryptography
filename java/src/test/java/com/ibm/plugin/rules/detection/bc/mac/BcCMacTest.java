@@ -103,7 +103,7 @@ class BcCMacTest extends TestBase {
         INode macNode = nodes.get(0);
         assertThat(macNode.getKind()).isEqualTo(Mac.class);
         assertThat(macNode.getChildren()).hasSize(4);
-        assertThat(macNode.asString()).isEqualTo("CMAC-AES");
+        assertThat(macNode.asString()).isEqualTo("AES-CMAC");
 
         // Tag under Mac
         INode tagNode = macNode.getChildren().get(Tag.class);

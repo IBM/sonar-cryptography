@@ -155,7 +155,7 @@ public final class MacReorganizer {
                                         node.asString()
                                                 .replace(
                                                         JavaTranslator.UNKNOWN,
-                                                        referenceChild.asString());
+                                                        referenceChild.asString().replace("-", ""));
 
                                 // Create the new Mac node
                                 DetectionLocation detectionLocation =

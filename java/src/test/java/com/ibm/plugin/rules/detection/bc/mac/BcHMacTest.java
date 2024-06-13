@@ -85,7 +85,7 @@ class BcHMacTest extends TestBase {
         INode macNode = nodes.get(0);
         assertThat(macNode.getKind()).isEqualTo(Mac.class);
         assertThat(macNode.getChildren()).hasSize(3);
-        assertThat(macNode.asString()).isEqualTo("HMAC-SHA-256");
+        assertThat(macNode.asString()).isEqualTo("HMAC-SHA256");
 
         // MessageDigest under Mac
         INode messageDigestNode = macNode.getChildren().get(MessageDigest.class);

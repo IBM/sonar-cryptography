@@ -110,7 +110,7 @@ public final class JavaMacContextTranslator extends AbstractContextTranslator
                     break;
                 case "CMac", "CMacWithIV":
                     macAlgorithm =
-                            new Algorithm("CMAC-" + JavaTranslator.UNKNOWN, detectionLocation);
+                            new Algorithm(JavaTranslator.UNKNOWN + "-CMAC", detectionLocation);
                     mac = new Mac(macAlgorithm, detectionLocation);
                     break;
                 case "DSTU7564Mac":
@@ -133,7 +133,7 @@ public final class JavaMacContextTranslator extends AbstractContextTranslator
                     break;
                 case "GMac", "KGMac":
                     macAlgorithm =
-                            new Algorithm("GMAC-" + JavaTranslator.UNKNOWN, detectionLocation);
+                            new Algorithm(JavaTranslator.UNKNOWN + "-GMAC", detectionLocation);
                     mac = new Mac(macAlgorithm, detectionLocation);
 
                     mode = new Mode("GCM", detectionLocation);

@@ -104,7 +104,7 @@ class BcGMacTest extends TestBase {
         INode macNode = nodes.get(0);
         assertThat(macNode.getKind()).isEqualTo(Mac.class);
         assertThat(macNode.getChildren()).hasSize(4);
-        assertThat(macNode.asString()).isEqualTo("GMAC-AES");
+        assertThat(macNode.asString()).isEqualTo("AES-GMAC");
 
         // Digest under Mac
         INode digestNode = macNode.getChildren().get(Digest.class);
