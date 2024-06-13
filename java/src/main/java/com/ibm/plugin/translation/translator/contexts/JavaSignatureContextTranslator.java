@@ -28,12 +28,14 @@ import com.ibm.engine.model.context.SignatureContext;
 import com.ibm.mapper.AbstractContextTranslator;
 import com.ibm.mapper.IContextTranslationWithKind;
 import com.ibm.mapper.configuration.Configuration;
-import com.ibm.mapper.mapper.bc.BCOperationModeSigningMapper;
+import com.ibm.mapper.mapper.bc.BcOperationModeSigningMapper;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.EllipticCurve;
 import com.ibm.mapper.model.EllipticCurveAlgorithm;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.ProbabilisticSignatureScheme;
+import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.model.functionality.Verify;
@@ -70,8 +72,8 @@ public final class JavaSignatureContextTranslator extends AbstractContextTransla
         } else if (value instanceof OperationMode<Tree> operationMode) {
             switch (kind) {
                 case SIGNING_STATUS:
-                    BCOperationModeSigningMapper bcOperationModeSigningMapper =
-                            new BCOperationModeSigningMapper();
+                    BcOperationModeSigningMapper bcOperationModeSigningMapper =
+                            new BcOperationModeSigningMapper();
                     return bcOperationModeSigningMapper
                             .parse(operationMode.asString(), detectionLocation, configuration)
                             .map(f -> f);
@@ -83,6 +85,7 @@ public final class JavaSignatureContextTranslator extends AbstractContextTransla
             Algorithm algorithm;
             Signature signature;
             EllipticCurveAlgorithm eca;
+            ProbabilisticSignatureScheme pss;
             switch (kind) {
                 case EdDSA:
                     String curveName = JavaTranslator.UNKNOWN;
@@ -111,15 +114,29 @@ public final class JavaSignatureContextTranslator extends AbstractContextTransla
                     algorithm = new Algorithm(JavaTranslator.UNKNOWN, detectionLocation);
                     signature = new Signature(algorithm, detectionLocation);
                     return Optional.of(signature);
-                case MESSAGE_SIGNER, DSA:
+                case RSA:
+                    algorithm =
+                            new Algorithm(JavaTranslator.UNKNOWN + "withRSA", detectionLocation);
+                    signature = new Signature(algorithm, detectionLocation);
+                    PublicKeyEncryption pke =
+                            new PublicKeyEncryption(
+                                    new Algorithm("RSA", detectionLocation), detectionLocation);
+                    signature.append(pke);
+                    return Optional.of(signature);
+                case SIGNATURE_NAME, DSA:
                     algorithm = new Algorithm(valueAction.asString(), detectionLocation);
                     signature = new Signature(algorithm, detectionLocation);
+                    return Optional.of(signature);
+                case PSS:
+                    pss = new ProbabilisticSignatureScheme(detectionLocation);
+                    algorithm = new Algorithm(JavaTranslator.UNKNOWN + "-PSS", detectionLocation);
+                    signature = new Signature(algorithm, detectionLocation);
+                    signature.append(pss);
                     return Optional.of(signature);
                 default:
                     // TODO: temporary translation that shouldn't be used
                     algorithm = new Algorithm(valueAction.asString(), detectionLocation);
-                    signature = new Signature(algorithm, detectionLocation);
-                    return Optional.of(signature);
+                    return Optional.of(algorithm);
             }
         }
         return Optional.empty();

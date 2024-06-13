@@ -19,8 +19,16 @@
  */
 package com.ibm.plugin.rules.detection.bc.streamcipher;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.ibm.engine.detection.DetectionStore;
+import com.ibm.engine.model.IValue;
+import com.ibm.engine.model.OperationMode;
+import com.ibm.engine.model.ValueAction;
+import com.ibm.engine.model.context.CipherContext;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.StreamCipher;
+import com.ibm.mapper.model.functionality.Encrypt;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
 import java.util.List;
@@ -48,6 +56,40 @@ class BcChaChaEngineTest extends TestBase {
             int findingId,
             @NotNull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
             @NotNull List<INode> nodes) {
-        // TODO:
+        /*
+         * Detection Store
+         */
+
+        assertThat(detectionStore.getDetectionValues()).hasSize(1);
+        assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(CipherContext.class);
+        IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
+        assertThat(value0).isInstanceOf(ValueAction.class);
+        assertThat(value0.asString()).isEqualTo("ChaCha");
+
+        DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
+                getStoreOfValueType(OperationMode.class, detectionStore.getChildren());
+        assertThat(store_1.getDetectionValues()).hasSize(1);
+        assertThat(store_1.getDetectionValueContext()).isInstanceOf(CipherContext.class);
+        IValue<Tree> value0_1 = store_1.getDetectionValues().get(0);
+        assertThat(value0_1).isInstanceOf(OperationMode.class);
+        assertThat(value0_1.asString()).isEqualTo("1");
+
+        /*
+         * Translation
+         */
+
+        assertThat(nodes).hasSize(1);
+
+        // StreamCipher
+        INode streamCipherNode = nodes.get(0);
+        assertThat(streamCipherNode.getKind()).isEqualTo(StreamCipher.class);
+        assertThat(streamCipherNode.getChildren()).hasSize(1);
+        assertThat(streamCipherNode.asString()).isEqualTo("ChaCha");
+
+        // Encrypt under StreamCipher
+        INode encryptNode = streamCipherNode.getChildren().get(Encrypt.class);
+        assertThat(encryptNode).isNotNull();
+        assertThat(encryptNode.getChildren()).isEmpty();
+        assertThat(encryptNode.asString()).isEqualTo("ENCRYPT");
     }
 }

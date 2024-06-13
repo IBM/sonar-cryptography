@@ -55,9 +55,13 @@ public final class BcMessageSigner {
         infoMap.putKey("HSSSigner").putType("org.bouncycastle.pqc.crypto.lms.");
         infoMap.putKey("LMSSigner").putType("org.bouncycastle.pqc.crypto.lms.");
         infoMap.putKey("PicnicSigner").putType("org.bouncycastle.pqc.crypto.picnic.");
-        infoMap.putKey("QTESLASigner").putType("org.bouncycastle.pqc.legacy.crypto.qtesla.");
+        infoMap.putKey("QTESLASigner")
+                .putName("qTESLA")
+                .putType("org.bouncycastle.pqc.legacy.crypto.qtesla.");
         infoMap.putKey("RainbowSigner").putType("org.bouncycastle.pqc.crypto.rainbow.");
-        infoMap.putKey("SPHINCSPlusSigner").putType("org.bouncycastle.pqc.crypto.sphincsplus.");
+        infoMap.putKey("SPHINCSPlusSigner")
+                .putName("SPHINCS+")
+                .putType("org.bouncycastle.pqc.crypto.sphincsplus.");
     }
 
     private static @NotNull List<IDetectionRule<Tree>> simpleConstructors() {
@@ -76,7 +80,7 @@ public final class BcMessageSigner {
                             // We want to capture all possible constructors (some have arguments)
                             .withAnyParameters()
                             .buildForContext(
-                                    new SignatureContext(SignatureContext.Kind.MESSAGE_SIGNER))
+                                    new SignatureContext(SignatureContext.Kind.SIGNATURE_NAME))
                             .inBundle(() -> "bcMessageSigner")
                             .withDependingDetectionRules(BcMessageSignerInit.rules()));
         }
@@ -91,12 +95,12 @@ public final class BcMessageSigner {
                         .createDetectionRule()
                         .forObjectTypes("org.bouncycastle.pqc.crypto.sphincs.SPHINCS256Signer")
                         .forConstructor()
-                        .shouldBeDetectedAs(new ValueActionFactory<>("SPHINCS256"))
+                        .shouldBeDetectedAs(new ValueActionFactory<>("SPHINCS-256"))
                         .withMethodParameter("org.bouncycastle.crypto.Digest")
                         .addDependingDetectionRules(BcDigests.rules())
                         .withMethodParameter("org.bouncycastle.crypto.Digest")
                         .addDependingDetectionRules(BcDigests.rules())
-                        .buildForContext(new SignatureContext(SignatureContext.Kind.MESSAGE_SIGNER))
+                        .buildForContext(new SignatureContext(SignatureContext.Kind.SIGNATURE_NAME))
                         .inBundle(() -> "bcMessageSigner")
                         .withDependingDetectionRules(BcMessageSignerInit.rules()));
 

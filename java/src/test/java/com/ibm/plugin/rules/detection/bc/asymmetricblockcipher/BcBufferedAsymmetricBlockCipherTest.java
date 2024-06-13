@@ -122,15 +122,8 @@ class BcBufferedAsymmetricBlockCipherTest extends TestBase {
         // BlockCipher
         INode blockCipherNode = nodes.get(0);
         assertThat(blockCipherNode.getKind()).isEqualTo(BlockCipher.class);
-        assertThat(blockCipherNode.getChildren()).hasSize(4);
+        assertThat(blockCipherNode.getChildren()).hasSize(3);
         assertThat(blockCipherNode.asString()).isEqualTo("RSA");
-
-        // OptimalAsymmetricEncryptionPadding under BlockCipher
-        INode optimalAsymmetricEncryptionPaddingNode =
-                blockCipherNode.getChildren().get(OptimalAsymmetricEncryptionPadding.class);
-        assertThat(optimalAsymmetricEncryptionPaddingNode).isNotNull();
-        assertThat(optimalAsymmetricEncryptionPaddingNode.getChildren()).isEmpty();
-        assertThat(optimalAsymmetricEncryptionPaddingNode.asString()).isEqualTo("OAEP");
 
         // Encrypt under BlockCipher
         INode encryptNode = blockCipherNode.getChildren().get(Encrypt.class);
@@ -138,8 +131,16 @@ class BcBufferedAsymmetricBlockCipherTest extends TestBase {
         assertThat(encryptNode.getChildren()).isEmpty();
         assertThat(encryptNode.asString()).isEqualTo("ENCRYPT");
 
-        // MessageDigest under BlockCipher
-        INode messageDigestNode = blockCipherNode.getChildren().get(MessageDigest.class);
+        // OptimalAsymmetricEncryptionPadding under BlockCipher
+        INode optimalAsymmetricEncryptionPaddingNode =
+                blockCipherNode.getChildren().get(OptimalAsymmetricEncryptionPadding.class);
+        assertThat(optimalAsymmetricEncryptionPaddingNode).isNotNull();
+        assertThat(optimalAsymmetricEncryptionPaddingNode.getChildren()).hasSize(1);
+        assertThat(optimalAsymmetricEncryptionPaddingNode.asString()).isEqualTo("OAEP");
+
+        // MessageDigest under OptimalAsymmetricEncryptionPadding under BlockCipher
+        INode messageDigestNode =
+                optimalAsymmetricEncryptionPaddingNode.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode).isNotNull();
         assertThat(messageDigestNode.getChildren()).isEmpty();
         assertThat(messageDigestNode.asString()).isEqualTo("SHA-3");

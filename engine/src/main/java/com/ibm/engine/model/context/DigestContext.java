@@ -31,6 +31,7 @@ public class DigestContext implements IDetectionContext, ISupportKind<DigestCont
     public enum Kind {
         NONE,
         MGF1,
+        MGF,
         CRAMER_SHOUP,
         NTRU,
         SHA1,

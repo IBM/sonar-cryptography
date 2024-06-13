@@ -24,9 +24,10 @@ import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
-import java.util.Arrays;
+import com.ibm.plugin.rules.detection.bc.BouncyCastleInfoMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
@@ -39,14 +40,16 @@ public final class BcAsymCipherEngine {
         // nothing
     }
 
-    private static final List<String> cipherEnginesList =
-            Arrays.asList(
-                    "ElGamalEngine",
-                    "NaccacheSternEngine",
-                    "NTRUEngine",
-                    "RSABlindedEngine",
-                    "RSABlindingEngine",
-                    "RSAEngine");
+    private static BouncyCastleInfoMap infoMap = new BouncyCastleInfoMap();
+
+    static {
+        infoMap.putKey("ElGamalEngine");
+        infoMap.putKey("NaccacheSternEngine").putName("Naccache-Stern");
+        infoMap.putKey("NTRUEngine");
+        infoMap.putKey("RSABlindedEngine").putName("RSA");
+        infoMap.putKey("RSABlindingEngine").putName("RSA");
+        infoMap.putKey("RSAEngine").putName("RSA");
+    }
 
     private static @NotNull List<IDetectionRule<Tree>> constructors(
             @Nullable IDetectionContext detectionValueContext) {
@@ -56,65 +59,19 @@ public final class BcAsymCipherEngine {
                         ? detectionValueContext
                         : new CipherContext(CipherContext.Kind.ASYMMETRIC_CIPHER_ENGINE);
 
-        for (String cipherEngine : cipherEnginesList) {
-            switch (cipherEngine) {
-                case "ElGamalEngine":
-                    constructorsList.add(
-                            new DetectionRuleBuilder<Tree>()
-                                    .createDetectionRule()
-                                    .forObjectTypes(
-                                            "org.bouncycastle.crypto.engines." + cipherEngine)
-                                    .forConstructor()
-                                    .shouldBeDetectedAs(new ValueActionFactory<>("ElGamal"))
-                                    .withoutParameters()
-                                    .buildForContext(context)
-                                    .inBundle(() -> "BcAsymCipherEngine")
-                                    .withDependingDetectionRules(BcAsymCipherInit.rules()));
-                    break;
-                case "NaccacheSternEngine":
-                    constructorsList.add(
-                            new DetectionRuleBuilder<Tree>()
-                                    .createDetectionRule()
-                                    .forObjectTypes(
-                                            "org.bouncycastle.crypto.engines." + cipherEngine)
-                                    .forConstructor()
-                                    .shouldBeDetectedAs(new ValueActionFactory<>("NaccacheStern"))
-                                    .withoutParameters()
-                                    .buildForContext(context)
-                                    .inBundle(() -> "BcAsymCipherEngine")
-                                    .withDependingDetectionRules(BcAsymCipherInit.rules()));
-                    break;
-                case "NTRUEngine":
-                    constructorsList.add(
-                            new DetectionRuleBuilder<Tree>()
-                                    .createDetectionRule()
-                                    .forObjectTypes(
-                                            "org.bouncycastle.crypto.engines." + cipherEngine)
-                                    .forConstructor()
-                                    .shouldBeDetectedAs(new ValueActionFactory<>("NTRU"))
-                                    .withoutParameters()
-                                    .buildForContext(context)
-                                    .inBundle(() -> "BcAsymCipherEngine")
-                                    .withDependingDetectionRules(BcAsymCipherInit.rules()));
-                    break;
-                case "RSAEngine",
-                        "RSABlindedEngine",
-                        "RSABlindingEngine": // TODO: Should I distinguish these RSA cases?
-                    constructorsList.add(
-                            new DetectionRuleBuilder<Tree>()
-                                    .createDetectionRule()
-                                    .forObjectTypes(
-                                            "org.bouncycastle.crypto.engines." + cipherEngine)
-                                    .forConstructor()
-                                    .shouldBeDetectedAs(new ValueActionFactory<>("RSA"))
-                                    .withoutParameters()
-                                    .buildForContext(context)
-                                    .inBundle(() -> "BcAsymCipherEngine")
-                                    .withDependingDetectionRules(BcAsymCipherInit.rules()));
-                    break;
-                default:
-                    break;
-            }
+        for (Map.Entry<String, BouncyCastleInfoMap.Info> entry : infoMap.entrySet()) {
+            String engine = entry.getKey();
+            String engineName = infoMap.getDisplayName(engine, "Engine");
+            constructorsList.add(
+                    new DetectionRuleBuilder<Tree>()
+                            .createDetectionRule()
+                            .forObjectTypes("org.bouncycastle.crypto.engines." + engine)
+                            .forConstructor()
+                            .shouldBeDetectedAs(new ValueActionFactory<>(engineName))
+                            .withoutParameters()
+                            .buildForContext(context)
+                            .inBundle(() -> "BcAsymCipherEngine")
+                            .withDependingDetectionRules(BcAsymCipherInit.rules()));
         }
         return constructorsList;
     }

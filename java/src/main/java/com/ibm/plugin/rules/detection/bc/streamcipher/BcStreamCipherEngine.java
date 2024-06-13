@@ -23,9 +23,10 @@ import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
-import java.util.Arrays;
+import com.ibm.plugin.rules.detection.bc.BouncyCastleInfoMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -37,31 +38,36 @@ public final class BcStreamCipherEngine {
         // private
     }
 
-    private static final List<String> simpleEnginesList =
-            /*
-             * The List of engine classes implementing StreamCipher having a simple
-             * constructor taking no argument
-             */
-            Arrays.asList(
-                    "ChaCha7539Engine",
-                    "ChaChaEngine",
-                    "Grain128Engine",
-                    "Grainv1Engine",
-                    "HC128Engine",
-                    "HC256Engine",
-                    "ISAACEngine",
-                    "RC4Engine",
-                    "Salsa20Engine", // <–– parent class
-                    "VMPCEngine", // <–– parent class
-                    "VMPCKSA3Engine",
-                    "XSalsa20Engine",
-                    "Zuc128Engine",
-                    "Zuc256Engine");
+    private static BouncyCastleInfoMap infoMap = new BouncyCastleInfoMap();
+
+    static {
+        /*
+         * Engine classes implementing StreamCipher having a simple
+         * constructor taking no argument
+         */
+        infoMap.putKey("ChaCha7539Engine").putName("ChaCha");
+        infoMap.putKey("ChaChaEngine");
+        infoMap.putKey("Grain128Engine").putName("Grain-128"); // key size of 128 bits
+        infoMap.putKey("Grainv1Engine").putName("Grain v1");
+        infoMap.putKey("HC128Engine").putName("HC-128"); // key size of 128 bits
+        infoMap.putKey("HC256Engine").putName("HC-256"); // key size of 256 bits
+        infoMap.putKey("ISAACEngine");
+        infoMap.putKey("RC4Engine");
+        infoMap.putKey("Salsa20Engine");
+        infoMap.putKey("VMPCEngine");
+        infoMap.putKey("VMPCKSA3Engine").putName("VMPC KSA3");
+        infoMap.putKey("XSalsa20Engine");
+        infoMap.putKey("Zuc128Engine").putName("ZUC-128");
+        infoMap.putKey("Zuc256Engine").putName("ZUC-256");
+    }
 
     private static @NotNull List<IDetectionRule<Tree>> constructors() {
         List<IDetectionRule<Tree>> constructorsList = new LinkedList<>();
 
-        for (String engine : simpleEnginesList) {
+        for (Map.Entry<String, BouncyCastleInfoMap.Info> entry : infoMap.entrySet()) {
+            String engine = entry.getKey();
+            String engineName = infoMap.getDisplayName(engine, "Engine");
+
             /*
              * Note that ChaChaEngine, Salsa20Engine and Zuc256Engine additionaly have
              * a constructor taking an int as parameter.
@@ -71,8 +77,7 @@ public final class BcStreamCipherEngine {
                             .createDetectionRule()
                             .forObjectExactTypes("org.bouncycastle.crypto.engines." + engine)
                             .forConstructor()
-                            .shouldBeDetectedAs(
-                                    new ValueActionFactory<>(engine.replace("Engine", "")))
+                            .shouldBeDetectedAs(new ValueActionFactory<>(engineName))
                             // We want to capture all possible constructors (some have arguments)
                             .withAnyParameters()
                             .buildForContext(

@@ -161,10 +161,10 @@ public final class JavaMacContextTranslator extends AbstractContextTranslator
                     mode = new Mode("CBC", detectionLocation);
                     mac.append(mode);
 
-                    /* Default BlockCipher value: it will get replaced if another value appended later */
-                    baseAlgorithm = new Algorithm("DES", detectionLocation);
+                    /* TODO: add this default BlockCipher value in the enrichment */
+                    /* baseAlgorithm = new Algorithm("DES", detectionLocation);
                     blockCipher = new BlockCipher(baseAlgorithm, null, null, detectionLocation);
-                    mac.append(blockCipher);
+                    mac.append(blockCipher); */
                     break;
                 case "KMAC":
                     macAlgorithm = new Algorithm("KMAC", detectionLocation);

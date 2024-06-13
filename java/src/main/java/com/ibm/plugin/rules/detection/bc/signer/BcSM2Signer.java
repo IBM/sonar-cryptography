@@ -42,7 +42,7 @@ public final class BcSM2Signer {
                     .forConstructor()
                     .shouldBeDetectedAs(new ValueActionFactory<>("SM2"))
                     .withoutParameters()
-                    .buildForContext(new SignatureContext())
+                    .buildForContext(new SignatureContext(SignatureContext.Kind.SIGNATURE_NAME))
                     .inBundle(() -> "bcSM2Signer")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
@@ -54,7 +54,7 @@ public final class BcSM2Signer {
                     .shouldBeDetectedAs(new ValueActionFactory<>("SM2"))
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
-                    .buildForContext(new SignatureContext())
+                    .buildForContext(new SignatureContext(SignatureContext.Kind.SIGNATURE_NAME))
                     .inBundle(() -> "bcSM2Signer")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
@@ -65,7 +65,7 @@ public final class BcSM2Signer {
                     .forConstructor()
                     .shouldBeDetectedAs(new ValueActionFactory<>("SM2"))
                     .withMethodParameter("org.bouncycastle.crypto.signers.DSAEncoding")
-                    .buildForContext(new SignatureContext())
+                    .buildForContext(new SignatureContext(SignatureContext.Kind.SIGNATURE_NAME))
                     .inBundle(() -> "bcSM2Signer")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
@@ -78,7 +78,7 @@ public final class BcSM2Signer {
                     .withMethodParameter("org.bouncycastle.crypto.signers.DSAEncoding")
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
-                    .buildForContext(new SignatureContext())
+                    .buildForContext(new SignatureContext(SignatureContext.Kind.SIGNATURE_NAME))
                     .inBundle(() -> "bcSM2Signer")
                     .withDependingDetectionRules(BcSignerInit.rules());
 

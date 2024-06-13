@@ -22,14 +22,14 @@ package com.ibm.mapper.mapper.bc;
 import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.functionality.Sign;
-import com.ibm.mapper.model.functionality.Verify;
+import com.ibm.mapper.model.functionality.Decapsulate;
+import com.ibm.mapper.model.functionality.Encapsulate;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class BCOperationModeSigningMapper implements IMapper {
+public class BcOperationModeWrappingMapper implements IMapper {
 
     @Nonnull
     @Override
@@ -41,15 +41,15 @@ public class BCOperationModeSigningMapper implements IMapper {
             return Optional.empty();
         }
         try {
-            /* Constant used to initialize the signature
+            /* Constant used to initialize cipher to wrapping status.
              *
-             * VERIFY = 0;
-             * SIGN = 1;
+             * UNWRAPPING = 0;
+             * WRAPPING = 1;
              */
             int mode = Integer.parseInt(str);
             return switch (mode) {
-                case 0 -> Optional.of(new Verify(detectionLocation));
-                case 1 -> Optional.of(new Sign(detectionLocation));
+                case 0 -> Optional.of(new Decapsulate(detectionLocation));
+                case 1 -> Optional.of(new Encapsulate(detectionLocation));
                 default -> Optional.empty();
             };
 

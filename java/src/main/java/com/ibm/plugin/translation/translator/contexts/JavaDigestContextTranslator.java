@@ -107,7 +107,7 @@ public final class JavaDigestContextTranslator extends AbstractContextTranslator
             MessageDigest messageDigest;
 
             switch (kind) {
-                case MGF1:
+                case MGF1, MGF:
                     return Optional.of(new MaskGenerationFunction(algorithm, detectionLocation));
                 default:
                     if (digestSize != null) {

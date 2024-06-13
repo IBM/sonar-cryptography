@@ -48,6 +48,7 @@ class BcISO9796d2PSSSignerTest extends TestBase {
             int findingId,
             @NotNull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
             @NotNull List<INode> nodes) {
-        // TODO:
+        // TODO: First fix the issue `DuplicateDependingRulesTest`, and it should lead to the
+        // correct results for this test
     }
 }

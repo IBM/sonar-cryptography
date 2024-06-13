@@ -23,7 +23,7 @@ public class BcISO9796d2SignerTestFile {
 
         // Initialize ISO9796d2Signer
         ISO9796d2Signer signer = new ISO9796d2Signer(cipher, digest, false);
-        // Noncompliant@-1 {{ISO9796d2}}
+        // Noncompliant@-1 {{ISO 9796-2}}
 
         signer.init(true, new RSAKeyParameters(true, new BigInteger("0"), new BigInteger("1")));
 

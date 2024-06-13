@@ -43,6 +43,7 @@ public class CipherContext implements IDetectionContext, ISupportKind<CipherCont
         ENCODING,
         ENCODING_SIGNATURE,
         WRAP_ENGINE,
+        WRAP_RFC,
         BLOCK_CIPHER,
         BLOCK_CIPHER_ENGINE,
         STREAM_CIPHER_ENGINE,

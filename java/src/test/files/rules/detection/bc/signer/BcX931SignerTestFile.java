@@ -23,7 +23,7 @@ public class BcX931SignerTestFile {
 
         // Initialize X931Signer
         X931Signer signer = new X931Signer(cipher, digest, false);
-        // Noncompliant@-1 {{X931}}
+        // Noncompliant@-1 {{X9.31}}
 
         signer.init(true, new RSAKeyParameters(true, new BigInteger("0"), new BigInteger("1")));
 

@@ -31,7 +31,8 @@ import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.mapper.AbstractContextTranslator;
 import com.ibm.mapper.IContextTranslationWithKind;
 import com.ibm.mapper.configuration.Configuration;
-import com.ibm.mapper.mapper.bc.BCOperationModeEncryptionMapper;
+import com.ibm.mapper.mapper.bc.BcOperationModeEncryptionMapper;
+import com.ibm.mapper.mapper.bc.BcOperationModeWrappingMapper;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.mapper.jca.JcaCipherOperationModeMapper;
 import com.ibm.mapper.model.AuthenticatedEncryption;
@@ -79,9 +80,15 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
         } else if (value instanceof OperationMode<Tree> operationMode) {
             switch (kind) {
                 case ENCRYPTION_STATUS:
-                    BCOperationModeEncryptionMapper bcCipherOperationModeMapper =
-                            new BCOperationModeEncryptionMapper();
+                    BcOperationModeEncryptionMapper bcCipherOperationModeMapper =
+                            new BcOperationModeEncryptionMapper();
                     return bcCipherOperationModeMapper
+                            .parse(operationMode.asString(), detectionLocation, configuration)
+                            .map(f -> f);
+                case WRAPPING_STATUS:
+                    BcOperationModeWrappingMapper bcOperationModeWrappingMapper =
+                            new BcOperationModeWrappingMapper();
+                    return bcOperationModeWrappingMapper
                             .parse(operationMode.asString(), detectionLocation, configuration)
                             .map(f -> f);
                 default:
@@ -120,9 +127,26 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
                                     new com.ibm.mapper.model.Algorithm(
                                             valueAction.asString(), detectionLocation),
                                     detectionLocation));
-                case BLOCK_CIPHER_ENGINE:
+                case BLOCK_CIPHER_ENGINE, WRAP_ENGINE:
                     return Optional.of(
                             new BlockCipher(
+                                    new com.ibm.mapper.model.Algorithm(
+                                            valueAction.asString(), detectionLocation),
+                                    null,
+                                    null,
+                                    detectionLocation));
+                case WRAP_RFC:
+                    /* TODO: Should I use the RFC value in the translation? Where? */
+                    return Optional.of(
+                            new BlockCipher(
+                                    new com.ibm.mapper.model.Algorithm(
+                                            JavaTranslator.UNKNOWN, detectionLocation),
+                                    null,
+                                    null,
+                                    detectionLocation));
+                case STREAM_CIPHER_ENGINE:
+                    return Optional.of(
+                            new StreamCipher(
                                     new com.ibm.mapper.model.Algorithm(
                                             valueAction.asString(), detectionLocation),
                                     null,
@@ -144,7 +168,12 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
                     boolean addPadding = false;
 
                     List<String> isNotAModeList =
-                            List.of("Padded", "PaddedBuffered", "PaddedBuffered(PKCS7)");
+                            List.of(
+                                    "Buffered",
+                                    "DefaultBuffered",
+                                    "Padded",
+                                    "PaddedBuffered",
+                                    "PaddedBuffered(PKCS7)");
                     if (isNotAModeList.contains(modeString)) {
                         addMode = false;
 
@@ -371,7 +400,7 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
             return Optional.of(keyLength);
         } else if (value instanceof BlockSize<Tree> blockSize) {
             switch (kind) {
-                case BLOCK_CIPHER:
+                case BLOCK_CIPHER, WRAP_ENGINE:
                     return Optional.of(
                             new com.ibm.mapper.model.BlockSize(
                                     Integer.parseInt(blockSize.asString()), detectionLocation));

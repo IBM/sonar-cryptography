@@ -41,12 +41,12 @@ public final class BcISO9796d2Signer {
                     .createDetectionRule()
                     .forObjectTypes("org.bouncycastle.crypto.signers.ISO9796d2Signer")
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("ISO9796d2"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>("ISO 9796-2"))
                     .withMethodParameter("org.bouncycastle.crypto.AsymmetricBlockCipher")
                     .addDependingDetectionRules(BcAsymmetricBlockCipher.rules())
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
-                    .buildForContext(new SignatureContext())
+                    .buildForContext(new SignatureContext(SignatureContext.Kind.SIGNATURE_NAME))
                     .inBundle(() -> "bcISO9796d2Signer")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
@@ -55,13 +55,13 @@ public final class BcISO9796d2Signer {
                     .createDetectionRule()
                     .forObjectTypes("org.bouncycastle.crypto.signers.ISO9796d2Signer")
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("ISO9796d2"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>("ISO 9796-2"))
                     .withMethodParameter("org.bouncycastle.crypto.AsymmetricBlockCipher")
                     .addDependingDetectionRules(BcAsymmetricBlockCipher.rules())
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
                     .withMethodParameter("boolean")
-                    .buildForContext(new SignatureContext())
+                    .buildForContext(new SignatureContext(SignatureContext.Kind.SIGNATURE_NAME))
                     .inBundle(() -> "bcISO9796d2Signer")
                     .withDependingDetectionRules(BcSignerInit.rules());
 

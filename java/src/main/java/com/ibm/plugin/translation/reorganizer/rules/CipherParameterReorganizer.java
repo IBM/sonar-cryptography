@@ -26,9 +26,8 @@ import com.ibm.mapper.model.functionality.Decrypt;
 import com.ibm.mapper.model.functionality.Encrypt;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.mapper.reorganizer.builder.ReorganizerRuleBuilder;
-import com.ibm.mapper.utils.Function3;
+import com.ibm.plugin.translation.reorganizer.UsualPerformActions;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -67,30 +66,12 @@ public final class CipherParameterReorganizer {
                             });
 
     @Nonnull
-    private static final Function3<INode, INode, List<INode>, List<INode>> performMovingChildrenUp =
-            (node, parent, roots) -> {
-                if (parent == null) {
-                    // Do nothing
-                    return roots;
-                }
-                for (Map.Entry<Class<? extends INode>, INode> entry :
-                        node.getChildren().entrySet()) {
-                    Class<? extends INode> kind = entry.getKey();
-                    INode child = entry.getValue();
-                    // Append the child to `parent` and remove it from `node`
-                    parent.append(child);
-                    node.removeChildOfType(kind);
-                }
-                return roots;
-            };
-
-    @Nonnull
     private static final IReorganizerRule MOVE_NODES_UNDER_ENCRYPT_UP =
             new ReorganizerRuleBuilder()
                     .createReorganizerRule()
                     .forNodeKind(Encrypt.class)
                     .withAnyNonNullChildren()
-                    .perform(performMovingChildrenUp);
+                    .perform(UsualPerformActions.performMovingChildrenUp);
 
     @Nonnull
     private static final IReorganizerRule MOVE_NODES_UNDER_DECRYPT_UP =
@@ -98,7 +79,7 @@ public final class CipherParameterReorganizer {
                     .createReorganizerRule()
                     .forNodeKind(Decrypt.class)
                     .withAnyNonNullChildren()
-                    .perform(performMovingChildrenUp);
+                    .perform(UsualPerformActions.performMovingChildrenUp);
 
     @Unmodifiable
     @Nonnull
