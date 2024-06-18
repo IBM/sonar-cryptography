@@ -156,37 +156,84 @@ java
 ```
 
 `plugin/rules` will contain the detection rules, organized by cryptography library, and `plugin/translation` will contain all files related to translation for this language.
+The `test` directory is not important at the beginning, it will be used only once we write detection rules, and we will cover it [later](#adding-support-for-another-cryptography-library).
+
+### Identifying the four classes to use in generics
+
+Recall that our methodology aims to bridge the gap between the language-specific sonar APIs and a higher level language-agnostic API.
+As explained earlier, this part is done in the [engine](#the-engine).
+While we will talk later about how to integrate a new language with the engine, we have to highlight that our methodology makes use of [Java generic types](https://docs.oracle.com/javase/tutorial/java/generics/types.html) at multiple places. In particular, our language-"agnostic" high level API still needs to be parametrized by language-dependent types.
+> TODO: add a link for "later"
+
+We need to find four of these types in the sonar API of the language of your choice, and it is crucial to make this step early in the development, as not finding these types may compromise completely the possibility of extending our plugin with this language.
+
+>[!NOTE]
+> If some of these classes are missing, you may create your own custom classes to try to patch this void, by investigating how these classes are used and trying to provide the same functionality. However, this has not been attempted yet and will probably result in significantly more work.
+
+To help you find these classes used to fill the four generics `R`, `T`, `S`, `P`, we provide the table below showing what these classes are for the languages we currently support (all of these classes are under the import path `org.sonar.plugins`):
+
+|        | Rule (`R`)               | Tree (`T`)             | Symbol (`S`)                | Publisher (`P`)                   |
+|--------|------------------------|----------------------|---------------------------|---------------------------------|
+| **Java**   | java.api.**JavaCheck**     | java.api.tree.**Tree**   | java.api.semantic.**Symbol**  | java.api.**JavaFileScannerContext** |
+| **Python** | python.api.**PythonCheck** | python.api.tree.**Tree** | python.api.symbols.**Symbol** | python.api.**PythonVisitorContext** |
+
+
+### Extension points
 
 Then, we have to add *extension points*: these are language-specific interfaces to implement in order to declare the custom detection rules of the module to the plugin. Read the sonar documentation to find what these interfaces are. For Java, these are the interfaces `RulesDefinition` and `CheckRegistrar`, respectively implemented in [`JavaScannerRuleDefinition`](../java/src/main/java/com/ibm/plugin/JavaScannerRuleDefinition.java) and [`JavaCheckRegistrar`](../java/src/main/java/com/ibm/plugin/JavaCheckRegistrar.java) in the `plugin` directory.
 
 > [!IMPORTANT]  
 > At this point, we have to clarify an important difference: we distinguish the SonarQube *rules* that we actually add to the plugin, and the detection *rules* (defined [earlier](#the-detection-rules)) that are rules written with our high level syntax and conforming to the `IDetectionRule` interface.
 >
-> In our plugin architecture, we make the choice to define a **single** SonarQube rule per language, that contains the logic of all detection rules. This rule conforms to a language-specific interface defined by your sonar analyzer API, like `IssuableSubscriptionVisitor` in Java or `PythonVisitorCheck` in Python.
+> In our plugin architecture, we make the choice to define a **single** SonarQube rule per language, that contains the logic of all detection rules. This rule extends a language-specific class defined by your sonar analyzer API, like `IssuableSubscriptionVisitor` in Java or `PythonVisitorCheck` in Python.
+> We will later call it the *visitor* class, as it enables to implement functions that are called upon the visitation of a kind of AST node (as a function declaration or a parameter).
 >
 > This means that on the SonarQube UI, we see only one (meaningless) rule that reports any kind of cryptography finding. The actual precise information should instead be exported through the `output` module, like we currently do with the CBOM. 
 
 We now explain with a bit more detail what the usual extension points are.
 
-#### Check Registrar
+#### The "Check Registrar" extension point
 
 If there is a similar entry point for your language, you can set it up similarly to Java (or to [`PythonCheckRegistrar`](../python/src/main/java/com/ibm/plugin/PythonCheckRegistrar.java) with the `PythonCustomRuleRepository` interface).
 
 This is the place where the SonarQube rule class should be referenced. Because this rule "regroups" all the detection rule, we call it the *inventory rule*, which is defined in Java as [`JavaInventoryRule`](../java/src/main/java/com/ibm/plugin/rules/JavaInventoryRule.java) in `plugin/rules`.
 
-This rule must implement the language-specific sonar rule interface, `IssuableSubscriptionVisitor` in Java, and must be annotated with a name:
+This rule must extend the language-specific sonar visitor class, `IssuableSubscriptionVisitor` in Java, and must be annotated with a name:
 ```java
 @Rule(key = "Inventory")
 ```
 
-We define the logic behind the inventory rule (and in particular how it will relate with all the `IDetectionRule` detection rules) in the `plugin/rules/detection` directory by creating an intermediary class implementing the language-specific sonar rule interface (`IssuableSubscriptionVisitor` in Java) and from which the inventory rule (`JavaInventoryRule`) will inherit. In Java, we call this class [`JavaBaseDetectionRule`](../java/src/main/java/com/ibm/plugin/rules/detection/JavaBaseDetectionRule.java) and it takes a constructor with a list of `IDetectionRule`[^1]. 
+We define the logic behind the inventory rule (and in particular how it will relate with all the `IDetectionRule` detection rules) in the `plugin/rules/detection` directory by first creating an intermediary class implementing the language-specific sonar visitor class (`IssuableSubscriptionVisitor` in Java) and from which the inventory rule (`JavaInventoryRule`) will inherit. In Java, we call this class [`JavaBaseDetectionRule`](../java/src/main/java/com/ibm/plugin/rules/detection/JavaBaseDetectionRule.java), and it takes a constructor with a list of `IDetectionRule`[^1]. 
 
-[^1]: It may also take a list of [`IReorganizerRule`](../mapper/src/main/java/com/ibm/mapper/reorganizer/IReorganizerRule.java) if necessary. More about this in [*Writing new detection rules for the Sonar Cryptography Plugin*](./DETECTION_RULE_STRUCTURE.md)
+[^1]: It may also take a list of [`IReorganizerRule`](../mapper/src/main/java/com/ibm/mapper/reorganizer/IReorganizerRule.java) if necessary. More about this in [*Writing new detection rules for the Sonar Cryptography Plugin*](./DETECTION_RULE_STRUCTURE.md).
+
+This list of `IDetectionRule` is defined in the same directory, in a file listing all the detection rules for this language under a function `rules()`. In Java, we call this file [`JavaDetectionRules`](../java/src/main/java/com/ibm/plugin/rules/detection/JavaDetectionRules.java).
+You can currently leave this list of rules empty, and we will discuss [later](#adding-support-for-another-cryptography-library) how to structure these detection rules in the module. 
+
+Back to the intermediary class (`JavaBaseDetectionRule` in Java), this is also the place where we have to check and *apply* our list of `IDetectionRule`. This can be done by overriding the relevant "visit" method(s) of the visitor class. For example in Java:
+```java
+/**
+ * Visits a tree node and applies detection rules to it.
+ *
+ * @param tree The tree node to visit.
+ */
+@Override
+public void visitNode(@Nonnull Tree tree) {
+    detectionRules.forEach(
+            rule -> {
+                DetectionExecutive<JavaCheck, Tree, Symbol, JavaFileScannerContext>
+                        detectionExecutive =
+                                JavaAggregator.getLanguageSupport()
+                                        .createDetectionExecutive(
+                                                tree, rule, new JavaScanContext(this.context));
+                detectionExecutive.subscribe(this);
+                detectionExecutive.start();
+            });
+}
+```
 
 
-
-
-#### Rule Definition
+#### The "Rule Definition" extension point
 
 If there is a similar entry point for your language, you can set it up similarly to Java (or Python) by providing basic metadata information about this rule that will be displayed in the SonarQube UI.
 
@@ -197,6 +244,12 @@ If there is a similar entry point for your language, you can set it up similarly
 <br><br><br><br><br><br><br><br><br><br>
 ---
 
+TO ADD SOMEWHERE
+- JavaAgreggator
+- ~~Explaining the 4 generic types used everywhere~~
+- Explaining engine stuff like the detection executive
+
+OVERALL PLAN
 - Update the POM.xml
 - Create a new language module (get inspired by a template plugin), find and integrate the extension points:
 https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/languages/overview/
