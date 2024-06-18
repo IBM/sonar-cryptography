@@ -1,3 +1,5 @@
-# Writing new detection rules for the the Sonar Cryptography Plugin
+# Writing new detection rules for the Sonar Cryptography Plugin
 
-> TODO
+> TODO:
+> - detection rules format
+> - translation

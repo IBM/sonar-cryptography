@@ -44,7 +44,7 @@ Because of this strong language dependency, we use different modules (like `java
 
 #### The detection rules
 
-A language module, like `java`, has two main folders: `rules` and `translation`. Let's first focus on [`rules`](../java/src/main/java/com/ibm/plugin/rules/).
+A language module, like [`java`](../java/), has two main source folders: `rules` and `translation`. Let's first focus on [`rules`](../java/src/main/java/com/ibm/plugin/rules/).
 
 This folder contains all detection rules for the language, organized by cryptography library. For example, the subfolder [`bc`](../java/src/main/java/com/ibm/plugin/rules/detection/bc/) contains all rules related to the BouncyCastle cryptography library, themselves organized based on the structure of this library.
 
@@ -55,7 +55,7 @@ Because all these detection rules follow a similar structure, our goal was to ma
 Indeed, defining rules directly using the AST APIs would be very verbose, with a lot of duplicated code to perform similar actions, and consequently hard to read.
 This higher level syntax is defined by the interface [`IDetectionRule`](../engine/src/main/java/com/ibm/engine/rule/IDetectionRule.java).
 
-> We explain with much more details this higher level syntax for writing detection rules in [*Writing new detection rules for the the Sonar Cryptography Plugin*](./DETECTION_RULE_STRUCTURE.md).
+> We explain with much more details this higher level syntax for writing detection rules in [*Writing new detection rules for the Sonar Cryptography Plugin*](./DETECTION_RULE_STRUCTURE.md).
 
 Of course, we don't get this nice syntax for free: something has to bridge the gap between the language-specific AST APIs and our language-agnostic syntax.
 This is the role of the `engine` module, that will be detailed later.
@@ -65,8 +65,34 @@ This is the role of the `engine` module, that will be detailed later.
 Writing a detection rule allows us to capture all the values linked to a cryptography asset, for example the name of the algorithm and its mode.
 These values are captured in a tree structure shaped like the tree of depending detection rules that detected them, so the tree relationships do not carry any semantic about how the cryptographic values relate to one another.
 
-> TODO: also create a separate markdown file about translation 
+What we want instead is a meaningful representation of all cryptography related values: a tree structure where relationships between nodes carry some meaning.
+Back to our example, we want a tree where the mode is a child node of the algorithm node, to indicate that it's the mode of this algorithm.
 
+This process of building a meaningful tree representation of the captured cryptography values is called the translation. This process is also part of the language module. In certain cases where translation requires to parse a string, the parsing and translation process is outsourced to the `mapper` module for better modularity.
+
+The last step of the translation process is called the enrichment, and is done by the `enricher` module.
+This step aims at adding content to the translated tree, based on external knowledge (i.e. not based on the values we captured in the source code).
+Indeed, we can get additional information from the documentation of a cryptography library, like some default values.
+Maybe our algorithm has a default mode when no mode is specified in the code, in such case we can "enrich" the translated tree with this default mode.
+Additionally, we can enrich most cryptography assets with an [object identifier](https://en.wikipedia.org/wiki/Object_identifier) (OID) that uniquely identifies an algorithm and plays an important role in a CBOM.
+
+> The process of translation is also explained with more details in [*Writing new detection rules for the Sonar Cryptography Plugin*](./DETECTION_RULE_STRUCTURE.md).
+
+
+### The engine
+
+The [`engine`](../engine/) module bridges the gap between the language-specific sonar APIs used for navigating the AST, and the high level language-agnostic API used for writing detection rules.
+It has a [`language`](../engine/src/main/java/com/ibm/engine/language/) subfolder which contains the set of functions to implement to enable this high level API for a language supported for SonarQube plugins.
+
+Here are all the interfaces that have to be implemented (specific details about the functions to implement may be documented in the interface files):
+
+- [`IBaseMethodVisitor`](../engine/src/main/java/com/ibm/engine/detection/IBaseMethodVisitor.java) (the class implementing this interface must also extend a language-specific `BaseTreeVisitor` from the sonar API)
+- [`IDetectionEngine`](../engine/src/main/java/com/ibm/engine/detection/IDetectionEngine.java)
+- [`ILanguageSupport`](../engine/src/main/java/com/ibm/engine/language/ILanguageSupport.java)
+- [`ILanguageTranslation`](../engine/src/main/java/com/ibm/engine/language/ILanguageTranslation.java)
+- [`IScanContext`](../engine/src/main/java/com/ibm/engine/language/IScanContext.java)
+
+The `engine` module contains a lot of other subfolders and files that enable strong detection capabilities, but they are all based on the functions provided by the `language` files and therefore do not need to be modified when adding support for another file.
 
 ## Adding support for another programming language
 
