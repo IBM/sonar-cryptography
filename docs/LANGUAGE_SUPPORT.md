@@ -206,9 +206,7 @@ java
         ├── files/rules
         └── java/com/ibm/plugin/rules
 ```
-[^1]
-
-[^1]: All directory trees in this file were generated using [this open-source tool](https://tree.nathanfriend.io/). If you need to modify a tree, please use this tool again to keep a coherent look.
+<p align="right"><a href="https://tree.nathanfriend.io/?s=(%27opt6s!(%27fancy!true~fullPath3~trailingSlash3~rootDot3)~7(%277%270B5*0src.0main%2F284.*A0detect68translat6.0test8filesC82C5%27)~vers6!%271%27)A%20.5**0-%202B%2Fco9ib9plugin3!false4rules5%5Cn6ion7source!8.*09m%2FA*%20BjavaC%2F4%01CBA987654320.*"><sub><sup>edit this tree<sub><sup></a></p>
 
 `plugin/rules` will contain the detection rules, organized by cryptography library, and `plugin/translation` will contain all files related to translation for this language.
 The `test` directory is not important at the beginning, it will be used only once we write detection rules, and we will cover it [later](#adding-support-for-another-cryptography-library).
@@ -352,6 +350,8 @@ java
                 ├── mycrypto
                 └── ... [other libraries]
 ```
+<p align="right"><a href="https://tree.nathanfriend.io/?s=(%27op9s!(%27fancy!true~fullPath7~trailingSlash7~rootDot7)~A(%27A%273K23src2Lmain%2F5GM26B2*CptoH0Gtransla92LtEtGfilE4FG54F%27)~version!%271%27)J%200**6...%20%5Bother%20librariE%5D2HL-%204%2FM8LB8C5K%2FcoIibIplugin6**J37!false82**9tionAsource!Bdetec9C6mycryEesFpto20G83H%5CnIm%2FJ*%20KjavaL*3MrulE%01MLKJIHGFECBA987654320*"><sub><sup>edit this tree<sub><sup></a></p>
+
 
 > [!TIP]
 > Our file organization is inspired by the documentation of the Sonar analyzer for Java. You can [consult it](https://github.com/SonarSource/sonar-java/blob/master/docs/CUSTOM_RULES_101.md#writing-a-rule) to learn more.
