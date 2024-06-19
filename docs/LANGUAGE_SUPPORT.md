@@ -104,7 +104,7 @@ Recall that only languages supported for SonarQube plugins are supported (they a
 
 In the following, we will take the example of adding support for the Java language.
 
-### Add the language analyzer
+### Adding the language analyzer
 
 The first step is to add a dependency for your sonar language analyzer to the main `sonar-cryptography` [`pom.xml`](../pom.xml).
 You should find information about the analyzer group and artifact identifiers in the appropriate language page of the [documentation of sonar languages](https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/languages/overview/).
@@ -164,6 +164,16 @@ Notice that interfaces classes are parametrized by the generics mentioned [previ
 > Later, once you will have [created the language module](#creating-a-new-language-module) and be able to write detection rules, you can write test rules and test files to make sure that your engine works as intended (i.e. correctly detects what is specified by the rule).
 > If it is not the case, you can then tune your engine implementation until your unit test is fixed.
 
+Once you have implemented these five interfaces, you have to declare your language support to the outside.
+To do so, simply add a function in [`LanguageSupporter`](../engine/src/main/java/com/ibm/engine/language/LanguageSupporter.java) that returns an instance of your class implementing `ILanguageSupport`. Here is how it looks for the Java case:
+
+```java
+@Nonnull
+public static ILanguageSupport<JavaCheck, Tree, Symbol, JavaFileScannerContext>
+        javaLanguageSupporter() {
+    return new JavaLanguageSupport();
+}
+```
 
 ### Creating a new language module
 
@@ -194,7 +204,7 @@ java
 `plugin/rules` will contain the detection rules, organized by cryptography library, and `plugin/translation` will contain all files related to translation for this language.
 The `test` directory is not important at the beginning, it will be used only once we write detection rules, and we will cover it [later](#adding-support-for-another-cryptography-library).
 
-### Extension points
+### Adding the extension points
 
 Then, we have to add *extension points*: these are language-specific interfaces to implement in order to declare the custom detection rules of the module to the plugin. Read the sonar documentation to find what these interfaces are. For Java, these are the interfaces `RulesDefinition` and `CheckRegistrar`, respectively implemented in [`JavaScannerRuleDefinition`](../java/src/main/java/com/ibm/plugin/JavaScannerRuleDefinition.java) and [`JavaCheckRegistrar`](../java/src/main/java/com/ibm/plugin/JavaCheckRegistrar.java) in the `plugin` directory.
 
@@ -210,11 +220,13 @@ We now explain with a bit more detail what the usual extension points are.
 
 #### The "Check Registrar" extension point
 
-If there is a similar entry point for your language, you can set it up similarly to Java (or to [`PythonCheckRegistrar`](../python/src/main/java/com/ibm/plugin/PythonCheckRegistrar.java) with the `PythonCustomRuleRepository` interface).
+If there is a similar entry point for your language, you can set it up similarly to [`JavaCheckRegistrar`](../java/src/main/java/com/ibm/plugin/JavaCheckRegistrar.java) in Java (or to [`PythonCheckRegistrar`](../python/src/main/java/com/ibm/plugin/PythonCheckRegistrar.java) with the `PythonCustomRuleRepository` interface).
 
-This is the place where the SonarQube rule class should be referenced. Because this rule "regroups" all the detection rule, we call it the *inventory rule*, which is defined in Java as [`JavaInventoryRule`](../java/src/main/java/com/ibm/plugin/rules/JavaInventoryRule.java) in `plugin/rules`.
+This is the place where the SonarQube rule class should be referenced. Because this rule "regroups" all the detection rule, we call it the *inventory rule*, which is defined in Java as [`JavaInventoryRule`](../java/src/main/java/com/ibm/plugin/rules/JavaInventoryRule.java) in `plugin/rules`[^1].
 
-This rule must extend the language-specific sonar visitor class, `IssuableSubscriptionVisitor` in Java, and must be annotated with a name:
+[^1]: In the Java case, we define an intermediary class [`JavaRuleList`](../java/src/main/java/com/ibm/plugin/JavaRuleList.java) that registers all Java SonarQube rules, but in our case it's only [`JavaInventoryRule`](../java/src/main/java/com/ibm/plugin/rules/JavaInventoryRule.java). This allows us to easily refer to all SonarQube rules at other places, like in [`JavaScannerRuleDefinition`](../java/src/main/java/com/ibm/plugin/JavaScannerRuleDefinition.java).
+
+This rule must extend the language-specific sonar visitor class, `IssuableSubscriptionVisitor` in Java, and must be annotated with a name (we are using "Inventory"):
 ```java
 @Rule(key = "Inventory")
 ```
@@ -226,7 +238,7 @@ We define the logic behind the inventory rule (and in particular how it will rel
 This list of `IDetectionRule` is defined in the same directory, in a file listing all the detection rules for this language under a function `rules()`. In Java, we call this file [`JavaDetectionRules`](../java/src/main/java/com/ibm/plugin/rules/detection/JavaDetectionRules.java).
 You can currently leave this list of rules empty, and we will discuss [later](#adding-support-for-another-cryptography-library) how to structure these detection rules in the module. 
 
-Back to the intermediary class (`JavaBaseDetectionRule` in Java), this is also the place where we have to check and *apply* our list of `IDetectionRule`. This can be done by overriding the relevant "visit" method(s) of the visitor class. For example in Java:
+Back to the intermediary class (`JavaBaseDetectionRule` in Java), this is also the place where we have to check and apply our list of `IDetectionRule`. This can be done by overriding the relevant "visit" method(s) of the visitor class. For example in Java (note that we have not yet defined `JavaAggregator`, which we will do just after):
 ```java
 /**
  * Visits a tree node and applies detection rules to it.
@@ -248,21 +260,31 @@ public void visitNode(@Nonnull Tree tree) {
 }
 ```
 
+Here, for each visited node of the AST and for each `IDetectionRule` detection rule, we enable a [`DetectionExecutive`](../engine/src/main/java/com/ibm/engine/executive/DetectionExecutive.java), which is a class from the engine that will take care of applying our detection rules.
+
+Additionally, the intermediary class (`JavaBaseDetectionRule` in Java) should implement the [`IObserver`](../common/src/main/java/com/ibm/common/IObserver.java) interface, consisting of an `update` method. This function will be called each time the scanner detects a finding, and will pass the finding as a parameter.
+SonarQube indeed reports each asset as they are detected.
+But if we want to export all of our findings in a single output structure, like a CBOM, we need some way to aggregate all results.
+
+This is therefore the purpose of the (empty) interface [`IAggregator`](../output/src/main/java/com/ibm/output/IAggregator.java), implemented in Java by the class [`JavaAggregator`](../java/src/main/java/com/ibm/plugin/JavaAggregator.java) directly in the `plugin` directory.
+The aggregator class can maintain a list of findings, that gets extended each time a new finding is detected and reported through the `update` function.
+The `JavaAggregator` implementation is quite generic and can be mostly reused for your implementation, after replacing the generic types by the correct ones, and using the correct language supporter.
+
 
 #### The "Rule Definition" extension point
 
-If there is a similar entry point for your language, you can set it up similarly to Java (or Python) by providing basic metadata information about this rule that will be displayed in the SonarQube UI.
+If there is a similar entry point for your language, you can set it up similarly to [`JavaScannerRuleDefinition`](../java/src/main/java/com/ibm/plugin/JavaScannerRuleDefinition.java) in Java (or [`PythonScannerRuleDefinition`](../python/src/main/java/com/ibm/plugin/PythonScannerRuleDefinition.java) in Python) by providing basic metadata information about this rule that will be displayed in the SonarQube UI.
 
 
-
+#### Registering the extension points
 
 
 <br><br><br><br><br><br><br><br><br><br>
 ---
 
 TO ADD SOMEWHERE
-- JavaAgreggator
-- LanguageSupporter
+- ~~JavaAgreggator~~
+- ~~LanguageSupporter~~
 - ~~Explaining the 4 generic types used everywhere~~
 - Explaining engine stuff like the detection executive
 - You should take some time to understand how your AST works
