@@ -2,6 +2,8 @@
 
 The Sonar Cryptography Plugin is designed with a modular architecture so that it can be extended to support additional programming languages and cryptography libraries.
 
+<br>
+
 ## Introduction to the project structure
 
 The Sonar Cryptography Plugin uses a rule-based approach to precisely identify which cryptography assets are used in the scanned code.
@@ -64,7 +66,7 @@ This is the role of the `engine` module, that will be detailed later.
 #### The translation
 
 Writing a detection rule allows us to capture all the values linked to a cryptography asset, for example the name of the algorithm and its mode.
-These values are captured in a tree structure shaped like the tree of depending detection rules that detected them, so the tree relationships do not carry any semantic about how the cryptographic values relate to one another.
+These values are captured in a tree structure shaped like the tree of dependent detection rules that detected them, so the tree relationships do not carry any semantic about how the cryptographic values relate to one another.
 
 What we want instead is a meaningful representation of all cryptography related values: a tree structure where relationships between nodes carry some meaning.
 Back to our example, we want a tree where the mode is a child node of the algorithm node, to indicate that it's the mode of this algorithm.
@@ -90,11 +92,15 @@ More details about these interfaces are given [later](#implementing-the-language
 
 The `engine` module contains a lot of other subfolders and files that enable strong detection capabilities, but they are all based on the functions provided by the `language` files and therefore do not need to be modified when adding support for another file.
 
+<br>
 
 ## Adding support for another programming language
 
 In this section, we detail step-by-step instructions about how to extend the Sonar Cryptography Plugin to support another language.
-Once the plugin supports the targeted language, the next section will detail how to add support for a cryptography library.
+Once the plugin supports the targeted language, the [next section](#adding-support-for-another-cryptography-library) will detail how to add support for a cryptography library.
+
+> [!TIP]
+> If your language is already supported by our plugin, you can directly skip to [the section](#adding-support-for-another-cryptography-library) explaining in detail how to add support for a cryptography library.
 
 Recall that only languages supported for SonarQube plugins are supported (they are listed [here](https://docs.sonarsource.com/sonarqube/latest/extension-guide/adding-coding-rules/#custom-rule-support-by-language) in the *Java* column), because they come with a sonar analyzer and API.
 
@@ -200,6 +206,9 @@ java
         ├── files/rules
         └── java/com/ibm/plugin/rules
 ```
+[^1]
+
+[^1]: All directory trees in this file were generated using [this open-source tool](https://tree.nathanfriend.io/). If you need to modify a tree, please use this tool again to keep a coherent look.
 
 `plugin/rules` will contain the detection rules, organized by cryptography library, and `plugin/translation` will contain all files related to translation for this language.
 The `test` directory is not important at the beginning, it will be used only once we write detection rules, and we will cover it [later](#adding-support-for-another-cryptography-library).
@@ -212,7 +221,7 @@ Then, we have to add *extension points*: these are language-specific interfaces 
 > At this point, we have to clarify an important difference: we distinguish the SonarQube *rules* that we actually add to the plugin, and the detection *rules* (defined [earlier](#the-detection-rules)) that are rules written with our high level syntax and conforming to the `IDetectionRule` interface.
 >
 > In our plugin architecture, we make the choice to define a **single** SonarQube rule per language, that contains the logic of all detection rules. This rule extends a language-specific class defined by your sonar analyzer API, like `IssuableSubscriptionVisitor` in Java or `PythonVisitorCheck` in Python.
-> We will later call it the *visitor* class, as it enables to implement functions that are called upon the visitation of a kind of AST node (as a function declaration or a parameter).
+> We will later call it the *visitor* class, as it enables to implement functions that are called upon the visitation of a some AST nodes.
 >
 > This means that on the SonarQube UI, we see only one (meaningless) rule that reports any kind of cryptography finding. The actual precise information should instead be exported through the `output` module, like we currently do with the CBOM. 
 
@@ -222,18 +231,18 @@ We now explain with a bit more detail what the usual extension points are.
 
 If there is a similar entry point for your language, you can set it up similarly to [`JavaCheckRegistrar`](../java/src/main/java/com/ibm/plugin/JavaCheckRegistrar.java) in Java (or to [`PythonCheckRegistrar`](../python/src/main/java/com/ibm/plugin/PythonCheckRegistrar.java) with the `PythonCustomRuleRepository` interface).
 
-This is the place where the SonarQube rule class should be referenced. Because this rule "regroups" all the detection rule, we call it the *inventory rule*, which is defined in Java as [`JavaInventoryRule`](../java/src/main/java/com/ibm/plugin/rules/JavaInventoryRule.java) in `plugin/rules`[^1].
+This is the place where the SonarQube rule class should be referenced. Because this rule "regroups" all the detection rule, we call it the *inventory rule*, which is defined in Java as [`JavaInventoryRule`](../java/src/main/java/com/ibm/plugin/rules/JavaInventoryRule.java) in `plugin/rules`[^2].
 
-[^1]: In the Java case, we define an intermediary class [`JavaRuleList`](../java/src/main/java/com/ibm/plugin/JavaRuleList.java) that registers all Java SonarQube rules, but in our case it's only [`JavaInventoryRule`](../java/src/main/java/com/ibm/plugin/rules/JavaInventoryRule.java). This allows us to easily refer to all SonarQube rules at other places, like in [`JavaScannerRuleDefinition`](../java/src/main/java/com/ibm/plugin/JavaScannerRuleDefinition.java).
+[^2]: In the Java case, we define an intermediary class [`JavaRuleList`](../java/src/main/java/com/ibm/plugin/JavaRuleList.java) that registers all Java SonarQube rules, but in our case it's only [`JavaInventoryRule`](../java/src/main/java/com/ibm/plugin/rules/JavaInventoryRule.java). This allows us to easily refer to all SonarQube rules at other places, like in [`JavaScannerRuleDefinition`](../java/src/main/java/com/ibm/plugin/JavaScannerRuleDefinition.java).
 
 This rule must extend the language-specific sonar visitor class, `IssuableSubscriptionVisitor` in Java, and must be annotated with a name (we are using "Inventory"):
 ```java
 @Rule(key = "Inventory")
 ```
 
-We define the logic behind the inventory rule (and in particular how it will relate with all the `IDetectionRule` detection rules) in the `plugin/rules/detection` directory by first creating an intermediary class implementing the language-specific sonar visitor class (`IssuableSubscriptionVisitor` in Java) and from which the inventory rule (`JavaInventoryRule`) will inherit. In Java, we call this class [`JavaBaseDetectionRule`](../java/src/main/java/com/ibm/plugin/rules/detection/JavaBaseDetectionRule.java), and it takes a constructor with a list of `IDetectionRule`[^2]. 
+We define the logic behind the inventory rule (and in particular how it will relate with all the `IDetectionRule` detection rules) in the `plugin/rules/detection` directory by first creating an intermediary class implementing the language-specific sonar visitor class (`IssuableSubscriptionVisitor` in Java) and from which the inventory rule (`JavaInventoryRule`) will inherit. In Java, we call this class [`JavaBaseDetectionRule`](../java/src/main/java/com/ibm/plugin/rules/detection/JavaBaseDetectionRule.java), and it takes a constructor with a list of `IDetectionRule`[^3]. 
 
-[^2]: It may also take a list of [`IReorganizerRule`](../mapper/src/main/java/com/ibm/mapper/reorganizer/IReorganizerRule.java) if necessary. More about this in [*Writing new detection rules for the Sonar Cryptography Plugin*](./DETECTION_RULE_STRUCTURE.md).
+[^3]: It may also take a list of [`IReorganizerRule`](../mapper/src/main/java/com/ibm/mapper/reorganizer/IReorganizerRule.java) if necessary. More about this in [*Writing new detection rules for the Sonar Cryptography Plugin*](./DETECTION_RULE_STRUCTURE.md).
 
 This list of `IDetectionRule` is defined in the same directory, in a file listing all the detection rules for this language under a function `rules()`. In Java, we call this file [`JavaDetectionRules`](../java/src/main/java/com/ibm/plugin/rules/detection/JavaDetectionRules.java).
 You can currently leave this list of rules empty, and we will discuss [later](#adding-support-for-another-cryptography-library) how to structure these detection rules in the module. 
@@ -312,10 +321,47 @@ When you reach this point, congrats! You now have completed all the steps to mak
 
 Now, it remains to write detection rules for the cryptography library of your choice, which we will explain in the next part.
 
+<br>
 
 ## Adding support for another cryptography library
 
+Once your programming language is supported by our plugin, it gets fairly simple to add support for various cryptography libraries.
+In this section, we will explain how you should write and organize your detection rules to do so.
 
+In the following, we will take the example of adding support for an hypothetical *mycrypto* cryptography library for the Java language.
+
+### Organizing your files
+
+To add support for *mycrypto*, start by creating the three directories (all named `mycrypto`) in the language module, that will be used to store all files relative to this library. The directory tree looks like this Java:
+```
+java
+└── src
+    ├── main/java/com/ibm/plugin
+    │   ├── rules
+    │   │   └── detection
+    │   │       ├── mycrypto
+    │   │       └── ... [other libraries]
+    │   └── translation
+    └── test
+        ├── files/rules
+        │   └── detection
+        │       ├── mycrypto
+        │       └── ... [other libraries]
+        └── java/com/ibm/plugin/rules
+            └── detection
+                ├── mycrypto
+                └── ... [other libraries]
+```
+
+> [!TIP]
+> Our file organization is inspired by the documentation of the Sonar analyzer for Java. You can [consult it](https://github.com/SonarSource/sonar-java/blob/master/docs/CUSTOM_RULES_101.md#writing-a-rule) to learn more.
+
+### Creating your first detection rule
+
+### Tuning the engine
+(only when you wrote your own language support)
+
+### Going further: using graph visualization to better understand dependent detection rules
 
 
 
@@ -334,3 +380,4 @@ Now, it remains to write detection rules for the cryptography library of your ch
 - Create library-specific folders
 - Write rules and associated test files (TDD) [delegate to other markdown file]
 - Tuning the engine using the debugger (you should take some time to understand how your AST works)
+- Writing multiple dependent rules: using the graph visualization
