@@ -352,11 +352,26 @@ java
 ```
 <p align="right"><a href="https://tree.nathanfriend.io/?s=(%27op9s!(%27fancy!true~fullPath7~trailingSlash7~rootDot7)~A(%27A%273K23src2Lmain%2F5GM26B2*CptoH0Gtransla92LtEtGfilE4FG54F%27)~version!%271%27)J%200**6...%20%5Bother%20librariE%5D2HL-%204%2FM8LB8C5K%2FcoIibIplugin6**J37!false82**9tionAsource!Bdetec9C6mycryEesFpto20G83H%5CnIm%2FJ*%20KjavaL*3MrulE%01MLKJIHGFECBA987654320*"><sub><sup>edit this tree<sub><sup></a></p>
 
+We use a [Test Driven Development](https://en.wikipedia.org/wiki/Test-driven_development) (TDD) approach, where you start by thinking about the kind of cryptographic asset you want to detect.
+Then, find (or write) a *test file* (in the language of your cryptography library) containing this asset.
+Next, write a detection *rule* aiming at detection precisely this asset.
+Finally, create a *unit test* checking that your detection rule indeed capture the intended value in the test file.
+
+These three kinds of files (test file, rule and unit test) are stored in those three distinct directories:
+- `main/.../plugin/rules/detection/mycrypto`: stores the detection rules, in the structure of your choice, but usually close to the structure of the cryptogrpahy library.
+- `test/.../plugin/rules/detection/mycrypto`: stores the unit test with the exact same structure than the rules.
+- `test/.../files/rules/detection/mycrypto`: stores the test files with the exact same structure than the rules (and than the unit tests).
+
 
 > [!TIP]
 > Our file organization is inspired by the documentation of the Sonar analyzer for Java. You can [consult it](https://github.com/SonarSource/sonar-java/blob/master/docs/CUSTOM_RULES_101.md#writing-a-rule) to learn more.
 
-### Creating your first detection rule
+### Creating and testing your first detection rule
+
+> [!IMPORTANT]
+> At this point, if you have not done it yet, you should read the section [*Writing a detection rule*](./DETECTION_RULE_STRUCTURE.md#writing-a-detection-rule) of *Writing new detection rules for the Sonar Cryptography Plugin* to understand how to write the detection rule.
+
+>TODO: Continue here
 
 ### Tuning the engine
 (only when you wrote your own language support)
