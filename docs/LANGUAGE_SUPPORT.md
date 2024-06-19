@@ -84,15 +84,9 @@ Additionally, we can enrich most cryptography assets with an [object identifier]
 ### The engine
 
 The [`engine`](../engine/) module bridges the gap between the language-specific sonar APIs used for navigating the AST, and the high level language-agnostic API used for writing detection rules.
-It has a [`language`](../engine/src/main/java/com/ibm/engine/language/) subfolder which contains the set of functions to implement to enable this high level API for a language supported for SonarQube plugins.
 
-Here are all the interfaces that have to be implemented (specific details about the functions to implement may be documented in the interface files):
-
-- [`IBaseMethodVisitor`](../engine/src/main/java/com/ibm/engine/detection/IBaseMethodVisitor.java) (the class implementing this interface must also extend a language-specific `BaseTreeVisitor` from the sonar API)
-- [`IDetectionEngine`](../engine/src/main/java/com/ibm/engine/detection/IDetectionEngine.java)
-- [`ILanguageSupport`](../engine/src/main/java/com/ibm/engine/language/ILanguageSupport.java)
-- [`ILanguageTranslation`](../engine/src/main/java/com/ibm/engine/language/ILanguageTranslation.java)
-- [`IScanContext`](../engine/src/main/java/com/ibm/engine/language/IScanContext.java)
+It has a [`language`](../engine/src/main/java/com/ibm/engine/language/) subfolder which contains the set of functions (defined by five interfaces) to implement to enable this high level API for a language supported for SonarQube plugins.
+More details about these interfaces are given [later](#implementing-the-language-specific-parts-of-the-engine).
 
 The `engine` module contains a lot of other subfolders and files that enable strong detection capabilities, but they are all based on the functions provided by the `language` files and therefore do not need to be modified when adding support for another file.
 
@@ -129,6 +123,48 @@ And add the dependency (using this version reference) under `<!-- language suppo
 </dependency>
 ```
 
+### Identifying the four classes to use in generics
+
+Recall that our methodology aims to bridge the gap between the language-specific sonar APIs and a higher level language-agnostic API.
+As explained earlier, this part is done in the [engine](#the-engine).
+While we will talk [later](#implementing-the-language-specific-parts-of-the-engine) about how to integrate a new language with the engine, we have to highlight that our methodology makes use of [Java generic types](https://docs.oracle.com/javase/tutorial/java/generics/types.html) at multiple places. In particular, our language-"agnostic" high level API still needs to be parametrized by language-dependent types.
+
+We need to find four of these types in the sonar API of the language of your choice, and it is crucial to make this step early in the development, as not finding these types may compromise completely the possibility of extending our plugin with this language.
+
+>[!NOTE]
+> If some of these classes are missing, you may create your own custom classes to try to patch this void, by investigating how these classes are used and trying to provide the same functionality. However, this has not been attempted yet and will probably result in significantly more work.
+
+To help you find these classes used to fill the four generics `R`, `T`, `S`, `P`, we provide the table below showing what these classes are for the languages we currently support (all of these classes are under the import path `org.sonar.plugins`):
+
+|        | Rule (`R`)               | Tree (`T`)             | Symbol (`S`)                | Publisher (`P`)                   |
+|--------|------------------------|----------------------|---------------------------|---------------------------------|
+| **Java**   | java.api.**JavaCheck**     | java.api.tree.**Tree**   | java.api.semantic.**Symbol**  | java.api.**JavaFileScannerContext** |
+| **Python** | python.api.**PythonCheck** | python.api.tree.**Tree** | python.api.symbols.**Symbol** | python.api.**PythonVisitorContext** |
+
+### Implementing the language-specific parts of the engine
+
+Here are all the interfaces that have to be implemented (specific details about the functions to implement may be documented in the interface files):
+
+- [`IBaseMethodVisitor`](../engine/src/main/java/com/ibm/engine/detection/IBaseMethodVisitor.java) (the class implementing this interface must also extend a language-specific `BaseTreeVisitor` from the sonar API)
+- [`IDetectionEngine`](../engine/src/main/java/com/ibm/engine/detection/IDetectionEngine.java)
+- [`ILanguageSupport`](../engine/src/main/java/com/ibm/engine/language/ILanguageSupport.java)
+- [`ILanguageTranslation`](../engine/src/main/java/com/ibm/engine/language/ILanguageTranslation.java)
+- [`IScanContext`](../engine/src/main/java/com/ibm/engine/language/IScanContext.java)
+
+Notice that interfaces classes are parametrized by the generics mentioned [previously](#identifying-the-four-classes-to-use-in-generics).
+
+> [!TIP]
+> Implementing these classes may be the most challenging part of the process, as it requires to bridge the gap between the language-specific API of your sonar analyzer (that it usually poorly documented) and the engine primitives (that are not documented yet).
+> Moreover, there is currently no proper way to test your engine implementation without writing detection rules (which will have to be done later).
+>
+> We therefore advise the following development process: try your best to implement these interfaces by reading their javadoc, understanding what they are supposed to do and checking how they were implemented for other languages.
+> Hopefully, your sonar analyzer has a relatively similar API as the others, and you can reuse parts of the code.
+>
+> Because you will not be able to immediately test your implementation, we advise you to start with a "basic" implementation of these interfaces: don't immediately try to handle all edge cases.
+> Later, once you will have [created the language module](#creating-a-new-language-module) and be able to write detection rules, you can write test rules and test files to make sure that your engine works as intended (i.e. correctly detects what is specified by the rule).
+> If it is not the case, you can then tune your engine implementation until your unit test is fixed.
+
+
 ### Creating a new language module
 
 Now that the language analyzer has been registered in the main `pom.xml`, we can create a new module named like the language (like [`java`](../java/)).
@@ -157,26 +193,6 @@ java
 
 `plugin/rules` will contain the detection rules, organized by cryptography library, and `plugin/translation` will contain all files related to translation for this language.
 The `test` directory is not important at the beginning, it will be used only once we write detection rules, and we will cover it [later](#adding-support-for-another-cryptography-library).
-
-### Identifying the four classes to use in generics
-
-Recall that our methodology aims to bridge the gap between the language-specific sonar APIs and a higher level language-agnostic API.
-As explained earlier, this part is done in the [engine](#the-engine).
-While we will talk later about how to integrate a new language with the engine, we have to highlight that our methodology makes use of [Java generic types](https://docs.oracle.com/javase/tutorial/java/generics/types.html) at multiple places. In particular, our language-"agnostic" high level API still needs to be parametrized by language-dependent types.
-> TODO: add a link for "later"
-
-We need to find four of these types in the sonar API of the language of your choice, and it is crucial to make this step early in the development, as not finding these types may compromise completely the possibility of extending our plugin with this language.
-
->[!NOTE]
-> If some of these classes are missing, you may create your own custom classes to try to patch this void, by investigating how these classes are used and trying to provide the same functionality. However, this has not been attempted yet and will probably result in significantly more work.
-
-To help you find these classes used to fill the four generics `R`, `T`, `S`, `P`, we provide the table below showing what these classes are for the languages we currently support (all of these classes are under the import path `org.sonar.plugins`):
-
-|        | Rule (`R`)               | Tree (`T`)             | Symbol (`S`)                | Publisher (`P`)                   |
-|--------|------------------------|----------------------|---------------------------|---------------------------------|
-| **Java**   | java.api.**JavaCheck**     | java.api.tree.**Tree**   | java.api.semantic.**Symbol**  | java.api.**JavaFileScannerContext** |
-| **Python** | python.api.**PythonCheck** | python.api.tree.**Tree** | python.api.symbols.**Symbol** | python.api.**PythonVisitorContext** |
-
 
 ### Extension points
 
@@ -246,8 +262,10 @@ If there is a similar entry point for your language, you can set it up similarly
 
 TO ADD SOMEWHERE
 - JavaAgreggator
+- LanguageSupporter
 - ~~Explaining the 4 generic types used everywhere~~
 - Explaining engine stuff like the detection executive
+- You should take some time to understand how your AST works
 
 OVERALL PLAN
 - Update the POM.xml
