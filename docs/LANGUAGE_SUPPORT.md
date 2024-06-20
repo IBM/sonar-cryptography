@@ -140,7 +140,7 @@ We need to find four of these types in the sonar API of the language of your cho
 >[!NOTE]
 > If some of these classes are missing, you may create your own custom classes to try to patch this void, by investigating how these classes are used and trying to provide the same functionality. However, this has not been attempted yet and will probably result in significantly more work.
 
-To help you find these classes used to fill the four generics `R`, `T`, `S`, `P`, we provide the table below showing what these classes are for the languages we currently support (all of these classes are under the import path `org.sonar.plugins`):
+To help you find these classes used to fill the four type parameters `R`, `T`, `S`, `P`, we provide the table below showing what these classes are for the languages we currently support (all of these classes are under the import path `org.sonar.plugins`):
 
 |        | Rule (`R`)               | Tree (`T`)             | Symbol (`S`)                | Publisher (`P`)                   |
 |--------|------------------------|----------------------|---------------------------|---------------------------------|
