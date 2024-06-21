@@ -358,7 +358,7 @@ Next, write a detection *rule* aiming at detection precisely this asset.
 Finally, create a *unit test* checking that your detection rule indeed capture the intended value in the test file.
 
 These three kinds of files (test file, rule and unit test) are stored in those three distinct directories:
-- `main/.../plugin/rules/detection/mycrypto`: stores the detection rules, in the structure of your choice, but usually close to the structure of the cryptogrpahy library.
+- `main/.../plugin/rules/detection/mycrypto`: stores the detection rules, in the structure of your choice, but usually close to the structure of the cryptography library.
 - `test/.../plugin/rules/detection/mycrypto`: stores the unit test with the exact same structure than the rules.
 - `test/.../files/rules/detection/mycrypto`: stores the test files with the exact same structure than the rules (and than the unit tests).
 
@@ -371,10 +371,36 @@ These three kinds of files (test file, rule and unit test) are stored in those t
 > [!IMPORTANT]
 > At this point, if you have not done it yet, you should read the section [*Writing a detection rule*](./DETECTION_RULE_STRUCTURE.md#writing-a-detection-rule) of *Writing new detection rules for the Sonar Cryptography Plugin* to understand how to write the detection rule.
 
->TODO: Continue here
+Now suppose that you want to write your first rule *MyRule* of your *mycrypto* library (that we are shortening to `Mc` in file names). You will need to create three files, in the three directories previously mentionned:
+- `McMyRule.java` in `main/.../plugin/rules/detection/mycrypto`: this is where you should define a class containing the *IDetectionRule MyRule*. Add a private constructor to your class, and define *MyRule* as a private and static variable. Create a public and static method `rules()` returning the list of all detection rules of your file, in your case simply `List.of(MyRule)`.
+- `McMyRuleTestFile.XXX` in `test/.../files/rules/detection/mycrypto`: this is where you should write a code example containing the function call that you aim to capture with `MyRule`. This file is written in your target programming language that you want to scan (so you should set the file extension `.XXX` accordingly).
+- `McMyRuleTest.java` in `test/.../plugin/rules/detection/mycrypto`: this is where you should define your unit test class, that should `extends TestBase`. Create a `test()` with a `@Test` annotation, in which you call the language-specific test function on the test file that you just defined. You should also override the `asserts` method, but leave it empty for now, we will come back to it.
 
-### Tuning the engine
+#### Registering your rule
+> TODO: register your rule
+
+
+#### Testing
+
+Once this is done, try to run your unit test and look at the logs.
+If it works, you should see logs of your detected values, in a tree structure looking like this (but with the values of your test file that you specified to detect in *MyRule*):
+```
+DEBUG [id: 1c259, bundle: -2060…, level: 0, hash: -8884…] (CipherContext<BLOCK_CIPHER>, ValueAction) CBC
+DEBUG [id: f5b9a, bundle: 21061…, level: 1, hash: 13077…]    └─ (CipherContext<ENCRYPTION_STATUS>, OperationMode) 0
+DEBUG [id: 7b818, bundle: 92146…, level: 1, hash: -4294…]    └─ (CipherContext<BLOCK_CIPHER_ENGINE>, ValueAction) AES
+DEBUG [id: 8d2d8, bundle: 21061…, level: 2, hash: 13077…]       └─ (CipherContext<ENCRYPTION_STATUS>, OperationMode) 0
+```
+
+Note that the unit test may fail (because we have not yet handled the translation), but what is important at this step is to observe these logs. If you do not observe these logs,
+ - and you have written your own support layer for a new programming language, then it is very likely to be a problem coming from this language support layer (that you could not have tested until now). You will have to spend some time tuning your code written in the `engine` module, which will be explained in the [next part](#tuning-the-engine-if-necessary).
+ - and you rely on existing language support, then the problem is probably coming from your detection rule or your test file. You should double-check that your rule is correctly registered, and that your rule correctly matches what you expect to detect in your test file. If you don't solve your problem by simply double-checking, try to use the debugger to see why your rule is not triggered. You can add a breakpoint to the `match` method of [`MethodMatcher`](../engine/src/main/java/com/ibm/engine/detection/MethodMatcher.java) to watch if each function call of your test file matches with your rule.
+
+### Tuning the engine (if necessary)
 (only when you wrote your own language support)
+
+### Translating your first detection rule
+
+### Writing assert statements
 
 ### Going further: using graph visualization to better understand dependent detection rules
 
