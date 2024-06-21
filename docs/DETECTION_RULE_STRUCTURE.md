@@ -107,9 +107,48 @@ And finally, we can finish the specification of the detection rules by adding to
 These are similar to the parameter dependent rules, but instead of applying these rules just on a parameter, they are applied to all the function calls in the current scope 
 
 
-
 #### Example
-> Use asChildOfParameterWithId to showcase what it does
+
+To showcase what we just explained, here is an example of Java source code.
+Let's say that we want to capture all the cryptography information related to the `CFBBlockCipher`: the CFB mode, the AES base cipher, the block size of 256, and additional information linked to the `cfb.init(...)` function call.
+
+```java
+public void AESCipherCFBmode(byte[] key) {
+    BlockCipher aes = AESEngine.newInstance();
+    CFBBlockCipher cfb = CFBBlockCipher.newInstance(aes, 256);
+    KeyParameter kp = new KeyParameter(key);
+    cfb.init(false, kp);
+    return;
+}
+```
+
+We therefore write the rule below:
+```java
+new DetectionRuleBuilder<Tree>()
+    .createDetectionRule()
+    .forObjectTypes("org.bouncycastle.crypto.modes.CFBBlockCipher")
+    .forMethods("newInstance")
+    .shouldBeDetectedAs(new ValueActionFactory<>("CFB"))
+    .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
+    .addDependingDetectionRules(BcBlockCipherEngine.rules())
+    .withMethodParameter("int")
+    .shouldBeDetectedAs(new BlockSizeFactory<>(Size.UnitType.BIT))
+    .asChildOfParameterWithId(-1)
+    .buildForContext(new CipherContext(CipherContext.Kind.MODE))
+    .inBundle(() -> "BcBlockCipher")
+    .withDependingDetectionRules(BcBlockCipherInit.rules());
+```
+
+We first specify the exact function call that we want to capture, which is here the `newInstance` function called on the `org.bouncycastle.crypto.modes.CFBBlockCipher` object, with two parameters (of type `org.bouncycastle.crypto.BlockCipher` and `int`).
+
+The mode "CFB" is captured using a top level detection `shouldBeDetectedAs(new ValueActionFactory<>("CFB"))`. To know that this is a mode, we use the appropriate detection context `new CipherContext(CipherContext.Kind.MODE)`.
+We also capture directly the second parameter of the function rule; the block size "256" (it will be attributed the same context, but we can distinguish it from a mode as it will be captured as a `BlockSize` object).
+This parameter detection is placed below the mode detection using `asChildOfParameterWithId(-1)`.
+
+To capture the first parameter, we rely instead on a list of dependent detection rules `BcBlockCipherEngine.rules()`, that should capture all the possible `BlockCipher` classes existing in the library. In our case, a dependent rule targeting `AESEngine.newInstance()` should capture the value "AES", with a context that should specify that it is the base cipher.
+
+Finally, a list of top level dependent detection rules `BcBlockCipherInit.rules()` should capture information part of the `cfb.init(...)` function call.
+
 
 #### Special cases: no parameters and any parameters
 
