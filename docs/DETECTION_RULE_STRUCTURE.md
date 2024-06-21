@@ -86,6 +86,26 @@ The step `asChildOfParameterWithId` allows you to put the associated detected va
 The `id` of a detected value is `-1` if it comes from the top level detection, or the index (starting at `0`) of the parameter detection of the rule.
 > TODO: is it the index of the parameter, or the index of the `shouldBeDetectedAs` of parameters?
 
+After this optional capture phase, there is another optional step to add dependent detection rules to the parameter, using `addDependingDetectionRules(List<IDetectionRule<T>> detectionRules)`.
+This step will apply the provided detection rules on the associated function parameter, which may result in additional captured values.
+This can be very useful when your function parameter is a value deriving from another function call which uses another parameter that you want to capture.
+In the tree of detected values, the values detected by these dependent detection rules are placed under the detections of the parent detection rules.
+> TODO: What happens when the parent detection rule has several detections? Under which one goes the dependent rule detections? Fix the current bug.
+
+At this point, you should have repeated all the steps starting from the `withMethodParameter` to here as many times as there are parameters in the function that you want to capture.
+
+Then, `buildForContext(IDetectionContext detectionValueContext)` defines the detection context for all the detected values of your rules (but detections from dependent rules have their own context).
+A detection context is therefore linked to each detected value, and is designed to categorize your findings and to help you carry additional information that is not present in the detected value.
+For example, let's say you want to capture the instantiation `new PKCS7Padding()`. You can write your detection rule with a top level detection `shouldBeDetectedAs(new ValueActionFactory<>("PKCS7"))`. In order to specify that `PKCS7` is a padding, you can use the detection context, by using `buildForContext(new CipherContext(CipherContext.Kind.PADDING))`. This context first coarsely categorizes your finding as related to ciphers, and specifies more precisely that it is a padding.
+
+After, we have `inBundle(IBundle bundle)` that requires us to link our rule to a bundle identifier.
+Indeed, we may have several functions or constructors doing the same thing, typically all having the same name, but differing by the various parameters they have.
+In this case, we have to write one detection rule per function.
+But using the same bundle identifier for all these rules, we can specify that these rules all belong together.
+
+And finally, we can finish the specification of the detection rules by adding top level dependent detection rules with `withDependingDetectionRules(List<IDetectionRule<T>> detectionRules)` (or not, using `withoutDependingDetectionRules()` instead).
+These are similar to the parameter dependent rules, but instead of applying these rules just on a parameter, they are applied to all the function calls in the current scope 
+
 
 
 #### Example
