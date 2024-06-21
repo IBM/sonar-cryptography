@@ -152,6 +152,26 @@ Finally, a list of top level dependent detection rules `BcBlockCipherInit.rules(
 
 #### Special cases: no parameters and any parameters
 
+Recall that we have not discussed the case where we want to detect a function call without parameters.
+We provide below another *regex-like* specification indicating how you can order the construction steps for two special cases.
+
+```java
+new DetectionRuleBuilder<T>()
+     .createDetectionRule()
+     .forObjectTypes(types) | .forObjectExactTypes(types)
+     .forMethods(names) | .forConstructor()
+     .shouldBeDetectedAs(actionFactory)
+     .withoutParameters() | withAnyParameters()
+     .buildForContext(detectionValueContext)
+     .inBundle(bundle)
+     .withDependingDetectionRules(detectionRules) | .withoutDependingDetectionRules()
+```
+
+Where you would previously use `withMethodParameter`, you can instead use `withoutParameters()` to indicate that you want to capture a method that does not have parameters.
+You can also use `withAnyParameters()` at the same place, this time to indicate that you want to capture any function that satisfy the object type and method name conditions, no matter its parameters.
+
+With these two special steps, you therefore cannot capture any information related to the parameters.
+This is why these steps are available **only** when you specify a top level detection (using `shouldBeDetectedAs(IActionFactory<T> actionFactory)`).
 
 ### Translating findings of a detection rule
 
