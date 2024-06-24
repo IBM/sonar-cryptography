@@ -417,6 +417,13 @@ If you have additional questions about how a function should work and be impleme
 
 ### Translating your first detection rule
 
+> [!IMPORTANT]
+> At this point, if you have not done it yet, you should read the section [*Translating findings of a detection rule*](./DETECTION_RULE_STRUCTURE.md#translating-findings-of-a-detection-rule) of *Writing new detection rules for the Sonar Cryptography Plugin* to understand how to translate the findings of a detection rule.
+
+> TODO: explain the files and directories that should be created to structure the translation.
+> Explain how to structure the reorganization.
+
+
 ### Writing assert statements
 
 ### Going further: using graph visualization to better understand dependent detection rules

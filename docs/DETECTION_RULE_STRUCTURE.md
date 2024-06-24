@@ -94,7 +94,7 @@ In the tree of detected values, the values detected by these dependent detection
 
 At this point, you should have repeated all the steps starting from the `withMethodParameter` to here as many times as there are parameters in the function that you want to capture.
 
-Then, `buildForContext(IDetectionContext detectionValueContext)` defines the detection context for all the detected values of your rules (but detections from dependent rules have their own context).
+Then, `buildForContext(IDetectionContext detectionValueContext)` defines the detection context ([`IDetectionContext`](../engine/src/main/java/com/ibm/engine/model/context/IDetectionContext.java)) for all the detected values of your rules (but detections from dependent rules have their own context).
 A detection context is therefore linked to each detected value, and is designed to categorize your findings and to help you carry additional information that is not present in the detected value.
 For example, let's say you want to capture the instantiation `new PKCS7Padding()`. You can write your detection rule with a top level detection `shouldBeDetectedAs(new ValueActionFactory<>("PKCS7"))`. In order to specify that `PKCS7` is a padding, you can use the detection context, by using `buildForContext(new CipherContext(CipherContext.Kind.PADDING))`. This context first coarsely categorizes your finding as related to ciphers, and specifies more precisely that it is a padding.
 
@@ -106,6 +106,8 @@ But using the same bundle identifier for all these rules, we can specify that th
 And finally, we can finish the specification of the detection rules by adding top level dependent detection rules with `withDependingDetectionRules(List<IDetectionRule<T>> detectionRules)` (or not, using `withoutDependingDetectionRules()` instead).
 These are similar to the parameter dependent rules, but instead of applying these rules just on a parameter, they are applied to all the function calls in the current scope 
 
+> [!TIP]
+> You will find all the classes implementing the action factories, value factories and contexts (that you may use in the functions described above) in the [`model`](../engine/src/main/java/com/ibm/engine/model/) directory of the engine.
 
 #### Example
 
@@ -157,14 +159,14 @@ We provide below another *regex-like* specification indicating how you can order
 
 ```java
 new DetectionRuleBuilder<T>()
-     .createDetectionRule()
-     .forObjectTypes(types) | .forObjectExactTypes(types)
-     .forMethods(names) | .forConstructor()
-     .shouldBeDetectedAs(actionFactory)
-     .withoutParameters() | withAnyParameters()
-     .buildForContext(detectionValueContext)
-     .inBundle(bundle)
-     .withDependingDetectionRules(detectionRules) | .withoutDependingDetectionRules()
+    .createDetectionRule()
+    .forObjectTypes(types) | .forObjectExactTypes(types)
+    .forMethods(names) | .forConstructor()
+    .shouldBeDetectedAs(actionFactory)
+    .withoutParameters() | withAnyParameters()
+    .buildForContext(detectionValueContext)
+    .inBundle(bundle)
+    .withDependingDetectionRules(detectionRules) | .withoutDependingDetectionRules()
 ```
 
 Where you would previously use `withMethodParameter`, you can instead use `withoutParameters()` to indicate that you want to capture a method that does not have parameters.
@@ -175,7 +177,47 @@ This is why these steps are available **only** when you specify a top level dete
 
 ### Translating findings of a detection rule
 
+Once you have written your detection rule, and once this rule detects findings when scanning some source code, you will obtain a tree of captured values.
+The goal of the translation is to represent these values into a standard tree (which can then be used to create a CBOM for example).
+For this, you should represent your cryptographic assets using the standard classes defined in the [`model`](../mapper/src/main/java/com/ibm/mapper/model/) directory of the *mapper* module (and not of the engine module like before).
+
+You should use the information contained into the detection context and the type of the detection value, to decide the type of translation you want to apply.
+
+Then, you should use some cryptography knowledge to translate your findings into the correct mapper classes.
+It is easy to translate by default what you detected as an *Algorithm* (from `engine`) into an *Algorithm* (from `mapper`).
+But if you know that this algorithm is used for public key encryption in the specific context in which you detect it, you may keep this information by detecting it with a `PublicKeyContext`, and then decide to translate it into a `PublicKeyEncryption` (which is a superclass of mapper's `Algorithm`).
+
+As a rule a thumb, there is almost always a straightforward translation of the assets you detect.
+But if you keep sufficiently enough information using the context and if you use some cryptography knowledge, you may translate your finding into a more specific class which will then bring more information into the CBOM.
+
+The translation of the tree of detected findings is done node-by-node.
+A tree of translated values is built while you are translating your detected values.
+During the translation phase, the tree keeps its overall shape
+This means that the translation of a child node of a detected value will be appended to the translation of this detected value.
+
+
 ### Reorganizing the translation tree
+
+However, as explained before, we don't have much control on the ordering of this (detection and translation) tree, which is driven by the structure of your cryptography library.
+This is why we introduce another step, after the translation, to reorganize the tree of translated values to correctly represent its content.
+Note that this reorganization step is not strictly necessary: for example, in the JCA cryptography library in Java, the translated trees immediately have the correct shape (because of how the library is structured).
+But this is not the case for Java's BouncyCastle library for example.
+
+We therefore introduce a way to specify *reorganization rules*, using a builder pattern specified with the [`IReorganizerRule`](../mapper/src/main/java/com/ibm/mapper/reorganizer/IReorganizerRule.java) interface.
+Like for detection rules, we provide below a *regex-like* specification indicating how you can order the construction steps to reorganize a translation tree.
+It contains these three *regex-like* syntax elements:
+- `[ ... ]?` represents an optional builder statement
+- `A | B` indicates that exactly one of A or B must be chosen
+
+```java
+new ReorganizerRuleBuilder()
+    .createReorganizerRule()
+    .forNodeKind(kind)
+    [.forNodeValue(value)]
+    [.includingChildren(children) | .withAnyNonNullChildren()]
+    [.withDetectionCondition(detectionConditionFunction)]
+    .perform(performFunction) | .noAction()
+```
 
 > TODO:
 > - detection rules format
