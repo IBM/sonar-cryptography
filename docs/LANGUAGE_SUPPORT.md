@@ -208,8 +208,8 @@ java
 ```
 <p align="right"><a href="https://tree.nathanfriend.io/?s=(%27opt6s!(%27fancy!true~fullPath3~trailingSlash3~rootDot3)~7(%277%270B5*0src.0main%2F284.*A0detect68translat6.0test8filesC82C5%27)~vers6!%271%27)A%20.5**0-%202B%2Fco9ib9plugin3!false4rules5%5Cn6ion7source!8.*09m%2FA*%20BjavaC%2F4%01CBA987654320.*"><sub><sup>edit this tree<sub><sup></a></p>
 
-`plugin/rules` will contain the detection rules, organized by cryptography library, and `plugin/translation` will contain all files related to translation for this language.
-The `test` directory is not important at the beginning, it will be used only once we write detection rules, and we will cover it [later](#adding-support-for-another-cryptography-library).
+`plugin/rules/` will contain the detection rules, organized by cryptography library, and `plugin/translation/` will contain all files related to translation for this language.
+The `test/` directory is not important at the beginning, it will be used only once we write detection rules, and we will cover it [later](#adding-support-for-another-cryptography-library).
 
 ### Adding the extension points
 
@@ -283,7 +283,7 @@ The `JavaAggregator` implementation is quite generic and can be mostly reused fo
 If there is a similar entry point for your language, you can set it up similarly to [`JavaScannerRuleDefinition`](../java/src/main/java/com/ibm/plugin/JavaScannerRuleDefinition.java) in Java (or [`PythonScannerRuleDefinition`](../python/src/main/java/com/ibm/plugin/PythonScannerRuleDefinition.java) in Python) by providing basic metadata information about this rule that will be displayed in the SonarQube UI.
 
 The metadata for your (single) SonarQube rule may have to be described with resource files (like `.json` and `.html`).
-In this case, similarly to the Java case, you can create a directory for resources (`java/src/main/java/com/ibm/resources/org/sonar/l10n/java/rules/java` in Java – similarly to what was done in the example Java plugin).
+In this case, similarly to the Java case, you can create a directory for resources (`java/src/main/java/com/ibm/resources/org/sonar/l10n/java/rules/java/` in Java – similarly to what was done in the example Java plugin).
 In the Java case, these resource files have to be named with the name of the rule they describe ("Inventory" in our case).
 
 
@@ -358,9 +358,9 @@ Next, write a detection *rule* aiming at detection precisely this asset.
 Finally, create a *unit test* checking that your detection rule indeed capture the intended value in the test file.
 
 These three kinds of files (test file, rule and unit test) are stored in those three distinct directories:
-- `main/.../plugin/rules/detection/mycrypto`: stores the detection rules, in the structure of your choice, but usually close to the structure of the cryptography library.
-- `test/.../plugin/rules/detection/mycrypto`: stores the unit test with the exact same structure than the rules.
-- `test/.../files/rules/detection/mycrypto`: stores the test files with the exact same structure than the rules (and than the unit tests).
+- `main/.../plugin/rules/detection/mycrypto/`: stores the detection rules, in the structure of your choice, but usually close to the structure of the cryptography library.
+- `test/.../plugin/rules/detection/mycrypto/`: stores the unit test with the exact same structure than the rules.
+- `test/.../files/rules/detection/mycrypto/`: stores the test files with the exact same structure than the rules (and than the unit tests).
 
 
 > [!TIP]
@@ -371,13 +371,21 @@ These three kinds of files (test file, rule and unit test) are stored in those t
 > [!IMPORTANT]
 > At this point, if you have not done it yet, you should read the section [*Writing a detection rule*](./DETECTION_RULE_STRUCTURE.md#writing-a-detection-rule) of *Writing new detection rules for the Sonar Cryptography Plugin* to understand how to write the detection rule.
 
-Now suppose that you want to write your first rule *MyRule* of your *mycrypto* library (that we are shortening to `Mc` in file names). You will need to create three files, in the three directories previously mentionned:
-- `McMyRule.java` in `main/.../plugin/rules/detection/mycrypto`: this is where you should define a class containing the *IDetectionRule MyRule*. Add a private constructor to your class, and define *MyRule* as a private and static variable. Create a public and static method `rules()` returning the list of all detection rules of your file, in your case simply `List.of(MyRule)`.
-- `McMyRuleTestFile.XXX` in `test/.../files/rules/detection/mycrypto`: this is where you should write a code example containing the function call that you aim to capture with `MyRule`. This file is written in your target programming language that you want to scan (so you should set the file extension `.XXX` accordingly).
-- `McMyRuleTest.java` in `test/.../plugin/rules/detection/mycrypto`: this is where you should define your unit test class, that should `extends TestBase`. Create a `test()` with a `@Test` annotation, in which you call the language-specific test function on the test file that you just defined. You should also override the `asserts` method, but leave it empty for now, we will come back to it.
+Now suppose that you want to write your first rule *MyRule* of your *mycrypto* library (that we are shortening to `Mc` in file names). You will need to create three files, in the three directories previously mentioned:
+- `McMyRule.java` in `main/.../plugin/rules/detection/mycrypto/`: this is where you should define a class containing the *IDetectionRule MyRule*. Add a private constructor to your class, and define *MyRule* as a private and static variable. Create a public and static method `rules()` returning the list of all detection rules of your file, in your case simply `List.of(MyRule)`.
+- `McMyRuleTestFile.XXX` in `test/.../files/rules/detection/mycrypto/`: this is where you should write a code example containing the function call that you aim to capture with `MyRule`. This file is written in your target programming language that you want to scan (so you should set the file extension `.XXX` accordingly).
+- `McMyRuleTest.java` in `test/.../plugin/rules/detection/mycrypto/`: this is where you should define your unit test class, that should `extends TestBase`. Create a `test()` with a `@Test` annotation, in which you call the language-specific test function on the test file that you just defined. You should also override the `asserts` method, but leave it empty for now, we will come back to it.
 
 #### Registering your rule
-> TODO: register your rule
+
+You need to create another file listing the detection rules of your library, that you should create under `plugin/rules/detection/mycrypto/`, similarly to the file [`BouncyCastleDetectionRules`](../java/src/main/java/com/ibm/plugin/rules/detection/bc/BouncyCastleDetectionRules.java) for the BouncyCastle library in Java.
+
+At this point, you should have already created a file listing all of your detection rules, like [`JavaDetectionRules`](../java/src/main/java/com/ibm/plugin/rules/detection/JavaDetectionRules.java) for Java, in `plugin/rules/detection/`.
+Therefore, register your library rules by adding them to the `rules` method of this main file containing all detection rules.
+This step is done only once, to register your new cryptography library.
+
+Finally, register your rule `McMyRule` in the file listing your library rules by adding it to its `rules` method.
+This step should be done each time you are creating a new detection rule in a new file.
 
 
 #### Testing
@@ -396,7 +404,16 @@ Note that the unit test may fail (because we have not yet handled the translatio
  - and you rely on existing language support, then the problem is probably coming from your detection rule or your test file. You should double-check that your rule is correctly registered, and that your rule correctly matches what you expect to detect in your test file. If you don't solve your problem by simply double-checking, try to use the debugger to see why your rule is not triggered. You can add a breakpoint to the `match` method of [`MethodMatcher`](../engine/src/main/java/com/ibm/engine/detection/MethodMatcher.java) to watch if each function call of your test file matches with your rule.
 
 ### Tuning the engine (if necessary)
-(only when you wrote your own language support)
+
+> [!NOTE]
+> This part is only relevant if you wrote your own language support and you are now experiencing detection problems. 
+
+Recall that when [implementing the language specific parts of the engine](#implementing-the-language-specific-parts-of-the-engine), you have implemented multiple interfaces without making any tests, and possibly without handling some edge cases yet.
+
+Now that you have a unit test, we advise that you add breakpoints on all of those functions for which you have a doubt or want to know more about how they actually work.
+Then, run your unit test with the debugger, and take the time to carefully observe if each of your functions is working as expected, and to fix them if it isn't the case.
+If you have additional questions about how a function should work and be implemented, and you have not found an answer in this documentation, we advise you to debug existing unit tests in other supported languages to observe the other (functioning) implementations of these functions.
+
 
 ### Translating your first detection rule
 
