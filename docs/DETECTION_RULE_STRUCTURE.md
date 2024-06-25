@@ -6,7 +6,7 @@ Here, we explain in detail our powerful high-level syntax that you can use to de
 > [!IMPORTANT]
 > If the programming language that you want to scan is not yet supported by our plugin, or if you want to add support for a cryptography library from scratch, please read [*Extending the Sonar Cryptography Plugin to add support for another language or cryptography library*](./LANGUAGE_SUPPORT.md) in parallel.
 
-### Writing a detection rule
+## Writing a detection rule
 
 For a relatively easy and short syntax, we follow the [builder design pattern](https://refactoring.guru/design-patterns/builder) to let you construct detection rules step by step.
 The interface specifying precisely this builder pattern (the allowed ordering of the construction steps) is [`IDetectionRule`](../engine/src/main/java/com/ibm/engine/rule/IDetectionRule.java).
@@ -17,7 +17,7 @@ The information about the involved cryptography assets can be part of the functi
 Sometimes, it is a mix of everything.
 But in every case there is a function call, which is why it is what we are aiming to detect with our detection rules.
 
-#### Specification
+### Specification
 
 Because visualizing the builder pattern from the [`IDetectionRule`](../engine/src/main/java/com/ibm/engine/rule/IDetectionRule.java) interface is not trivial, we provide below a *regex-like* specification indicating how you can order the construction steps to detect a function call.
 It contains these three *regex-like* syntax elements:
@@ -47,7 +47,7 @@ new DetectionRuleBuilder<T>()
 You may have noticed that this specification does not allow constructing rules for function calls with no parameters.
 Indeed, to keep the specification above simpler, we handle this case separately [later](#special-cases-no-parameters-and-any-parameters).
 
-#### Detailed explanations
+### Detailed explanations
 
 Writing a detection rule starts with instantiating a new [`DetectionRuleBuilder`](../engine/src/main/java/com/ibm/engine/rule/builder/DetectionRuleBuilder.java) and calling its `createDetectionRule()` method.
 Notice that `DetectionRuleBuilder<T>` is a generic class, that should be parametrized with a language-specific type (learn more [here](./LANGUAGE_SUPPORT.md#identifying-the-four-classes-to-use-in-generics)).
@@ -109,7 +109,7 @@ These are similar to the parameter dependent rules, but instead of applying thes
 > [!TIP]
 > You will find all the classes implementing the action factories, value factories and contexts (that you may use in the functions described above) in the [`model`](../engine/src/main/java/com/ibm/engine/model/) directory of the engine.
 
-#### Example
+### Example
 
 To showcase what we just explained, here is an example of Java source code.
 Let's say that we want to capture all the cryptography information related to the `CFBBlockCipher`: the CFB mode, the AES base cipher, the block size of 256, and additional information linked to the `cfb.init(...)` function call.
@@ -152,7 +152,7 @@ To capture the first parameter, we rely instead on a list of dependent detection
 Finally, a list of top level dependent detection rules `BcBlockCipherInit.rules()` should capture information part of the `cfb.init(...)` function call.
 
 
-#### Special cases: no parameters and any parameters
+### Special cases: no parameters and any parameters
 
 Recall that we have not discussed the case where we want to detect a function call without parameters.
 We provide below another *regex-like* specification indicating how you can order the construction steps for two special cases.
@@ -175,7 +175,7 @@ You can also use `withAnyParameters()` at the same place, this time to indicate 
 With these two special steps, you therefore cannot capture any information related to the parameters.
 This is why these steps are available **only** when you specify a top level detection (using `shouldBeDetectedAs(IActionFactory<T> actionFactory)`).
 
-### Translating findings of a detection rule
+## Translating findings of a detection rule
 
 Once you have written your detection rule, and once this rule detects findings when scanning some source code, you will obtain a tree of captured values.
 The goal of the translation is to represent these values into a standard tree (which can then be used to create a CBOM for example).
@@ -196,12 +196,14 @@ During the translation phase, the tree keeps its overall shape
 This means that the translation of a child node of a detected value will be appended to the translation of this detected value.
 
 
-### Reorganizing the translation tree
+## Reorganizing the translation tree
 
 However, as explained before, we don't have much control on the ordering of this (detection and translation) tree, which is driven by the structure of your cryptography library.
-This is why we introduce another step, after the translation, to reorganize the tree of translated values to correctly represent its content.
+This is why we may introduce another step, after the translation, to reorganize the tree of translated values to correctly represent its content.
 Note that this reorganization step is not strictly necessary: for example, in the JCA cryptography library in Java, the translated trees immediately have the correct shape (because of how the library is structured).
-But this is not the case for Java's BouncyCastle library for example.
+But this is for example not the case for Java's BouncyCastle library.
+
+### Specification 
 
 We therefore introduce a way to specify *reorganization rules*, using a builder pattern specified with the [`IReorganizerRule`](../mapper/src/main/java/com/ibm/mapper/reorganizer/IReorganizerRule.java) interface.
 Like for detection rules, we provide below a *regex-like* specification indicating how you can order the construction steps to reorganize a translation tree.
@@ -219,6 +221,86 @@ new ReorganizerRuleBuilder()
     .perform(performFunction) | .noAction()
 ```
 
+### Detailed explanations
+
+Writing a reorganization rule starts with instantiating a new [`ReorganizerRuleBuilder`](../mapper/src/main/java/com/ibm/mapper/reorganizer/builder/ReorganizerRuleBuilder.java) and calling its `createReorganizerRule()` method.
+
+Given a translation tree, the first goal is to check if this tree should be reorganized by this rule.
+The rule therefore defines a pattern which will be checked against the tree: if there is a match between this tree and the reorganization rule, then the reorganization will be applied.
+This pattern starts by specifying the kind (= type) of node that should be in the translation tree using `forNodeKind(Class<? extends INode> kind)`.
+Then, a specific node value can optionally be specified using `forNodeValue(String value)`.
+
+This creates a pattern over a single node, but the pattern can be a subtree, by optionally defining what the children of this node should be like.
+Using `includingChildren(List<IReorganizerRule> children)`, you can include other reorganizer specifications that have to be satisfied by some children of the current node. Note that you can recursively create children rules, meaning that you can specify a tree pattern of an arbitrary size.
+Alternatively, you can use `withAnyNonNullChildren()` to simply guarantee that your node has at least one node child.
+
+A last optional step specifying the pattern is another type of condition, defined by `withDetectionCondition(Function3<INode, INode, List<INode>, Boolean> detectionConditionFunction)`, where `Function3` is defined as:
+```java
+@FunctionalInterface
+public interface Function3<A1, A2, A3, R> {
+    R apply(A1 one, A2 two, A3 three);
+}
+```
+The detection condition function is a function `(node, parent, roots) -> {return ...}` taking the current node, its parent and the root nodes of the translation tree, and returning a boolean specifying whether the pattern is satisfied.
+This step can be used to define more specific tree patterns than simply relying on a fixed pattern based on the nodes kinds and values.
+
+Finally, while all the previous steps were specifying the tree pattern, we have to define the reorganization action that is performed in case of a pattern match, using `perform(Function3<INode, INode, List<INode>, List<INode>> performFunction)`.
+It is also a function `(node, parent, roots) -> {return ...}` taking the current node, its parent and the root nodes of the translation tree, but returning an updated list of root nodes representing the translation tree with the reorganization applied.
+Alternatively, it is also possible to use `noAction()` to not define a reorganization action. This is typically the case when defining children reorganization rules in `includingChildren(List<IReorganizerRule> children)`, that are just used to define a pattern.
+
+### Example
+
+Let's suppose that we obtained the following translation tree. These are the correctly translated values, but the message digest should be part of the OAEP. This is therefore a reorganization problem.
+```
+(BlockCipher) RSA
+   └─ (OptimalAsymmetricEncryptionPadding) OAEP
+   └─ (MessageDigest) SHA-3
+```
+This is the target translation that we want to obtain after reorganization:
+```
+(BlockCipher) RSA
+   └─ (OptimalAsymmetricEncryptionPadding) OAEP
+      └─ (MessageDigest) SHA-3
+```
+
+To do so, we define the following reorganization rule:
+```java
+new ReorganizerRuleBuilder()
+    .createReorganizerRule()
+    .forNodeKind(BlockCipher.class)
+    .includingChildren(
+        List.of(
+            new ReorganizerRuleBuilder()
+                .createReorganizerRule()
+                .forNodeKind(OptimalAsymmetricEncryptionPadding.class)
+                .noAction(),
+            new ReorganizerRuleBuilder()
+                .createReorganizerRule()
+                .forNodeKind(MessageDigest.class)
+                .noAction()))
+    .perform(
+        (node, parent, roots) -> {
+            INode oaepChild =
+                node.getChildren()
+                    .get(OptimalAsymmetricEncryptionPadding.class)
+                    .deepCopy();
+            INode messageDigestChild =
+                node.getChildren().get(MessageDigest.class).deepCopy();
+
+            // Add the message digest under the OAEP node
+            oaepChild.append(messageDigestChild);
+            // Remove the message digest from the BlockCipher's children
+            node.removeChildOfType(MessageDigest.class);
+
+            return roots;
+        });
+
+```
+In this rule, we first specify our simple pattern: a `BlockCipher` node with `OptimalAsymmetricEncryptionPadding` and `MessageDigest` children.
+When this pattern is detected, the perform function simply appends the `MessageDigest` to the `OptimalAsymmetricEncryptionPadding`, and removes the `MessageDigest` from the children of the `BlockCipher`.
+
+<br><br><br><br><br><br><br><br><br><br>
+---
 > TODO:
 > - detection rules format
 > - translation
