@@ -238,7 +238,8 @@ This rule must extend the language-specific sonar visitor class, `IssuableSubscr
 @Rule(key = "Inventory")
 ```
 
-We define the logic behind the inventory rule (and in particular how it will relate with all the `IDetectionRule` detection rules) in the `plugin/rules/detection` directory by first creating an intermediary class implementing the language-specific sonar visitor class (`IssuableSubscriptionVisitor` in Java) and from which the inventory rule (`JavaInventoryRule`) will inherit. In Java, we call this class [`JavaBaseDetectionRule`](../java/src/main/java/com/ibm/plugin/rules/detection/JavaBaseDetectionRule.java), and it takes a constructor with a list of `IDetectionRule`[^3]. 
+We define the logic behind the inventory rule (and in particular how it will relate with all the `IDetectionRule` detection rules) in the `plugin/rules/detection` directory by first creating an intermediary class implementing the language-specific sonar visitor class (`IssuableSubscriptionVisitor` in Java) and from which the inventory rule (`JavaInventoryRule`) will inherit. In Java, we call this class [`JavaBaseDetectionRule`](../java/src/main/java/com/ibm/plugin/rules/detection/JavaBaseDetectionRule.java), and it takes a constructor with a list of `IDetectionRule`[^3].
+Implementing this class will require defining a translation process, but we will come to that [later](#bridging-the-gap), and you can keep these parts empty for now.
 
 [^3]: It may also take a list of [`IReorganizerRule`](../mapper/src/main/java/com/ibm/mapper/reorganizer/IReorganizerRule.java) if necessary. More about this in [*Writing new detection rules for the Sonar Cryptography Plugin*](./DETECTION_RULE_STRUCTURE.md).
 
@@ -255,15 +256,15 @@ Back to the intermediary class (`JavaBaseDetectionRule` in Java), this is also t
 @Override
 public void visitNode(@Nonnull Tree tree) {
     detectionRules.forEach(
-            rule -> {
-                DetectionExecutive<JavaCheck, Tree, Symbol, JavaFileScannerContext>
-                        detectionExecutive =
-                                JavaAggregator.getLanguageSupport()
-                                        .createDetectionExecutive(
-                                                tree, rule, new JavaScanContext(this.context));
-                detectionExecutive.subscribe(this);
-                detectionExecutive.start();
-            });
+        rule -> {
+            DetectionExecutive<JavaCheck, Tree, Symbol, JavaFileScannerContext>
+                detectionExecutive =
+                    JavaAggregator.getLanguageSupport()
+                        .createDetectionExecutive(
+                            tree, rule, new JavaScanContext(this.context));
+            detectionExecutive.subscribe(this);
+            detectionExecutive.start();
+        });
 }
 ```
 
@@ -366,6 +367,12 @@ These three kinds of files (test file, rule and unit test) are stored in those t
 > [!TIP]
 > Our file organization is inspired by the documentation of the Sonar analyzer for Java. You can [consult it](https://github.com/SonarSource/sonar-java/blob/master/docs/CUSTOM_RULES_101.md#writing-a-rule) to learn more.
 
+Additionally, we need a `TestBase` class which we will use as the base class for our unit tests (in Java, it is [`TestBase`](../java/src/test/java/com/ibm/plugin/TestBase.java)).
+This class specifies that we want our tests to use all of our defined detection rules, by extending the *inventory rule* class.
+It also handles the logs of the tests, and structures how assert statements are checked.
+If you wrote your own language support, you should create this `TestBase` class now.
+Note that implementing `TestBase` requires a translation process, but we will come to that [later](#bridging-the-gap), and you can keep these parts empty for now.
+
 ### Creating and testing your first detection rule
 
 > [!IMPORTANT]
@@ -391,13 +398,15 @@ This step should be done each time you are creating a new detection rule in a ne
 #### Testing
 
 Once this is done, try to run your unit test and look at the logs.
-If it works, you should see logs of your detected values, in a tree structure looking like this (but with the values of your test file that you specified to detect in *MyRule*):
+If it works, you should see logs[^4] of your detected values, in a tree structure looking like this (but with the values of your test file that you specified to detect in *MyRule*):
 ```
 DEBUG [id: 1c259, bundle: -2060…, level: 0, hash: -8884…] (CipherContext<BLOCK_CIPHER>, ValueAction) CBC
 DEBUG [id: f5b9a, bundle: 21061…, level: 1, hash: 13077…]    └─ (CipherContext<ENCRYPTION_STATUS>, OperationMode) 0
 DEBUG [id: 7b818, bundle: 92146…, level: 1, hash: -4294…]    └─ (CipherContext<BLOCK_CIPHER_ENGINE>, ValueAction) AES
 DEBUG [id: 8d2d8, bundle: 21061…, level: 2, hash: 13077…]       └─ (CipherContext<ENCRYPTION_STATUS>, OperationMode) 0
 ```
+
+[^4] : If you wrote your own `TestBase`, make sure that you call the `DetectionStoreLogger.print(DetectionStore ds)` method at the right place to display your findings in the logs.
 
 Note that the unit test may fail (because we have not yet handled the translation), but what is important at this step is to observe these logs. If you do not observe these logs,
  - and you have written your own support layer for a new programming language, then it is very likely to be a problem coming from this language support layer (that you could not have tested until now). You will have to spend some time tuning your code written in the `engine` module, which will be explained in the [next part](#tuning-the-engine-if-necessary).
@@ -417,11 +426,71 @@ If you have additional questions about how a function should work and be impleme
 
 ### Translating your first detection rule
 
-> [!IMPORTANT]
-> At this point, if you have not done it yet, you should read the section [*Translating findings of a detection rule*](./DETECTION_RULE_STRUCTURE.md#translating-findings-of-a-detection-rule) of *Writing new detection rules for the Sonar Cryptography Plugin* to understand how to translate the findings of a detection rule.
+> [!NOTE]
+> This part is particularly relevant if you wrote your own language support.
+> If you rely on existing language support, most translation files mentioned below should already be created.
+> However, we still advise you to read this part to better understand which files you should modify to translate your detection rules.
 
-> TODO: explain the files and directories that should be created to structure the translation.
-> Explain how to structure the reorganization.
+> [!IMPORTANT]
+> At this point, if you have not done it yet, you should read the sections [*Translating findings of a detection rule*](./DETECTION_RULE_STRUCTURE.md#translating-findings-of-a-detection-rule) and [*Reorganizing the translation tree*](./DETECTION_RULE_STRUCTURE.md#reorganizing-the-translation-tree) of *Writing new detection rules for the Sonar Cryptography Plugin* to understand how to translate the findings of a detection rule.
+> 
+> In the following, we will assume that your translation includes a reorganization phase, but feel free to remove it if you know that it is not necessary in the case of your library.
+
+In addition to the file structure we introduced earlier, we introduce new subdirectories in `translation`, that you should have in your language module.
+This part of the directory tree looks like this in Java:
+
+```
+java
+└── src
+    └── main/java/com/ibm/plugin
+        ├── rules
+        │   └── detection
+        │       ├── mycrypto
+        │       └── ... [other libraries]
+        └── translation
+            ├── translator
+            │   └── contexts
+            └── reorganizer
+                └── rules
+```
+<p align="right"><a href="https://tree.nathanfriend.io/?s=(%27opt7s!(%27fancy!true~fullPath3~trailingSlash3~rootDot3)~8(%278%272java52src5*2main%2Fjava%2Fcom%2Fibm%2Fplugin09042detect7A42mycryptoA42...%20%5Bother%20libraries%5D067A6orA*2contextsA2reorganizerA*9%27)~vers7!%271%27)4%2005**2-%203!false4*%205%5Cn*62translat7ion8source!92rulesA0*%01A987654320*"><sub><sup>edit this tree<sub><sup></a></p>
+
+#### The translator
+
+In the directory `translation/translator/`, start by creating your main translator class, implementing the [`ITranslator`](../mapper/src/main/java/com/ibm/mapper/ITranslator.java) interface.
+In Java, this is the [`JavaTranslator`](../java/src/main/java/com/ibm/plugin/translation/translator/JavaTranslator.java) class.
+
+For better structure, we advise to split the translation in multiple files based on the detection context of the detected values.
+We therefore advise creating one translator file per detection context, and to store them in `translation/translator/contexts/`.
+In your main translator file, you can switch over the detection context of the values of your detection store, and delegate the actual translation work to the context translator files.
+
+You can now add content to these files to translate the findings from your first detection rule, following the section [*Translating findings of a detection rule*](./DETECTION_RULE_STRUCTURE.md#translating-findings-of-a-detection-rule).
+
+#### The reorganization
+
+In the directory `translation/reorganizer/`, start by creating your file listing all reorganization rules for your language. In Java, this is the [`JavaReorganizerRules`](../java/src/main/java/com/ibm/plugin/translation/reorganizer/JavaReorganizerRules.java) class.
+
+All these reorganization rules should then be stored in `translation/reorganizer/rules/`, with the structure of your choice.
+
+If necessary, you can now reorganize the translation of the findings of your first detection rule, following the section [*Reorganizing the translation tree*](./DETECTION_RULE_STRUCTURE.md#reorganizing-the-translation-tree).
+
+#### Bridging the gap
+
+It now remains to register this translation and reorganization steps somewhere.
+In `translation/`, start by creating a file controlling the translation process following the [`ITranslationProcess`](../mapper/src/main/java/com/ibm/mapper/ITranslationProcess.java) interface.
+In Java, this is [`JavaTranslationProcess`](../java/src/main/java/com/ibm/plugin/translation/JavaTranslationProcess.java).
+
+This is where you will apply the translation and reorganization steps, as well as the enrichment process, which is a language-agnostic step adding information to the translation tree, as mentioned [earlier](#the-translation).
+
+Finally, this translation process file should be registered at two places:
+- In your class implementing the language-specific sonar visitor class ([`JavaBaseDetectionRule`](../java/src/main/java/com/ibm/plugin/rules/detection/JavaBaseDetectionRule.java) in Java), mentioned in [here](#the-check-registrar-extension-point).
+- In your `TestBase` class ([`TestBase`](../java/src/test/java/com/ibm/plugin/TestBase.java) in Java), mentioned in [here](#organizing-your-files). Also makes sure to log the translated tree of findings by calling `Utils.printNodeTree(List<INode> nodes)` at the right place (with `Utils` from `com.ibm.mapper.utils`).
+
+You can now run again your unit test to check whether your detected values are correctly translated.
+If your implementation works, you should observe logs displaying the translated (and potentially reorganized) trees, after the initial logs of the detected values.
+
+
+
 
 
 ### Writing assert statements

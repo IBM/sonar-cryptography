@@ -298,10 +298,3 @@ new ReorganizerRuleBuilder()
 ```
 In this rule, we first specify our simple pattern: a `BlockCipher` node with `OptimalAsymmetricEncryptionPadding` and `MessageDigest` children.
 When this pattern is detected, the perform function simply appends the `MessageDigest` to the `OptimalAsymmetricEncryptionPadding`, and removes the `MessageDigest` from the children of the `BlockCipher`.
-
-<br><br><br><br><br><br><br><br><br><br>
----
-> TODO:
-> - detection rules format
-> - translation
-> - reorganizer rules

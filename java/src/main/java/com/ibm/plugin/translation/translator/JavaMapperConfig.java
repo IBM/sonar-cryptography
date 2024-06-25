@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.plugin.translation;
+package com.ibm.plugin.translation.translator;
 
 import com.ibm.mapper.configuration.Configuration;
 import javax.annotation.Nonnull;
