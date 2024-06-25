@@ -2,20 +2,19 @@
 
 The Sonar Cryptography Plugin is designed with a modular architecture so that it can be extended to support additional programming languages and cryptography libraries.
 
-<br>
 
 ## Introduction to the project structure
 
 The Sonar Cryptography Plugin uses a rule-based approach to precisely identify which cryptography assets are used in the scanned code.
 Adding support for detecting a cryptography library means writing a set of rules covering all cryptographic assets introduced by the library.
 
-Defining those rules as part of a SonarQube plugin allows us to easily integrate with usual SonarQube workflows, and to benefit from existing support to scan some languages (languages supported for SonarQube plugins are listed [here](https://docs.sonarsource.com/sonarqube/latest/extension-guide/adding-coding-rules/#custom-rule-support-by-language) in the *Java* column).
+Defining those rules as part of a SonarQube plugin allows us to easily integrate with usual SonarQube workflows, and to benefit from existing support to scan some languages (the languages supported for SonarQube plugins are listed [here](https://docs.sonarsource.com/sonarqube/latest/extension-guide/adding-coding-rules/#custom-rule-support-by-language) in the *Java* column).
 
 ### Overview
 
 The project is composed of the following modules:
 - The plugin: `sonar-cryptography-plugin`
-- One package per supported language, like `java` and `python`
+- One module per supported language, like `java` and `python`
 - The detection engine: `engine`
 - Four other modules: `mapper`, `enricher`, `output` and `common`
 
@@ -24,7 +23,7 @@ The project is composed of the following modules:
 This module ([`sonar-cryptography-plugin`](../sonar-cryptography-plugin/)) is the only SonarQube plugin, for all supported languages, so that we have a single cryptography plugin (and not one per language). 
 
 Its main class is [`CryptoPlugin`](../sonar-cryptography-plugin/src/main/java/com/ibm/plugin/CryptoPlugin.java) which implements the Sonar [`Plugin`](https://javadocs.sonarsource.org/10.3.0.1951/org/sonar/api/Plugin.html) interface, and registers all rules for all languages.
-This is done through the `addExtensions` method, and the extension classes to add vary depending on the language (they are usually mentioned in the documentation, or at least appear – in the class implementing `Plugin` – in the example plugins provided by Sonar).
+This is done through the `addExtensions` method, and the extension classes to add vary depending on the language (they are usually mentioned in the documentation, or at least appear in the example plugins provided by Sonar – in the class implementing `Plugin`).
 
 This module also defines the choice of output format for all the findings (in [`OutputFileJob`](../sonar-cryptography-plugin/src/main/java/com/ibm/plugin/OutputFileJob.java)).
 Indeed, while any SonarQube plugin will natively report the detected cryptographic findings to the SonarQube instance, our plugin adds an output layer capable of exporting the results in any other format.
@@ -90,7 +89,7 @@ The [`engine`](../engine/) module bridges the gap between the language-specific 
 It has a [`language`](../engine/src/main/java/com/ibm/engine/language/) subfolder which contains the set of functions (defined by five interfaces) to implement to enable this high level API for a language supported for SonarQube plugins.
 More details about these interfaces are given [later](#implementing-the-language-specific-parts-of-the-engine).
 
-The `engine` module contains a lot of other subfolders and files that enable strong detection capabilities, but they are all based on the functions provided by the `language` files and therefore do not need to be modified when adding support for another file.
+The `engine` module contains a lot of other subfolders and files that enable strong detection capabilities, but they are all based on the functions provided by the `language` files and therefore do not need to be modified when adding support for another language.
 
 <br>
 
@@ -466,6 +465,9 @@ For better structure, we advise to split the translation in multiple files based
 We therefore advise creating one translator file per detection context, and to store them in `translation/translator/contexts/`.
 In your main translator file, you can switch over the detection context of the values of your detection store, and delegate the actual translation work to the context translator files.
 
+Additionally, if translating your assets implies parsing complicated strings (typically like `"AES/ECB/PKCS5Padding"` in Java's JCA), we recommend handling the parsing with a dedicated class of the `mapper` module.
+This class should be in the `mapper/.../mapper/mapper/mycrypto/` directory and should implement the [`IMapper`](../mapper/src/main/java/com/ibm/mapper/mapper/IMapper.java) interface.
+
 You can now add content to these files to translate the findings from your first detection rule, following the section [*Translating findings of a detection rule*](./DETECTION_RULE_STRUCTURE.md#translating-findings-of-a-detection-rule).
 
 #### The reorganization
@@ -482,7 +484,7 @@ It now remains to register this translation and reorganization steps somewhere.
 In `translation/`, start by creating a file controlling the translation process following the [`ITranslationProcess`](../mapper/src/main/java/com/ibm/mapper/ITranslationProcess.java) interface.
 In Java, this is [`JavaTranslationProcess`](../java/src/main/java/com/ibm/plugin/translation/JavaTranslationProcess.java).
 
-This is where you will apply the translation and reorganization steps, as well as the enrichment process, which is a language-agnostic step adding information to the translation tree, as mentioned [earlier](#the-translation).
+This is where you will apply the translation and reorganization steps, as well as the enrichment process, which is a step adding external information to the translation tree, as mentioned [earlier](#the-translation).
 
 Finally, this translation process file should be registered at two places:
 - In your class implementing the language-specific sonar visitor class ([`JavaBaseDetectionRule`](../java/src/main/java/com/ibm/plugin/rules/detection/JavaBaseDetectionRule.java) in Java), mentioned in [here](#the-check-registrar-extension-point).
