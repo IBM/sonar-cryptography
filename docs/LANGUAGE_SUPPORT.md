@@ -421,6 +421,8 @@ Recall that when [implementing the language specific parts of the engine](#imple
 
 Now that you have a unit test, we advise that you add breakpoints on all of those functions for which you have a doubt or want to know more about how they actually work.
 Then, run your unit test with the debugger, and take the time to carefully observe if each of your functions is working as expected, and to fix them if it isn't the case.
+Also take the time to understand how your language-specific AST (defined by your sonar language analyzer) works, and it may help you to draw a schema representing the different relationships between its kinds of nodes.
+
 If you have additional questions about how a function should work and be implemented, and you have not found an answer in this documentation, we advise you to debug existing unit tests in other supported languages to observe the other (functioning) implementations of these functions.
 
 
@@ -429,7 +431,7 @@ If you have additional questions about how a function should work and be impleme
 > [!NOTE]
 > This part is particularly relevant if you wrote your own language support.
 > If you rely on existing language support, most translation files mentioned below should already be created.
-> However, we still advise you to read this part to better understand which files you should modify to translate your detection rules.
+> However, you should still read this part to better understand which files you should modify to translate your detection rules.
 
 > [!IMPORTANT]
 > At this point, if you have not done it yet, you should read the sections [*Translating findings of a detection rule*](./DETECTION_RULE_STRUCTURE.md#translating-findings-of-a-detection-rule) and [*Reorganizing the translation tree*](./DETECTION_RULE_STRUCTURE.md#reorganizing-the-translation-tree) of *Writing new detection rules for the Sonar Cryptography Plugin* to understand how to translate the findings of a detection rule.
@@ -490,28 +492,30 @@ You can now run again your unit test to check whether your detected values are c
 If your implementation works, you should observe logs displaying the translated (and potentially reorganized) trees, after the initial logs of the detected values.
 
 
-
-
-
 ### Writing assert statements
+
+Your detection rule now works, and its findings get correctly translated? Congrats, your rule is almost finished!
+The only thing you need is a way to check if this detection and translation will stay correct in the future, even when making some modifications to your rules or to the engine.
+
+For this, we advise writing exhaustive assert statements for each unit test, checking each property of the detection stores and translated nodes. This way, you will immediately know if you break things with future modifications or updates.
+You can look into existing unit tests to know how we are writing these assert statements.
+
+If you have to write a lot of assert statements for a lot of detection rules, you may want to automate this process.
+While we do not provide a generic methodology to do so, we have done it for Java, with [`GenerateAssertsHelper`](../java/src/test/java/com/ibm/plugin/utils/GenerateAssertsHelper.java) (documented in its file), from which you can get inspired to write your own automation for your language.
+
 
 ### Going further: using graph visualization to better understand dependent detection rules
 
+If you are adding support to a big cryptography library, you will probably need a lot a detection rules, possibly with a lot of dependent detection rules.
+Depending on how your cryptography library is structured, this may result in a large web of widely connected rules, which may make it hard to visualize and reason about.
 
+To make it easily visualizable, we provide a language-agnostic way to export all your detection rules to a simple JSON representation. This is done with the [`ExportRules`](../engine/src/main/java/com/ibm/engine/serializer/ExportRules.java) class, that you can extend with a unit test to automatically generate this JSON export each time you run the test. 
+It will be exported to `target/rules.json` in your language module.
 
+You can then build whatever representation you like from this JSON export.
+In Java, we provide a graph representation using the `pyvis` Python library.
+The file [`parse.py`](../java/rule-graph/parse.py) is a Python script parsing the JSON and building a graph, that gets exported into an [HTML file](../docs/index.html) that you can visualize in your browser. 
 
-
-
-
-
-
-
-
-
-<br><br><br><br><br><br><br><br><br><br>
----
-
-- Create library-specific folders
-- Write rules and associated test files (TDD) [delegate to other markdown file]
-- Tuning the engine using the debugger (you should take some time to understand how your AST works)
-- Writing multiple dependent rules: using the graph visualization
+| ![example graph](./images/graph.png) | 
+|:--:| 
+| *What the Java graph looks like at the time of writing this section. Red nodes are entry-point rules (rules that are directly checked when scanning code), blue nodes are dependent-only nodes (rules that are only checked when another rule has matched), and green nodes are interfaces. An arrow from node A to node B means that B is a dependent detection rule of rule A. Notice that there are two main connected parts: most JCA rules are in the top connected component, and most BouncyCastle rules are in the main big connected component. Also notice that some rules are completely disconnected: it just means that they do not have dependent detection rules.* |
