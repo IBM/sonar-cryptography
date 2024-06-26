@@ -196,11 +196,14 @@ A tree of translated values is built while you are translating your detected val
 During the translation phase, the tree keeps its overall shape
 This means that the translation of a child node of a detected value will be appended to the translation of this detected value.
 
+| ![example of the node-by-node translation process](./images/translation.png) | 
+|:--:| 
+| *This diagram represents the node-by-node translation process. In blue, we have the tree of detected values. The dotted lines show that each detected value gets independently translated into some translated value(s), in green. At the end of the node-by-node translation process, we have a tree of translated values (right part of the diagram) which is composed of each translated value, linked with the same ordering as the tree of detected values. This current result is not satisfying, and we will explain next how we can reorganize this tree of translated values.* |
 
 ## Reorganizing the translation tree
 
-However, as explained before, we don't have much control on the ordering of this (detection and translation) tree, which is driven by the structure of your cryptography library.
-This is why we may introduce another step, after the translation, to reorganize the tree of translated values to correctly represent its content.
+The main limitation of this node-by-node translation approach is that we don't have much control on the ordering of tree of detected values (which is driven by the structure of your cryptography library) and consequently on the tree of translated values.
+This is why, in some cases, we introduce another step after the translation, to reorganize the tree of translated values to correctly represent its content.
 Note that this reorganization step is not strictly necessary: for example, in the JCA cryptography library in Java, the translated trees immediately have the correct shape (because of how the library is structured).
 But this is for example not the case for Java's BouncyCastle library.
 
@@ -294,7 +297,25 @@ new ReorganizerRuleBuilder()
 
             return roots;
         });
-
 ```
+
 In this rule, we first specify our simple pattern: a `BlockCipher` node with `OptimalAsymmetricEncryptionPadding` and `MessageDigest` children.
 When this pattern is detected, the perform function simply appends the `MessageDigest` to the `OptimalAsymmetricEncryptionPadding`, and removes the `MessageDigest` from the children of the `BlockCipher`.
+
+### Having multiple reorganization rules
+
+When you define multiple reorganization rules for your language, you may introduce reorganization conflicts leading to unexpected results or infinite loops.
+It is therefore crucial that you understand how these reorganization rules are applied to prevent undesirable consequences.
+
+Reorganization rules are applied according to the logic described in the [`Reorganizer`](../mapper/src/main/java/com/ibm/mapper/reorganizer/Reorganizer.java) class of the `mapper` module.
+We iterate on the nodes of the translation tree with a [breadth-first search](https://en.wikipedia.org/wiki/Breadth-first_search) (BFS), and we check for each node if it matches with a reorganization rule.
+If it matches, we stop the BFS, and we apply the reorganization and return the updated translation tree (described by its list of root nodes).
+We then continue by starting a new BFS on the updated translation tree, starting from the new roots.
+This process ends once no reorganization rule matches with the current translation tree in a BFS iteration.
+
+Ideally, you should write your reorganization rules so that the order in which they are applied does not matter.
+But if you truly need to assume a fixed ordering, know that the reorganization rules are applied in the list order that you define in the class listing them all ([`JavaReorganizerRules`](../java/src/main/java/com/ibm/plugin/translation/reorganizer/JavaReorganizerRules.java) in Java).
+
+| ![example graph](./images/reorganization.png) | 
+|:--:| 
+| *This diagram follows the previous one, and starts with the translation tree we obtained before. It shows how we can apply two reorganization rules to this tree to obtain a final translation tree whose structure follows our expectations. In this example, the two reorganization rules are applied in an arbitrary order: notice that we would obtain the same final translation tree if we would apply the two reorganization rules in the opposite order.* |
