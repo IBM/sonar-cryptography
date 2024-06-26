@@ -137,7 +137,7 @@ While we will talk [later](#implementing-the-language-specific-parts-of-the-engi
 We need to find four of these types in the sonar API of the language of your choice, and it is crucial to make this step early in the development, as not finding these types may compromise completely the possibility of extending our plugin with this language.
 
 >[!NOTE]
-> If some of these classes are missing, you may create your own custom classes to try to patch this void, by investigating how these classes are used and trying to provide the same functionality. However, this has not been attempted yet and will probably result in significantly more work.
+> If some of these classes are missing in the APIs of your language, you may create your own custom classes to try to patch this void, by investigating how these classes are used and trying to provide the same functionality. However, this has not been attempted yet and will probably result in significantly more work.
 
 To help you find these classes used to fill the four type parameters `R`, `T`, `S`, `P`, we provide the table below showing what these classes are for the languages we currently support (all of these classes are under the import path `org.sonar.plugins`):
 
@@ -150,13 +150,13 @@ To help you find these classes used to fill the four type parameters `R`, `T`, `
 
 Here are all the interfaces that have to be implemented (specific details about the functions to implement may be documented in the interface files):
 
-- [`IBaseMethodVisitor`](../engine/src/main/java/com/ibm/engine/detection/IBaseMethodVisitor.java) (the class implementing this interface must also extend a language-specific `BaseTreeVisitor` from the sonar API)
+- [`IBaseMethodVisitor`](../engine/src/main/java/com/ibm/engine/detection/IBaseMethodVisitor.java) (the class implementing this interface must also extend a language-specific `BaseTreeVisitor` from the sonar API: see [`JavaBaseMethodVisitor`](../engine/src/main/java/com/ibm/engine/language/java/JavaBaseMethodVisitor.java) for example)
 - [`IDetectionEngine`](../engine/src/main/java/com/ibm/engine/detection/IDetectionEngine.java)
 - [`ILanguageSupport`](../engine/src/main/java/com/ibm/engine/language/ILanguageSupport.java)
 - [`ILanguageTranslation`](../engine/src/main/java/com/ibm/engine/language/ILanguageTranslation.java)
 - [`IScanContext`](../engine/src/main/java/com/ibm/engine/language/IScanContext.java)
 
-Notice that interfaces classes are parametrized by the generics mentioned [previously](#identifying-the-four-classes-to-use-in-generics).
+Notice that these interfaces are parametrized by the generics mentioned [previously](#identifying-the-four-classes-to-use-in-generics).
 
 > [!TIP]
 > Implementing these classes may be the most challenging part of the process, as it requires to bridge the gap between the language-specific API of your sonar analyzer (that it usually poorly documented) and the engine primitives (that are not documented yet).
@@ -167,7 +167,7 @@ Notice that interfaces classes are parametrized by the generics mentioned [previ
 >
 > Because you will not be able to immediately test your implementation, we advise you to start with a "basic" implementation of these interfaces: don't immediately try to handle all edge cases.
 > Later, once you will have [created the language module](#creating-a-new-language-module) and be able to write detection rules, you can write test rules and test files to make sure that your engine works as intended (i.e. correctly detects what is specified by the rule).
-> If it is not the case, you can then tune your engine implementation until your unit test is fixed.
+> If it is not the case, you can then [tune your engine](#tuning-the-engine-if-necessary) implementation until your unit test is fixed.
 
 Once you have implemented these five interfaces, you have to declare your language support to the outside.
 To do so, simply add a function in [`LanguageSupporter`](../engine/src/main/java/com/ibm/engine/language/LanguageSupporter.java) that returns an instance of your class implementing `ILanguageSupport`. Here is how it looks for the Java case:
@@ -179,10 +179,11 @@ public static ILanguageSupport<JavaCheck, Tree, Symbol, JavaFileScannerContext>
     return new JavaLanguageSupport();
 }
 ```
+This function will be used [later](#the-check-registrar-extension-point).
 
 ### Creating a new language module
 
-Now that the language analyzer has been registered in the main `pom.xml`, we can create a new module named like the language (like [`java`](../java/)).
+Now that the language analyzer has been registered in the main `pom.xml` and that the engine interfaces have been implemented, we can create a new module named like the language (like [`java`](../java/)).
 
 > [!IMPORTANT]  
 > This process depends on how the language analyzer APIs work: **carefully read the available documentation explaining how to create a SonarQube plugin for your language first**. This documentation should take precedence over the more general explanations that we will discuss next.
@@ -217,10 +218,10 @@ Then, we have to add *extension points*: these are language-specific interfaces 
 > [!IMPORTANT]  
 > At this point, we have to clarify an important difference: we distinguish the SonarQube *rules* that we actually add to the plugin, and the detection *rules* (defined [earlier](#the-detection-rules)) that are rules written with our high level syntax and conforming to the `IDetectionRule` interface.
 >
-> In our plugin architecture, we make the choice to define a **single** SonarQube rule per language, that contains the logic of all detection rules. This rule extends a language-specific class defined by your sonar analyzer API, like `IssuableSubscriptionVisitor` in Java or `PythonVisitorCheck` in Python.
-> We will later call it the *visitor* class, as it enables to implement functions that are called upon the visitation of a some AST nodes.
+> In our plugin architecture, we make the choice to define a **single** SonarQube rule per language, which contains the logic of all detection rules. This rule extends a language-specific class defined by your sonar analyzer API, like `IssuableSubscriptionVisitor` in Java or `PythonVisitorCheck` in Python.
+> We will later call it the *visitor* class, as it enables to implement functions which are called upon the visitation of a some AST nodes.
 >
-> This means that on the SonarQube UI, we see only one (meaningless) rule that reports any kind of cryptography finding. The actual precise information should instead be exported through the `output` module, like we currently do with the CBOM. 
+> This means that on the SonarQube UI, we see only one rule per language, which reports all the cryptography findings. The actual precise information should instead be exported through the `output` module, like we currently do with the CBOM. 
 
 We now explain with a bit more detail what the usual extension points are.
 
@@ -228,9 +229,9 @@ We now explain with a bit more detail what the usual extension points are.
 
 If there is a similar entry point for your language, you can set it up similarly to [`JavaCheckRegistrar`](../java/src/main/java/com/ibm/plugin/JavaCheckRegistrar.java) in Java (or to [`PythonCheckRegistrar`](../python/src/main/java/com/ibm/plugin/PythonCheckRegistrar.java) with the `PythonCustomRuleRepository` interface).
 
-This is the place where the SonarQube rule class should be referenced. Because this rule "regroups" all the detection rule, we call it the *inventory rule*, which is defined in Java as [`JavaInventoryRule`](../java/src/main/java/com/ibm/plugin/rules/JavaInventoryRule.java) in `plugin/rules`[^2].
+This is the place where the SonarQube rule class should be referenced. Because this rule "regroups" all the detection rules, we call it the *inventory rule*, which is defined in Java as [`JavaInventoryRule`](../java/src/main/java/com/ibm/plugin/rules/JavaInventoryRule.java) in `plugin/rules`[^2].
 
-[^2]: In the Java case, we define an intermediary class [`JavaRuleList`](../java/src/main/java/com/ibm/plugin/JavaRuleList.java) that registers all Java SonarQube rules, but in our case it's only [`JavaInventoryRule`](../java/src/main/java/com/ibm/plugin/rules/JavaInventoryRule.java). This allows us to easily refer to all SonarQube rules at other places, like in [`JavaScannerRuleDefinition`](../java/src/main/java/com/ibm/plugin/JavaScannerRuleDefinition.java).
+[^2]: In the Java case, we define an intermediary class [`JavaRuleList`](../java/src/main/java/com/ibm/plugin/JavaRuleList.java) that registers all Java SonarQube rules, which in our case is only [`JavaInventoryRule`](../java/src/main/java/com/ibm/plugin/rules/JavaInventoryRule.java). This allows us to easily refer to all SonarQube rules at other places, like in [`JavaScannerRuleDefinition`](../java/src/main/java/com/ibm/plugin/JavaScannerRuleDefinition.java).
 
 This rule must extend the language-specific sonar visitor class, `IssuableSubscriptionVisitor` in Java, and must be annotated with a name (we are using "Inventory"):
 ```java
@@ -240,7 +241,7 @@ This rule must extend the language-specific sonar visitor class, `IssuableSubscr
 We define the logic behind the inventory rule (and in particular how it will relate with all the `IDetectionRule` detection rules) in the `plugin/rules/detection` directory by first creating an intermediary class implementing the language-specific sonar visitor class (`IssuableSubscriptionVisitor` in Java) and from which the inventory rule (`JavaInventoryRule`) will inherit. In Java, we call this class [`JavaBaseDetectionRule`](../java/src/main/java/com/ibm/plugin/rules/detection/JavaBaseDetectionRule.java), and it takes a constructor with a list of `IDetectionRule`[^3].
 Implementing this class will require defining a translation process, but we will come to that [later](#bridging-the-gap), and you can keep these parts empty for now.
 
-[^3]: It may also take a list of [`IReorganizerRule`](../mapper/src/main/java/com/ibm/mapper/reorganizer/IReorganizerRule.java) if necessary. More about this in [*Writing new detection rules for the Sonar Cryptography Plugin*](./DETECTION_RULE_STRUCTURE.md).
+[^3]: It may also take a list of [`IReorganizerRule`](../mapper/src/main/java/com/ibm/mapper/reorganizer/IReorganizerRule.java) if necessary. More about this in the section [*Reorganizing the translation tree*](./DETECTION_RULE_STRUCTURE.md#reorganizing-the-translation-tree) of *Writing new detection rules for the Sonar Cryptography Plugin*.
 
 This list of `IDetectionRule` is defined in the same directory, in a file listing all the detection rules for this language under a function `rules()`. In Java, we call this file [`JavaDetectionRules`](../java/src/main/java/com/ibm/plugin/rules/detection/JavaDetectionRules.java).
 You can currently leave this list of rules empty, and we will discuss [later](#adding-support-for-another-cryptography-library) how to structure these detection rules in the module. 
@@ -275,6 +276,7 @@ But if we want to export all of our findings in a single output structure, like 
 
 This is therefore the purpose of the (empty) interface [`IAggregator`](../output/src/main/java/com/ibm/output/IAggregator.java), implemented in Java by the class [`JavaAggregator`](../java/src/main/java/com/ibm/plugin/JavaAggregator.java) directly in the `plugin` directory.
 The aggregator class can maintain a list of findings, that gets extended each time a new finding is detected and reported through the `update` function.
+It also implements a `getLanguageSupport()` method that returns the `ILanguageSupport` (using the `LanguageSupporter` defined [earlier](#implementing-the-language-specific-parts-of-the-engine)), which you should use in your "visit" method (like in `visitNode` above).
 The `JavaAggregator` implementation is quite generic and can be mostly reused for your implementation, after replacing the generic types by the correct ones, and using the correct language supporter.
 
 
@@ -355,11 +357,11 @@ java
 We use a [Test Driven Development](https://en.wikipedia.org/wiki/Test-driven_development) (TDD) approach, where you start by thinking about the kind of cryptographic asset you want to detect.
 Then, find (or write) a *test file* (in the language of your cryptography library) containing this asset.
 Next, write a detection *rule* aiming at detection precisely this asset.
-Finally, create a *unit test* checking that your detection rule indeed capture the intended value in the test file.
+Finally, create a *unit test* checking that your detection rule indeed captures the intended value in the test file.
 
 These three kinds of files (test file, rule and unit test) are stored in those three distinct directories:
 - `main/.../plugin/rules/detection/mycrypto/`: stores the detection rules, in the structure of your choice, but usually close to the structure of the cryptography library.
-- `test/.../plugin/rules/detection/mycrypto/`: stores the unit test with the exact same structure than the rules.
+- `test/.../plugin/rules/detection/mycrypto/`: stores the unit tests with the exact same structure than the rules.
 - `test/.../files/rules/detection/mycrypto/`: stores the test files with the exact same structure than the rules (and than the unit tests).
 
 
@@ -369,29 +371,53 @@ These three kinds of files (test file, rule and unit test) are stored in those t
 Additionally, we need a `TestBase` class which we will use as the base class for our unit tests (in Java, it is [`TestBase`](../java/src/test/java/com/ibm/plugin/TestBase.java)).
 This class specifies that we want our tests to use all of our defined detection rules, by extending the *inventory rule* class.
 It also handles the logs of the tests, and structures how assert statements are checked.
-If you wrote your own language support, you should create this `TestBase` class now.
+If you wrote your own language support, you should create this `TestBase` class now (very similarly to the Java implementation).
 Note that implementing `TestBase` requires a translation process, but we will come to that [later](#bridging-the-gap), and you can keep these parts empty for now.
 
 ### Creating and testing your first detection rule
 
 > [!IMPORTANT]
-> At this point, if you have not done it yet, you should read the section [*Writing a detection rule*](./DETECTION_RULE_STRUCTURE.md#writing-a-detection-rule) of *Writing new detection rules for the Sonar Cryptography Plugin* to understand how to write the detection rule.
+> At this point, if you have not done it yet, you should read the section [*Writing a detection rule*](./DETECTION_RULE_STRUCTURE.md#writing-a-detection-rule) of *Writing new detection rules for the Sonar Cryptography Plugin* to understand how to write a detection rule.
 
 Now suppose that you want to write your first rule *MyRule* of your *mycrypto* library (that we are shortening to `Mc` in file names). You will need to create three files, in the three directories previously mentioned:
 - `McMyRule.java` in `main/.../plugin/rules/detection/mycrypto/`: this is where you should define a class containing the *IDetectionRule MyRule*. Add a private constructor to your class, and define *MyRule* as a private and static variable. Create a public and static method `rules()` returning the list of all detection rules of your file, in your case simply `List.of(MyRule)`.
 - `McMyRuleTestFile.XXX` in `test/.../files/rules/detection/mycrypto/`: this is where you should write a code example containing the function call that you aim to capture with `MyRule`. This file is written in your target programming language that you want to scan (so you should set the file extension `.XXX` accordingly).
-- `McMyRuleTest.java` in `test/.../plugin/rules/detection/mycrypto/`: this is where you should define your unit test class, that should `extends TestBase`. Create a `test()` with a `@Test` annotation, in which you call the language-specific test function on the test file that you just defined. You should also override the `asserts` method, but leave it empty for now, we will come back to it.
+- `McMyRuleTest.java` in `test/.../plugin/rules/detection/mycrypto/`: this is where you should define your unit test class, which should `extends TestBase`. Create a `test()` method with a `@Test` annotation, in which you call the language-specific test function on the test file that you just defined. You should also override the `asserts` method, but leave it empty for now, we will [come back to it](#writing-assert-statements).
+
+Don't hesitate to look into the existing rules written for other libraries and languages to have a clear understanding of how to structure everything.
 
 #### Registering your rule
 
-You need to create another file listing the detection rules of your library, that you should create under `plugin/rules/detection/mycrypto/`, similarly to the file [`BouncyCastleDetectionRules`](../java/src/main/java/com/ibm/plugin/rules/detection/bc/BouncyCastleDetectionRules.java) for the BouncyCastle library in Java.
+You need to create another class `MyCryptoDetectionRules` listing the detection rules of your library, that you should create under `plugin/rules/detection/mycrypto/`, similarly to the class [`BouncyCastleDetectionRules`](../java/src/main/java/com/ibm/plugin/rules/detection/bc/BouncyCastleDetectionRules.java) for the BouncyCastle library in Java.
 
-At this point, you should have already created a file listing all of your detection rules, like [`JavaDetectionRules`](../java/src/main/java/com/ibm/plugin/rules/detection/JavaDetectionRules.java) for Java, in `plugin/rules/detection/`.
+At this point, you should have already created a class listing all of your detection rules, like [`JavaDetectionRules`](../java/src/main/java/com/ibm/plugin/rules/detection/JavaDetectionRules.java) for Java, in `plugin/rules/detection/`.
 Therefore, register your library rules by adding them to the `rules` method of this main file containing all detection rules.
-This step is done only once, to register your new cryptography library.
+This step is done only once, to register your new cryptography library:
+```java
+public static List<IDetectionRule<Tree>> rules() {
+    return Stream.of(
+            // ...
+            MyCryptoDetectionRules.rules().stream(),
+            // ...
+            )
+        .flatMap(i -> i)
+        .toList();
+}
+```
 
-Finally, register your rule `McMyRule` in the file listing your library rules by adding it to its `rules` method.
-This step should be done each time you are creating a new detection rule in a new file.
+Finally, register your rule `McMyRule` in your class `MyCryptoDetectionRules` listing your library rules by adding it to its `rules` method.
+This step should be done each time you are creating a new detection rule in a new file:
+```java
+public static List<IDetectionRule<Tree>> rules() {
+    return Stream.of(
+            // ...
+            McMyRule.rules().stream(),
+            // ...
+            )
+        .flatMap(i -> i)
+        .toList();
+}
+```
 
 
 #### Testing
@@ -405,7 +431,7 @@ DEBUG [id: 7b818, bundle: 92146…, level: 1, hash: -4294…]    └─ (CipherC
 DEBUG [id: 8d2d8, bundle: 21061…, level: 2, hash: 13077…]       └─ (CipherContext<ENCRYPTION_STATUS>, OperationMode) 0
 ```
 
-[^4] : If you wrote your own `TestBase`, make sure that you call the `DetectionStoreLogger.print(DetectionStore ds)` method at the right place to display your findings in the logs.
+[^4]: If you wrote your own `TestBase`, make sure that you call the `DetectionStoreLogger.print(DetectionStore ds)` method at the right place to display your findings in the logs.
 
 Note that the unit test may fail (because we have not yet handled the translation), but what is important at this step is to observe these logs. If you do not observe these logs,
  - and you have written your own support layer for a new programming language, then it is very likely to be a problem coming from this language support layer (that you could not have tested until now). You will have to spend some time tuning your code written in the `engine` module, which will be explained in the [next part](#tuning-the-engine-if-necessary).
@@ -420,7 +446,7 @@ Recall that when [implementing the language specific parts of the engine](#imple
 
 Now that you have a unit test, we advise that you add breakpoints on all of those functions for which you have a doubt or want to know more about how they actually work.
 Then, run your unit test with the debugger, and take the time to carefully observe if each of your functions is working as expected, and to fix them if it isn't the case.
-Also take the time to understand how your language-specific AST (defined by your sonar language analyzer) works, and it may help you to draw a schema representing the different relationships between its kinds of nodes.
+Also take the time to understand how your language-specific AST (defined by your sonar language analyzer) works. To do so, it may help you to draw a schema representing the different relationships between its kinds of nodes.
 
 If you have additional questions about how a function should work and be implemented, and you have not found an answer in this documentation, we advise you to debug existing unit tests in other supported languages to observe the other (functioning) implementations of these functions.
 
@@ -428,7 +454,7 @@ If you have additional questions about how a function should work and be impleme
 ### Translating your first detection rule
 
 > [!NOTE]
-> This part is particularly relevant if you wrote your own language support.
+> This part introduces new directories and files that you should create if you wrote your own language support.
 > If you rely on existing language support, most translation files mentioned below should already be created.
 > However, you should still read this part to better understand which files you should modify to translate your detection rules.
 
@@ -437,7 +463,7 @@ If you have additional questions about how a function should work and be impleme
 > 
 > In the following, we will assume that your translation includes a reorganization phase, but feel free to remove it if you know that it is not necessary in the case of your library.
 
-In addition to the file structure we introduced earlier, we introduce new subdirectories in `translation`, that you should have in your language module.
+In addition to the file structure we introduced earlier, we introduce new subdirectories in `translation/`, that you should have in your language module.
 This part of the directory tree looks like this in Java:
 
 ```
@@ -464,9 +490,10 @@ In Java, this is the [`JavaTranslator`](../java/src/main/java/com/ibm/plugin/tra
 For better structure, we advise to split the translation in multiple files based on the detection context of the detected values.
 We therefore advise creating one translator file per detection context, and to store them in `translation/translator/contexts/`.
 In your main translator file, you can switch over the detection context of the values of your detection store, and delegate the actual translation work to the context translator files.
+Look at how it is done in Java for more details.
 
-Additionally, if translating your assets implies parsing complicated strings (typically like `"AES/ECB/PKCS5Padding"` in Java's JCA), we recommend handling the parsing with a dedicated class of the `mapper` module.
-This class should be in the `mapper/.../mapper/mapper/mycrypto/` directory and should implement the [`IMapper`](../mapper/src/main/java/com/ibm/mapper/mapper/IMapper.java) interface.
+Additionally, if translating your assets implies parsing complicated strings (typically like `"AES/ECB/PKCS5Padding"` in Java's JCA), we recommend handling the parsing with dedicated classes of the `mapper` module.
+These classes should be in the `mapper/.../mapper/mapper/mycrypto/` directory and should implement the [`IMapper`](../mapper/src/main/java/com/ibm/mapper/mapper/IMapper.java) interface.
 
 You can now add content to these files to translate the findings from your first detection rule, following the section [*Translating findings of a detection rule*](./DETECTION_RULE_STRUCTURE.md#translating-findings-of-a-detection-rule).
 
@@ -485,8 +512,29 @@ In `translation/`, start by creating a file controlling the translation process 
 In Java, this is [`JavaTranslationProcess`](../java/src/main/java/com/ibm/plugin/translation/JavaTranslationProcess.java).
 
 This is where you will apply the translation and reorganization steps, as well as the enrichment process, which is a step adding external information to the translation tree, as mentioned [earlier](#the-translation).
+These steps must be called in the `initiate` function, which looks like this in Java:
+```java
+@Override
+@Nonnull
+public List<INode> initiate(
+    @Nonnull
+        DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> rootDetectionStore) {
+    // 1. Translate
+    JavaTranslator javaTranslator = new JavaTranslator(rule);
+    List<INode> translatedValues = javaTranslator.translate(rootDetectionStore);
 
-Finally, this translation process file should be registered at two places:
+    // 2. Reorganize
+    Reorganizer javaReorganizer = new Reorganizer(reorganizerRules);
+    List<INode> reorganizedValues = javaReorganizer.reorganize(translatedValues);
+
+    // 3. Enrich
+    Enricher.enrich(reorganizedValues);
+
+    return reorganizedValues;
+}
+```
+
+Finally, this translation process file should be registered in two places:
 - In your class implementing the language-specific sonar visitor class ([`JavaBaseDetectionRule`](../java/src/main/java/com/ibm/plugin/rules/detection/JavaBaseDetectionRule.java) in Java), mentioned in [here](#the-check-registrar-extension-point).
 - In your `TestBase` class ([`TestBase`](../java/src/test/java/com/ibm/plugin/TestBase.java) in Java), mentioned in [here](#organizing-your-files). Also makes sure to log the translated tree of findings by calling `Utils.printNodeTree(List<INode> nodes)` at the right place (with `Utils` from `com.ibm.mapper.utils`).
 
@@ -500,10 +548,10 @@ Your detection rule now works, and its findings get correctly translated? Congra
 The only thing you need is a way to check if this detection and translation will stay correct in the future, even when making some modifications to your rules or to the engine.
 
 For this, we advise writing exhaustive assert statements for each unit test, checking each property of the detection stores and translated nodes. This way, you will immediately know if you break things with future modifications or updates.
-You can look into existing unit tests to know how we are writing these assert statements.
+You can look into existing unit tests to know how these assert statements are written.
 
 If you have to write a lot of assert statements for a lot of detection rules, you may want to automate this process.
-While we do not provide a generic methodology to do so, we have done it for Java, with [`GenerateAssertsHelper`](../java/src/test/java/com/ibm/plugin/utils/GenerateAssertsHelper.java) (documented in its file), from which you can get inspired to write your own automation for your language.
+While we do not provide a generic methodology to do so, we have done it for Java, with [`GenerateAssertsHelper`](../java/src/test/java/com/ibm/plugin/utils/GenerateAssertsHelper.java) (documented in its file), which can easily be reused for another language, requiring only minor modifications.
 
 
 ### Going further: using graph visualization to better understand dependent detection rules
@@ -511,12 +559,13 @@ While we do not provide a generic methodology to do so, we have done it for Java
 If you are adding support to a big cryptography library, you will probably need a lot a detection rules, possibly with a lot of dependent detection rules.
 Depending on how your cryptography library is structured, this may result in a large web of widely connected rules, which may make it hard to visualize and reason about.
 
-To make it easily visualizable, we provide a language-agnostic way to export all your detection rules to a simple JSON representation. This is done with the [`ExportRules`](../engine/src/main/java/com/ibm/engine/serializer/ExportRules.java) class, that you can extend with a unit test to automatically generate this JSON export each time you run the test. 
+To make it easily visualizable, we provide a language-agnostic way to export all your detection rules to a simple JSON representation. This is done with the [`ExportRules`](../engine/src/main/java/com/ibm/engine/serializer/ExportRules.java) class, that you can extend with a unit test to automatically generate this JSON export each time you run the test ([`ExportJavaRulesToJsonTest`](../java/src/test/java/com/ibm/plugin/rules/ExportJavaRulesToJsonTest.java) in Java). 
 It will be exported to `target/rules.json` in your language module.
 
 You can then build whatever representation you like from this JSON export.
 In Java, we provide a graph representation using the `pyvis` Python library.
-The file [`parse.py`](../java/rule-graph/parse.py) is a Python script parsing the JSON and building a graph, that gets exported into an [HTML file](../docs/index.html) that you can visualize in your browser. 
+The file [`parse.py`](../java/rule-graph/parse.py) is a Python script parsing the JSON and building a graph, that gets exported into an [HTML file](../docs/index.html) that you can visualize in your browser.
+This script can be reused in to create the same graph for the language of your choice, provided that you have exported the rules to the same JSON format.
 
 | ![example graph](./images/graph.png) | 
 |:--:| 
