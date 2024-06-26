@@ -364,6 +364,9 @@ These three kinds of files (test file, rule and unit test) are stored in those t
 - `test/.../plugin/rules/detection/mycrypto/`: stores the unit tests with the exact same structure than the rules.
 - `test/.../files/rules/detection/mycrypto/`: stores the test files with the exact same structure than the rules (and than the unit tests).
 
+> [!WARNING]
+> The test files located in `test/.../files/rules/detection/` (for all languages and cryptography libraries) are solely for testing detection rules. **They are not intended as reference code** for cryptography libraries.
+> Using this code outside its intended purpose may result in malfunctioning code or severe security vulnerabilities.
 
 > [!TIP]
 > Our file organization is inspired by the documentation of the Sonar analyzer for Java. You can [consult it](https://github.com/SonarSource/sonar-java/blob/master/docs/CUSTOM_RULES_101.md#writing-a-rule) to learn more.
