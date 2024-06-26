@@ -59,7 +59,7 @@ To specify its type(s), you can use `forObjectTypes(String... types)` to capture
 > [!NOTE]
 > Some languages, like Python, can have functions defined directly in a file and not in a class, in this case the function is not "called on an object". In this case, the meaning of the provided types depends on the implementation of the language support for the Sonar Cryptography Plugin: you should look into the documentation or code describing what this "object type" represents in your language. In particular, you can look into the implementation of the function `getInvokedObjectTypeString` in the [`ILanguageTranslation`](../engine/src/main/java/com/ibm/engine/language/ILanguageTranslation.java) implementation of your language. For example in Python, we define this type as the "fully qualified name" of the function, which is its full import path.
 
-You then have to specify the name(s) of the function you want to capture using `forMethods(String... names)`.
+You then have to specify the name(s) of the function(s) you want to capture using `forMethods(String... names)`.
 Alternatively, you can use `forConstructor()` to capture constructors of the object specified previously (note that constructors are internally defined as `<init>` functions).
 
 Then, you can add an optional `shouldBeDetectedAs(IActionFactory<T> actionFactory)` step.
@@ -95,11 +95,11 @@ In the tree of detected values, the values detected by these dependent detection
 
 At this point, you should have repeated all the steps starting from the `withMethodParameter` to here as many times as there are parameters in the function that you want to capture.
 
-Then, `buildForContext(IDetectionContext detectionValueContext)` defines the detection context ([`IDetectionContext`](../engine/src/main/java/com/ibm/engine/model/context/IDetectionContext.java)) for all the detected values of your rules (but detections from dependent rules have their own context).
+Then, `buildForContext(IDetectionContext detectionValueContext)` defines the detection context ([`IDetectionContext`](../engine/src/main/java/com/ibm/engine/model/context/IDetectionContext.java)) for all the detected values of your rule (but detections from dependent rules have their own context).
 A detection context is therefore linked to each detected value, and is designed to categorize your findings and to help you carry additional information that is not present in the detected value.
 For example, let's say you want to capture the instantiation `new PKCS7Padding()`. You can write your detection rule with a top level detection `shouldBeDetectedAs(new ValueActionFactory<>("PKCS7"))`. In order to specify that `PKCS7` is a padding, you can use the detection context, by using `buildForContext(new CipherContext(CipherContext.Kind.PADDING))`. This context first coarsely categorizes your finding as related to ciphers, and specifies more precisely that it is a padding.
 
-After, we have `inBundle(IBundle bundle)` that requires us to link our rule to a bundle identifier.
+After, we have `inBundle(IBundle bundle)` that requires us to link our rule to a bundle identifier ([`IBundle`](../engine/src/main/java/com/ibm/engine/rule/IBundle.java)).
 Indeed, we may have several functions or constructors doing the same thing, typically all having the same name, but differing by the various parameters they have.
 In this case, we have to write one detection rule per function.
 But using the same bundle identifier for all these rules, we can specify that these rules all belong together.
@@ -150,7 +150,7 @@ This parameter detection is placed below the mode detection using `asChildOfPara
 
 To capture the first parameter, we rely instead on a list of dependent detection rules `BcBlockCipherEngine.rules()`, that should capture all the possible `BlockCipher` classes existing in the library. In our case, a dependent rule targeting `AESEngine.newInstance()` should capture the value "AES", with a context that should specify that it is the base cipher.
 
-Finally, a list of top level dependent detection rules `BcBlockCipherInit.rules()` should capture information part of the `cfb.init(...)` function call.
+Finally, a list of top level dependent detection rules `BcBlockCipherInit.rules()` should capture some information contained in the `cfb.init(...)` function call.
 
 
 ### Special cases: no parameters and any parameters
@@ -173,7 +173,7 @@ new DetectionRuleBuilder<T>()
 Where you would previously use `withMethodParameter`, you can instead use `withoutParameters()` to indicate that you want to capture a method that does not have parameters.
 You can also use `withAnyParameters()` at the same place, this time to indicate that you want to capture any function that satisfy the object type and method name conditions, no matter its parameters.
 
-With these two special steps, you therefore cannot capture any information related to the parameters.
+With these two special steps, you cannot capture any information related to the parameters.
 This is why these steps are available **only** when you specify a top level detection (using `shouldBeDetectedAs(IActionFactory<T> actionFactory)`).
 
 ## Translating findings of a detection rule
@@ -185,8 +185,8 @@ For this, you should represent your cryptographic assets using the standard clas
 You should use the information contained into the detection context and the type of the detection value, to decide the type of translation you want to apply.
 
 Then, you should use some cryptography knowledge to translate your findings into the correct mapper classes.
-It is easy to translate by default what you detected as an *Algorithm* (from `engine`) into an *Algorithm* (from `mapper`).
-But if you know that this algorithm is used for public key encryption in the specific context in which you detect it, you may keep this information by detecting it with a `PublicKeyContext`, and then decide to translate it into a `PublicKeyEncryption` (which is a superclass of mapper's `Algorithm`).
+It is easy to translate what you detected as an *Algorithm* (from `engine`) into an *Algorithm* (from `mapper`).
+But if you know that this algorithm is used for public key encryption in the specific context in which you detect it, you may keep this information by using the context `PublicKeyContext` in your detection rule, and then decide to translate it into a `PublicKeyEncryption` (which is a superclass of mapper's `Algorithm`).
 
 As a rule a thumb, there is almost always a straightforward translation of the assets you detect.
 But if you keep sufficiently enough information using the context and if you use some cryptography knowledge, you may translate your finding into a more specific class which will then bring more information into the CBOM.
@@ -208,7 +208,7 @@ But this is for example not the case for Java's BouncyCastle library.
 
 We therefore introduce a way to specify *reorganization rules*, using a builder pattern specified with the [`IReorganizerRule`](../mapper/src/main/java/com/ibm/mapper/reorganizer/IReorganizerRule.java) interface.
 Like for detection rules, we provide below a *regex-like* specification indicating how you can order the construction steps to reorganize a translation tree.
-It contains these three *regex-like* syntax elements:
+It contains these (same) two *regex-like* syntax elements:
 - `[ ... ]?` represents an optional builder statement
 - `A | B` indicates that exactly one of A or B must be chosen
 
@@ -228,22 +228,22 @@ Writing a reorganization rule starts with instantiating a new [`ReorganizerRuleB
 
 Given a translation tree, the first goal is to check if this tree should be reorganized by this rule.
 The rule therefore defines a pattern which will be checked against the tree: if there is a match between this tree and the reorganization rule, then the reorganization will be applied.
-This pattern starts by specifying the kind (= type) of node that should be in the translation tree using `forNodeKind(Class<? extends INode> kind)`.
+This pattern starts by specifying the kind (= type) of a node that should be in the translation tree using `forNodeKind(Class<? extends INode> kind)`.
 Then, a specific node value can optionally be specified using `forNodeValue(String value)`.
 
 This creates a pattern over a single node, but the pattern can be a subtree, by optionally defining what the children of this node should be like.
 Using `includingChildren(List<IReorganizerRule> children)`, you can include other reorganizer specifications that have to be satisfied by some children of the current node. Note that you can recursively create children rules, meaning that you can specify a tree pattern of an arbitrary size.
 Alternatively, you can use `withAnyNonNullChildren()` to simply guarantee that your node has at least one node child.
 
-A last optional step specifying the pattern is another type of condition, defined by `withDetectionCondition(Function3<INode, INode, List<INode>, Boolean> detectionConditionFunction)`, where `Function3` is defined as:
+A last optional step specifying the pattern is to require any other condition, using `withDetectionCondition(Function3<INode, INode, List<INode>, Boolean> detectionConditionFunction)`, where `Function3` is defined as:
 ```java
 @FunctionalInterface
 public interface Function3<A1, A2, A3, R> {
     R apply(A1 one, A2 two, A3 three);
 }
 ```
-The detection condition function is a function `(node, parent, roots) -> {return ...}` taking the current node, its parent and the root nodes of the translation tree, and returning a boolean specifying whether the pattern is satisfied.
-This step can be used to define more specific tree patterns than simply relying on a fixed pattern based on the nodes kinds and values.
+The parameter of `withDetectionCondition` is a function `(node, parent, roots) -> {return ...}` taking the current node, its parent and the root nodes of the translation tree, and returning a boolean specifying whether the pattern is satisfied.
+This step can be used to define more specific tree patterns than simply relying on a fixed pattern based on the nodes kinds, values and children.
 
 Finally, while all the previous steps were specifying the tree pattern, we have to define the reorganization action that is performed in case of a pattern match, using `perform(Function3<INode, INode, List<INode>, List<INode>> performFunction)`.
 It is also a function `(node, parent, roots) -> {return ...}` taking the current node, its parent and the root nodes of the translation tree, but returning an updated list of root nodes representing the translation tree with the reorganization applied.
@@ -283,8 +283,7 @@ new ReorganizerRuleBuilder()
         (node, parent, roots) -> {
             INode oaepChild =
                 node.getChildren()
-                    .get(OptimalAsymmetricEncryptionPadding.class)
-                    .deepCopy();
+                    .get(OptimalAsymmetricEncryptionPadding.class);
             INode messageDigestChild =
                 node.getChildren().get(MessageDigest.class).deepCopy();
 
