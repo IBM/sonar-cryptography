@@ -18,6 +18,11 @@ The project is composed of the following modules:
 - The detection engine: `engine`
 - Four other modules: `mapper`, `enricher`, `output` and `common`
 
+
+| ![architecture diagram](./images/architecture.png) | 
+|:--:| 
+| *High level diagram showing the architecture of the various modules composing the Sonar Cryptography Plugin, shown here with two language extensions (java and python), each language containing two cryptography libaries. The `sonar-cryptography-plugin` module directly depends on the language modules, which themselves depends on a bunch of dependent modules. This diagram shows the extendable parts of the modules: the engine language support, the library-specific mappers, and the choice of output format.* |
+
 ### The plugin
 
 This module ([`sonar-cryptography-plugin`](../sonar-cryptography-plugin/)) is the only SonarQube plugin, for all supported languages, so that we have a single cryptography plugin (and not one per language). 
