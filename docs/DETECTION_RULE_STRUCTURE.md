@@ -153,7 +153,7 @@ To capture the first parameter, we rely instead on a list of dependent detection
 Finally, a list of top level dependent detection rules `BcBlockCipherInit.rules()` should capture some information contained in the `cfb.init(...)` function call.
 
 
-### Special cases: no parameters and any parameters
+### Special cases: no parameter and any parameters
 
 Recall that we have not discussed the case where we want to detect a function call without parameters.
 We provide below another *regex-like* specification indicating how you can order the construction steps for two special cases.
