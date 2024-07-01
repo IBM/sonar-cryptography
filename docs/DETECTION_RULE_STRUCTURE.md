@@ -234,7 +234,7 @@ The rule therefore defines a pattern which will be checked against the tree: if 
 This pattern starts by specifying the kind (= type) of a node that should be in the translation tree using `forNodeKind(Class<? extends INode> kind)`.
 Then, a specific node value can optionally be specified using `forNodeValue(String value)`.
 
-This creates a pattern over a single node, but the pattern can be a subtree, by optionally defining what the children of this node should be like.
+This pattern currently identifies a single node, but we can (optionally) define a more specific pattern identifying a subtree, by defining what the children of this node should be like.
 Using `includingChildren(List<IReorganizerRule> children)`, you can include other reorganizer specifications that have to be satisfied by some children of the current node. Note that you can recursively create children rules, meaning that you can specify a tree pattern of an arbitrary size.
 Alternatively, you can use `withAnyNonNullChildren()` to simply guarantee that your node has at least one node child.
 
@@ -242,11 +242,11 @@ A last optional step specifying the pattern is to require any other condition, u
 
 [^1]: `Function3` is defined as: `@FunctionalInterface public interface Function3<A1, A2, A3, R> {R apply(A1 one, A2 two, A3 three);}`
 
-The parameter of `withDetectionCondition` is a function `(node, parent, roots) -> {return ...}` taking the current node, its parent and the root nodes of the translation tree, and returning a boolean specifying whether the pattern is satisfied.
+The parameter of `withDetectionCondition` is a function `(node, parent, roots) -> bool` taking the current node, its parent and the root nodes of the translation tree, and returning a boolean specifying whether the pattern is satisfied.
 This step can be used to define more specific tree patterns than simply relying on a fixed pattern based on the nodes kinds, values and children.
 
 Finally, while all the previous steps were specifying the tree pattern, we have to define the reorganization action that is performed in case of a pattern match, using `perform(Function3<INode, INode, List<INode>, List<INode>> performFunction)`.
-It is also a function `(node, parent, roots) -> {return ...}` taking the current node, its parent and the root nodes of the translation tree, but returning an updated list of root nodes representing the translation tree with the reorganization applied.
+It is also a function `(node, parent, roots) -> updatedRoots` taking the current node, its parent and the root nodes of the translation tree, but returning an updated list of root nodes representing the translation tree with the reorganization applied.
 Alternatively, it is also possible to use `noAction()` to not define a reorganization action. This is typically the case when defining children reorganization rules in `includingChildren(List<IReorganizerRule> children)`, that are just used to define a pattern.
 
 ### Example
