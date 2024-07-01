@@ -22,8 +22,8 @@ But in each case, there is an expression for the relevant language that we want 
 
 Because visualizing the builder pattern from the [`IDetectionRule`](../engine/src/main/java/com/ibm/engine/rule/IDetectionRule.java) interface is not trivial, we provide below a *regex-like* specification indicating how you can order the construction steps to detect a function call.
 It contains these three *regex-like* syntax elements:
-- `[ ... ]?` represents an optional builder statement
-- `[ ... ]+` represents one or more repetitions of the enclosed statement
+- `[ ... ]?`: an optional builder statement
+- `[ ... ]+`: one or more repetitions of the enclosed statement
 - `A | B` indicates that exactly one of A or B must be chosen
 
 ```java
