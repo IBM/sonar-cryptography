@@ -73,13 +73,13 @@ Writing detection rules allows us to capture all the values linked to a cryptogr
 Those values are captured in a tree-like structure based on the definition of detection rules and their dependent detection rules that detected them.
 The tree does not contain any semantic information about how the cryptographic values relate to each other.
 
-What we want instead is a meaningful representation of all cryptography related values: a tree structure where relationships between nodes carry some meaning.
+Ultimately, we want a meaningful representation of all cryptography-relevant values: a tree structure in which the relationships between the nodes have a meaning.
 Back to our example, we want a tree where the mode is a child node of the algorithm node, to indicate that it's the mode of this algorithm.
 
 This process of building a meaningful tree representation of the captured cryptography values is called the translation. This process is also part of the language module. In certain cases where translation requires to parse a string, the parsing and translation process is outsourced to the `mapper` module for better modularity.
 
 The last step of the translation process is called the enrichment, and is done by the `enricher` module.
-This step aims at adding content to the translated tree, based on external knowledge (i.e. not based on the values we captured in the source code).
+This step aims at adding content to the translated tree, based on external knowledge.
 Indeed, we can get additional information from the documentation of a cryptography library, like some default values.
 Maybe our algorithm has a default mode when no mode is specified in the code, in such case we can "enrich" the translated tree with this default mode.
 Additionally, we can enrich most cryptography assets with an [object identifier](https://en.wikipedia.org/wiki/Object_identifier) (OID) that uniquely identifies an algorithm and plays an important role in a CBOM.
@@ -92,7 +92,7 @@ Additionally, we can enrich most cryptography assets with an [object identifier]
 
 The [`engine`](../engine/) module bridges the gap between the language-specific sonar APIs used for navigating the AST, and the high level language-agnostic API used for writing detection rules.
 
-It has a [`language`](../engine/src/main/java/com/ibm/engine/language/) subfolder which contains the set of functions (defined by five interfaces) to implement to enable this high level API for a language supported for SonarQube plugins.
+It has a [`language`](../engine/src/main/java/com/ibm/engine/language/) subfolder that contains the set of functions (defined by five interfaces) to be implemented to set up this high-level API for a language.
 More details about these interfaces are given [later](#implementing-the-language-specific-parts-of-the-engine).
 
 The `engine` module contains a lot of other subfolders and files that enable strong detection capabilities, but they are all based on the functions provided by the `language` files and therefore do not need to be modified when adding support for another language.
@@ -107,18 +107,15 @@ Once the plugin supports the targeted language, the [next section](#adding-suppo
 > [!TIP]
 > If your language is already supported by our plugin, you can directly skip to [the section](#adding-support-for-another-cryptography-library) explaining in detail how to add support for a cryptography library.
 
-Recall that only languages supported for SonarQube plugins are supported (they are listed [here](https://docs.sonarsource.com/sonarqube/latest/extension-guide/adding-coding-rules/#custom-rule-support-by-language) in the *Java* column), because they come with a sonar analyzer and API.
+Currently we only support languages that are provided by Sonar, aka for which there is a Sonar parser to generate an abstract syntax tree ([see](https://github.com/search?q=topic%3Alanguage-team+org%3ASonarSource+&type=repositories) the supported language parsers). Theoretically, any language parser (written in Java) that generates an AST from the source code should be integrable, and thus any language for which such a parser exists. With our current implementation, we have only tested the parsers provided by Sonar.
 
-> [!NOTE]  
-> If you really want to add support for a language that is not supported for SonarQube plugins, it may be possible to use a third-party analyzer and integrate with SonarQube using [generic formatted issue reports](https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/importing-external-issues/generic-issue-import-format/).
-> However, this has not been attempted yet and will probably result in significantly more work.
 
 In the following, we will take the example of adding support for the Java language.
 
-### Adding the language analyzer
+### Adding the language parser
 
-The first step is to add a dependency for your sonar language analyzer to the main `sonar-cryptography` [`pom.xml`](../pom.xml).
-You should find information about the analyzer group and artifact identifiers in the appropriate language page of the [documentation of sonar languages](https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/languages/overview/).
+The first step is to add a dependency for your sonar language parser to the main `sonar-cryptography` [`pom.xml`](../pom.xml).
+You should find a parser for your language by searching the parser provided by Sonar directly ([see](https://github.com/search?q=topic%3Alanguage-team+org%3ASonarSource+&type=repositories)) or by searching for parsers created by the community, such as the one for C/C++ ([see](https://github.com/SonarOpenCommunity/sonar-cxx))
 
 Then, first add its version under `<!-- language parser versions -->`:
 ```xml
@@ -136,11 +133,11 @@ And add the dependency (using this version reference) under `<!-- language suppo
 
 ### Identifying the four classes to use in generics
 
-Recall that our methodology aims to bridge the gap between the language-specific sonar APIs and a higher level language-agnostic API.
+Recall that our methodology aims to bridge the gap between the language-specific parser APIs and a higher level language-agnostic API.
 As explained earlier, this part is done in the [engine](#the-engine).
 While we will talk [later](#implementing-the-language-specific-parts-of-the-engine) about how to integrate a new language with the engine, we have to highlight that our methodology makes use of [Java generic types](https://docs.oracle.com/javase/tutorial/java/generics/types.html) at multiple places. In particular, our language-"agnostic" high level API still needs to be parametrized by language-dependent types.
 
-We need to find four of these types in the sonar API of the language of your choice, and it is crucial to make this step early in the development, as not finding these types may compromise completely the possibility of extending our plugin with this language.
+We need to find these four types in the language's (Sonar) parser API. It is crucial to take this step early in the development, as not finding these types can compromise the integration of the language with the chosen parser.
 
 >[!NOTE]
 > If some of these classes are missing in the APIs of your language, you may create your own custom classes to try to patch this void, by investigating how these classes are used and trying to provide the same functionality. However, this has not been attempted yet and will probably result in significantly more work.
@@ -165,11 +162,11 @@ Here are all the interfaces that have to be implemented (specific details about 
 Notice that these interfaces are parametrized by the generics mentioned [previously](#identifying-the-four-classes-to-use-in-generics).
 
 > [!TIP]
-> Implementing these classes may be the most challenging part of the process, as it requires to bridge the gap between the language-specific API of your sonar analyzer (that it usually poorly documented) and the engine primitives (that are not documented yet).
+> Implementing these classes may be the most challenging part of the process, as it requires to bridge the gap between the language-specific APIs (usually poorly documented) and the engine primitives (that are not documented yet).
 > Moreover, there is currently no proper way to test your engine implementation without writing detection rules (which will have to be done later).
 >
 > We therefore advise the following development process: try your best to implement these interfaces by reading their javadoc, understanding what they are supposed to do and checking how they were implemented for other languages.
-> Hopefully, your sonar analyzer has a relatively similar API as the others, and you can reuse parts of the code.
+> Hopefully, your parser has a relatively similar API as the others, and you can reuse parts of the code.
 >
 > Because you will not be able to immediately test your implementation, we advise you to start with a "basic" implementation of these interfaces: don't immediately try to handle all edge cases.
 > Later, once you will have [created the language module](#creating-a-new-language-module) and be able to write detection rules, you can write test rules and test files to make sure that your engine works as intended (i.e. correctly detects what is specified by the rule).
@@ -224,7 +221,7 @@ Then, we have to add *extension points*: these are language-specific interfaces 
 > [!IMPORTANT]  
 > At this point, we have to clarify an important difference: we distinguish the SonarQube *rules* that we actually add to the plugin, and the detection *rules* (defined [earlier](#the-detection-rules)) that are rules written with our high level syntax and conforming to the `IDetectionRule` interface.
 >
-> In our plugin architecture, we make the choice to define a **single** SonarQube rule per language, which contains the logic of all detection rules. This rule extends a language-specific class defined by your sonar analyzer API, like `IssuableSubscriptionVisitor` in Java or `PythonVisitorCheck` in Python.
+> In our plugin architecture, we have chosen to define detection rules independently of the higher-level SonarQube rules that you see in the UI. The detection rules are there to collect all possible cryptographic information, while the SonarQube rules can be defined on top of these detections. The idea is that a SonarQube rule can be: `Don't use MD5` or `If using RSA, the key size should be larger than 2048`, while the detection rules try to capture all occurrences of these algorithms in the source code.  At the moment, the plugin only contains an `Inventory` rule that collects all occurrences of cryptographic assets and reports them as a problem to the SonarQube UI. This rule extends a language-specific class defined by the API of your Sonar analyzer, such as `IssuableSubscriptionVisitor` in Java or `PythonVisitorCheck` in Python.
 > We will later call it the *visitor* class, as it enables to implement functions which are called upon the visitation of a some AST nodes.
 >
 > This means that on the SonarQube UI, we see only one rule per language, which reports all the cryptography findings. The actual precise information should instead be exported through the `output` module, like we currently do with the CBOM. 
@@ -239,7 +236,7 @@ This is the place where the SonarQube rule class should be referenced. Because t
 
 [^2]: In the Java case, we define an intermediary class [`JavaRuleList`](../java/src/main/java/com/ibm/plugin/JavaRuleList.java) that registers all Java SonarQube rules, which in our case is only [`JavaInventoryRule`](../java/src/main/java/com/ibm/plugin/rules/JavaInventoryRule.java). This allows us to easily refer to all SonarQube rules at other places, like in [`JavaScannerRuleDefinition`](../java/src/main/java/com/ibm/plugin/JavaScannerRuleDefinition.java).
 
-This rule must extend the language-specific sonar visitor class, `IssuableSubscriptionVisitor` in Java, and must be annotated with a name (we are using "Inventory"):
+SonarQube rules must extend the language-specific sonar visitor class, `IssuableSubscriptionVisitor` in Java, and must be annotated with a name (we are using "Inventory"):
 ```java
 @Rule(key = "Inventory")
 ```
