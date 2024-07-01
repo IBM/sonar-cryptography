@@ -44,7 +44,7 @@ To write detection rules based on the content of the source code, we use an inte
 The conversion of source code into AST is done by a language-specific analyzer. We use the parsers published by Sonar for this purpose.
 
 The built AST provides us with the ability to navigate through the source code and to determine, for example, if some term is a function or a variable.
-Because each programming language has its own syntax, these ASTs (and associated APIs) are language specific too.
+Because each programming language has its own syntax, these ASTs (and associated APIs) are language specific.
 
 Because of this strong language dependency, we use different modules (like `java` and `python`) to separate our rules based on their programming language
 
@@ -54,8 +54,8 @@ A language module, like [`java`](../java/), has two main source folders: `rules`
 
 This folder contains all detection rules for the language, organized by cryptography library. For example, the subfolder [`bc`](../java/src/main/java/com/ibm/plugin/rules/detection/bc/) contains all rules related to the BouncyCastle cryptography library, themselves organized based on the structure of this library.
 
-Each rule defines a pattern of the AST corresponding to a function call related to cryptography, and defines the values of interest that should be captured (such as the algorithm name, mode, padding, ...) and included in the output file (typically in the CBOM).
-Additionally, dependencies between rules can be specified to captured more complex cryptographic schemes involving multiple functions.
+Each rule defines a pattern corresponding to a function call related to cryptography and specifies which values are of interest to be captured (e.g. algorithm name, mode, padding, ...).
+In addition, dependencies between rules can be specified to capture more complex cryptographic schemes with multiple functions (understanding the context).
 
 Because all these detection rules follow a similar structure, our goal was to make their writing as easy and short as possible, with a simple and language-agnostic higher level syntax.
 Indeed, defining rules directly using the AST APIs would be very verbose, with a lot of duplicated code to perform similar actions, and consequently hard to read.
