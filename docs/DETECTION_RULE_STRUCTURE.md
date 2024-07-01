@@ -60,7 +60,7 @@ To specify its type(s), you can use `forObjectTypes(String... types)` to capture
 > Some languages, like Python, can have functions defined directly in a file and not in a class, in this case the function is not "called on an object". In this case, the meaning of the provided types depends on the implementation of the language support for the Sonar Cryptography Plugin: you should look into the documentation or code describing what this "object type" represents in your language. In particular, you can look into the implementation of the function `getInvokedObjectTypeString` in the [`ILanguageTranslation`](../engine/src/main/java/com/ibm/engine/language/ILanguageTranslation.java) implementation of your language. For example in Python, we define this type as the "fully qualified name" of the function, which is its full import path.
 
 You then have to specify the name(s) of the function(s) you want to capture using `forMethods(String... names)`.
-Alternatively, you can use `forConstructor()` to capture constructors of the object specified previously (note that constructors are internally defined as `<init>` functions).
+Alternatively, you can use `forConstructor()` to capture constructors of the object specified previously (note that constructors are internally defined as `<init>` functions, since this is the representation used by the sonar language parsers).
 
 Then, you can add an optional `shouldBeDetectedAs(IActionFactory<T> actionFactory)` step.
 This allows you to capture some information related to your function (and not its parameters).
@@ -69,7 +69,7 @@ Alternatively, [`ValueActionFactory`](../engine/src/main/java/com/ibm/engine/mod
 For example, for a function call `initAes()` or `AES.init()`, here is the place to capture the use of the AES algorithm, using `shouldBeDetectedAs(new ValueActionFactory<>("AES")`.
 
 > [!IMPORTANT]
-> In detection rules, `shouldBeDetectedAs` are the only statements which specify the "capture" of information, that will be stored in a tree structure. It can be done at the top level of a detection rule (like we just explained), or at the level of a function parameter (explained later below). 
+> When defining detection rules, `shouldBeDetectedAs` is the only statement which specify the "capture" of information. It can be done at the top level of a detection rule (like we just explained), or at the level of a function parameter (explained later below). 
 
 At this point, to identify the exact function call that we want to detect, we have to specify all the parameters of the function call.
 We therefore add `withMethodParameter(String type)` for each parameter, with its type.
@@ -81,7 +81,7 @@ We offer multiple classes implementing `IValueFactory` allowing you to capture v
 - The parameter contains a string specifying the chosen algorithm (like in the function call `encrypt("AES")`): `shouldBeDetectedAs(new AlgorithmFactory<>())` will capture the string `AES`.
 - The parameter contains an integer specifying the bit size of the key (like in the function call `createNewKeyWithSize(256)`): `shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))` will capture the integer `256`.
 
-This step may optionally be followed by a `asChildOfParameterWithId(int id)` statement, which give finer-grained control on the organization of the tree of detected values.
+This step may optionally be followed by a `asChildOfParameterWithId(int id)` statement, which provides finer-grained control for structuring the tree-shape of detected values.
 Indeed, by default, all values detected with `shouldBeDetectedAs` in a same rule are set at the same level in the tree of detections (no matter if it's a top level or a parameter detection).
 The step `asChildOfParameterWithId` allows you to put the associated detected value below (in the tree) the detection identified by `id`.
 The `id` of a detected value is `-1` if it comes from the top level detection, or the index (starting at `0`) of the parameter detection of the rule.
@@ -105,7 +105,7 @@ In this case, we have to write one detection rule per function.
 But using the same bundle identifier for all these rules, we can specify that these rules all belong together.
 
 And finally, we can finish the specification of the detection rules by adding top level dependent detection rules with `withDependingDetectionRules(List<IDetectionRule<T>> detectionRules)` (or not, using `withoutDependingDetectionRules()` instead).
-These are similar to the parameter dependent rules, but instead of applying these rules just on a parameter, they are applied to all the function calls in the current scope 
+These are similar to the parameter dependent rules, but instead of applying these rules on a parameter, they are applied to the object itself, i.e. to the object with which the rule matched in the first place. 
 
 > [!TIP]
 > You will find all the classes implementing the action factories, value factories and contexts (that you may use in the functions described above) in the [`model`](../engine/src/main/java/com/ibm/engine/model/) directory of the engine.
@@ -179,13 +179,13 @@ This is why these steps are available **only** when you specify a top level dete
 ## Translating findings of a detection rule
 
 Once you have written your detection rule, and once this rule detects findings when scanning some source code, you will obtain a tree of captured values.
-The goal of the translation is to represent these values into a standard tree (which can then be used to create a CBOM for example).
-For this, you should represent your cryptographic assets using the standard classes defined in the [`model`](../mapper/src/main/java/com/ibm/mapper/model/) directory of the *mapper* module (and not of the engine module like before).
+The aim of the translation is to represent these values in a standardized, language-independent tree in the cryptographic domain.
+For this, you should represent your cryptographic assets and values using the standard classes defined in the [`model`](../mapper/src/main/java/com/ibm/mapper/model/) directory of the *mapper* module (and not of the engine module like before).
 
-You should use the information contained into the detection context and the type of the detection value, to decide the type of translation you want to apply.
+You should use the information contained in the detection context and the type of detection value to decide which type of translation you want to apply.
 
-Then, you should use some cryptography knowledge to translate your findings into the correct mapper classes.
-It is easy to translate what you detected as an *Algorithm* (from `engine`) into an *Algorithm* (from `mapper`).
+With the help of some knowledge about cryptography, you can translate those findings into the correct model classes.
+It is straightforward to translate what you detected as an *Algorithm* (from `engine`) into an *Algorithm* (from `mapper`).
 But if you know that this algorithm is used for public key encryption in the specific context in which you detect it, you may keep this information by using the context `PublicKeyContext` in your detection rule, and then decide to translate it into a `PublicKeyEncryption` (which is a superclass of mapper's `Algorithm`).
 
 As a rule a thumb, there is almost always a straightforward translation of the assets you detect.
@@ -202,7 +202,7 @@ This means that the translation of a child node of a detected value will be appe
 
 ## Reorganizing the translation tree
 
-The main limitation of this node-by-node translation approach is that we don't have much control on the ordering of tree of detected values (which is driven by the structure of your cryptography library) and consequently on the tree of translated values.
+The main limitation of this node-per-node translation approach is that we do not have much control over the order of the tree structure of the detected values (which is determined by the structure of your cryptographic library) and consequently not over the tree structure of the translated values.
 This is why, in some cases, we introduce another step after the translation, to reorganize the tree of translated values to correctly represent its content.
 Note that this reorganization step is not strictly necessary: for example, in the JCA cryptography library in Java, the translated trees immediately have the correct shape (because of how the library is structured).
 But this is for example not the case for Java's BouncyCastle library.
