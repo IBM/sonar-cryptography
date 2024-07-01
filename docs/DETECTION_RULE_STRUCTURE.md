@@ -16,7 +16,7 @@ The entry-point of a detection rule is a function call (or similarly a class ins
 A cryptography library will indeed provide you with various functions you can call to perform a cryptographic operation.
 The information about the involved cryptography assets can be part of the function name (a function called `aesEncrypt()`), of the function arguments (a function `encrypt(String algorithmName)`) or of the object on which the function is called (an `encrypt()` function called on a `crypto.AES` object).
 Sometimes, it is a mix of everything.
-But in every case there is a function call, which is why it is what we are aiming to detect with our detection rules.
+But in each case, there is an expression for the relevant language that we want to detect in order to extract the necessary cryptographic information.
 
 ### Specification
 
