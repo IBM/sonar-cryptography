@@ -202,7 +202,7 @@ This means that the translation of a child node of a detected value will be appe
 
 ## Reorganizing the translation tree
 
-The main limitation of this node-per-node translation approach is that we do not have much control over the order of the tree structure of the detected values (which is determined by the structure of your cryptographic library) and consequently not over the tree structure of the translated values.
+The main limitation of this node-by-node translation approach is that we do not have much control over the order of the tree structure of the detected values (which is determined by the structure of your cryptographic library) and consequently not over the tree structure of the translated values.
 This is why, in some cases, we introduce another step after the translation, to reorganize the tree of translated values to correctly represent its content.
 Note that this reorganization step is not strictly necessary: for example, in the JCA cryptography library in Java, the translated trees immediately have the correct shape (because of how the library is structured).
 But this is for example not the case for Java's BouncyCastle library.
@@ -212,7 +212,7 @@ But this is for example not the case for Java's BouncyCastle library.
 We therefore introduce a way to specify *reorganization rules*, using a builder pattern specified with the [`IReorganizerRule`](../mapper/src/main/java/com/ibm/mapper/reorganizer/IReorganizerRule.java) interface.
 Like for detection rules, we provide below a *regex-like* specification indicating how you can order the construction steps to reorganize a translation tree.
 It contains these (same) two *regex-like* syntax elements:
-- `[ ... ]?` represents an optional builder statement
+- `[ ... ]?`: an optional builder statement
 - `A | B` indicates that exactly one of A or B must be chosen
 
 ```java
