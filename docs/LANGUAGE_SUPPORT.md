@@ -69,8 +69,9 @@ This is the role of the `engine` module, that will be detailed later.
 
 #### The translation
 
-Writing a detection rule allows us to capture all the values linked to a cryptography asset, for example the name of the algorithm and its mode.
-These values are captured in a tree structure shaped like the tree of dependent detection rules that detected them, so the tree relationships do not carry any semantic about how the cryptographic values relate to one another.
+Writing detection rules allows us to capture all the values linked to a cryptography asset, for example the name of the algorithm and its mode.
+Those values are captured in a tree-like structure based on the definition of detection rules and their dependent detection rules that detected them.
+The tree does not contain any semantic information about how the cryptographic values relate to each other.
 
 What we want instead is a meaningful representation of all cryptography related values: a tree structure where relationships between nodes carry some meaning.
 Back to our example, we want a tree where the mode is a child node of the algorithm node, to indicate that it's the mode of this algorithm.
