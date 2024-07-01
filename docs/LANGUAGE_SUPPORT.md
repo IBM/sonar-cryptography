@@ -221,7 +221,11 @@ Then, we have to add *extension points*: these are language-specific interfaces 
 > [!IMPORTANT]  
 > At this point, we have to clarify an important difference: we distinguish the SonarQube *rules* that we actually add to the plugin, and the detection *rules* (defined [earlier](#the-detection-rules)) that are rules written with our high level syntax and conforming to the `IDetectionRule` interface.
 >
-> In our plugin architecture, we have chosen to define detection rules independently of the higher-level SonarQube rules that you see in the UI. The detection rules are there to collect all possible cryptographic information, while the SonarQube rules can be defined on top of these detections. The idea is that a SonarQube rule can be: `Don't use MD5` or `If using RSA, the key size should be larger than 2048`, while the detection rules try to capture all occurrences of these algorithms in the source code.  At the moment, the plugin only contains an `Inventory` rule that collects all occurrences of cryptographic assets and reports them as a problem to the SonarQube UI. This rule extends a language-specific class defined by the API of your Sonar analyzer, such as `IssuableSubscriptionVisitor` in Java or `PythonVisitorCheck` in Python.
+> In our plugin architecture, we have chosen to define detection rules independently of the higher-level SonarQube rules that you see in the UI.
+> The detection rules are there to collect all possible cryptographic information, while the SonarQube rules can be defined on top of these detections.
+> The idea is that a SonarQube rule can be: *Don't use MD5* or *If using RSA, the key size should be larger than 2048*, while the detection rules try to capture all occurrences of these algorithms in the source code.
+> At the moment, the plugin only contains an "Inventory" rule that collects all occurrences of cryptographic assets and reports them as a problem to the SonarQube UI.
+> This rule extends a language-specific class defined by the API of your Sonar analyzer, such as `IssuableSubscriptionVisitor` in Java or `PythonVisitorCheck` in Python.
 > We will later call it the *visitor* class, as it enables to implement functions which are called upon the visitation of a some AST nodes.
 >
 > This means that on the SonarQube UI, we see only one rule per language, which reports all the cryptography findings. The actual precise information should instead be exported through the `output` module, like we currently do with the CBOM. 
