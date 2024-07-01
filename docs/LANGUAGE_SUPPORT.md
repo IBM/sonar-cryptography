@@ -43,7 +43,7 @@ Ultimately, the `sonar-cryptography-plugin` is the entry point of our SonarQube 
 To write detection rules based on the content of the source code, we use an intermediary representation of the source code that is more easy to navigate than plain text: an [AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree) (abstract syntax tree).
 The conversion of source code into AST is done by a language-specific analyzer. We use the parsers published by Sonar for this purpose.
 
-Therefore, SonarQube provides us with an API to navigate the source code and determine, for example, if some term is a function or a variable.
+The built AST provides us with the ability to navigate through the source code and to determine, for example, if some term is a function or a variable.
 Because each programming language has its own syntax, these ASTs (and associated APIs) are language specific too.
 
 Because of this strong language dependency, we use different modules (like `java` and `python`) to separate our rules based on their programming language
