@@ -2,7 +2,7 @@
 
 The Sonar Cryptography Plugin is designed with a modular architecture so that you can easily write new detection rules for cryptography assets.
 Here, we explain in detail our powerful high-level syntax that you can use to define a detection rule in a few lines, independently of the programming language of the source code.
-We then guide you to translate the findings of these rules into a standard tree representation, that will be used to generate a CBOM.
+We then guide you to translate the findings of these rules into a standard representation in the domain of cryptography, which is used to create a CBOM.
 
 > [!IMPORTANT]
 > If the programming language that you want to scan is not yet supported by our plugin, or if you want to add support for a cryptography library from scratch, please read [*Extending the Sonar Cryptography Plugin to add support for another language or cryptography library*](./LANGUAGE_SUPPORT.md) in parallel.
