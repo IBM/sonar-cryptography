@@ -240,7 +240,7 @@ Alternatively, you can use `withAnyNonNullChildren()` to simply guarantee that y
 
 A last optional step specifying the pattern is to require any other condition, using `withDetectionCondition(Function3<INode, INode, List<INode>, Boolean> detectionConditionFunction)`[^1].
 
-[^1] : `Function3` is defined as: `@FunctionalInterface public interface Function3<A1, A2, A3, R> {R apply(A1 one, A2 two, A3 three);}`
+[^1]: `Function3` is defined as: `@FunctionalInterface public interface Function3<A1, A2, A3, R> {R apply(A1 one, A2 two, A3 three);}`
 
 The parameter of `withDetectionCondition` is a function `(node, parent, roots) -> {return ...}` taking the current node, its parent and the root nodes of the translation tree, and returning a boolean specifying whether the pattern is satisfied.
 This step can be used to define more specific tree patterns than simply relying on a fixed pattern based on the nodes kinds, values and children.
