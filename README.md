@@ -18,10 +18,16 @@ in source code and generates [CBOM](https://cyclonedx.org/capabilities/cbom/).
 | Language | Cryptographic Library                                                                         | Coverage | 
 |----------|-----------------------------------------------------------------------------------------------|----------|
 | Java     | [JCA](https://docs.oracle.com/javase/8/docs/technotes/guides/security/crypto/CryptoSpec.html) | 100%     |
-|          | [BouncyCastle](https://github.com/bcgit/bc-java)                                              | 80%      |
+|          | [BouncyCastle](https://github.com/bcgit/bc-java) (*light-weight API*)                         | 100%[^1] |
 | Python   | [pyca/cryptography](https://cryptography.io/en/latest/)                                       | 100%     |
 
-> The plugin is designed so that it can be extended to support additional languages and recognition rules to support more libraries. Detailed instructions on how to add new languages and recognition rules will follow shortly.
+
+[^1]: We only cover the BouncyCastle *light-weight API* according to [this specification](https://javadoc.io/static/org.bouncycastle/bctls-jdk14/1.75/specifications.html)
+
+> [!NOTE]
+> The plugin is designed in a modular way so that it can be extended to support additional languages and recognition rules to support more libraries.
+> - To add support for another language or cryptography library, see [*Extending the Sonar Cryptography Plugin to add support for another language or cryptography library*](./docs/LANGUAGE_SUPPORT.md)
+> - If you just want to know more about the syntax for writing new detection rules, see [*Writing new detection rules for the Sonar Cryptography Plugin*](./docs/DETECTION_RULE_STRUCTURE.md)
 
 ## Installation
 

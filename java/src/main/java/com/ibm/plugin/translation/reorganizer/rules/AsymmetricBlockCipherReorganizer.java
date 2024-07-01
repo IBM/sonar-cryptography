@@ -134,8 +134,7 @@ public final class AsymmetricBlockCipherReorganizer {
                             (node, parent, roots) -> {
                                 INode oaepChild =
                                         node.getChildren()
-                                                .get(OptimalAsymmetricEncryptionPadding.class)
-                                                .deepCopy();
+                                                .get(OptimalAsymmetricEncryptionPadding.class);
                                 INode messageDigestChild =
                                         node.getChildren().get(MessageDigest.class).deepCopy();
 
