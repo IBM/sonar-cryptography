@@ -25,7 +25,7 @@ The project is composed of the following modules:
 
 ### The plugin
 
-This module ([`sonar-cryptography-plugin`](../sonar-cryptography-plugin/)) is the only SonarQube plugin, for all supported languages, so that we have a single cryptography plugin (and not one per language). 
+The ([`sonar-cryptography-plugin`](../sonar-cryptography-plugin/)) module creates the single SonarQube plugin, for all supported languages, so that we have only one cryptography plugin (and not one per language). 
 
 Its main class is [`CryptoPlugin`](../sonar-cryptography-plugin/src/main/java/com/ibm/plugin/CryptoPlugin.java) which implements the Sonar [`Plugin`](https://javadocs.sonarsource.org/10.3.0.1951/org/sonar/api/Plugin.html) interface, and registers all rules for all languages.
 This is done through the `addExtensions` method, and the extension classes to add vary depending on the language (they are usually mentioned in the documentation, or at least appear in the example plugins provided by Sonar – in the class implementing `Plugin`).
@@ -41,7 +41,7 @@ Ultimately, the `sonar-cryptography-plugin` is the entry point of our SonarQube 
 ### The language modules
 
 To write detection rules based on the content of the source code, we use an intermediary representation of the source code that is more easy to navigate than plain text: an [AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree) (abstract syntax tree).
-The conversion from plain source code to AST is done by a language-specific analyzer, that is provided by SonarQube for languages supported for SonarQube plugins.
+The conversion of source code into AST is done by a language-specific analyzer. We use the parsers published by Sonar for this purpose.
 
 Therefore, SonarQube provides us with an API to navigate the source code and determine, for example, if some term is a function or a variable.
 Because each programming language has its own syntax, these ASTs (and associated APIs) are language specific too.
