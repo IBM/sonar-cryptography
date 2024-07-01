@@ -278,9 +278,7 @@ public void visitNode(@Nonnull Tree tree) {
 Here, for each visited node of the AST and for each `IDetectionRule` detection rule, we enable a [`DetectionExecutive`](../engine/src/main/java/com/ibm/engine/executive/DetectionExecutive.java), which is a class from the engine that will take care of applying our detection rules.
 
 Additionally, the intermediary class (`JavaBaseDetectionRule` in Java) should implement the [`IObserver`](../common/src/main/java/com/ibm/common/IObserver.java) interface, consisting of an `update` method. This function will be called each time the scanner detects a finding, and will pass the finding as a parameter.
-SonarQube indeed reports each asset as they are detected.
-But if we want to export all of our findings in a single output structure, like a CBOM, we need some way to aggregate all results.
-
+If we want to export all of our findings in a single output structure, like a CBOM, we need some way to aggregate all results.
 This is therefore the purpose of the (empty) interface [`IAggregator`](../output/src/main/java/com/ibm/output/IAggregator.java), implemented in Java by the class [`JavaAggregator`](../java/src/main/java/com/ibm/plugin/JavaAggregator.java) directly in the `plugin` directory.
 The aggregator class can maintain a list of findings, that gets extended each time a new finding is detected and reported through the `update` function.
 It also implements a `getLanguageSupport()` method that returns the `ILanguageSupport` (using the `LanguageSupporter` defined [earlier](#implementing-the-language-specific-parts-of-the-engine)), which you should use in your "visit" method (like in `visitNode` above).
