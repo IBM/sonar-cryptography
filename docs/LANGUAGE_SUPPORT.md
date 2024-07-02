@@ -283,7 +283,8 @@ This is therefore the purpose of the (empty) interface [`IAggregator`](../output
 The aggregator class can maintain a list of findings, that gets extended each time a new finding is detected and reported through the `update` function.
 It also implements a `getLanguageSupport()` method that returns the `ILanguageSupport` (using the `LanguageSupporter` defined [earlier](#implementing-the-language-specific-parts-of-the-engine)), which you should use in your "visit" method (like in `visitNode` above).
 The `JavaAggregator` implementation is quite generic and can be mostly reused for your implementation, after replacing the generic types by the correct ones, and using the correct language supporter.
-
+> [!TIP]
+> By extending the `JavaBaseDetectionRule` class, you can create new high-level SonarQube rules beyond the Inventory rule. The `JavaInventoryRule` is an example of how the underlying cryptographic information (collected by the detection rules) can be utilized. 
 
 #### The "Rule Definition" extension point
 
