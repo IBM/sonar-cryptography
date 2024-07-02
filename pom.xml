@@ -50,6 +50,14 @@
         <google-java-format.version>1.22.0</google-java-format.version>
     </properties>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/IBM/sonar-cryptography</url>
+        </repository>
+    </distributionManagement>
+
     <dependencies>
         <!-- ide annotations -->
         <dependency>
