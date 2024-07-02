@@ -47,7 +47,6 @@ public final class BcKeyParameter {
                     .withMethodParameter("int")
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
-                    .asChildOfParameterWithId(-1)
                     .buildForContext(
                             new AlgorithmParameterContext(AlgorithmParameterContext.Kind.KEY))
                     .inBundle(() -> "BcKeyParameter")

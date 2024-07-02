@@ -25,7 +25,6 @@ import com.ibm.engine.model.context.*;
 import com.ibm.mapper.ITranslator;
 import com.ibm.mapper.model.*;
 import com.ibm.mapper.utils.DetectionLocation;
-import com.ibm.plugin.translation.JavaMapperConfig;
 import com.ibm.plugin.translation.translator.contexts.*;
 import java.util.List;
 import java.util.Map;
