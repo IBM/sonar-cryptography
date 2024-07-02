@@ -17,6 +17,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <testSourceDirectory>src/test/java/com/ibm/plugin/</testSourceDirectory>
+
     <dependencies>
         <dependency>
             <groupId>com.ibm</groupId>
