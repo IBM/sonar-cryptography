@@ -4,6 +4,9 @@
 name: Maven Package
 
 on:
+  push:
+    branches:
+      - feature/package-pipeline # for debug
   release:
     types: [created]
 
