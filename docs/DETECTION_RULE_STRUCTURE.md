@@ -83,15 +83,14 @@ We offer multiple classes implementing `IValueFactory` allowing you to capture v
 
 This step may optionally be followed by a `asChildOfParameterWithId(int id)` statement, which provides finer-grained control for structuring the tree-shape of detected values.
 Indeed, by default, all values detected with `shouldBeDetectedAs` in a same rule are set at the same level in the tree of detections (no matter if it's a top level or a parameter detection).
-The step `asChildOfParameterWithId` allows you to put the associated detected value below (in the tree) the detection identified by `id`.
+The step `asChildOfParameterWithId` allows you to put the associated detected value below (in the tree) another detection identified by `id`.
 The `id` of a detected value is `-1` if it comes from the top level detection, or the index (starting at `0`) of the parameter detection of the rule.
-> TODO: is it the index of the parameter, or the index of the `shouldBeDetectedAs` of parameters?
+We recommend looking at the [detailed example](#example) to better understand how this works.
 
 After this optional capture phase, there is another optional step to add dependent detection rules to the parameter, using `addDependingDetectionRules(List<IDetectionRule<T>> detectionRules)`.
 This step will apply the provided detection rules on the associated function parameter, which may result in additional captured values.
 This can be very useful when your function parameter is a value deriving from another function call which uses another parameter that you want to capture.
 In the tree of detected values, the values detected by these dependent detection rules are placed under the detections of the parent detection rules.
-> TODO: What happens when the parent detection rule has several detections? Under which one goes the dependent rule detections? Fix the current bug.
 
 At this point, you should have repeated all the steps starting from the `withMethodParameter` to here as many times as there are parameters in the function that you want to capture.
 
