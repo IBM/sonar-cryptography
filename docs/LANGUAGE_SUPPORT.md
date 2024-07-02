@@ -76,7 +76,7 @@ The tree does not contain any semantic information about how the cryptographic v
 Ultimately, we want a meaningful representation of all cryptography-relevant values: a tree structure in which the relationships between the nodes have a meaning.
 Back to our example, we want a tree where the mode is a child node of the algorithm node, to indicate that it's the mode of this algorithm.
 
-This process of building a meaningful tree representation of the captured cryptography values is called the translation. This process is also part of the language module. In certain cases where translation requires to parse a string, the parsing and translation process is outsourced to the `mapper` module for better modularity.
+This process of building a meaningful tree representation of the captured cryptography values is called the translation. This process is also part of the language module (like the `java` or `python` module). In certain cases where translation requires to parse a string, the parsing and translation process is outsourced to the `mapper` module for better modularity.
 
 The last step of the translation process is called the enrichment, and is done by the `enricher` module.
 This step aims at adding content to the translated tree, based on external knowledge.
