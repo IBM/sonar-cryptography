@@ -57,7 +57,7 @@ Then, the two next builder steps aim at identifying the function call that you w
 To specify its type(s), you can use `forObjectTypes(String... types)` to capture any function call that is called on an object whose type is matching one of the provided types **or subtypes**. Instead, you can also use `.forObjectExactTypes(String... types)` to only capture function calls matching one of the provided exact types (and not their subtypes).
 
 > [!NOTE]
-> Some languages, like Python, can have functions defined directly in a file and not in a class, in this case the function is not "called on an object". In this case, the meaning of the provided types depends on the implementation of the language support for the Sonar Cryptography Plugin: you should look into the documentation or code describing what this "object type" represents in your language. In particular, you can look into the implementation of the function `getInvokedObjectTypeString` in the [`ILanguageTranslation`](../engine/src/main/java/com/ibm/engine/language/ILanguageTranslation.java) implementation of your language. For example in Python, we define this type as the "fully qualified name" of the function, which is its full import path.
+> In some languages, such as Python, functions can be defined directly in a file and not in a class. In this case, the function is not "called on an object", so the meaning of the specified types depends on the implementation of the language support in the engine module: you should look into the documentation or code describing what this "object type" represents in your language. In particular, you can look into the implementation of the function `getInvokedObjectTypeString` in the [`ILanguageTranslation`](../engine/src/main/java/com/ibm/engine/language/ILanguageTranslation.java) implementation of your language. For example in Python, we define this type as the "fully qualified name" of the function, which is its full import path.
 
 You then have to specify the name(s) of the function(s) you want to capture using `forMethods(String... names)`.
 Alternatively, you can use `forConstructor()` to capture constructors of the object specified previously (note that constructors are internally defined as `<init>` functions, since this is the representation used by the sonar language parsers).
@@ -96,7 +96,10 @@ At this point, you should have repeated all the steps starting from the `withMet
 
 Then, `buildForContext(IDetectionContext detectionValueContext)` defines the detection context ([`IDetectionContext`](../engine/src/main/java/com/ibm/engine/model/context/IDetectionContext.java)) for all the detected values of your rule (but detections from dependent rules have their own context).
 A detection context is therefore linked to each detected value, and is designed to categorize your findings and to help you carry additional information that is not present in the detected value.
-For example, let's say you want to capture the instantiation `new PKCS7Padding()`. You can write your detection rule with a top level detection `shouldBeDetectedAs(new ValueActionFactory<>("PKCS7"))`. In order to specify that `PKCS7` is a padding, you can use the detection context, by using `buildForContext(new CipherContext(CipherContext.Kind.PADDING))`. This context first coarsely categorizes your finding as related to ciphers, and specifies more precisely that it is a padding.
+For example, suppose you have two function calls `Cipher.getInstance("AES")` and `SecretKeyFactory.getInstance("AES")`. When writing detection rules to capture their cryptography information, you will in both cases capture the algorithm value "AES".
+But using the detection context, you can distinguish these two values. In the first case, using `buildForContext(new CipherContext())`, you can capture "AES" knowing that it is a cipher.
+In the second case, using `buildForContext(new SecretKeyContext())`, you can capture "AES" knowing that it is a secret key.
+Additionally, you can add more precise information in your context if necessary. For example, to specify that your AES cipher is a block cipher, you can use the specific context `buildForContext(new CipherContext(CipherContext.Kind.BLOCK_CIPHER))`. This context first coarsely categorizes your finding as related to ciphers, and specifies more precisely that it is a block cipher.
 
 After, we have `inBundle(IBundle bundle)` that requires us to link our rule to a bundle identifier ([`IBundle`](../engine/src/main/java/com/ibm/engine/rule/IBundle.java)).
 Indeed, we may have several functions or constructors doing the same thing, typically all having the same name, but differing by the various parameters they have.
@@ -105,6 +108,10 @@ But using the same bundle identifier for all these rules, we can specify that th
 
 And finally, we can finish the specification of the detection rules by adding top level dependent detection rules with `withDependingDetectionRules(List<IDetectionRule<T>> detectionRules)` (or not, using `withoutDependingDetectionRules()` instead).
 These are similar to the parameter dependent rules, but instead of applying these rules on a parameter, they are applied to the object itself, i.e. to the object with which the rule matched in the first place. 
+
+> TODO: Currently, findings of top level dependent detection rules are added below *each* (top level and parameter) detections of the rules in the tree of detected values.
+> This is not a desired behavior as it duplicates information, and should be changed in the future.
+> This issue can be followed [here](https://github.com/IBM/sonar-cryptography/issues/12).
 
 > [!TIP]
 > You will find all the classes implementing the action factories, value factories and contexts (that you may use in the functions described above) in the [`model`](../engine/src/main/java/com/ibm/engine/model/) directory of the engine.
