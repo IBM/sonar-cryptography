@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.plugin.rules;
+package com.ibm.plugin;
 
 import com.ibm.engine.serializer.ExportRules;
 import com.ibm.plugin.rules.detection.JavaDetectionRules;
