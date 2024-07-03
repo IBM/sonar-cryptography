@@ -31,9 +31,9 @@ in source code and generates [CBOM](https://cyclonedx.org/capabilities/cbom/).
 
 ## Installation
 
-Copy the plugins (jar files) to `$SONARQUBE_HOME/extensions/plugins` and restart 
+Copy the plugin (one of the JAR files from the [latest releases](https://github.com/IBM/sonar-cryptography/releases), 
+depending on whether you are using JRE 17 or later or JRE 11) to `$SONARQUBE_HOME/extensions/plugins` and restart 
 SonarQube ([more](https://docs.sonarqube.org/latest/setup-and-upgrade/install-a-plugin/)).
-
 ## Using
 
 The plugin provides new inventory rules (IBM Cryptography Repository) regarding the use of cryptography for 
