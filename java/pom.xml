@@ -15,7 +15,6 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <testSourceDirectory>src/test/java/com/ibm/plugin/rules</testSourceDirectory>
     </properties>
 
     <dependencies>
@@ -42,33 +41,10 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <!-- TODO: This dependency is not explicitely needed, but having it allows the IDE to show errors in the bc test files -->
+            <!-- This dependency is not explicitely needed, but having it enables IDE linting in BouncyCastle test files -->
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcpkix-jdk18on</artifactId>
             <version>1.78.1</version>
         </dependency>
     </dependencies>
-
-    <!-- <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.3.0</version>
-                <executions>
-                    <execution>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <executable>${basedir}/rule-graph/build-graph.sh</executable>
-                    <workingDirectory>${basedir}/rule-graph</workingDirectory>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build> -->
-
 </project>
