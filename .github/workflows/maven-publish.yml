@@ -4,9 +4,6 @@
 name: Publish package to GitHub Packages
 
 on:
-  push:
-    branches:
-      - feature/package-pipeline # for debug
   release:
     types: [created]
 

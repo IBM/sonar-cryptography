@@ -573,7 +573,7 @@ It will be exported to `target/rules.json` in your language module.
 
 You can then build whatever representation you like from this JSON export.
 In Java, we provide a graph representation using the `pyvis` Python library.
-The file [`parse.py`](../java/rule-graph/parse.py) is a Python script parsing the JSON and building a graph, that gets exported into an [HTML file](../docs/index.html) that you can visualize in your browser.
+The file [`parse.py`](../java/rule-graph/parse.py) (which you can execute with the right requirements using [`build-graph.sh`](../java/rule-graph/build-graph.sh) if you have `pip` and `python3` installed) is a Python script parsing the JSON and building a graph, that gets exported into an [HTML file](../docs/index.html) that you can visualize in your browser.
 This script can be reused in to create the same graph for the language of your choice, provided that you have exported the rules to the same JSON format.
 
 | ![example graph](./images/graph.png) | 
