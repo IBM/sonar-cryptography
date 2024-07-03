@@ -34,6 +34,6 @@ jobs:
     #   run: mvn -B package --file pom.xml
 
     - name: Deploy to GitHub Packages
-      run: mvn --batch-mode deploy #-s $GITHUB_WORKSPACE/settings.xml
+      run: mvn deploy #-s $GITHUB_WORKSPACE/settings.xml
       env:
         GITHUB_TOKEN: ${{ github.token }}
