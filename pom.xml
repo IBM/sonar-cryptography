@@ -44,7 +44,7 @@
         <sonar.version>9.8.0.63668</sonar.version>
         <sonar.plugin.api.version>9.13.0.360</sonar.plugin.api.version>
         <!-- language parser versions -->
-        <sonar.java.version>7.35.0.36271</sonar.java.version>
+        <sonar.java.version>8.1.0.36477</sonar.java.version>
         <sonar.python.version>4.19.0.15616</sonar.python.version>
 
         <google-java-format.version>1.22.0</google-java-format.version>
