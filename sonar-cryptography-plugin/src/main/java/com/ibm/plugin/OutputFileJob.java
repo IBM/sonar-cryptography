@@ -25,8 +25,13 @@ import javax.annotation.Nonnull;
 import org.sonar.api.batch.postjob.PostJob;
 import org.sonar.api.batch.postjob.PostJobContext;
 import org.sonar.api.batch.postjob.PostJobDescriptor;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 
 public class OutputFileJob implements PostJob {
+
+    private static final Logger LOGGER = Loggers.get(OutputFileJob.class);
+
     @Override
     public void describe(PostJobDescriptor postJobDescriptor) {
         postJobDescriptor.name("Output generation");
@@ -41,5 +46,6 @@ public class OutputFileJob implements PostJob {
                         .orElse(Constants.CBOM_OUTPUT_NAME_DEFAULT);
         ScannerManager scannerManager = new ScannerManager(new CBOMOutputFileFactory());
         scannerManager.getOutputFile().saveTo(new File(cbomFilename + ".json"));
+        LOGGER.info("CBOM was successfully generated '" + cbomFilename + ".json'.");
     }
 }
