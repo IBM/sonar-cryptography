@@ -9,10 +9,10 @@ in source code and generates [CBOM](https://cyclonedx.org/capabilities/cbom/).
 
 ## Version compatibility
 
-| Plugin Version | SonarQube Version                      |
-|----------------|--------------------------------------- |
-| 2.0.0 and up (_coming soon_)   | SonarQube 10.x.x and up  |      
-| 1.x.x          | SonarQube 9.8.x up to 9.9.x (lts)      |
+| Plugin Version               | SonarQube Version                 |
+|------------------------------|-----------------------------------|
+| 2.0.0 and up (_coming soon_) | SonarQube 10.x.x and up           |      
+| 1.x.x                        | SonarQube 9.8.x up to 9.9.x (lts) |
 
 ## Supported languages and libraries
 
@@ -38,7 +38,8 @@ SonarQube ([more](https://docs.sonarqube.org/latest/setup-and-upgrade/install-a-
 
 > [!NOTE]
 > We are currently in the process of adding the plugin to the SonarQube marketplace. You will then be able to install
-> the plugin directly via the marketplace and no longer have to add it manually to the plugin directory.
+> the plugin directly via the marketplace (only applicable for the community version, 
+> [see](https://docs.sonarsource.com/sonarqube/latest/instance-administration/marketplace/)).
 
 ## Using
 
@@ -48,22 +49,17 @@ If you enable these rules, a source code scan creates a cryptographic inventory 
 [CBOM](https://cyclonedx.org/capabilities/cbom/) with all cryptographic assets and writing 
 a `cbom.json` to the scan directory.
 
-### Create a Quality Profile with Cryptographic Rules
+### Add Cryptography Rules to your Quality Profile
 
-The crypto rules added by the plugin are not per default activated. Create a new quality profile for a specific language.
+This plugin incorporates rules specifically focused on cryptography.
 
-![Quality Profile with Crypto Rules](.github/img/quality_profile.png)
-
-Then (on the top right) open the profile settings and activate more rules. Find the new
-rules (IBM Cryptography) and activate them.
+> To generate a Cryptography Bill of Materials (CBOM), it is mandatory to activate at 
+> least one of these cryptography-related rules.
 
 ![Activate Rules Crypto Rules](.github/img/activate_rules.png)
 
-Open the project you created before and open *Project Settings* and there *Quality Profile*.
-If not already there, add Java or Python as a language and select the extended Quality Profile with the
-activated crypto rules.
-
-![Project Quality Profile](.github/img/project_qp.png)
+As of the current version, the plugin contains one single rule for creating a cryptographic inventory. 
+Future updates may introduce additional rules to expand functionality.
 
 ### Scan Source Code
 
