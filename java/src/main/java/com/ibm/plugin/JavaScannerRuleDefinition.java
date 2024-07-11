@@ -28,7 +28,7 @@ import org.sonarsource.analyzer.commons.RuleMetadataLoader;
 
 public class JavaScannerRuleDefinition implements RulesDefinition {
     public static final String REPOSITORY_KEY = "sonar-java-crypto";
-    public static final String REPOSITORY_NAME = "IBM Cryptography (Java)";
+    public static final String REPOSITORY_NAME = "Sonar Cryptography";
 
     // Add the rule keys of the rules which need to be considered as template-rules
     private static final Set<String> RULE_TEMPLATES_KEY = Collections.emptySet();
