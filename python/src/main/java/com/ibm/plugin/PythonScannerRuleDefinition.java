@@ -28,7 +28,7 @@ import org.sonarsource.analyzer.commons.RuleMetadataLoader;
 
 public class PythonScannerRuleDefinition implements RulesDefinition {
     public static final String REPOSITORY_KEY = "sonar-python-crypto";
-    public static final String REPOSITORY_NAME = "IBM Cryptography (Python)";
+    public static final String REPOSITORY_NAME = "Sonar Cryptography";
 
     // Add the rule keys of the rules which need to be considered as template-rules
     private static final Set<String> RULE_TEMPLATES_KEY = Collections.emptySet();

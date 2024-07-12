@@ -57,7 +57,7 @@
                 <configuration>
                     <pluginKey>sonar-crypto-plugin</pluginKey>
                     <pluginName>Sonar Crypto Plugin</pluginName>
-                    <pluginClass>com.ibm.plugin.CryptoPlugin</pluginClass>
+                    <pluginClass>com.ibm.plugin.CryptographyPlugin</pluginClass>
                     <pluginApiMinVersion>${sonar.version}</pluginApiMinVersion>
                     <sonarLintSupported>true</sonarLintSupported>
                     <skipDependenciesPackaging>true</skipDependenciesPackaging>

@@ -24,17 +24,17 @@ import org.sonar.api.SonarRuntime;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
-public class CryptoPlugin implements org.sonar.api.Plugin {
+public class CryptographyPlugin implements org.sonar.api.Plugin {
 
     @SuppressWarnings({"java:S1874"})
-    private static final Logger LOGGER = Loggers.get(CryptoPlugin.class);
+    private static final Logger LOGGER = Loggers.get(CryptographyPlugin.class);
 
     @Override
     public void define(Context context) {
         SonarRuntime runtime = context.getRuntime();
         SonarProduct product = runtime.getProduct();
 
-        LOGGER.info("Crypto Plugin initializing in Context (" + product + ")");
+        LOGGER.info("Sonar Cryptography initialized in context (" + product + ")");
 
         context.addExtensions(Configuration.getPropertyDefinitions()); // add configuration
         context.addExtensions(

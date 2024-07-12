@@ -1,5 +1,5 @@
 {
-  "title": "Crypto Inventory",
+  "title": "Cryptographic Inventory (CBOM)",
   "type": "CODE_SMELL",
   "status": "ready",
   "remediation": {
@@ -8,8 +8,8 @@
   },
   "tags": [
     "cryptography",
-    "algorithm",
-    "rules"
+    "cbom",
+    "cwe"
   ],
   "defaultSeverity": "Minor",
   "scope": "Main",

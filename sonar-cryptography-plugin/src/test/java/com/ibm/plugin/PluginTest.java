@@ -37,7 +37,7 @@ class PluginTest {
                 SonarRuntimeImpl.forSonarQube(
                         Version.create(9, 5), SonarQubeSide.SCANNER, SonarEdition.COMMUNITY);
         Plugin.Context context = new PluginContextImpl.Builder().setSonarRuntime(runtime).build();
-        CryptoPlugin plugin = new CryptoPlugin();
+        CryptographyPlugin plugin = new CryptographyPlugin();
         plugin.define(context);
         Assertions.assertEquals(6, context.getExtensions().size());
     }
