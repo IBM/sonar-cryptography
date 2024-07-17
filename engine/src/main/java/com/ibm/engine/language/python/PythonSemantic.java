@@ -27,19 +27,20 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.apache.commons.lang3.tuple.Pair;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.plugins.python.api.symbols.ClassSymbol;
 import org.sonar.plugins.python.api.symbols.Symbol;
 import org.sonar.plugins.python.api.symbols.Usage;
 import org.sonar.plugins.python.api.tree.*;
 
 public final class PythonSemantic {
-    private static final Logger LOGGER = Loggers.get(PythonSemantic.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PythonSemantic.class);
 
     private PythonSemantic() {
         // private
@@ -93,9 +94,7 @@ public final class PythonSemantic {
         List<Tree> results = new LinkedList<>();
         for (ResolvedValue<Object, Tree> value : values) {
             Tree t = value.tree();
-            if (t != null) {
-                results.add(t);
-            }
+            results.add(t);
         }
 
         if (results.isEmpty()) {
@@ -106,7 +105,8 @@ public final class PythonSemantic {
                 if (nameSymbol instanceof ClassSymbol nameClassSymbol
                         && nameClassSymbol.fullyQualifiedName() != null) {
                     return Optional.of(
-                            (String string) -> nameClassSymbol.fullyQualifiedName().equals(string));
+                            (String string) ->
+                                    Objects.equals(nameClassSymbol.fullyQualifiedName(), string));
                 }
             }
             // Otherwise, we accept all types
@@ -120,13 +120,8 @@ public final class PythonSemantic {
                 case NAME:
                     Name nameTree = (Name) resultTree;
                     Optional<String> fullyQualifiedNameTempOptional =
-                            Optional.ofNullable(nameTree)
-                                    .map(Name::symbol)
-                                    .map(Symbol::fullyQualifiedName);
-                    String fullyQualifiedNameTemp =
-                            fullyQualifiedNameTempOptional.isPresent()
-                                    ? fullyQualifiedNameTempOptional.get()
-                                    : null;
+                            Optional.of(nameTree).map(Name::symbol).map(Symbol::fullyQualifiedName);
+                    String fullyQualifiedNameTemp = fullyQualifiedNameTempOptional.orElse(null);
                     if (fullyQualifiedNameTemp != null) {
                         if (nameTree.parent() instanceof FunctionDef) {
                             // When we want to resolve the type of a function definition, we resolve
@@ -203,7 +198,7 @@ public final class PythonSemantic {
      */
     private static Boolean resolveMultipleTypes(
             @Nonnull String stringType, @Nonnull List<IType> typesList) {
-        Boolean result = false;
+        boolean result = false;
         for (IType iType : typesList) {
             if (iType.is(stringType)) {
                 result = true;
@@ -223,9 +218,9 @@ public final class PythonSemantic {
      * @return A boolean, {@code true} if {@code fullyQualifiedNameStringType} is of type {@code
      *     wantedStringType}
      */
-    private static Boolean resolveFullyQualifiedNameStringType(
+    private static boolean resolveFullyQualifiedNameStringType(
             @Nonnull String fullyQualifiedNameStringType, @Nonnull String wantedStringType) {
-        Boolean result = false;
+        boolean result = false;
 
         // When defining a "type" in `forObjectTypes`, we never include the end (method or class
         // name). To detect `cryptography.hazmat.primitives.asymmetric.dsa.DSAPublicNumbers`, we use
@@ -322,7 +317,8 @@ public final class PythonSemantic {
                 return result;
             }
 
-            List<Usage> usages = new LinkedList<>(nameTree.symbol().usages());
+            List<Usage> usages =
+                    new LinkedList<>(Objects.requireNonNull(nameTree.symbol()).usages());
 
             // We remove all the usages that are declared *after* the current tree, and we remove
             // the usage of the current tree we are resolving
@@ -440,68 +436,62 @@ public final class PythonSemantic {
                                 for (Statement statementTree :
                                         functionDefTree.body().statements()) {
                                     // We resolve all return statements
-                                    if (statementTree instanceof ReturnStatement) {
-                                        ReturnStatement returnStatementTree =
-                                                (ReturnStatement) statementTree;
-                                        if (!returnStatementTree.expressions().isEmpty()) {
-                                            if (subscriptionIndex
-                                                            instanceof Integer intSubscriptionIndex
-                                                    && intSubscriptionIndex != null
-                                                    && intSubscriptionIndex
-                                                            < returnStatementTree
+                                    if (statementTree instanceof ReturnStatement returnStatementTree
+                                            && !returnStatementTree.expressions().isEmpty()) {
+                                        if (subscriptionIndex
+                                                        instanceof Integer intSubscriptionIndex
+                                                && intSubscriptionIndex
+                                                        < returnStatementTree
+                                                                .expressions()
+                                                                .size()) {
+                                            // Case where we know the subscription index: we
+                                            // resolve the right expression, and we remove the
+                                            // subscription index for deeper resolution, now
+                                            // that it has been utilized
+                                            result.addAll(
+                                                    resolveValues(
+                                                            clazz,
+                                                            returnStatementTree
                                                                     .expressions()
-                                                                    .size()) {
-                                                // Case where we know the subscription index: we
-                                                // resolve the right expression, and we remove the
-                                                // subscription index for deeper resolution, now
-                                                // that it has been utilized
+                                                                    .get(intSubscriptionIndex),
+                                                            argsMappingList,
+                                                            null,
+                                                            returnEnclosingParam,
+                                                            isResolvingType,
+                                                            detectionEngine,
+                                                            alreadyResolvedTrees));
+                                        } else {
+                                            // Case where we don't know the subscription index:
+                                            // we resolve everything
+                                            for (Expression expressionTree :
+                                                    returnStatementTree.expressions()) {
+                                                @SuppressWarnings("unchecked")
+                                                LinkedList<
+                                                                Map<
+                                                                        org.sonar.plugins.python.api
+                                                                                .tree.Parameter,
+                                                                        Argument>>
+                                                        argsMappingListClone =
+                                                                (LinkedList<
+                                                                                Map<
+                                                                                        org.sonar
+                                                                                                .plugins
+                                                                                                .python
+                                                                                                .api
+                                                                                                .tree
+                                                                                                .Parameter,
+                                                                                        Argument>>)
+                                                                        argsMappingList.clone();
                                                 result.addAll(
                                                         resolveValues(
                                                                 clazz,
-                                                                returnStatementTree
-                                                                        .expressions()
-                                                                        .get(intSubscriptionIndex),
-                                                                argsMappingList,
-                                                                null,
+                                                                expressionTree,
+                                                                argsMappingListClone,
+                                                                subscriptionIndex,
                                                                 returnEnclosingParam,
                                                                 isResolvingType,
                                                                 detectionEngine,
                                                                 alreadyResolvedTrees));
-                                            } else {
-                                                // Case where we don't know the subscription index:
-                                                // we resolve everything
-                                                for (Expression expressionTree :
-                                                        returnStatementTree.expressions()) {
-                                                    @SuppressWarnings("unchecked")
-                                                    LinkedList<
-                                                                    Map<
-                                                                            org.sonar.plugins.python
-                                                                                    .api.tree
-                                                                                    .Parameter,
-                                                                            Argument>>
-                                                            argsMappingListClone =
-                                                                    (LinkedList<
-                                                                                    Map<
-                                                                                            org
-                                                                                                    .sonar
-                                                                                                    .plugins
-                                                                                                    .python
-                                                                                                    .api
-                                                                                                    .tree
-                                                                                                    .Parameter,
-                                                                                            Argument>>)
-                                                                            argsMappingList.clone();
-                                                    result.addAll(
-                                                            resolveValues(
-                                                                    clazz,
-                                                                    expressionTree,
-                                                                    argsMappingListClone,
-                                                                    subscriptionIndex,
-                                                                    returnEnclosingParam,
-                                                                    isResolvingType,
-                                                                    detectionEngine,
-                                                                    alreadyResolvedTrees));
-                                                }
                                             }
                                         }
                                     }
@@ -555,7 +545,7 @@ public final class PythonSemantic {
                 // When resolving the name does give standard results, we call `resolveConstant` to
                 // resolve the string name of the nameTree
                 // This is important because the name of a class (like SECP384R1) or function may
-                // carry the informatiom about the used cryptography algorithm
+                // carry the information about the used cryptography algorithm
                 Optional<O> value = resolveConstant(clazz, nameTree);
                 return value.map(t -> List.of(new ResolvedValue<>(t, (Tree) nameTree)))
                         .orElse(Collections.emptyList());
@@ -642,7 +632,9 @@ public final class PythonSemantic {
                     Argument argument =
                             (Argument)
                                     detectionEngine.extractArgumentFromMethodCaller(
-                                            methodDefinition, callExpressionTree, parameter.name());
+                                            methodDefinition,
+                                            callExpressionTree,
+                                            Objects.requireNonNull(parameter.name()));
                     thisMapping.put(parameter, argument);
                 }
             }
@@ -661,7 +653,6 @@ public final class PythonSemantic {
             List<ResolvedValue<O, Tree>> result = new LinkedList<>();
             Tuple tupleTree = (Tuple) tree;
             if (subscriptionIndex instanceof Integer intSubscriptionIndex
-                    && intSubscriptionIndex != null
                     && intSubscriptionIndex < tupleTree.elements().size()) {
                 // Resolve the right tuple when there is a `subscriptionIndex`
                 result.addAll(
@@ -796,7 +787,6 @@ public final class PythonSemantic {
             List<Expression> listExpressions = listLiteralTree.elements().expressions();
             if (!listExpressions.isEmpty()
                     && subscriptionIndex instanceof Integer intSubscriptionIndex
-                    && intSubscriptionIndex != null
                     && intSubscriptionIndex < listExpressions.size()) {
                 // Case where the list is not empty and we know the subscription index: we resolve
                 // the right expression, and we remove the subscription index for future
@@ -834,8 +824,7 @@ public final class PythonSemantic {
             DictionaryLiteral dictionaryLiteralTree = (DictionaryLiteral) tree;
             List<DictionaryLiteralElement> listElements = dictionaryLiteralTree.elements();
             boolean keyResolved = false;
-            if (subscriptionIndex instanceof String stringSubscriptionIndex
-                    && stringSubscriptionIndex != null) {
+            if (subscriptionIndex instanceof String stringSubscriptionIndex) {
                 for (DictionaryLiteralElement dictionaryLiteralElement : listElements) {
                     if (dictionaryLiteralElement instanceof KeyValuePair keyValuePairTree
                             && keyValuePairTree.key() instanceof StringLiteral keyLiteral
@@ -987,7 +976,7 @@ public final class PythonSemantic {
     private static FunctionDef getMethodDefinition(@Nonnull final Tree tree) {
         if (tree instanceof Name nameTree && nameTree.symbol() != null) {
             List<Usage> usages =
-                    Optional.ofNullable(nameTree)
+                    Optional.of(nameTree)
                             .map(Name::symbol)
                             .map(Symbol::usages)
                             .orElse(Collections.emptyList());

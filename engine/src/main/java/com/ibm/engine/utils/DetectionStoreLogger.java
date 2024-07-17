@@ -28,19 +28,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DetectionStoreLogger<R, T, S, P> {
-    private static final Logger LOGGER = Loggers.get(DetectionStoreLogger.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DetectionStoreLogger.class);
 
     public void print(@Nonnull DetectionStore<R, T, S, P> rootDetectionStore) {
         printDstoreValues(0, List.of(rootDetectionStore));
     }
 
-    private int truncateSizeForLongNumbers = 6;
+    private static final int TRUNCATE_SIZE_FOR_LONG_NUMBERS = 6;
 
     private void printDstoreValues(
             int tabs, @Nonnull List<DetectionStore<R, T, S, P>> detectionStores) {
@@ -59,16 +58,12 @@ public class DetectionStoreLogger<R, T, S, P> {
                                                                     store.getDetectionRule()
                                                                             .bundle()
                                                                             .getIdentifier()
-                                                                            .hashCode(),
-                                                                    true,
-                                                                    truncateSizeForLongNumbers)
+                                                                            .hashCode())
                                                             + ", level: "
                                                             + store.getLevel()
                                                             + ", hash: "
                                                             + getFormattedNumericString(
-                                                                    store.hashCode(),
-                                                                    true,
-                                                                    truncateSizeForLongNumbers)
+                                                                    store.hashCode())
                                                             + "] "
                                                             + "   ".repeat(Math.max(0, tabs))
                                                             + (tabs > 0 ? "└─ " : "")
@@ -97,16 +92,12 @@ public class DetectionStoreLogger<R, T, S, P> {
                                                                         store.getDetectionRule()
                                                                                 .bundle()
                                                                                 .getIdentifier()
-                                                                                .hashCode(),
-                                                                        true,
-                                                                        truncateSizeForLongNumbers)
+                                                                                .hashCode())
                                                                 + ", level: "
                                                                 + store.getLevel()
                                                                 + ", hash: "
                                                                 + getFormattedNumericString(
-                                                                        store.hashCode(),
-                                                                        true,
-                                                                        truncateSizeForLongNumbers)
+                                                                        store.hashCode())
                                                                 + "] "
                                                                 + "   ".repeat(Math.max(0, tabs))
                                                                 + (tabs > 0 ? "└─ " : "")
@@ -161,26 +152,25 @@ public class DetectionStoreLogger<R, T, S, P> {
     }
 
     @Nonnull
-    String getFormattedNumericString(
-            int hashInt, boolean canBeNegative, @Nullable Integer maxCharacters) {
+    String getFormattedNumericString(int hashInt) {
         String res = "";
-        if (canBeNegative && hashInt >= 0) {
+        if (hashInt >= 0) {
             res += "";
         }
         res += Integer.toString(hashInt);
 
-        if (maxCharacters != null) {
-            if (maxCharacters < 3) {
-                throw new IllegalArgumentException(
-                        "Max characters must be greater than or equal to 3");
-            } else if (res.length() > maxCharacters) {
-                res = res.substring(0, maxCharacters - 1) + "…";
-            } else if (res.length() < maxCharacters) {
-                res += StringUtils.repeat(" ", maxCharacters - res.length());
-            }
+        if (DetectionStoreLogger.TRUNCATE_SIZE_FOR_LONG_NUMBERS < 3) {
+            throw new IllegalArgumentException("Max characters must be greater than or equal to 3");
+        } else if (res.length() > DetectionStoreLogger.TRUNCATE_SIZE_FOR_LONG_NUMBERS) {
+            res = res.substring(0, DetectionStoreLogger.TRUNCATE_SIZE_FOR_LONG_NUMBERS - 1) + "…";
+        } else if (res.length() < DetectionStoreLogger.TRUNCATE_SIZE_FOR_LONG_NUMBERS) {
+            res +=
+                    StringUtils.repeat(
+                            " ",
+                            DetectionStoreLogger.TRUNCATE_SIZE_FOR_LONG_NUMBERS - res.length());
         }
-        if (maxCharacters != null && res.length() > maxCharacters) {
-            res = res.substring(0, maxCharacters - 1) + "…";
+        if (res.length() > DetectionStoreLogger.TRUNCATE_SIZE_FOR_LONG_NUMBERS) {
+            res = res.substring(0, DetectionStoreLogger.TRUNCATE_SIZE_FOR_LONG_NUMBERS - 1) + "…";
         }
         return res;
     }

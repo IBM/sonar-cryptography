@@ -38,8 +38,8 @@ import com.ibm.plugin.rules.detection.hash.CryptographyHash;
 import com.ibm.plugin.rules.detection.symmetric.CryptographyCipher;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.plugins.python.api.tree.Tree;
 
 @SuppressWarnings("java:S1301")
@@ -49,7 +49,7 @@ public final class PythonKeyContextTranslator {
         // private
     }
 
-    private static final Logger LOGGER = Loggers.get(PythonKeyContextTranslator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PythonKeyContextTranslator.class);
 
     @Nonnull
     public static Optional<INode> translateForKeyContext(

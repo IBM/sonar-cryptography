@@ -22,15 +22,15 @@ package com.ibm.plugin;
 import com.ibm.output.cyclondx.CBOMOutputFileFactory;
 import java.io.File;
 import javax.annotation.Nonnull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.postjob.PostJob;
 import org.sonar.api.batch.postjob.PostJobContext;
 import org.sonar.api.batch.postjob.PostJobDescriptor;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
 
 public class OutputFileJob implements PostJob {
 
-    private static final Logger LOGGER = Loggers.get(OutputFileJob.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OutputFileJob.class);
 
     @Override
     public void describe(PostJobDescriptor postJobDescriptor) {

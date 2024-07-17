@@ -39,12 +39,11 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class MacReorganizer {
-
-    private static final Logger LOGGER = Loggers.get(MacReorganizer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MacReorganizer.class);
 
     private MacReorganizer() {
         // private

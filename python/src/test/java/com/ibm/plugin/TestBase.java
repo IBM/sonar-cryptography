@@ -22,24 +22,26 @@ package com.ibm.plugin;
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.detection.Finding;
 import com.ibm.engine.model.IValue;
+import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.utils.DetectionStoreLogger;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.Utils;
-import com.ibm.plugin.rules.PythonInventoryRule;
+import com.ibm.plugin.rules.detection.PythonBaseDetectionRule;
+import com.ibm.plugin.rules.detection.PythonDetectionRules;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
-import org.sonar.api.utils.log.LogTester;
-import org.sonar.api.utils.log.LoggerLevel;
+import org.slf4j.event.Level;
+import org.sonar.api.testfixtures.log.LogTesterJUnit5;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
 import org.sonar.plugins.python.api.tree.Tree;
 
-public abstract class TestBase extends PythonInventoryRule {
-    protected final LogTester logTester = new LogTester();
+public abstract class TestBase extends PythonBaseDetectionRule {
 
     @Nonnull
     private final DetectionStoreLogger<PythonCheck, Tree, Symbol, PythonVisitorContext>
@@ -47,9 +49,18 @@ public abstract class TestBase extends PythonInventoryRule {
 
     private int findingId = 0;
 
+    protected TestBase(@NotNull List<IDetectionRule<Tree>> detectionRules) {
+        super(detectionRules);
+    }
+
+    protected TestBase() {
+        super(PythonDetectionRules.rules());
+    }
+
     @BeforeEach
     public void debug() {
-        logTester.setLevel(LoggerLevel.DEBUG);
+        LogTesterJUnit5 logTesterJUnit5 = new LogTesterJUnit5();
+        logTesterJUnit5.setLevel(Level.DEBUG);
     }
 
     @Override
