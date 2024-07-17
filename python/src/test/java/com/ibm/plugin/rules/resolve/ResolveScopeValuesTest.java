@@ -19,29 +19,34 @@
  */
 package com.ibm.plugin.rules.resolve;
 
-import com.ibm.plugin.rules.detection.PythonBaseDetectionRule;
-import org.junit.jupiter.api.BeforeEach;
+import com.ibm.engine.detection.DetectionStore;
+import com.ibm.mapper.model.INode;
+import com.ibm.plugin.TestBase;
+import java.util.List;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
-import org.sonar.api.utils.log.LogTester;
-import org.sonar.api.utils.log.LoggerLevel;
+import org.sonar.plugins.python.api.PythonCheck;
+import org.sonar.plugins.python.api.PythonVisitorContext;
+import org.sonar.plugins.python.api.symbols.Symbol;
+import org.sonar.plugins.python.api.tree.Tree;
 import org.sonar.python.checks.utils.PythonCheckVerifier;
 
-public class ResolveScopeValuesTest extends PythonBaseDetectionRule {
-    // This Test class structure allows to test a single class of rules instead of all rules defined
+class ResolveScopeValuesTest extends TestBase {
+    // This Test class structure allows testing a single class of rules instead of all rules defined
     // in PythonDetectionRules.
     // To do so, add `extends PythonBaseDetectionRule` and define a constructor using the rules you
     // want.
     // To use several rules, create a `rules()` method to call in the constructor.
-
-    protected final LogTester logTester = new LogTester();
-
     protected ResolveScopeValuesTest() {
         super(ResolveScopeValues.rules());
     }
 
-    @BeforeEach
-    public void debug() {
-        logTester.setLevel(LoggerLevel.DEBUG);
+    @Override
+    public void asserts(
+            int findingId,
+            @NotNull DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> detectionStore,
+            @NotNull List<INode> nodes) {
+        // nothing
     }
 
     @Test

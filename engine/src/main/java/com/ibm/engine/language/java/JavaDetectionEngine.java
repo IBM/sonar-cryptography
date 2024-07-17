@@ -34,8 +34,8 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.apache.commons.lang3.tuple.Pair;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.plugins.java.api.JavaCheck;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
@@ -43,7 +43,7 @@ import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.*;
 
 public final class JavaDetectionEngine implements IDetectionEngine<Tree, Symbol> {
-    private static final Logger LOGGER = Loggers.get(JavaDetectionEngine.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JavaDetectionEngine.class);
 
     @Nonnull
     private final DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore;

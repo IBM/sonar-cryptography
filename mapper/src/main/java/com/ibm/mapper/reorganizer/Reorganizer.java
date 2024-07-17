@@ -25,12 +25,11 @@ import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import org.apache.commons.lang3.tuple.Pair;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class Reorganizer implements IReorganizer {
-
-    private static final Logger LOGGER = Loggers.get(Reorganizer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Reorganizer.class);
 
     private final List<IReorganizerRule> rules;
 

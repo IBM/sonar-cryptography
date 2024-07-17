@@ -25,13 +25,14 @@ import com.ibm.engine.language.ILanguageTranslation;
 import java.util.*;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.plugins.java.api.tree.*;
 
 public class JavaLanguageTranslation implements ILanguageTranslation<Tree> {
-    @Nonnull private static final Logger LOGGER = Loggers.get(JavaLanguageTranslation.class);
+    @Nonnull
+    private static final Logger LOGGER = LoggerFactory.getLogger(JavaLanguageTranslation.class);
 
     @Nonnull
     @Override
