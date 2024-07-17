@@ -19,15 +19,15 @@
  */
 package com.ibm.plugin;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.api.SonarProduct;
 import org.sonar.api.SonarRuntime;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
 
 public class CryptographyPlugin implements org.sonar.api.Plugin {
 
     @SuppressWarnings({"java:S1874"})
-    private static final Logger LOGGER = Loggers.get(CryptographyPlugin.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CryptographyPlugin.class);
 
     @Override
     public void define(Context context) {

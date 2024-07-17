@@ -33,16 +33,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.plugins.java.api.JavaCheck;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public class GenerateAssertsHelper {
-
-    private static final Logger LOGGER = Loggers.get(GenerateAssertsHelper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GenerateAssertsHelper.class);
 
     private static final String filePath = "target/generated-asserts/";
     private static final String fileName = "asserts.txt";
@@ -112,11 +111,11 @@ public class GenerateAssertsHelper {
             throws IOException {
         writer.write(
                 String.format(
-                        "assertThat(%s.getDetectionValues()).hasSize(%d);\n",
+                        "assertThat(%s.getDetectionValues()).hasSize(%d);%n",
                         detectionStoreVarName, detectionStore.getDetectionValues().size()));
         writer.write(
                 String.format(
-                        "assertThat(%s.getDetectionValueContext()).isInstanceOf(%s.class);\n",
+                        "assertThat(%s.getDetectionValueContext()).isInstanceOf(%s.class);%n",
                         detectionStoreVarName,
                         detectionStore.getDetectionValueContext().getClass().getSimpleName()));
 
@@ -134,15 +133,15 @@ public class GenerateAssertsHelper {
 
             writer.write(
                     String.format(
-                            "IValue<Tree> %s = %s.getDetectionValues().get(%d);\n",
+                            "IValue<Tree> %s = %s.getDetectionValues().get(%d);%n",
                             valueVarName, detectionStoreVarName, i));
             writer.write(
                     String.format(
-                            "assertThat(%s).isInstanceOf(%s.class);\n",
+                            "assertThat(%s).isInstanceOf(%s.class);%n",
                             valueVarName, value.getClass().getSimpleName()));
             writer.write(
                     String.format(
-                            "assertThat(%s.asString()).isEqualTo(\"%s\");\n",
+                            "assertThat(%s.asString()).isEqualTo(\"%s\");%n",
                             valueVarName, value.asString()));
             writer.write("\n");
         }
@@ -171,7 +170,7 @@ public class GenerateAssertsHelper {
 
             writer.write(
                     String.format(
-                            "DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> %s = getStoreOfValueType(%s.class, %s.getChildren());\n",
+                            "DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> %s = getStoreOfValueType(%s.class, %s.getChildren());%n",
                             childrenStoreVarName, kind, detectionStoreVarName));
 
             generateDetectionStoreAssertions(writer, store, childrenStoreVarName);
@@ -182,7 +181,7 @@ public class GenerateAssertsHelper {
 
     private static void generateNodeAssertions(
             FileWriter writer, List<INode> nodes, String nodeVarName) throws IOException {
-        writer.write(String.format("assertThat(%s).hasSize(%d);\n\n", nodeVarName, nodes.size()));
+        writer.write(String.format("assertThat(%s).hasSize(%d);%n%n", nodeVarName, nodes.size()));
 
         for (int i = 0; i < nodes.size(); i++) {
             INode node = nodes.get(i);
@@ -190,7 +189,7 @@ public class GenerateAssertsHelper {
         }
     }
 
-    private static Map<String, Integer> usedKindNames = new HashMap<>();
+    private static final Map<String, Integer> usedKindNames = new HashMap<>();
 
     private static void generateNodeAssertionsRecursive(
             FileWriter writer,
@@ -224,37 +223,37 @@ public class GenerateAssertsHelper {
         if (index >= 0) {
             // Case of top level translation nodes
             title = kindName;
-            writer.write(String.format("// %s\n", title));
+            writer.write(String.format("// %s%n", title));
             writer.write(
                     String.format(
-                            "INode %s = %s.get(%d);\n", nodeVarName, previousNodeVarName, index));
+                            "INode %s = %s.get(%d);%n", nodeVarName, previousNodeVarName, index));
             writer.write(
                     String.format(
-                            "assertThat(%s.getKind()).isEqualTo(%s.class);\n",
+                            "assertThat(%s.getKind()).isEqualTo(%s.class);%n",
                             nodeVarName, kindName));
         } else {
             // Case of children nodes
             title = String.format("%s under %s", kindName, previousTitle);
-            writer.write(String.format("// %s\n", title));
+            writer.write(String.format("// %s%n", title));
             writer.write(
                     String.format(
-                            "INode %s = %s.getChildren().get(%s.class);\n",
+                            "INode %s = %s.getChildren().get(%s.class);%n",
                             nodeVarName, previousNodeVarName, kindName));
-            writer.write(String.format("assertThat(%s).isNotNull();\n", nodeVarName));
+            writer.write(String.format("assertThat(%s).isNotNull();%n", nodeVarName));
         }
 
-        if (node.getChildren().size() > 0) {
+        if (!node.getChildren().isEmpty()) {
             writer.write(
                     String.format(
-                            "assertThat(%s.getChildren()).hasSize(%d);\n",
+                            "assertThat(%s.getChildren()).hasSize(%d);%n",
                             nodeVarName, node.getChildren().size()));
         } else {
-            writer.write(String.format("assertThat(%s.getChildren()).isEmpty();\n", nodeVarName));
+            writer.write(String.format("assertThat(%s.getChildren()).isEmpty();%n", nodeVarName));
         }
 
         writer.write(
                 String.format(
-                        "assertThat(%s.asString()).isEqualTo(\"%s\");\n",
+                        "assertThat(%s.asString()).isEqualTo(\"%s\");%n",
                         nodeVarName, node.asString()));
         writer.write("\n");
 

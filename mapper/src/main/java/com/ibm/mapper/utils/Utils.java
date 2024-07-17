@@ -25,11 +25,11 @@ import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class Utils {
-    private static final Logger LOGGER = Loggers.get(Utils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class);
 
     private Utils() {
         // singleton
@@ -43,13 +43,11 @@ public final class Utils {
         nodes.forEach(
                 node -> {
                     LOGGER.debug(
-                            "[translation] "
-                                    + "   ".repeat(Math.max(0, tabs))
-                                    + (tabs > 0 ? "└─ " : "")
-                                    + "("
-                                    + node.getKind().getSimpleName()
-                                    + ") "
-                                    + node.asString());
+                            "[translation] {}{}({}) {}",
+                            "   ".repeat(Math.max(0, tabs)),
+                            tabs > 0 ? "└─ " : "",
+                            node.getKind().getSimpleName(),
+                            node.asString());
                     if (node.hasChildren()) {
                         printNodes(tabs + 1, node.getChildren().values());
                     }

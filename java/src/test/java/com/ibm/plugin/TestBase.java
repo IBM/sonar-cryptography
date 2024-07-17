@@ -35,18 +35,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
-import org.sonar.api.utils.log.LogTester;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.LoggerLevel;
-import org.sonar.api.utils.log.Loggers;
+import org.slf4j.event.Level;
+import org.sonar.api.testfixtures.log.LogTesterJUnit5;
 import org.sonar.plugins.java.api.JavaCheck;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public abstract class TestBase extends JavaInventoryRule {
-    protected final LogTester logTester = new LogTester();
-    private static final Logger LOGGER = Loggers.get(TestBase.class);
 
     @Nonnull
     private final DetectionStoreLogger<JavaCheck, Tree, Symbol, JavaFileScannerContext>
@@ -69,7 +65,8 @@ public abstract class TestBase extends JavaInventoryRule {
 
     @BeforeEach
     public void debug() {
-        logTester.setLevel(LoggerLevel.DEBUG);
+        LogTesterJUnit5 logTesterJUnit5 = new LogTesterJUnit5();
+        logTesterJUnit5.setLevel(Level.DEBUG);
     }
 
     @Override

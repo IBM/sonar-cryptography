@@ -108,6 +108,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.sonarsource.api.plugin</groupId>
+            <artifactId>sonar-plugin-api-test-fixtures</artifactId>
+            <version>${sonar.plugin.api.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>5.10.3</version>
