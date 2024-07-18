@@ -34,12 +34,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class ExportRules {
-
-    private static final Logger LOGGER = Loggers.get(ExportRules.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExportRules.class);
 
     protected <T> void exportToJSON(
             List<IDetectionRule<T>> listOfEntryPoints, FileWriter fileWriter) {

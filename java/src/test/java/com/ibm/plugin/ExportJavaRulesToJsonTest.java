@@ -24,12 +24,12 @@ import com.ibm.plugin.rules.detection.JavaDetectionRules;
 import java.io.FileWriter;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /* This class is not really a test, but is used to export all Java rules to a JSON file */
 class ExportJavaRulesToJsonTest extends ExportRules {
-    private static final Logger LOGGER = Loggers.get(ExportJavaRulesToJsonTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExportJavaRulesToJsonTest.class);
 
     @Test
     void test() {

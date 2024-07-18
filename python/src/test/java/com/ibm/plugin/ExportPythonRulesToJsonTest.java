@@ -24,12 +24,12 @@ import com.ibm.plugin.rules.detection.PythonDetectionRules;
 import java.io.FileWriter;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /* This class is not really a test, but is used to export all Python rules to a JSON file */
 class ExportPythonRulesToJsonTest extends ExportRules {
-    private static final Logger LOGGER = Loggers.get(ExportPythonRulesToJsonTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExportPythonRulesToJsonTest.class);
 
     @Test
     void test() {

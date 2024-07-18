@@ -31,8 +31,8 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.java.model.ExpressionUtils;
 import org.sonar.plugins.java.api.JavaCheck;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
@@ -41,7 +41,7 @@ import org.sonar.plugins.java.api.tree.*;
 
 public final class JavaLanguageSupport
         implements ILanguageSupport<JavaCheck, Tree, Symbol, JavaFileScannerContext> {
-    private static final Logger LOGGER = Loggers.get(JavaLanguageSupport.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JavaLanguageSupport.class);
     @Nonnull private final Handler<JavaCheck, Tree, Symbol, JavaFileScannerContext> handler;
 
     public JavaLanguageSupport() {

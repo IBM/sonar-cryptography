@@ -44,14 +44,13 @@ import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.plugin.translation.translator.JavaTranslator;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class JavaMacContextTranslator extends AbstractContextTranslator
         implements IContextTranslationWithKind<Tree, MacContext.Kind> {
-
-    private static final Logger LOGGER = Loggers.get(JavaMacContextTranslator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JavaMacContextTranslator.class);
 
     public JavaMacContextTranslator(@NotNull Configuration configuration) {
         super(configuration);
