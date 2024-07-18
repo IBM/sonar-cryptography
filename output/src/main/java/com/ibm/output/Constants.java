@@ -25,6 +25,6 @@ public final class Constants {
         // nothing
     }
 
-    public static final String SCANNER_NAME = "SonarQube Crypto Scanner Plugin";
-    public static final String SCANNER_VENDOR = "IBM Research";
+    public static final String SCANNER_NAME = "Sonar Cryptography Plugin";
+    public static final String SCANNER_VENDOR = "IBM";
 }
