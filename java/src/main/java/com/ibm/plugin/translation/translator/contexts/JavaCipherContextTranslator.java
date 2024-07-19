@@ -53,12 +53,11 @@ import com.ibm.mapper.model.functionality.Encapsulate;
 import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.plugin.translation.translator.JavaTranslator;
-import org.jetbrains.annotations.NotNull;
-import org.sonar.plugins.java.api.tree.Tree;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
+import org.sonar.plugins.java.api.tree.Tree;
 
 public final class JavaCipherContextTranslator extends AbstractContextTranslator
         implements IContextTranslationWithKind<Tree, CipherContext.Kind> {

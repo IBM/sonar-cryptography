@@ -24,11 +24,10 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class ITranslator<R, T, S, P> {
 
