@@ -22,23 +22,21 @@ package com.ibm.enricher;
 import com.ibm.enricher.algorithm.AlgorithmEnricher;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.INode;
-
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nonnull;
 
 /**
- * This enricher instance operates on a language-agnostic level,
- * meaning it will enrich the given list of nodes with general
- * cryptographic knowledge, such as OIDs. This does not include
- * language-specific information like default key sizes.
- * Therefore, create a library-specific enricher instance
- * as part of the language package.
+ * This enricher instance operates on a language-agnostic level, meaning it will enrich the given
+ * list of nodes with general cryptographic knowledge, such as OIDs. This does not include
+ * language-specific information like default key sizes. Therefore, create a library-specific
+ * enricher instance as part of the language package.
  */
 public class Enricher implements IEnricher {
 
     /**
      * Enriches a list of nodes with additional information.
+     *
      * @param nodes The list of nodes to enrich
      */
     public static void enrich(@Nonnull final List<INode> nodes) {
@@ -54,6 +52,7 @@ public class Enricher implements IEnricher {
 
     /**
      * Enriches the given node with additional information.
+     *
      * @param node The node to enrich
      */
     @Override
