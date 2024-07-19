@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class PythonEnricher implements IEnricher {
 
@@ -56,7 +57,7 @@ public class PythonEnricher implements IEnricher {
             List.of(PrivateKey.class, PublicKey.class);
 
     @Override
-    public void enrich(INode node) {
+    public void enrich(@NotNull INode node) {
         enrichPrivateKeyWithAlgorithm(node);
 
         enrichPublicKeyAlgorithmWithPrivateKeyAlgorithmContent(node);
@@ -75,11 +76,13 @@ public class PythonEnricher implements IEnricher {
      * This function should be applied at the very end of the enrichment/translation process. It
      * will extract the nodes of class listed in `rootLevelKinds` to make them root nodes. It is
      * important that this function gets applied after the other enrichments, as those may use links
-     * between nodes that may be removed after calling this function. TODO: For now, it only looks
-     * at children of the root PrivateKey node: should I make it more general?
+     * between nodes that may be removed after calling this function.
      *
-     * @param values
-     * @return
+     * <p>TODO: For now, it only looks at children of the root private key node: should I make it
+     * more general?
+     *
+     * @param values A list of nodes to enrich.
+     * @return A new list of nodes with additional information.
      */
     public List<INode> enrichRootAfter(@Nonnull final List<INode> values) {
         List<INode> newValues = new ArrayList<>(values);
@@ -107,12 +110,15 @@ public class PythonEnricher implements IEnricher {
 
     /**
      * This function should be applied at the very beginning of the enrichment process. It
-     * processes/rearanges the root nodes before the application of the per-node enrichment. It is
+     * processes/rearranges the root nodes before the application of the per-node enrichment. It is
      * important that this function gets applied before the other enrichments, as those may use
      * links between nodes that may result from calling this function.
      *
-     * @param values
-     * @return
+     * <p>This method takes a list of {@link INode} objects as input and returns a new list with
+     * some additional information added to each node.
+     *
+     * @param values the list of {@link INode} objects to be enriched
+     * @return a new list of {@link INode} objects with additional information added to each node
      */
     public List<INode> enrichRootBefore(@Nonnull final List<INode> values) {
         List<INode> newValues = new ArrayList<>(values);
@@ -160,10 +166,9 @@ public class PythonEnricher implements IEnricher {
     private void enrichSignatureWithAlgorithm(INode node) {
         // If a PrivateKey has a Signature child, enrich the Signature with the algorithm
         // information from the private key
-        if (!(node instanceof PrivateKey)) {
+        if (!(node instanceof PrivateKey privateKey)) {
             return;
         }
-        PrivateKey privateKey = (PrivateKey) node;
         INode signatureChild = privateKey.getChildren().get(Signature.class);
         if (signatureChild == null) {
             return;

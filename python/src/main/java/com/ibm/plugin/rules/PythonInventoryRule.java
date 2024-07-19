@@ -19,13 +19,24 @@
  */
 package com.ibm.plugin.rules;
 
+import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.plugin.rules.detection.PythonBaseDetectionRule;
 import com.ibm.plugin.rules.detection.PythonDetectionRules;
+import java.util.List;
+import javax.annotation.Nonnull;
+import org.jetbrains.annotations.VisibleForTesting;
 import org.sonar.check.Rule;
+import org.sonar.plugins.python.api.tree.Tree;
 
 @Rule(key = "Inventory")
 public class PythonInventoryRule extends PythonBaseDetectionRule {
+
     public PythonInventoryRule() {
-        super(PythonDetectionRules.rules());
+        super(PythonDetectionRules.rules(), List.of());
+    }
+
+    @VisibleForTesting
+    protected PythonInventoryRule(@Nonnull List<IDetectionRule<Tree>> detectionRules) {
+        super(detectionRules, List.of());
     }
 }
