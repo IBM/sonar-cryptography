@@ -27,15 +27,14 @@ import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.mapper.reorganizer.Reorganizer;
 import com.ibm.mapper.utils.Utils;
 import com.ibm.plugin.translation.translator.JavaTranslator;
+import java.util.Collections;
+import java.util.List;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.JavaCheck;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
-
-import javax.annotation.Nonnull;
-import java.util.Collections;
-import java.util.List;
 
 public final class JavaTranslationProcess
         extends ITranslationProcess<JavaCheck, Tree, Symbol, JavaFileScannerContext> {

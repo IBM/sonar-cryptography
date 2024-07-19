@@ -24,12 +24,15 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.List;
-import java.util.Optional;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Optional;
 
 public abstract class ITranslator<R, T, S, P> {
+
+    public static final String UNKNOWN = "unknown";
 
     @Nonnull protected final R rule;
 

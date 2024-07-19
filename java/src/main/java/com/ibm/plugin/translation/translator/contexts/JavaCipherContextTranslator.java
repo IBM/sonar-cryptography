@@ -53,11 +53,12 @@ import com.ibm.mapper.model.functionality.Encapsulate;
 import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.plugin.translation.translator.JavaTranslator;
+import org.jetbrains.annotations.NotNull;
+import org.sonar.plugins.java.api.tree.Tree;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
-import org.sonar.plugins.java.api.tree.Tree;
 
 public final class JavaCipherContextTranslator extends AbstractContextTranslator
         implements IContextTranslationWithKind<Tree, CipherContext.Kind> {
@@ -78,26 +79,29 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
                     .parse(value.asString(), detectionLocation, configuration)
                     .map(a -> a);
         } else if (value instanceof OperationMode<Tree> operationMode) {
-            switch (kind) {
-                case ENCRYPTION_STATUS:
+            return switch (kind) {
+                case ENCRYPTION_STATUS -> {
                     BcOperationModeEncryptionMapper bcCipherOperationModeMapper =
                             new BcOperationModeEncryptionMapper();
-                    return bcCipherOperationModeMapper
+                    yield bcCipherOperationModeMapper
                             .parse(operationMode.asString(), detectionLocation, configuration)
                             .map(f -> f);
-                case WRAPPING_STATUS:
+                }
+                case WRAPPING_STATUS -> {
                     BcOperationModeWrappingMapper bcOperationModeWrappingMapper =
                             new BcOperationModeWrappingMapper();
-                    return bcOperationModeWrappingMapper
+                    yield bcOperationModeWrappingMapper
                             .parse(operationMode.asString(), detectionLocation, configuration)
                             .map(f -> f);
-                default:
+                }
+                default -> {
                     JcaCipherOperationModeMapper jcaCipherOperationModeMapper =
                             new JcaCipherOperationModeMapper();
-                    return jcaCipherOperationModeMapper
+                    yield jcaCipherOperationModeMapper
                             .parse(operationMode.asString(), detectionLocation, configuration)
                             .map(f -> f);
-            }
+                }
+            };
         } else if (value instanceof CipherAction<Tree> cipherAction) {
             return switch (cipherAction.getAction()) {
                 case WRAP -> Optional.of(new Encapsulate(detectionLocation));
@@ -112,8 +116,9 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
             Mode mode;
             Padding padding;
             PasswordBasedEncryption pbe;
+
             switch (kind) {
-                case ASYMMETRIC_CIPHER_ENGINE:
+                case ASYMMETRIC_CIPHER_ENGINE, BLOCK_CIPHER_ENGINE, WRAP_ENGINE:
                     return Optional.of(
                             new BlockCipher(
                                     new com.ibm.mapper.model.Algorithm(
@@ -127,16 +132,8 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
                                     new com.ibm.mapper.model.Algorithm(
                                             valueAction.asString(), detectionLocation),
                                     detectionLocation));
-                case BLOCK_CIPHER_ENGINE, WRAP_ENGINE:
-                    return Optional.of(
-                            new BlockCipher(
-                                    new com.ibm.mapper.model.Algorithm(
-                                            valueAction.asString(), detectionLocation),
-                                    null,
-                                    null,
-                                    detectionLocation));
                 case WRAP_RFC:
-                    /* TODO: Should I use the RFC value in the translation? Where? */
+                    // TODO: Should the RFC value be reflected in the translation? Where?
                     return Optional.of(
                             new BlockCipher(
                                     new com.ibm.mapper.model.Algorithm(
@@ -155,7 +152,7 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
                 case HASH:
                     return Optional.of(
                             // TODO: Is `Cipher` right? (and we need something that
-                            // dinstinguishes this Hash cipher from the Main cipher)
+                            //  dinstinguishes this Hash cipher from the Main cipher)
                             new Cipher(
                                     new com.ibm.mapper.model.Algorithm(
                                             valueAction.asString(), detectionLocation),
@@ -363,7 +360,7 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
                     switch (valueAction.asString()) {
                         default:
                             // TODO: In the end, this default translation should be removed (maybe
-                            // still translate but add a WARN log?)
+                            //  still translate but add a WARN log?)
                             return Optional.of(
                                     new com.ibm.mapper.model.Algorithm(
                                             valueAction.asString(), detectionLocation));

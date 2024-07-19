@@ -20,19 +20,33 @@
 package com.ibm.plugin.translation.translator;
 
 import com.ibm.engine.detection.DetectionStore;
-import com.ibm.engine.model.*;
-import com.ibm.engine.model.context.*;
+import com.ibm.engine.model.IValue;
+import com.ibm.engine.model.context.AlgorithmParameterContext;
+import com.ibm.engine.model.context.CipherContext;
+import com.ibm.engine.model.context.DigestContext;
+import com.ibm.engine.model.context.IDetectionContext;
+import com.ibm.engine.model.context.KeyAgreementContext;
+import com.ibm.engine.model.context.KeyContext;
+import com.ibm.engine.model.context.MacContext;
+import com.ibm.engine.model.context.PRNGContext;
+import com.ibm.engine.model.context.PrivateKeyContext;
+import com.ibm.engine.model.context.ProtocolContext;
+import com.ibm.engine.model.context.PublicKeyContext;
+import com.ibm.engine.model.context.SecretKeyContext;
+import com.ibm.engine.model.context.SignatureContext;
 import com.ibm.mapper.ITranslator;
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
-import com.ibm.plugin.translation.translator.contexts.*;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.ibm.plugin.translation.translator.contexts.JavaAlgorithmParameterContextTranslator;
+import com.ibm.plugin.translation.translator.contexts.JavaCipherContextTranslator;
+import com.ibm.plugin.translation.translator.contexts.JavaDigestContextTranslator;
+import com.ibm.plugin.translation.translator.contexts.JavaKeyAgreementContextTranslator;
+import com.ibm.plugin.translation.translator.contexts.JavaKeyContextTranslator;
+import com.ibm.plugin.translation.translator.contexts.JavaMacContextTranslator;
+import com.ibm.plugin.translation.translator.contexts.JavaPRNGContextTranslator;
+import com.ibm.plugin.translation.translator.contexts.JavaProtocolContextTranslator;
+import com.ibm.plugin.translation.translator.contexts.JavaSecretKeyContextTranslator;
+import com.ibm.plugin.translation.translator.contexts.JavaSignatureContextTranslator;
 import org.jetbrains.annotations.Unmodifiable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,12 +55,22 @@ import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.location.Position;
 import org.sonar.plugins.java.api.location.Range;
 import org.sonar.plugins.java.api.semantic.Symbol;
-import org.sonar.plugins.java.api.tree.*;
+import org.sonar.plugins.java.api.tree.EnumConstantTree;
+import org.sonar.plugins.java.api.tree.MethodInvocationTree;
+import org.sonar.plugins.java.api.tree.NewClassTree;
+import org.sonar.plugins.java.api.tree.SyntaxToken;
+import org.sonar.plugins.java.api.tree.Tree;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public final class JavaTranslator
         extends ITranslator<JavaCheck, Tree, Symbol, JavaFileScannerContext> {
-
-    public static final String UNKNOWN = "unknown";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JavaTranslator.class);
     @Nonnull private final JavaMapperConfig javaMapperConfig = new JavaMapperConfig();
