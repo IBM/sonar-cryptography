@@ -26,8 +26,9 @@ import com.ibm.engine.executive.DetectionExecutive;
 import com.ibm.engine.language.python.PythonScanContext;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.plugin.PythonAggregator;
-import com.ibm.plugin.translation.PythonTranslator;
+import com.ibm.plugin.translation.PythonTranslationProcess;
 import java.util.List;
 import java.util.function.Consumer;
 import javax.annotation.Nonnull;
@@ -41,11 +42,15 @@ import org.sonar.plugins.python.api.tree.Tree;
 
 public abstract class PythonBaseDetectionRule extends PythonVisitorCheck
         implements IObserver<Finding<PythonCheck, Tree, Symbol, PythonVisitorContext>> {
-    @Nonnull protected final PythonTranslator pythonTranslator = new PythonTranslator(this);
+
+    @Nonnull protected final PythonTranslationProcess pythonTranslationProcess;
     @Nonnull protected final List<IDetectionRule<Tree>> detectionRules;
 
-    protected PythonBaseDetectionRule(@Nonnull List<IDetectionRule<Tree>> detectionRules) {
+    protected PythonBaseDetectionRule(
+            @Nonnull List<IDetectionRule<Tree>> detectionRules,
+            @Nonnull List<IReorganizerRule> reorganizerRules) {
         this.detectionRules = detectionRules;
+        this.pythonTranslationProcess = new PythonTranslationProcess(this, reorganizerRules);
     }
 
     @Override
@@ -89,7 +94,7 @@ public abstract class PythonBaseDetectionRule extends PythonVisitorCheck
             @Nonnull
                     DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext>
                             detectionStore) {
-        List<INode> nodes = pythonTranslator.translate(detectionStore);
+        List<INode> nodes = pythonTranslationProcess.initiate(detectionStore);
         PythonAggregator.addNodes(nodes);
     }
 }

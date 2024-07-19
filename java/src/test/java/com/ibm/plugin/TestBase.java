@@ -25,8 +25,13 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.utils.DetectionStoreLogger;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.utils.Utils;
 import com.ibm.plugin.rules.JavaInventoryRule;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.event.Level;
@@ -35,13 +40,6 @@ import org.sonar.plugins.java.api.JavaCheck;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 public abstract class TestBase extends JavaInventoryRule {
 
@@ -82,7 +80,6 @@ public abstract class TestBase extends JavaInventoryRule {
         detectionStoreLogger.print(detectionStore);
 
         final List<INode> nodes = javaTranslationProcess.initiate(detectionStore);
-        Utils.printNodeTree(nodes);
         asserts(findingId, detectionStore, nodes);
         findingId++;
     }

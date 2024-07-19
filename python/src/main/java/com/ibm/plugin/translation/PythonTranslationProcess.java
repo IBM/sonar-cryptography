@@ -24,47 +24,40 @@ import com.ibm.enricher.Enricher;
 import com.ibm.mapper.ITranslationProcess;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
-import com.ibm.mapper.reorganizer.Reorganizer;
 import com.ibm.mapper.utils.Utils;
-import com.ibm.plugin.translation.translator.JavaTranslator;
-import org.jetbrains.annotations.Unmodifiable;
-import org.sonar.plugins.java.api.JavaCheck;
-import org.sonar.plugins.java.api.JavaFileScannerContext;
-import org.sonar.plugins.java.api.semantic.Symbol;
-import org.sonar.plugins.java.api.tree.Tree;
-
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
+import org.sonar.plugins.python.api.PythonCheck;
+import org.sonar.plugins.python.api.PythonVisitorContext;
+import org.sonar.plugins.python.api.symbols.Symbol;
+import org.sonar.plugins.python.api.tree.Tree;
 
-public final class JavaTranslationProcess
-        extends ITranslationProcess<JavaCheck, Tree, Symbol, JavaFileScannerContext> {
+public final class PythonTranslationProcess
+        extends ITranslationProcess<PythonCheck, Tree, Symbol, PythonVisitorContext> {
 
-    public JavaTranslationProcess(
-            @Nonnull JavaCheck rule, @Nonnull List<IReorganizerRule> reorganizerRules) {
+    public PythonTranslationProcess(
+            @NotNull PythonCheck rule, @NotNull List<IReorganizerRule> reorganizerRules) {
         super(rule, reorganizerRules);
     }
 
-    @Override
-    @Nonnull
+    @NotNull @Override
     public @Unmodifiable List<INode> initiate(
-            @Nonnull
-                    DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext>
+            @NotNull DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext>
                             rootDetectionStore) {
         // 1. Translate
-        JavaTranslator javaTranslator = new JavaTranslator(rule);
-        List<INode> translatedValues = javaTranslator.translate(rootDetectionStore);
-        Utils.printNodeTree("translated", translatedValues);
+        PythonTranslator pythonTranslator = new PythonTranslator(rule);
+        List<INode> translatedValues = pythonTranslator.translate(rootDetectionStore);
+        Utils.printNodeTree("translation", translatedValues);
 
         // 2. Reorganize
-        Reorganizer javaReorganizer = new Reorganizer(reorganizerRules);
-        List<INode> reorganizedValues = javaReorganizer.reorganize(translatedValues);
-        Utils.printNodeTree("reorganised", reorganizedValues);
+        // not implemented
 
         // 3. Enrich
-        Enricher.enrich(reorganizedValues);
-        Utils.printNodeTree("enriched", reorganizedValues);
+        Enricher.enrich(translatedValues);
+        Utils.printNodeTree("enrichment", translatedValues);
 
-        return Collections.unmodifiableList(reorganizedValues);
+        return Collections.unmodifiableList(translatedValues);
     }
 }
