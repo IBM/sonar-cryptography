@@ -20,10 +20,19 @@
 package com.ibm.plugin.translation;
 
 import com.ibm.engine.detection.DetectionStore;
-import com.ibm.engine.model.*;
-import com.ibm.engine.model.context.*;
+import com.ibm.engine.model.IAction;
+import com.ibm.engine.model.IValue;
+import com.ibm.engine.model.context.CipherContext;
+import com.ibm.engine.model.context.DigestContext;
+import com.ibm.engine.model.context.IDetectionContext;
+import com.ibm.engine.model.context.KeyContext;
+import com.ibm.engine.model.context.MacContext;
+import com.ibm.engine.model.context.PrivateKeyContext;
+import com.ibm.engine.model.context.PublicKeyContext;
+import com.ibm.engine.model.context.SecretKeyContext;
+import com.ibm.engine.model.context.SignatureContext;
 import com.ibm.mapper.ITranslator;
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.plugin.translation.contexts.PythonCipherContextTranslator;
 import com.ibm.plugin.translation.contexts.PythonDigestContextTranslator;
@@ -33,7 +42,12 @@ import com.ibm.plugin.translation.contexts.PythonPrivateKeyContextTranslator;
 import com.ibm.plugin.translation.contexts.PythonPublicKeyContextTranslator;
 import com.ibm.plugin.translation.contexts.PythonSecretKeyContextTranslator;
 import com.ibm.plugin.translation.contexts.PythonSignatureContextTranslator;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -52,8 +66,8 @@ public class PythonTranslator extends ITranslator<PythonCheck, Tree, Symbol, Pyt
 
     @Nonnull private final PythonMapperConfig pythonMapperConfig = new PythonMapperConfig();
 
-    public PythonTranslator(@Nonnull PythonCheck rule) {
-        super(rule);
+    public PythonTranslator() {
+        // nothing
     }
 
     /**
@@ -84,15 +98,6 @@ public class PythonTranslator extends ITranslator<PythonCheck, Tree, Symbol, Pyt
             @Nonnull
                     DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext>
                             rootDetectionStore) {
-        // report issue
-        rootDetectionStore
-                .getDetectionValues()
-                .forEach(
-                        iValue ->
-                                rootDetectionStore
-                                        .getScanContext()
-                                        .reportIssue(
-                                                rule, iValue.getLocation(), iValue.asString()));
         // get assets of root
         final String filePath = rootDetectionStore.getScanContext().getRelativePath();
 

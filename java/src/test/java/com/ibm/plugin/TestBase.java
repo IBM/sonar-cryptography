@@ -25,7 +25,6 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.utils.DetectionStoreLogger;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.utils.Utils;
 import com.ibm.plugin.rules.JavaInventoryRule;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,19 +70,14 @@ public abstract class TestBase extends JavaInventoryRule {
 
     @Override
     public void update(@Nonnull Finding<JavaCheck, Tree, Symbol, JavaFileScannerContext> finding) {
-        _update(finding, this::testFinding);
-    }
-
-    private void testFinding(
-            @Nonnull
-                    DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext>
-                            detectionStore) {
+        final DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore =
+                finding.detectionStore();
         detectionStoreLogger.print(detectionStore);
 
         final List<INode> nodes = javaTranslationProcess.initiate(detectionStore);
-        Utils.printNodeTree(nodes);
         asserts(findingId, detectionStore, nodes);
         findingId++;
+        this.report(finding.detectionStore(), this);
     }
 
     public abstract void asserts(

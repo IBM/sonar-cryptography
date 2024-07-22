@@ -21,7 +21,13 @@ package com.ibm.engine.language.python;
 
 import static com.ibm.engine.detection.MethodMatcher.ANY;
 
-import com.ibm.engine.detection.*;
+import com.ibm.engine.detection.DetectionStore;
+import com.ibm.engine.detection.EnumMatcher;
+import com.ibm.engine.detection.Handler;
+import com.ibm.engine.detection.IBaseMethodVisitorFactory;
+import com.ibm.engine.detection.IDetectionEngine;
+import com.ibm.engine.detection.MatchContext;
+import com.ibm.engine.detection.MethodMatcher;
 import com.ibm.engine.executive.DetectionExecutive;
 import com.ibm.engine.language.ILanguageSupport;
 import com.ibm.engine.language.ILanguageTranslation;
@@ -35,7 +41,11 @@ import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
-import org.sonar.plugins.python.api.tree.*;
+import org.sonar.plugins.python.api.tree.FileInput;
+import org.sonar.plugins.python.api.tree.FunctionDef;
+import org.sonar.plugins.python.api.tree.Name;
+import org.sonar.plugins.python.api.tree.ParameterList;
+import org.sonar.plugins.python.api.tree.Tree;
 
 public class PythonLanguageSupport
         implements ILanguageSupport<PythonCheck, Tree, Symbol, PythonVisitorContext> {
@@ -68,12 +78,6 @@ public class PythonLanguageSupport
     }
 
     @Override
-    public @NotNull IScanContext<PythonCheck, Tree> createScanContext(
-            @NotNull PythonVisitorContext publisher) {
-        return new PythonScanContext(publisher);
-    }
-
-    @Override
     public @NotNull IBaseMethodVisitorFactory<Tree, Symbol> getBaseMethodVisitorFactory() {
         return PythonBaseMethodVisitor::new;
     }
@@ -84,9 +88,9 @@ public class PythonLanguageSupport
         // otherwise we return the highest level root node corresponding to all the content of the
         // current file.
         if (expression instanceof FunctionDef functionDefTree) {
-            return Optional.ofNullable(functionDefTree);
+            return Optional.of(functionDefTree);
         } else if (expression instanceof FileInput fileInputTree) {
-            return Optional.ofNullable(fileInputTree);
+            return Optional.of(fileInputTree);
         } else if (expression.parent() != null) {
             return getEnclosingMethod(expression.parent());
         }
@@ -101,14 +105,11 @@ public class PythonLanguageSupport
             // name, to which we remove the function name.
             String invocationObjectName;
             Optional<String> invocationObjectNameOptional =
-                    Optional.ofNullable(functionDefTree)
+                    Optional.of(functionDefTree)
                             .map(FunctionDef::name)
                             .map(Name::symbol)
                             .map(Symbol::fullyQualifiedName);
-            invocationObjectName =
-                    invocationObjectNameOptional.isPresent()
-                            ? invocationObjectNameOptional.get()
-                            : "";
+            invocationObjectName = invocationObjectNameOptional.orElse("");
 
             int lastDotIndex = invocationObjectName.lastIndexOf(".");
             lastDotIndex = lastDotIndex == -1 ? invocationObjectName.length() : lastDotIndex;
@@ -121,7 +122,6 @@ public class PythonLanguageSupport
             if (parameterList != null) {
                 String[] parameters =
                         parameterList.all().stream()
-                                // TODO: I don't think we can do better tham using type ANY for each
                                 // parameter
                                 .map(param -> ANY)
                                 .toArray(String[]::new);

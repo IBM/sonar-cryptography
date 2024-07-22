@@ -19,20 +19,20 @@
  */
 package com.ibm.plugin.rules.detection;
 
-import com.ibm.common.IObserver;
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.detection.Finding;
 import com.ibm.engine.executive.DetectionExecutive;
 import com.ibm.engine.language.java.JavaScanContext;
 import com.ibm.engine.rule.IDetectionRule;
+import com.ibm.mapper.IBaseDetectionRule;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.plugin.JavaAggregator;
 import com.ibm.plugin.translation.JavaTranslationProcess;
 import java.util.List;
-import java.util.function.Consumer;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.VisibleForTesting;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
 import org.sonar.plugins.java.api.JavaCheck;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
@@ -40,7 +40,7 @@ import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public abstract class JavaBaseDetectionRule extends IssuableSubscriptionVisitor
-        implements IObserver<Finding<JavaCheck, Tree, Symbol, JavaFileScannerContext>> {
+        implements IBaseDetectionRule<JavaCheck, Tree, Symbol, JavaFileScannerContext> {
 
     @Nonnull protected final JavaTranslationProcess javaTranslationProcess;
     @Nonnull protected final List<IDetectionRule<Tree>> detectionRules;
@@ -49,7 +49,7 @@ public abstract class JavaBaseDetectionRule extends IssuableSubscriptionVisitor
             @Nonnull List<IDetectionRule<Tree>> detectionRules,
             @Nonnull List<IReorganizerRule> reorganizerRules) {
         this.detectionRules = detectionRules;
-        this.javaTranslationProcess = new JavaTranslationProcess(this, reorganizerRules);
+        this.javaTranslationProcess = new JavaTranslationProcess(reorganizerRules);
     }
 
     /**
@@ -82,30 +82,22 @@ public abstract class JavaBaseDetectionRule extends IssuableSubscriptionVisitor
     }
 
     /**
-     * Updates the output file with the translated nodes resulting from a finding.
+     * On new finding.
      *
      * @param finding A finding containing detection store information.
      */
     @Override
     public void update(@Nonnull Finding<JavaCheck, Tree, Symbol, JavaFileScannerContext> finding) {
-        _update(finding, this::handleFinding);
-    }
-
-    @VisibleForTesting
-    @SuppressWarnings("java:S100")
-    protected void _update(
-            @Nonnull Finding<JavaCheck, Tree, Symbol, JavaFileScannerContext> finding,
-            @Nonnull
-                    Consumer<DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext>>
-                            storeConsumer) {
-        storeConsumer.accept(finding.detectionStore());
-    }
-
-    private void handleFinding(
-            @Nonnull
-                    DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext>
-                            detectionStore) {
-        List<INode> nodes = javaTranslationProcess.initiate(detectionStore);
+        List<INode> nodes = javaTranslationProcess.initiate(finding.detectionStore());
         JavaAggregator.addNodes(nodes);
+        this.report(finding.detectionStore(), this);
+    }
+
+    @Override
+    public void report(
+            @NotNull @Unmodifiable
+                    DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
+            @NotNull JavaCheck rule) {
+        // override by higher level rule, to report an issue
     }
 }

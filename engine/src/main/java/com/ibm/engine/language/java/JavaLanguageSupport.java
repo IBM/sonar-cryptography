@@ -19,7 +19,13 @@
  */
 package com.ibm.engine.language.java;
 
-import com.ibm.engine.detection.*;
+import com.ibm.engine.detection.DetectionStore;
+import com.ibm.engine.detection.EnumMatcher;
+import com.ibm.engine.detection.Handler;
+import com.ibm.engine.detection.IBaseMethodVisitorFactory;
+import com.ibm.engine.detection.IDetectionEngine;
+import com.ibm.engine.detection.MatchContext;
+import com.ibm.engine.detection.MethodMatcher;
 import com.ibm.engine.executive.DetectionExecutive;
 import com.ibm.engine.language.ILanguageSupport;
 import com.ibm.engine.language.ILanguageTranslation;
@@ -37,7 +43,11 @@ import org.sonar.java.model.ExpressionUtils;
 import org.sonar.plugins.java.api.JavaCheck;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
-import org.sonar.plugins.java.api.tree.*;
+import org.sonar.plugins.java.api.tree.ClassTree;
+import org.sonar.plugins.java.api.tree.ExpressionTree;
+import org.sonar.plugins.java.api.tree.MethodTree;
+import org.sonar.plugins.java.api.tree.Tree;
+import org.sonar.plugins.java.api.tree.TypeTree;
 
 public final class JavaLanguageSupport
         implements ILanguageSupport<JavaCheck, Tree, Symbol, JavaFileScannerContext> {
@@ -71,13 +81,6 @@ public final class JavaLanguageSupport
                     DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext>
                             detectionStore) {
         return new JavaDetectionEngine(detectionStore, this.handler);
-    }
-
-    @Nonnull
-    @Override
-    public @NotNull IScanContext<JavaCheck, Tree> createScanContext(
-            @Nonnull JavaFileScannerContext publisher) {
-        return new JavaScanContext(publisher);
     }
 
     @Nonnull
