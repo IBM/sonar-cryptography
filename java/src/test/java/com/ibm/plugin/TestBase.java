@@ -70,18 +70,14 @@ public abstract class TestBase extends JavaInventoryRule {
 
     @Override
     public void update(@Nonnull Finding<JavaCheck, Tree, Symbol, JavaFileScannerContext> finding) {
-        _update(finding, this::testFinding);
-    }
-
-    private void testFinding(
-            @Nonnull
-                    DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext>
-                            detectionStore) {
+        final DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore =
+                finding.detectionStore();
         detectionStoreLogger.print(detectionStore);
 
         final List<INode> nodes = javaTranslationProcess.initiate(detectionStore);
         asserts(findingId, detectionStore, nodes);
         findingId++;
+        this.report(finding.detectionStore(), this);
     }
 
     public abstract void asserts(

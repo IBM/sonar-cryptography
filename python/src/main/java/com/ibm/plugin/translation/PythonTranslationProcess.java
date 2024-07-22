@@ -37,9 +37,8 @@ import org.sonar.plugins.python.api.tree.Tree;
 public final class PythonTranslationProcess
         extends ITranslationProcess<PythonCheck, Tree, Symbol, PythonVisitorContext> {
 
-    public PythonTranslationProcess(
-            @NotNull PythonCheck rule, @NotNull List<IReorganizerRule> reorganizerRules) {
-        super(rule, reorganizerRules);
+    public PythonTranslationProcess(@NotNull List<IReorganizerRule> reorganizerRules) {
+        super(reorganizerRules);
     }
 
     @NotNull @Override
@@ -47,7 +46,7 @@ public final class PythonTranslationProcess
             @NotNull DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext>
                             rootDetectionStore) {
         // 1. Translate
-        PythonTranslator pythonTranslator = new PythonTranslator(rule);
+        PythonTranslator pythonTranslator = new PythonTranslator();
         List<INode> translatedValues = pythonTranslator.translate(rootDetectionStore);
         Utils.printNodeTree("translation", translatedValues);
 

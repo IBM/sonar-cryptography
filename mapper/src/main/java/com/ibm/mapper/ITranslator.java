@@ -33,12 +33,6 @@ public abstract class ITranslator<R, T, S, P> {
 
     public static final String UNKNOWN = "unknown";
 
-    @Nonnull protected final R rule;
-
-    protected ITranslator(@Nonnull R rule) {
-        this.rule = rule;
-    }
-
     @Nonnull
     protected abstract List<INode> translate(
             @Nonnull DetectionStore<R, T, S, P> rootDetectionStore);

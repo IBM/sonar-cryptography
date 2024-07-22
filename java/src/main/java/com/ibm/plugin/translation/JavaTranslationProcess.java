@@ -39,9 +39,8 @@ import org.sonar.plugins.java.api.tree.Tree;
 public final class JavaTranslationProcess
         extends ITranslationProcess<JavaCheck, Tree, Symbol, JavaFileScannerContext> {
 
-    public JavaTranslationProcess(
-            @Nonnull JavaCheck rule, @Nonnull List<IReorganizerRule> reorganizerRules) {
-        super(rule, reorganizerRules);
+    public JavaTranslationProcess(@Nonnull List<IReorganizerRule> reorganizerRules) {
+        super(reorganizerRules);
     }
 
     @Override
@@ -51,7 +50,7 @@ public final class JavaTranslationProcess
                     DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext>
                             rootDetectionStore) {
         // 1. Translate
-        JavaTranslator javaTranslator = new JavaTranslator(rule);
+        JavaTranslator javaTranslator = new JavaTranslator();
         List<INode> translatedValues = javaTranslator.translate(rootDetectionStore);
         Utils.printNodeTree("translated", translatedValues);
 

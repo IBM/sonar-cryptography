@@ -19,21 +19,37 @@
  */
 package com.ibm.plugin.rules.detection;
 
-import com.ibm.plugin.rules.JavaInventoryRule;
+import com.ibm.engine.detection.DetectionStore;
+import com.ibm.mapper.model.INode;
+import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.jca.cipher.JcaCipherGetInstance;
+import java.util.List;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.verifier.CheckVerifier;
+import org.sonar.plugins.java.api.JavaCheck;
+import org.sonar.plugins.java.api.JavaFileScannerContext;
+import org.sonar.plugins.java.api.semantic.Symbol;
+import org.sonar.plugins.java.api.tree.Tree;
 
 @Rule(key = "Test")
-class DetectionWithSubRuleTest extends JavaInventoryRule {
+class DetectionWithSubRuleTest extends TestBase {
 
     public DetectionWithSubRuleTest() {
         super(JcaCipherGetInstance.rules());
     }
 
-    @Disabled
+    @Override
+    public void asserts(
+            int findingId,
+            @NotNull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
+            @NotNull List<INode> nodes) {
+        // nothing
+    }
+
+    @Disabled("")
     @Test
     void test() {
         CheckVerifier.newVerifier()

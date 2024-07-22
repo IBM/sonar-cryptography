@@ -74,13 +74,13 @@ public final class JavaTranslator
     private static final Logger LOGGER = LoggerFactory.getLogger(JavaTranslator.class);
     @Nonnull private final JavaMapperConfig javaMapperConfig = new JavaMapperConfig();
 
-    public JavaTranslator(@Nonnull JavaCheck rule) {
-        super(rule);
+    public JavaTranslator() {
+        // nothing
     }
 
     /**
-     * The translate method is responsible for translating the provided detection store. It performs
-     * several important tasks within its implementation: <br>
+     * The translation method is responsible for translating the provided detection store. It
+     * performs several important tasks within its implementation: <br>
      * retrieve the detection values, and for each value, a new issue is reported using the provided
      * rule, location, and string representation.
      * <li>Retrieves the file path of the root detection store. This allows the method to identify
@@ -105,15 +105,7 @@ public final class JavaTranslator
             @Nonnull
                     DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext>
                             rootDetectionStore) {
-        // report issue
-        rootDetectionStore
-                .getDetectionValues()
-                .forEach(
-                        iValue ->
-                                rootDetectionStore
-                                        .getScanContext()
-                                        .reportIssue(
-                                                rule, iValue.getLocation(), iValue.asString()));
+
         final String filePath = rootDetectionStore.getScanContext().getRelativePath();
         // get assets of root
         final Map<INode, INode> rootAssetValues =

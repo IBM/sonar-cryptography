@@ -19,15 +19,20 @@
  */
 package com.ibm.plugin.rules;
 
+import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.rule.IDetectionRule;
-import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.plugin.rules.detection.JavaBaseDetectionRule;
 import com.ibm.plugin.rules.detection.JavaDetectionRules;
 import com.ibm.plugin.translation.reorganizer.JavaReorganizerRules;
 import java.util.List;
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.sonar.check.Rule;
+import org.sonar.plugins.java.api.JavaCheck;
+import org.sonar.plugins.java.api.JavaFileScannerContext;
+import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
 @Rule(key = "Inventory")
@@ -41,10 +46,18 @@ public class JavaInventoryRule extends JavaBaseDetectionRule {
         super(detectionRules, JavaReorganizerRules.rules());
     }
 
-    @VisibleForTesting
-    protected JavaInventoryRule(
-            @Nonnull List<IDetectionRule<Tree>> detectionRules,
-            @Nonnull List<IReorganizerRule> reorganizerRules) {
-        super(detectionRules, reorganizerRules);
+    @Override
+    public void report(
+            @NotNull @Unmodifiable
+                    DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
+            @NotNull JavaCheck rule) {
+        detectionStore
+                .getDetectionValues()
+                .forEach(
+                        iValue ->
+                                detectionStore
+                                        .getScanContext()
+                                        .reportIssue(
+                                                rule, iValue.getLocation(), iValue.asString()));
     }
 }
