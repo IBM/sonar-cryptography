@@ -35,21 +35,23 @@ public final class Utils {
         // singleton
     }
 
-    public static void printNodeTree(@Nonnull List<INode> rootNodes) {
-        printNodes(0, rootNodes);
+    public static void printNodeTree(@Nonnull final String step, @Nonnull List<INode> rootNodes) {
+        printNodes(step, 0, rootNodes);
     }
 
-    private static void printNodes(int tabs, @Nonnull Collection<INode> nodes) {
+    private static void printNodes(
+            @Nonnull final String step, int tabs, @Nonnull Collection<INode> nodes) {
         nodes.forEach(
                 node -> {
                     LOGGER.debug(
-                            "[translation] {}{}({}) {}",
+                            "[{}] {}{}({}) {}",
+                            step,
                             "   ".repeat(Math.max(0, tabs)),
                             tabs > 0 ? "└─ " : "",
                             node.getKind().getSimpleName(),
                             node.asString());
                     if (node.hasChildren()) {
-                        printNodes(tabs + 1, node.getChildren().values());
+                        printNodes(step, tabs + 1, node.getChildren().values());
                     }
                 });
     }

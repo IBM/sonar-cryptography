@@ -19,19 +19,20 @@
  */
 package com.ibm.plugin.rules.detection;
 
-import com.ibm.common.IObserver;
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.detection.Finding;
 import com.ibm.engine.executive.DetectionExecutive;
 import com.ibm.engine.language.python.PythonScanContext;
 import com.ibm.engine.rule.IDetectionRule;
+import com.ibm.mapper.IBaseDetectionRule;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.plugin.PythonAggregator;
-import com.ibm.plugin.translation.PythonTranslator;
+import com.ibm.plugin.translation.PythonTranslationProcess;
 import java.util.List;
-import java.util.function.Consumer;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.VisibleForTesting;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
@@ -40,12 +41,16 @@ import org.sonar.plugins.python.api.tree.CallExpression;
 import org.sonar.plugins.python.api.tree.Tree;
 
 public abstract class PythonBaseDetectionRule extends PythonVisitorCheck
-        implements IObserver<Finding<PythonCheck, Tree, Symbol, PythonVisitorContext>> {
-    @Nonnull protected final PythonTranslator pythonTranslator = new PythonTranslator(this);
+        implements IBaseDetectionRule<PythonCheck, Tree, Symbol, PythonVisitorContext> {
+
+    @Nonnull protected final PythonTranslationProcess pythonTranslationProcess;
     @Nonnull protected final List<IDetectionRule<Tree>> detectionRules;
 
-    protected PythonBaseDetectionRule(@Nonnull List<IDetectionRule<Tree>> detectionRules) {
+    protected PythonBaseDetectionRule(
+            @Nonnull List<IDetectionRule<Tree>> detectionRules,
+            @Nonnull List<IReorganizerRule> reorganizerRules) {
         this.detectionRules = detectionRules;
+        this.pythonTranslationProcess = new PythonTranslationProcess(reorganizerRules);
     }
 
     @Override
@@ -72,24 +77,15 @@ public abstract class PythonBaseDetectionRule extends PythonVisitorCheck
      */
     @Override
     public void update(@Nonnull Finding<PythonCheck, Tree, Symbol, PythonVisitorContext> finding) {
-        _update(finding, this::handleFinding);
-    }
-
-    @VisibleForTesting
-    @SuppressWarnings("java:S100")
-    protected void _update(
-            @Nonnull Finding<PythonCheck, Tree, Symbol, PythonVisitorContext> finding,
-            @Nonnull
-                    Consumer<DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext>>
-                            storeConsumer) {
-        storeConsumer.accept(finding.detectionStore());
-    }
-
-    private void handleFinding(
-            @Nonnull
-                    DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext>
-                            detectionStore) {
-        List<INode> nodes = pythonTranslator.translate(detectionStore);
+        List<INode> nodes = pythonTranslationProcess.initiate(finding.detectionStore());
         PythonAggregator.addNodes(nodes);
+    }
+
+    @Override
+    public void report(
+            @NotNull @Unmodifiable
+                    DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> detectionStore,
+            @NotNull PythonCheck rule) {
+        // override by higher level rule, to report an issue
     }
 }

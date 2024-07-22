@@ -24,7 +24,11 @@ import com.ibm.common.IObservers;
 import com.ibm.engine.callstack.CallContext;
 import com.ibm.engine.callstack.IGetNotifiedWhenNewCallWasAddedToCallStack;
 import com.ibm.engine.detection.Handler;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nonnull;
 
@@ -102,9 +106,10 @@ public class HookRepository<R, T, S, P>
     }
 
     /**
-     * Check if hook is registered to trigger hook detection event
+     * Check if hook is registered to trigger hook detection event for {@link CallContext}.
      *
-     * @param callContext
+     * @param callContext The context in which to update the hooks. This should include information
+     *     about the current state of the system, such as the current request and response objects.
      */
     @Override
     public void update(@Nonnull final CallContext<R, T> callContext) {

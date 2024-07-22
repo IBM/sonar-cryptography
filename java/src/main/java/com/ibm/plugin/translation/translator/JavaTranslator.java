@@ -20,12 +20,33 @@
 package com.ibm.plugin.translation.translator;
 
 import com.ibm.engine.detection.DetectionStore;
-import com.ibm.engine.model.*;
-import com.ibm.engine.model.context.*;
+import com.ibm.engine.model.IValue;
+import com.ibm.engine.model.context.AlgorithmParameterContext;
+import com.ibm.engine.model.context.CipherContext;
+import com.ibm.engine.model.context.DigestContext;
+import com.ibm.engine.model.context.IDetectionContext;
+import com.ibm.engine.model.context.KeyAgreementContext;
+import com.ibm.engine.model.context.KeyContext;
+import com.ibm.engine.model.context.MacContext;
+import com.ibm.engine.model.context.PRNGContext;
+import com.ibm.engine.model.context.PrivateKeyContext;
+import com.ibm.engine.model.context.ProtocolContext;
+import com.ibm.engine.model.context.PublicKeyContext;
+import com.ibm.engine.model.context.SecretKeyContext;
+import com.ibm.engine.model.context.SignatureContext;
 import com.ibm.mapper.ITranslator;
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
-import com.ibm.plugin.translation.translator.contexts.*;
+import com.ibm.plugin.translation.translator.contexts.JavaAlgorithmParameterContextTranslator;
+import com.ibm.plugin.translation.translator.contexts.JavaCipherContextTranslator;
+import com.ibm.plugin.translation.translator.contexts.JavaDigestContextTranslator;
+import com.ibm.plugin.translation.translator.contexts.JavaKeyAgreementContextTranslator;
+import com.ibm.plugin.translation.translator.contexts.JavaKeyContextTranslator;
+import com.ibm.plugin.translation.translator.contexts.JavaMacContextTranslator;
+import com.ibm.plugin.translation.translator.contexts.JavaPRNGContextTranslator;
+import com.ibm.plugin.translation.translator.contexts.JavaProtocolContextTranslator;
+import com.ibm.plugin.translation.translator.contexts.JavaSecretKeyContextTranslator;
+import com.ibm.plugin.translation.translator.contexts.JavaSignatureContextTranslator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -41,23 +62,25 @@ import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.location.Position;
 import org.sonar.plugins.java.api.location.Range;
 import org.sonar.plugins.java.api.semantic.Symbol;
-import org.sonar.plugins.java.api.tree.*;
+import org.sonar.plugins.java.api.tree.EnumConstantTree;
+import org.sonar.plugins.java.api.tree.MethodInvocationTree;
+import org.sonar.plugins.java.api.tree.NewClassTree;
+import org.sonar.plugins.java.api.tree.SyntaxToken;
+import org.sonar.plugins.java.api.tree.Tree;
 
 public final class JavaTranslator
         extends ITranslator<JavaCheck, Tree, Symbol, JavaFileScannerContext> {
 
-    public static final String UNKNOWN = "unknown";
-
     private static final Logger LOGGER = LoggerFactory.getLogger(JavaTranslator.class);
     @Nonnull private final JavaMapperConfig javaMapperConfig = new JavaMapperConfig();
 
-    public JavaTranslator(@Nonnull JavaCheck rule) {
-        super(rule);
+    public JavaTranslator() {
+        // nothing
     }
 
     /**
-     * The translate method is responsible for translating the provided detection store. It performs
-     * several important tasks within its implementation: <br>
+     * The translation method is responsible for translating the provided detection store. It
+     * performs several important tasks within its implementation: <br>
      * retrieve the detection values, and for each value, a new issue is reported using the provided
      * rule, location, and string representation.
      * <li>Retrieves the file path of the root detection store. This allows the method to identify
@@ -82,15 +105,7 @@ public final class JavaTranslator
             @Nonnull
                     DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext>
                             rootDetectionStore) {
-        // report issue
-        rootDetectionStore
-                .getDetectionValues()
-                .forEach(
-                        iValue ->
-                                rootDetectionStore
-                                        .getScanContext()
-                                        .reportIssue(
-                                                rule, iValue.getLocation(), iValue.asString()));
+
         final String filePath = rootDetectionStore.getScanContext().getRelativePath();
         // get assets of root
         final Map<INode, INode> rootAssetValues =

@@ -19,20 +19,13 @@
  */
 package com.ibm.mapper;
 
+import com.ibm.common.IObserver;
 import com.ibm.engine.detection.DetectionStore;
-import com.ibm.mapper.model.INode;
-import com.ibm.mapper.reorganizer.IReorganizerRule;
-import java.util.List;
+import com.ibm.engine.detection.Finding;
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.Unmodifiable;
 
-public abstract class ITranslationProcess<R, T, S, P> {
+public interface IBaseDetectionRule<R, T, S, P> extends IObserver<Finding<R, T, S, P>> {
 
-    @Nonnull protected final List<IReorganizerRule> reorganizerRules;
-
-    protected ITranslationProcess(@Nonnull List<IReorganizerRule> reorganizerRules) {
-        this.reorganizerRules = reorganizerRules;
-    }
-
-    @Nonnull
-    protected abstract List<INode> initiate(@Nonnull DetectionStore<R, T, S, P> rootDetectionStore);
+    void report(@Nonnull @Unmodifiable DetectionStore<R, T, S, P> detectionStore, @Nonnull R rule);
 }

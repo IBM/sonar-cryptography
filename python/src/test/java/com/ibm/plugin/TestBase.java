@@ -25,8 +25,7 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.utils.DetectionStoreLogger;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.utils.Utils;
-import com.ibm.plugin.rules.detection.PythonBaseDetectionRule;
+import com.ibm.plugin.rules.PythonInventoryRule;
 import com.ibm.plugin.rules.detection.PythonDetectionRules;
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +40,7 @@ import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
 import org.sonar.plugins.python.api.tree.Tree;
 
-public abstract class TestBase extends PythonBaseDetectionRule {
+public abstract class TestBase extends PythonInventoryRule {
 
     @Nonnull
     private final DetectionStoreLogger<PythonCheck, Tree, Symbol, PythonVisitorContext>
@@ -65,37 +64,20 @@ public abstract class TestBase extends PythonBaseDetectionRule {
 
     @Override
     public void update(@Nonnull Finding<PythonCheck, Tree, Symbol, PythonVisitorContext> finding) {
-        _update(finding, this::testFinding);
-    }
-
-    private void testFinding(
-            @Nonnull
-                    DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext>
-                            detectionStore) {
+        final DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> detectionStore =
+                finding.detectionStore();
         detectionStoreLogger.print(detectionStore);
 
-        List<INode> nodes = pythonTranslator.translate(detectionStore);
-        Utils.printNodeTree(nodes);
-
+        List<INode> nodes = pythonTranslationProcess.initiate(detectionStore);
         asserts(findingId, detectionStore, nodes);
         findingId++;
+        this.report(finding.detectionStore(), this);
     }
 
     public abstract void asserts(
             int findingId,
             @Nonnull DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> detectionStore,
             @Nonnull List<INode> nodes);
-
-    @Nullable public DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> getStoreWithValue(
-            // TODO: this function (and its Java equivalent) never seem to be used
-            @Nonnull
-                    List<DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext>>
-                            detectionStores) {
-        return detectionStores.stream()
-                .filter(store -> !store.getDetectionValues().isEmpty())
-                .findFirst()
-                .orElse(null);
-    }
 
     @Nullable public DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> getStoreOfValueType(
             @Nonnull final Class<? extends IValue> valueType,
