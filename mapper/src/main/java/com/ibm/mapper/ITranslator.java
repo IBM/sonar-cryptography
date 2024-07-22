@@ -31,11 +31,7 @@ import javax.annotation.Nullable;
 
 public abstract class ITranslator<R, T, S, P> {
 
-    @Nonnull protected final R rule;
-
-    protected ITranslator(@Nonnull R rule) {
-        this.rule = rule;
-    }
+    public static final String UNKNOWN = "unknown";
 
     @Nonnull
     protected abstract List<INode> translate(

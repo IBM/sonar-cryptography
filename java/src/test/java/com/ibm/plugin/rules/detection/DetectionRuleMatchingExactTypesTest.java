@@ -19,20 +19,25 @@
  */
 package com.ibm.plugin.rules.detection;
 
+import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
-import com.ibm.plugin.rules.JavaInventoryRule;
+import com.ibm.mapper.model.INode;
+import com.ibm.plugin.TestBase;
 import java.util.List;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.verifier.CheckVerifier;
+import org.sonar.plugins.java.api.JavaCheck;
+import org.sonar.plugins.java.api.JavaFileScannerContext;
+import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
 @Rule(key = "Test")
-class DetectionRuleMatchingExactTypesTest extends JavaInventoryRule {
+class DetectionRuleMatchingExactTypesTest extends TestBase {
 
     public DetectionRuleMatchingExactTypesTest() {
         super(
@@ -67,6 +72,14 @@ class DetectionRuleMatchingExactTypesTest extends JavaInventoryRule {
                                         })
                                 .inBundle(() -> "testBundle")
                                 .withoutDependingDetectionRules()));
+    }
+
+    @Override
+    public void asserts(
+            int findingId,
+            @NotNull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
+            @NotNull List<INode> nodes) {
+        // nothing
     }
 
     @Test

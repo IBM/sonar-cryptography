@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.plugin.rules.detection.jca.seed;
+package com.ibm.plugin.rules.detection.random;
 
 import static com.ibm.plugin.rules.detection.TypeShortcuts.BYTE_ARRAY_TYPE;
 
@@ -82,7 +82,8 @@ import org.sonar.plugins.java.api.tree.Tree;
  *     specified by NIST in SP-108. These are not Java implementation requirements either. They
  *     could however be used if a FIPS compliant random number generator is required.
  */
-public final class JcaSecureRandom {
+@SuppressWarnings("java:S1192")
+public final class SecureRandomGetInstance {
 
     private static final IDetectionRule<Tree> SECURE_RANDOM_1 =
             new DetectionRuleBuilder<Tree>()
@@ -117,7 +118,7 @@ public final class JcaSecureRandom {
                     .inBundle(() -> "JcaSecureRandom")
                     .withoutDependingDetectionRules();
 
-    private JcaSecureRandom() {
+    private SecureRandomGetInstance() {
         // nothing
     }
 

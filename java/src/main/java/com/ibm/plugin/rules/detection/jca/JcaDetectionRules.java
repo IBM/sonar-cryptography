@@ -30,7 +30,6 @@ import com.ibm.plugin.rules.detection.jca.keygenerator.JcaKeyGeneratorGetInstanc
 import com.ibm.plugin.rules.detection.jca.keygenerator.JcaKeyPairGeneratorGetInstance;
 import com.ibm.plugin.rules.detection.jca.keyspec.JcaSecretKeySpec;
 import com.ibm.plugin.rules.detection.jca.mac.JcaMacGetInstance;
-import com.ibm.plugin.rules.detection.jca.seed.JcaSecureRandom;
 import com.ibm.plugin.rules.detection.jca.signature.JcaSignatureGetInstance;
 import java.util.List;
 import java.util.stream.Stream;
@@ -54,8 +53,6 @@ public final class JcaDetectionRules {
                         // secret key
                         JcaSecretKeyFactoryGetInstance.rules().stream(),
                         JcaSecretKeySpec.rules().stream(),
-                        // prng
-                        JcaSecureRandom.rules().stream(),
                         // digest
                         JcaDigest.rules().stream(),
                         // signature

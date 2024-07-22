@@ -17,14 +17,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.plugin.rules.detection.jca.seed;
+package com.ibm.plugin.rules.detection.random;
 
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.mapper.model.INode;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.sonar.java.checks.verifier.CheckVerifier;
 import org.sonar.plugins.java.api.JavaCheck;
@@ -32,13 +31,17 @@ import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
-class JcaSecureRandomTest extends TestBase {
+class SecureRandomGetInstanceTest extends TestBase {
+
+    protected SecureRandomGetInstanceTest() {
+        super(SecureRandomGetInstance.rules());
+    }
 
     @Test
-    @Disabled
     void test() {
         CheckVerifier.newVerifier()
-                .onFile("src/test/files/rules/detection/jca/seed/JcaSecureRandomTestFile.java")
+                .onFile(
+                        "src/test/files/rules/detection/random/SecureRandomGetInstanceTestFile.java")
                 .withChecks(this)
                 .verifyIssues();
     }
@@ -47,7 +50,5 @@ class JcaSecureRandomTest extends TestBase {
     public void asserts(
             int findingId,
             @Nonnull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
-            @Nonnull List<INode> nodes) {
-        // TODO
-    }
+            @Nonnull List<INode> nodes) {}
 }

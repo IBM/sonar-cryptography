@@ -19,13 +19,46 @@
  */
 package com.ibm.plugin.rules;
 
+import com.ibm.engine.detection.DetectionStore;
+import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.plugin.rules.detection.PythonBaseDetectionRule;
 import com.ibm.plugin.rules.detection.PythonDetectionRules;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
+import org.jetbrains.annotations.VisibleForTesting;
 import org.sonar.check.Rule;
+import org.sonar.plugins.python.api.PythonCheck;
+import org.sonar.plugins.python.api.PythonVisitorContext;
+import org.sonar.plugins.python.api.symbols.Symbol;
+import org.sonar.plugins.python.api.tree.Tree;
+
+import javax.annotation.Nonnull;
+import java.util.List;
 
 @Rule(key = "Inventory")
 public class PythonInventoryRule extends PythonBaseDetectionRule {
+
     public PythonInventoryRule() {
-        super(PythonDetectionRules.rules());
+        super(PythonDetectionRules.rules(), List.of());
+    }
+
+    @VisibleForTesting
+    protected PythonInventoryRule(@Nonnull List<IDetectionRule<Tree>> detectionRules) {
+        super(detectionRules, List.of());
+    }
+
+    @Override
+    public void report(
+            @NotNull @Unmodifiable
+                    DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> detectionStore,
+            @NotNull PythonCheck rule) {
+        detectionStore
+                .getDetectionValues()
+                .forEach(
+                        iValue ->
+                                detectionStore
+                                        .getScanContext()
+                                        .reportIssue(
+                                                rule, iValue.getLocation(), iValue.asString()));
     }
 }
