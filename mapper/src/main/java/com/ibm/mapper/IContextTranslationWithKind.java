@@ -21,17 +21,19 @@ package com.ibm.mapper;
 
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.context.IDetectionContext;
+import com.ibm.engine.rule.IBundle;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
-import javax.annotation.Nonnull;
 
-public interface IContextTranslationWithKind<T, K> {
+import javax.annotation.Nonnull;
+import java.util.Optional;
+
+public interface IContextTranslationWithKind<T> {
 
     @Nonnull
     Optional<INode> translate(
+            @Nonnull final IBundle bundleIdentifier,
             @Nonnull final IValue<T> value,
-            @Nonnull final K kind,
             @Nonnull final IDetectionContext detectionContext,
             @Nonnull final DetectionLocation detectionLocation);
 }

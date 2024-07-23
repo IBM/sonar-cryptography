@@ -19,14 +19,13 @@
  */
 package com.ibm.mapper.model;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
+import javax.annotation.Nonnull;
 
 /** PBKDF */
 public class PasswordBasedKeyDerivationFunction extends KeyDerivationFunction {
 
-    public PasswordBasedKeyDerivationFunction(
-            @Nonnull Algorithm algorithm) {
+    public PasswordBasedKeyDerivationFunction(@Nonnull Algorithm algorithm) {
         super(algorithm, PasswordBasedKeyDerivationFunction.class);
     }
 

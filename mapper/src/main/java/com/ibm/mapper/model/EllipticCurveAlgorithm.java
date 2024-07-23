@@ -19,19 +19,17 @@
  */
 package com.ibm.mapper.model;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
+import javax.annotation.Nonnull;
 
 public final class EllipticCurveAlgorithm extends Algorithm {
 
-    public EllipticCurveAlgorithm(
-            @Nonnull Algorithm algorithm) {
+    public EllipticCurveAlgorithm(@Nonnull Algorithm algorithm) {
         super(algorithm, algorithm.detectionLocation, EllipticCurveAlgorithm.class);
     }
 
     public EllipticCurveAlgorithm(
-            @Nonnull Algorithm algorithm,
-            @Nonnull EllipticCurve ellipticCurve) {
+            @Nonnull Algorithm algorithm, @Nonnull EllipticCurve ellipticCurve) {
         super(algorithm, algorithm.detectionLocation, EllipticCurveAlgorithm.class);
         this.append(ellipticCurve);
     }

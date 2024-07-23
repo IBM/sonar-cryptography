@@ -124,7 +124,7 @@ public final class BcMac {
                             .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                             .addDependingDetectionRules(BcBlockCipher.all())
                             .buildForContext(new MacContext())
-                            .inBundle(() -> "bcMac")
+                            .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcMacInit.rules()));
         }
 
@@ -141,7 +141,7 @@ public final class BcMac {
                             .shouldBeDetectedAs(new MacSizeFactory<>(Size.UnitType.BIT))
                             .asChildOfParameterWithId(-1)
                             .buildForContext(new MacContext())
-                            .inBundle(() -> "bcMac")
+                            .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcMacInit.rules()));
         }
 
@@ -156,7 +156,7 @@ public final class BcMac {
                             .shouldBeDetectedAs(new MacSizeFactory<>(Size.UnitType.BIT))
                             .asChildOfParameterWithId(-1)
                             .buildForContext(new MacContext())
-                            .inBundle(() -> "bcMac")
+                            .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcMacInit.rules()));
         }
 
@@ -173,7 +173,7 @@ public final class BcMac {
                                     "org.bouncycastle.crypto.paddings.BlockCipherPadding")
                             .addDependingDetectionRules(BcBlockCipherPadding.rules())
                             .buildForContext(new MacContext())
-                            .inBundle(() -> "bcMac")
+                            .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcMacInit.rules()));
         }
 
@@ -193,7 +193,7 @@ public final class BcMac {
                                     "org.bouncycastle.crypto.paddings.BlockCipherPadding")
                             .addDependingDetectionRules(BcBlockCipherPadding.rules())
                             .buildForContext(new MacContext())
-                            .inBundle(() -> "bcMac")
+                            .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcMacInit.rules()));
         }
 
@@ -207,7 +207,7 @@ public final class BcMac {
                             .withMethodParameter("org.bouncycastle.crypto.Digest")
                             .addDependingDetectionRules(BcDigests.rules())
                             .buildForContext(new MacContext())
-                            .inBundle(() -> "bcMac")
+                            .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcMacInit.rules()));
         }
 
@@ -222,7 +222,7 @@ public final class BcMac {
                             // We want to capture all possible constructors (some have arguments)
                             .withAnyParameters()
                             .buildForContext(new MacContext())
-                            .inBundle(() -> "bcMac")
+                            .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcMacInit.rules()));
         }
         return constructorsList;
@@ -240,7 +240,7 @@ public final class BcMac {
                         .withMethodParameter("org.bouncycastle.crypto.modes.GCMModeCipher")
                         .addDependingDetectionRules(BcBlockCipher.all())
                         .buildForContext(new MacContext())
-                        .inBundle(() -> "bcMac")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcMacInit.rules()));
 
         constructorsList.add(
@@ -255,7 +255,7 @@ public final class BcMac {
                         .shouldBeDetectedAs(new MacSizeFactory<>(Size.UnitType.BIT))
                         .asChildOfParameterWithId(-1)
                         .buildForContext(new MacContext())
-                        .inBundle(() -> "bcMac")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcMacInit.rules()));
 
         constructorsList.add(
@@ -267,7 +267,7 @@ public final class BcMac {
                         .withMethodParameter("org.bouncycastle.crypto.modes.KGCMBlockCipher")
                         .addDependingDetectionRules(BcKGCMBlockCipher.rules())
                         .buildForContext(new MacContext())
-                        .inBundle(() -> "bcMac")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcMacInit.rules()));
 
         constructorsList.add(
@@ -282,7 +282,7 @@ public final class BcMac {
                         .shouldBeDetectedAs(new MacSizeFactory<>(Size.UnitType.BIT))
                         .asChildOfParameterWithId(-1)
                         .buildForContext(new MacContext())
-                        .inBundle(() -> "bcMac")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcMacInit.rules()));
 
         constructorsList.add(
@@ -293,7 +293,7 @@ public final class BcMac {
                         .shouldBeDetectedAs(new ValueActionFactory<>("Poly1305"))
                         .withoutParameters()
                         .buildForContext(new MacContext())
-                        .inBundle(() -> "bcMac")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcMacInit.rules()));
 
         constructorsList.add(
@@ -311,7 +311,7 @@ public final class BcMac {
                         .shouldBeDetectedAs(new MacSizeFactory<>(Size.UnitType.BIT))
                         .asChildOfParameterWithId(-1)
                         .buildForContext(new MacContext())
-                        .inBundle(() -> "bcMac")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcMacInit.rules()));
 
         constructorsList.add(
@@ -331,7 +331,7 @@ public final class BcMac {
                         .withMethodParameter("org.bouncycastle.crypto.paddings.BlockCipherPadding")
                         .addDependingDetectionRules(BcBlockCipherPadding.rules())
                         .buildForContext(new MacContext())
-                        .inBundle(() -> "bcMac")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcMacInit.rules()));
 
         constructorsList.add(
@@ -345,7 +345,7 @@ public final class BcMac {
                         .asChildOfParameterWithId(-1)
                         .withMethodParameter("int")
                         .buildForContext(new MacContext())
-                        .inBundle(() -> "bcMac")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcMacInit.rules()));
 
         constructorsList.add(
@@ -359,7 +359,7 @@ public final class BcMac {
                         .withMethodParameter("int")
                         .withMethodParameter(BYTE_ARRAY_TYPE)
                         .buildForContext(new MacContext())
-                        .inBundle(() -> "bcMac")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcMacInit.rules()));
 
         constructorsList.add(
@@ -375,7 +375,7 @@ public final class BcMac {
                         .shouldBeDetectedAs(new MacSizeFactory<>(Size.UnitType.BIT))
                         .asChildOfParameterWithId(-1)
                         .buildForContext(new MacContext())
-                        .inBundle(() -> "bcMac")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcMacInit.rules()));
 
         constructorsList.add(
@@ -388,7 +388,7 @@ public final class BcMac {
                         // Could that lead to an infinity of depending detection rules?
                         .withMethodParameter("org.bouncycastle.crypto.macs.SkeinMac")
                         .buildForContext(new MacContext())
-                        .inBundle(() -> "bcMac")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcMacInit.rules()));
 
         return constructorsList;

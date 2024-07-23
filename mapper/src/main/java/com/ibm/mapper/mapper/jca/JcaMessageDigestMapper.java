@@ -28,13 +28,12 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.mapper.utils.Utils;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class JcaMessageDigestMapper implements IMapper {
     private static final List<String> validValues =
@@ -178,6 +177,7 @@ public class JcaMessageDigestMapper implements IMapper {
                         getBlockSize(sanatizedString)
                                 .map(blockStr -> new BlockSize(blockStr, detectionLocation))
                                 .orElse(null));
+        messageDigest.apply(configuration);
         return Optional.of(messageDigest);
     }
 

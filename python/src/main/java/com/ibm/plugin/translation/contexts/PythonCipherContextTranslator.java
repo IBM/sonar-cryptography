@@ -42,11 +42,12 @@ import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.plugin.rules.detection.symmetric.CryptographyCipher;
 import com.ibm.plugin.translation.PythonTranslatorUtils;
+import org.sonar.plugins.python.api.tree.Tree;
+
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import javax.annotation.Nonnull;
-import org.sonar.plugins.python.api.tree.Tree;
 
 @SuppressWarnings("java:S1301")
 public final class PythonCipherContextTranslator {
@@ -85,7 +86,7 @@ public final class PythonCipherContextTranslator {
             case "MGF1":
                 return Optional.of(
                         new MaskGenerationFunction(
-                                new Algorithm(detection, detectionLocation), detectionLocation));
+                                new Algorithm(detection, detectionLocation)));
             default:
                 switch (kind) {
                     case NONE:
@@ -95,10 +96,10 @@ public final class PythonCipherContextTranslator {
                         // `CryptographyCipher.streamCiphers` are supported]
                         algorithm = new Algorithm(detection, detectionLocation);
                         if (CryptographyCipher.blockCiphers.contains(detection)) {
-                            cipher = new BlockCipher(algorithm, null, null, detectionLocation);
+                            cipher = new BlockCipher(algorithm, null, null);
                             return Optional.of(cipher);
                         } else if (CryptographyCipher.streamCiphers.contains(detection)) {
-                            cipher = new StreamCipher(algorithm, null, null, detectionLocation);
+                            cipher = new StreamCipher(algorithm, null, null);
                             return Optional.of(cipher);
                         }
 
@@ -165,7 +166,7 @@ public final class PythonCipherContextTranslator {
                             algorithm = new Algorithm("AES", detectionLocation);
                             cipher =
                                     new AuthenticatedEncryption(
-                                            algorithm, null, null, null, detectionLocation);
+                                            algorithm, null, null, null);
                             cipher.append(new Decrypt(detectionLocation));
                             return Optional.of(cipher);
                         }
@@ -181,7 +182,7 @@ public final class PythonCipherContextTranslator {
                     case RSA:
                         cipher =
                                 new Cipher(
-                                        new Algorithm("RSA", detectionLocation), detectionLocation);
+                                        new Algorithm("RSA", detectionLocation));
                         cipher.append(new Encrypt(detectionLocation));
                         return Optional.of(cipher);
                     case CHACHA20POLY1305:
@@ -198,7 +199,7 @@ public final class PythonCipherContextTranslator {
                             algorithm = new Algorithm("AES", detectionLocation);
                             cipher =
                                     new AuthenticatedEncryption(
-                                            algorithm, null, null, null, detectionLocation);
+                                            algorithm, null, null, null);
                             cipher.append(new Encrypt(detectionLocation));
                             return Optional.of(cipher);
                         }
@@ -209,7 +210,7 @@ public final class PythonCipherContextTranslator {
                 if (kind == CipherContext.Kind.OAEP) {
                     padding = new Padding("OAEP", detectionLocation, new HashMap<>());
                     return Optional.of(
-                            new OptimalAsymmetricEncryptionPadding(padding, detectionLocation));
+                            new OptimalAsymmetricEncryptionPadding(padding));
                 }
                 break;
             case WRAP:
@@ -223,8 +224,7 @@ public final class PythonCipherContextTranslator {
                         new BlockCipher(
                                 new Algorithm(algorithmName, detectionLocation),
                                 null,
-                                null,
-                                detectionLocation);
+                                null);
                 secretKey.append(blockCipher);
                 blockCipher.append(new KeyGeneration(detectionLocation));
                 return Optional.of(encapsulate);

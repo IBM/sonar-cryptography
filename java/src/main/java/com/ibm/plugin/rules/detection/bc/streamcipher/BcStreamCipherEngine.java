@@ -82,7 +82,7 @@ public final class BcStreamCipherEngine {
                             .withAnyParameters()
                             .buildForContext(
                                     new CipherContext(CipherContext.Kind.STREAM_CIPHER_ENGINE))
-                            .inBundle(() -> "bcStreamCipherEngine")
+                            .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcStreamCipherInit.rules()));
         }
         return constructorsList;

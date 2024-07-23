@@ -34,6 +34,7 @@ import com.ibm.engine.model.context.ProtocolContext;
 import com.ibm.engine.model.context.PublicKeyContext;
 import com.ibm.engine.model.context.SecretKeyContext;
 import com.ibm.engine.model.context.SignatureContext;
+import com.ibm.engine.rule.IBundle;
 import com.ibm.mapper.ITranslator;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -47,13 +48,6 @@ import com.ibm.plugin.translation.translator.contexts.JavaPRNGContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.JavaProtocolContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.JavaSecretKeyContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.JavaSignatureContextTranslator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,6 +61,14 @@ import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.NewClassTree;
 import org.sonar.plugins.java.api.tree.SyntaxToken;
 import org.sonar.plugins.java.api.tree.Tree;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public final class JavaTranslator
         extends ITranslator<JavaCheck, Tree, Symbol, JavaFileScannerContext> {
@@ -113,6 +115,7 @@ public final class JavaTranslator
                         .map(
                                 ivalue ->
                                         translate(
+                                                rootDetectionStore.getDetectionRule().bundle(),
                                                 ivalue,
                                                 rootDetectionStore.getDetectionValueContext(),
                                                 filePath))
@@ -160,6 +163,7 @@ public final class JavaTranslator
                         .map(
                                 ivalue ->
                                         translate(
+                                                detectionStore.getDetectionRule().bundle(),
                                                 ivalue,
                                                 detectionStore.getDetectionValueContext(),
                                                 filePath))
@@ -219,6 +223,7 @@ public final class JavaTranslator
 
     @Nonnull
     public Optional<INode> translate(
+            @Nonnull final IBundle bundleIdentifier,
             @Nonnull final IValue<Tree> value,
             @Nonnull final IDetectionContext detectionValueContext,
             @Nonnull final String filePath) {
@@ -230,11 +235,10 @@ public final class JavaTranslator
 
         // cipher context
         if (detectionValueContext.is(CipherContext.class)) {
-            CipherContext.Kind kind = ((CipherContext) detectionValueContext).kind();
             JavaCipherContextTranslator javaCipherContextTranslation =
                     new JavaCipherContextTranslator(javaMapperConfig);
-            return javaCipherContextTranslation.translate(
-                    value, kind, detectionValueContext, detectionLocation);
+            return javaCipherContextTranslation.translate(bundleIdentifier,
+                    value, detectionValueContext, detectionLocation);
 
             // secret key context
         } else if (detectionValueContext.is(SecretKeyContext.class)) {

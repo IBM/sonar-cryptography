@@ -24,13 +24,14 @@ import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleInfoMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
+
+import javax.annotation.Nonnull;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public final class BcBlockCipherPadding {
     private BcBlockCipherPadding() {
@@ -62,7 +63,7 @@ public final class BcBlockCipherPadding {
                             .shouldBeDetectedAs(new ValueActionFactory<>(paddingName))
                             .withoutParameters()
                             .buildForContext(new CipherContext(CipherContext.Kind.PADDING))
-                            .inBundle(() -> "BcBlockCipherPadding")
+                            .inBundle(() -> "Bc")
                             .withoutDependingDetectionRules());
         }
         return constructorsList;

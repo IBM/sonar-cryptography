@@ -73,7 +73,7 @@ class JcaSignatureMapperTest {
 
         assertThat(signatureOptional.get().getDigest()).isPresent();
         MessageDigest messageDigest = signatureOptional.get().getDigest().get();
-        assertThat(messageDigest.getName()).isEqualTo("SHA-384");
+        assertThat(messageDigest.getName()).isEqualTo("SHA384");
         assertThat(messageDigest.getDigestSize()).isPresent();
         assertThat(messageDigest.getDigestSize().get().getValue()).isEqualTo(384);
 
@@ -125,7 +125,7 @@ class JcaSignatureMapperTest {
 
         assertThat(signatureOptional.get().getDigest()).isPresent();
         MessageDigest messageDigest = signatureOptional.get().getDigest().get();
-        assertThat(messageDigest.getName()).isEqualTo("SHA-1");
+        assertThat(messageDigest.getName()).isEqualTo("SHA1");
         assertThat(messageDigest.getDigestSize()).isPresent();
         assertThat(messageDigest.getDigestSize().get().getValue()).isEqualTo(160);
 

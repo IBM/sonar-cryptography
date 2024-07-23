@@ -73,7 +73,7 @@ public final class BcAEADCipherEngine {
                                 .shouldBeDetectedAs(new ValueActionFactory<>(engineName))
                                 .withoutParameters()
                                 .buildForContext(new CipherContext(CipherContext.Kind.AEAD_ENGINE))
-                                .inBundle(() -> "BcAEADCipherEngine")
+                                .inBundle(() -> "Bc")
                                 .withDependingDetectionRules(BcAEADCipherInit.rules()));
             } else {
                 constructorsList.add(
@@ -92,7 +92,7 @@ public final class BcAEADCipherEngine {
                                                 AlgorithmParameter.Kind.ANY))
                                 .asChildOfParameterWithId(-1)
                                 .buildForContext(new CipherContext(CipherContext.Kind.AEAD_ENGINE))
-                                .inBundle(() -> "BcAEADCipherEngine")
+                                .inBundle(() -> "Bc")
                                 .withDependingDetectionRules(BcAEADCipherInit.rules()));
             }
         }

@@ -73,13 +73,8 @@ public final class SignerReorganizer {
                                         // Create the new Signature node
                                         DetectionLocation detectionLocation =
                                                 ((IAsset) node).getDetectionContext();
-                                        Signature newSignature =
-                                                new Signature(
-                                                        new Algorithm(
-                                                                newSignatureName,
-                                                                detectionLocation),
-                                                        detectionLocation);
-                                        return newSignature;
+                                        return new Signature(
+                                                new Algorithm(newSignatureName, detectionLocation));
                                     }));
 
     private static final IReorganizerRule RENAME_SIGNATURE_RSA =
@@ -115,14 +110,8 @@ public final class SignerReorganizer {
                                         // Create the new Signature node
                                         DetectionLocation detectionLocation =
                                                 ((IAsset) node).getDetectionContext();
-                                        Signature newSignature =
-                                                new Signature(
-                                                        new Algorithm(
-                                                                newSignatureName,
-                                                                detectionLocation),
-                                                        detectionLocation);
-
-                                        return newSignature;
+                                        return new Signature(
+                                                new Algorithm(newSignatureName, detectionLocation));
                                     }));
 
     private static final IReorganizerRule RENAME_SIGNATURE =
@@ -184,14 +173,8 @@ public final class SignerReorganizer {
                                         // Create the new Signature node
                                         DetectionLocation detectionLocation =
                                                 ((IAsset) node).getDetectionContext();
-                                        Signature newSignature =
-                                                new Signature(
-                                                        new Algorithm(
-                                                                newSignatureName,
-                                                                detectionLocation),
-                                                        detectionLocation);
-
-                                        return newSignature;
+                                        return new Signature(
+                                                new Algorithm(newSignatureName, detectionLocation));
                                     }));
 
     @Unmodifiable

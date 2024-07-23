@@ -61,7 +61,7 @@ public final class BcBasicAgreement {
                                             agreement.replace("BasicAgreement", "")))
                             .withoutParameters()
                             .buildForContext(new KeyContext(KeyContext.Kind.DH))
-                            .inBundle(() -> "BcBasicAgreement")
+                            .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcBasicAgreementInit.rules()));
         }
 

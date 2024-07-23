@@ -21,6 +21,8 @@ package com.ibm.mapper.mapper.ssl;
 
 import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.IMapper;
+import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
@@ -38,6 +40,8 @@ public class EncryptionAlgorithmMapper implements IMapper {
             return Optional.empty();
         }
 
-        return Optional.empty();
+        final String name = str.replace(" ", "-").toLowerCase();
+        final Algorithm algorithm = new Algorithm(name, detectionLocation);
+        return Optional.of(new Cipher(algorithm));
     }
 }

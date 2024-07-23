@@ -79,7 +79,7 @@ class JcaAlgorithmParameterGeneratorInitTest extends TestBase {
         assertThat(nodes).hasSize(1);
         INode node = nodes.get(0);
         assertThat(node).isInstanceOf(com.ibm.mapper.model.Algorithm.class);
-        assertThat(node.asString()).isEqualTo("DiffieHellman");
+        assertThat(node.asString()).isEqualTo("DH");
 
         INode defaultKeyLength = node.getChildren().get(KeyLength.class);
         assertThat(defaultKeyLength).isNotNull();

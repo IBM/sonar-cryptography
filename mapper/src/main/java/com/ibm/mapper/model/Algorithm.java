@@ -38,14 +38,14 @@ public class Algorithm implements IAsset {
             @Nonnull Algorithm algorithm,
             @Nonnull DetectionLocation detectionLocation,
             @Nonnull final Class<? extends Algorithm> asKind) {
-        this.name = algorithm.getName();
+        this.name = applyStandardNaming(algorithm.getName());
         this.children = algorithm.getChildren();
         this.detectionLocation = detectionLocation;
         this.kind = asKind;
     }
 
     public Algorithm(@Nonnull String name, @Nonnull DetectionLocation detectionLocation) {
-        this.name = name;
+        this.name = applyStandardNaming(name);
         this.children = new HashMap<>();
         this.detectionLocation = detectionLocation;
         this.kind = Algorithm.class;
@@ -55,7 +55,7 @@ public class Algorithm implements IAsset {
             @Nonnull String name,
             @Nonnull DetectionLocation detectionLocation,
             @Nonnull Map<Class<? extends INode>, INode> children) {
-        this.name = name;
+        this.name = applyStandardNaming(name);
         this.children = children;
         this.detectionLocation = detectionLocation;
         this.kind = Algorithm.class;
@@ -66,7 +66,7 @@ public class Algorithm implements IAsset {
             @Nonnull KeyLength keyLength,
             @Nonnull DetectionLocation detectionLocation,
             @Nonnull Map<Class<? extends INode>, INode> children) {
-        this.name = name;
+        this.name = applyStandardNaming(name);
         this.children = children;
         this.detectionLocation = detectionLocation;
         this.kind = Algorithm.class;
@@ -77,7 +77,7 @@ public class Algorithm implements IAsset {
         this.children = new HashMap<>();
         this.kind = algorithm.kind;
         this.detectionLocation = algorithm.detectionLocation;
-        this.name = algorithm.name;
+        this.name = applyStandardNaming(algorithm.name);
     }
 
     @Override
@@ -174,5 +174,20 @@ public class Algorithm implements IAsset {
     @Override
     public String toString() {
         return name;
+    }
+
+    @Nonnull
+    public String applyStandardNaming(final @Nonnull String name) {
+        return switch (name.toLowerCase()) {
+            case "sha1", "sha-1", "sha" -> "SHA1";
+            case "sha224", "sha-224" -> "SHA224";
+            case "sha256", "sha-256" -> "SHA256";
+            case "sha384", "sha-384" -> "SHA384";
+            case "sha512", "sha-512" -> "SHA512";
+            case "desede", "tripledes" -> "DESede";
+            case "desedewrap", "tripledeswrap" -> "DESedeWrap";
+            case "diffiehellman", "dh" -> "DH";
+            default -> name;
+        };
     }
 }

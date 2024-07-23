@@ -21,7 +21,9 @@ package com.ibm.mapper.mapper.jca;
 
 import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.IMapper;
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.HashMap;
 import java.util.Map;

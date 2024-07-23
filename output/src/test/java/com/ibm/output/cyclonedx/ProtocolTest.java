@@ -40,8 +40,7 @@ class ProtocolTest {
 
         final CBOMOutputFile outputFile = new CBOMOutputFile();
 
-        final TLSProtocol tlsProtocol =
-                new TLSProtocol(new Protocol("TLSv1.3", detectionLocation), detectionLocation);
+        final TLSProtocol tlsProtocol = new TLSProtocol(new Protocol("TLSv1.3", detectionLocation));
         tlsProtocol.append(new Version("1.3", detectionLocation));
 
         outputFile.add(List.of(tlsProtocol));

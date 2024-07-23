@@ -19,9 +19,9 @@
  */
 package com.ibm.mapper.model;
 
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Optional;
 
 /**
  * <a
@@ -47,10 +47,7 @@ public class Cipher extends Algorithm {
         super(algorithm, algorithm.detectionLocation, Cipher.class);
     }
 
-    public Cipher(
-            @Nonnull Algorithm algorithm,
-            @Nullable Mode mode,
-            @Nullable Padding padding) {
+    public Cipher(@Nonnull Algorithm algorithm, @Nullable Mode mode, @Nullable Padding padding) {
         super(algorithm, algorithm.detectionLocation, Cipher.class);
         if (mode != null) {
             this.append(mode);

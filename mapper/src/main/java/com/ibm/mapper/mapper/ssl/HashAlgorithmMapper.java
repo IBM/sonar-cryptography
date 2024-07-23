@@ -17,35 +17,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper;
+package com.ibm.mapper.mapper.ssl;
 
-import com.ibm.engine.detection.DetectionStore;
-import com.ibm.engine.model.IValue;
-import com.ibm.engine.model.context.IDetectionContext;
-import com.ibm.engine.rule.IBundle;
+import com.ibm.mapper.configuration.Configuration;
+import com.ibm.mapper.mapper.IMapper;
+import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public abstract class ITranslator<R, T, S, P> {
+public final class HashAlgorithmMapper implements IMapper {
 
-    public static final String UNKNOWN = "unknown";
+    @NotNull @Override
+    public Optional<? extends INode> parse(
+            @Nullable String str,
+            @NotNull DetectionLocation detectionLocation,
+            @NotNull Configuration configuration) {
+        if (str == null) {
+            return Optional.empty();
+        }
 
-    @Nonnull
-    protected abstract List<INode> translate(
-            @Nonnull DetectionStore<R, T, S, P> rootDetectionStore);
-
-    @Nonnull
-    protected abstract Optional<INode> translate(
-            @Nonnull final IBundle bundleIdentifier,
-            @Nonnull IValue<T> value,
-            @Nonnull IDetectionContext detectionValueContext,
-            @Nonnull final String filePath);
-
-    @Nullable protected abstract DetectionLocation getDetectionContextFrom(
-            @Nonnull T location, @Nonnull String filePath);
+        final String name = str.replace(" ", "-").toLowerCase();
+        final Algorithm algorithm = new Algorithm(name, detectionLocation);
+        return Optional.of(new Cipher(algorithm));
+    }
 }

@@ -64,6 +64,6 @@ class JcaPRNGMapperTest {
         INode child = children.get(MessageDigest.class);
         assertThat(child.is(MessageDigest.class)).isTrue();
         MessageDigest messageDigest = (MessageDigest) child;
-        assertThat(messageDigest.getName()).isEqualTo("SHA-1");
+        assertThat(messageDigest.getName()).isEqualTo("SHA1");
     }
 }

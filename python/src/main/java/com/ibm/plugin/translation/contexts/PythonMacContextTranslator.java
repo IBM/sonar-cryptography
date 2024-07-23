@@ -31,9 +31,10 @@ import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.plugin.rules.detection.hash.CryptographyHash;
 import com.ibm.plugin.rules.detection.symmetric.CryptographyCipher;
-import java.util.Optional;
-import javax.annotation.Nonnull;
 import org.sonar.plugins.python.api.tree.Tree;
+
+import javax.annotation.Nonnull;
+import java.util.Optional;
 
 @SuppressWarnings("java:S1301")
 public final class PythonMacContextTranslator {
@@ -71,8 +72,8 @@ public final class PythonMacContextTranslator {
                 // Algorithms [only the ones in `CryptographyCipher.blockCiphers` are supported]
                 algorithm = new Algorithm(detection + "-CMAC", detectionLocation);
                 if (CryptographyCipher.blockCiphers.contains(detection)) {
-                    cipher = new BlockCipher(algorithm, null, null, detectionLocation);
-                    mac = new Mac(cipher, detectionLocation);
+                    cipher = new BlockCipher(algorithm, null, null);
+                    mac = new Mac(cipher);
                     return Optional.of(mac);
                 }
                 break;
@@ -82,8 +83,8 @@ public final class PythonMacContextTranslator {
                 if (CryptographyHash.hashes.contains(detection)) {
                     String hashName = detection.replace('_', '-');
                     algorithm = new Algorithm("HMAC-" + hashName, detectionLocation);
-                    messageDigest = new MessageDigest(algorithm, detectionLocation);
-                    mac = new Mac(messageDigest, detectionLocation);
+                    messageDigest = new MessageDigest(algorithm);
+                    mac = new Mac(messageDigest);
                     return Optional.of(mac);
                 }
                 break;
@@ -103,7 +104,7 @@ public final class PythonMacContextTranslator {
         switch (cipherAction.getAction()) {
             case MAC:
                 algorithm = new Algorithm(kind.name(), detectionLocation);
-                mac = new Mac(algorithm, detectionLocation);
+                mac = new Mac(algorithm);
                 return Optional.of(mac);
             default:
                 break;

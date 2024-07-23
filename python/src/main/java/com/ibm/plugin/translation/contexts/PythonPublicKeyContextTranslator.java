@@ -30,9 +30,10 @@ import com.ibm.mapper.model.PublicKey;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.plugin.translation.PythonTranslatorUtils;
-import java.util.Optional;
-import javax.annotation.Nonnull;
 import org.sonar.plugins.python.api.tree.Tree;
+
+import javax.annotation.Nonnull;
+import java.util.Optional;
 
 @SuppressWarnings("java:S1301")
 public final class PythonPublicKeyContextTranslator {
@@ -72,7 +73,7 @@ public final class PythonPublicKeyContextTranslator {
                 baseAlgorithm = new Algorithm(algorithmName, detectionLocation);
                 ellipticCurve = new EllipticCurve(detectedAlgorithm.asString(), detectionLocation);
                 resAlgorithm =
-                        new EllipticCurveAlgorithm(baseAlgorithm, ellipticCurve, detectionLocation);
+                        new EllipticCurveAlgorithm(baseAlgorithm, ellipticCurve);
 
                 resAlgorithm.append(new KeyGeneration(detectionLocation));
                 publicKey.append(resAlgorithm);

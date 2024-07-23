@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper;
+package com.ibm.engine.rule;
 
 import com.ibm.common.IObserver;
 import com.ibm.engine.detection.DetectionStore;

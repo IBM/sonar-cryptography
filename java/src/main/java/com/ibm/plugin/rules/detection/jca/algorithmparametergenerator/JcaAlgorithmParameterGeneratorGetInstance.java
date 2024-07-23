@@ -39,7 +39,7 @@ public final class JcaAlgorithmParameterGeneratorGetInstance {
                     .withMethodParameter(STRING_TYPE)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "JcaAlgorithmParameterGeneratorGetInstance")
+                    .inBundle(() -> "Jca")
                     .withDependingDetectionRules(JcaAlgorithmParameterGeneratorInit.rules());
 
     private static final IDetectionRule<Tree> PARAMETER_GENERATOR_2 =
@@ -51,7 +51,7 @@ public final class JcaAlgorithmParameterGeneratorGetInstance {
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .withMethodParameter("java.security.Provider")
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "JcaAlgorithmParameterGeneratorGetInstance")
+                    .inBundle(() -> "Jca")
                     .withDependingDetectionRules(JcaAlgorithmParameterGeneratorInit.rules());
 
     private static final IDetectionRule<Tree> PARAMETER_GENERATOR_3 =
@@ -63,7 +63,7 @@ public final class JcaAlgorithmParameterGeneratorGetInstance {
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .withMethodParameter(STRING_TYPE)
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "JcaAlgorithmParameterGeneratorGetInstance")
+                    .inBundle(() -> "Jca")
                     .withDependingDetectionRules(JcaAlgorithmParameterGeneratorInit.rules());
 
     private JcaAlgorithmParameterGeneratorGetInstance() {

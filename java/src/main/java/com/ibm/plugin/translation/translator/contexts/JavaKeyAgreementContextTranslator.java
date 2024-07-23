@@ -54,10 +54,7 @@ public class JavaKeyAgreementContextTranslator extends AbstractContextTranslator
             return jcaAlgorithmMapper
                     .parse(algorithm.asString(), detectionLocation, configuration)
                     .map(iNode -> (com.ibm.mapper.model.Algorithm) iNode)
-                    .map(
-                            algorithmNode ->
-                                    new KeyAgreement(
-                                            algorithmNode, algorithmNode.getDetectionContext()));
+                    .map(KeyAgreement::new);
         } else if (value instanceof KeySize<Tree> keySize) {
             KeyLength keyLength = new KeyLength(keySize.getValue(), detectionLocation);
             return Optional.of(keyLength);

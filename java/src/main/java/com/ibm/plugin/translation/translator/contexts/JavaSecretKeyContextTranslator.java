@@ -19,7 +19,11 @@
  */
 package com.ibm.plugin.translation.translator.contexts;
 
-import com.ibm.engine.model.*;
+import com.ibm.engine.model.Algorithm;
+import com.ibm.engine.model.IValue;
+import com.ibm.engine.model.KeySize;
+import com.ibm.engine.model.PasswordSize;
+import com.ibm.engine.model.SaltSize;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.model.context.KeyContext;
 import com.ibm.mapper.AbstractContextTranslator;
@@ -69,7 +73,7 @@ public final class JavaSecretKeyContextTranslator extends AbstractContextTransla
                                 return algo;
                             })
                     .map(algo -> new Key(algo.asString(), algo, detectionLocation))
-                    .map(key -> new SecretKey(key, detectionLocation));
+                    .map(SecretKey::new);
         } else if (value instanceof KeySize<Tree> keySize) {
             KeyLength keyLength = new KeyLength(keySize.getValue(), detectionLocation);
             return Optional.of(keyLength);

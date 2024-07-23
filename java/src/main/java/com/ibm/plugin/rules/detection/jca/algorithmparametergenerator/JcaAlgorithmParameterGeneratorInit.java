@@ -40,7 +40,7 @@ public final class JcaAlgorithmParameterGeneratorInit {
                     .withMethodParameter("java.security.spec.AlgorithmParameterSpec")
                     .addDependingDetectionRules(JcaAlgorithmParameterSpec.rules())
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "JcaAlgorithmParameterGeneratorInit")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> PARAMETER_INIT_2 =
@@ -52,7 +52,7 @@ public final class JcaAlgorithmParameterGeneratorInit {
                     .addDependingDetectionRules(JcaAlgorithmParameterSpec.rules())
                     .withMethodParameter("java.security.SecureRandom")
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "JcaAlgorithmParameterGeneratorInit")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> PARAMETER_INIT_3 =
@@ -63,7 +63,7 @@ public final class JcaAlgorithmParameterGeneratorInit {
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "JcaAlgorithmParameterGeneratorInit")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
     private static final IDetectionRule<Tree> PARAMETER_INIT_4 =
             new DetectionRuleBuilder<Tree>()
@@ -74,7 +74,7 @@ public final class JcaAlgorithmParameterGeneratorInit {
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
                     .withMethodParameter("java.security.SecureRandom")
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "JcaAlgorithmParameterGeneratorInit")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private JcaAlgorithmParameterGeneratorInit() {

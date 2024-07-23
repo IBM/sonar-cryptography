@@ -45,7 +45,7 @@ public final class JcaKeyFactoryGenerate {
                     .withMethodParameter(KEY_SPEC_TYPE)
                     .addDependingDetectionRules(JcaKeySpec.rules())
                     .buildForContext(new PrivateKeyContext(KeyContext.Kind.NONE))
-                    .inBundle(() -> "JcaKeyFactoryGenerate")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> GENERATE_PUBLIC =
@@ -57,7 +57,7 @@ public final class JcaKeyFactoryGenerate {
                     .withMethodParameter(KEY_SPEC_TYPE)
                     .addDependingDetectionRules(JcaKeySpec.rules())
                     .buildForContext(new PublicKeyContext(KeyContext.Kind.NONE))
-                    .inBundle(() -> "JcaKeyFactoryGenerate")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private JcaKeyFactoryGenerate() {

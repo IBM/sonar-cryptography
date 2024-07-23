@@ -44,7 +44,7 @@ public final class JcaSecretKeyFactoryGenerateSecret {
                     .withMethodParameter(KEY_SPEC_TYPE)
                     .addDependingDetectionRules(JcaKeySpec.rules())
                     .buildForContext(new SecretKeyContext(KeyContext.Kind.NONE))
-                    .inBundle(() -> "JcaSecretKeyFactoryGenerateSecret")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private JcaSecretKeyFactoryGenerateSecret() {

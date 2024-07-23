@@ -21,7 +21,14 @@ package com.ibm.mapper.mapper.jca;
 
 import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.IMapper;
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.AuthenticatedEncryption;
+import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.Mode;
+import com.ibm.mapper.model.OptimalAsymmetricEncryptionPadding;
+import com.ibm.mapper.model.Padding;
+import com.ibm.mapper.model.PasswordBasedEncryption;
+import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.List;
 import java.util.Optional;
@@ -123,10 +130,7 @@ public class JcaCipherMapper implements IMapper {
                     || mode.getName().toLowerCase().contains("ccm")) {
                 return Optional.of(
                         new AuthenticatedEncryption(
-                                algorithm.get(),
-                                mode,
-                                paddingOptional.orElse(null),
-                                null));
+                                algorithm.get(), mode, paddingOptional.orElse(null), null));
             }
         }
 

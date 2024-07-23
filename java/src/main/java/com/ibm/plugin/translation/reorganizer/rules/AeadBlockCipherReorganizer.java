@@ -54,12 +54,7 @@ public final class AeadBlockCipherReorganizer {
                                                         .deepCopy();
 
                                 INode newAuthenticatedEncryption =
-                                        new AuthenticatedEncryption(
-                                                blockCipher,
-                                                null,
-                                                null,
-                                                null,
-                                                ((IAsset) node).getDetectionContext());
+                                        new AuthenticatedEncryption(blockCipher, null, null, null);
 
                                 for (Map.Entry<Class<? extends INode>, INode> childKeyValue :
                                         node.getChildren().entrySet()) {

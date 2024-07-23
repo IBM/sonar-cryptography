@@ -58,7 +58,7 @@ public final class BcPKCS1Encoding {
                         .addDependingDetectionRules(
                                 BcAsymCipherEngine.rules(engineDetectionValueContext))
                         .buildForContext(context)
-                        .inBundle(() -> "BcPKCS1Encoding")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcAsymCipherInit.rules()));
 
         constructorsList.add(
@@ -72,7 +72,7 @@ public final class BcPKCS1Encoding {
                                 BcAsymCipherEngine.rules(engineDetectionValueContext))
                         .withMethodParameter(BYTE_ARRAY_TYPE)
                         .buildForContext(context)
-                        .inBundle(() -> "BcPKCS1Encoding")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcAsymCipherInit.rules()));
 
         constructorsList.add(
@@ -86,7 +86,7 @@ public final class BcPKCS1Encoding {
                                 BcAsymCipherEngine.rules(engineDetectionValueContext))
                         .withMethodParameter("int")
                         .buildForContext(context)
-                        .inBundle(() -> "BcPKCS1Encoding")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcAsymCipherInit.rules()));
 
         return constructorsList;

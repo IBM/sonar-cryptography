@@ -38,7 +38,7 @@ public class Key implements IAsset {
             @Nonnull Key key,
             @Nonnull DetectionLocation detectionLocation,
             @Nonnull final Class<? extends Key> asKind) {
-        this.name = key.getName();
+        this.name = applyStandardNaming(key.getName());
         this.children = key.getChildren();
         this.detectionLocation = detectionLocation;
         this.kind = asKind;
@@ -48,7 +48,7 @@ public class Key implements IAsset {
             @Nonnull String name,
             @Nonnull DetectionLocation detectionLocation,
             @Nonnull final Class<? extends Key> asKind) {
-        this.name = name;
+        this.name = applyStandardNaming(name);
         this.children = new HashMap<>();
         this.detectionLocation = detectionLocation;
         this.kind = asKind;
@@ -58,7 +58,7 @@ public class Key implements IAsset {
             @Nonnull String name,
             @Nonnull Algorithm algorithm,
             @Nonnull DetectionLocation detectionLocation) {
-        this.name = name;
+        this.name = applyStandardNaming(name);
         this.children = new HashMap<>();
         this.children.put(algorithm.getKind(), algorithm);
         this.detectionLocation = detectionLocation;
@@ -69,7 +69,7 @@ public class Key implements IAsset {
         this.children = new HashMap<>();
         this.kind = key.kind;
         this.detectionLocation = key.detectionLocation;
-        this.name = key.name;
+        this.name = applyStandardNaming(key.name);
     }
 
     @Nonnull
@@ -119,6 +119,11 @@ public class Key implements IAsset {
     @Override
     public DetectionLocation getDetectionContext() {
         return detectionLocation;
+    }
+
+    @NotNull @Override
+    public String applyStandardNaming(@NotNull String name) {
+        return name; // key is not different from algorithm
     }
 
     @Nonnull

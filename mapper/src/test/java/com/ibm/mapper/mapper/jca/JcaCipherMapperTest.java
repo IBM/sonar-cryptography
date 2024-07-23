@@ -23,7 +23,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.configuration.TestConfig;
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.AuthenticatedEncryption;
+import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.Cipher;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.Mode;
+import com.ibm.mapper.model.PasswordBasedEncryption;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.List;
 import java.util.Optional;
@@ -55,7 +62,7 @@ class JcaCipherMapperTest {
         assertThat(mode.getBlockSize()).isEmpty();
 
         assertThat(cipher.getPadding()).isPresent();
-        assertThat(cipher.getPadding().get().getName()).isEqualTo("PKCS5Padding");
+        assertThat(cipher.getPadding().get().getName()).isEqualTo("PKCS5");
     }
 
     @Test
@@ -114,7 +121,7 @@ class JcaCipherMapperTest {
         assertThat(mode.getBlockSize().get().getValue()).isEqualTo(8);
 
         assertThat(cipher.getPadding()).isPresent();
-        assertThat(cipher.getPadding().get().getName()).isEqualTo("NoPadding");
+        assertThat(cipher.getPadding().get().getName()).isEmpty();
     }
 
     @Test
@@ -166,6 +173,6 @@ class JcaCipherMapperTest {
         assertThat(mode.getBlockSize().get().getValue()).isEqualTo(8);
 
         assertThat(cipher.getPadding()).isPresent();
-        assertThat(cipher.getPadding().get().getName()).isEqualTo("No");
+        assertThat(cipher.getPadding().get().getName()).isEmpty();
     }
 }

@@ -37,14 +37,14 @@ public class Protocol implements IAsset {
             @Nonnull Protocol protocol,
             @Nonnull DetectionLocation detectionLocation,
             @Nonnull final Class<? extends Protocol> asKind) {
-        this.type = protocol.getType();
+        this.type = applyStandardNaming(protocol.getType());
         this.children = protocol.getChildren();
         this.detectionLocation = detectionLocation;
         this.kind = asKind;
     }
 
     public Protocol(@Nonnull String type, @Nonnull DetectionLocation detectionLocation) {
-        this.type = type;
+        this.type = applyStandardNaming(type);
         this.children = new HashMap<>();
         this.detectionLocation = detectionLocation;
         this.kind = Protocol.class;
@@ -54,7 +54,7 @@ public class Protocol implements IAsset {
             @Nonnull String type,
             @Nonnull DetectionLocation detectionLocation,
             @Nonnull Map<Class<? extends INode>, INode> children) {
-        this.type = type;
+        this.type = applyStandardNaming(type);
         this.children = children;
         this.detectionLocation = detectionLocation;
         this.kind = Protocol.class;
@@ -65,7 +65,7 @@ public class Protocol implements IAsset {
             @Nonnull KeyLength keyLength,
             @Nonnull DetectionLocation detectionLocation,
             @Nonnull Map<Class<? extends INode>, INode> children) {
-        this.type = type;
+        this.type = applyStandardNaming(type);
         this.children = children;
         this.detectionLocation = detectionLocation;
         this.kind = Protocol.class;
@@ -76,7 +76,7 @@ public class Protocol implements IAsset {
         this.children = new HashMap<>();
         this.kind = protocol.kind;
         this.detectionLocation = protocol.detectionLocation;
-        this.type = protocol.type;
+        this.type = applyStandardNaming(protocol.type);
     }
 
     @Override
@@ -123,6 +123,14 @@ public class Protocol implements IAsset {
     @NotNull @Override
     public DetectionLocation getDetectionContext() {
         return detectionLocation;
+    }
+
+    @NotNull @Override
+    public String applyStandardNaming(@NotNull String name) {
+        return switch (name.toLowerCase()) {
+            case "tls" -> "TLS";
+            default -> name;
+        };
     }
 
     @Nonnull

@@ -41,7 +41,7 @@ public final class JcaECPrivateKeySpec {
                     .withMethodParameter("java.security.spec.ECParameterSpec")
                     .addDependingDetectionRules(JcaECGenParameterSpec.rules())
                     .buildForContext(new KeyContext(KeyContext.Kind.EC))
-                    .inBundle(() -> "JcaECPrivateKeySpec")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private JcaECPrivateKeySpec() {

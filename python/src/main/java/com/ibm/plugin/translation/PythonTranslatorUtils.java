@@ -32,8 +32,9 @@ import com.ibm.mapper.model.SecretKey;
 import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
+
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 public final class PythonTranslatorUtils {
     private PythonTranslatorUtils() {
@@ -49,7 +50,7 @@ public final class PythonTranslatorUtils {
         Algorithm baseAlgorithm = new Algorithm(algorithmName, detectionLocation);
         EllipticCurve ellipticCurve = new EllipticCurve(curveName, detectionLocation);
         EllipticCurveAlgorithm resAlgorithm =
-                new EllipticCurveAlgorithm(baseAlgorithm, ellipticCurve, detectionLocation);
+                new EllipticCurveAlgorithm(baseAlgorithm, ellipticCurve);
 
         resAlgorithm.append(new KeyGeneration(detectionLocation));
         privateKey.append(resAlgorithm);
@@ -115,10 +116,9 @@ public final class PythonTranslatorUtils {
                 new StreamCipher(
                         new Algorithm(cipherString, detectionLocation),
                         null,
-                        null,
-                        detectionLocation);
+                        null);
 
-        cipher.append(new Mac(new Algorithm(macString, detectionLocation), detectionLocation));
+        cipher.append(new Mac(new Algorithm(macString, detectionLocation)));
         return cipher;
     }
 
@@ -157,8 +157,7 @@ public final class PythonTranslatorUtils {
                         new Algorithm(algorithmName, detectionLocation),
                         new Mode(modeString, detectionLocation),
                         null,
-                        null,
-                        detectionLocation);
+                        null);
         cipher.append(new KeyLength(keyLength, detectionLocation));
         cipher.append(new KeyGeneration(detectionLocation));
         secretKey.append(cipher);

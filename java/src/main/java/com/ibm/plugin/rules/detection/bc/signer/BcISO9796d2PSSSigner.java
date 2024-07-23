@@ -52,7 +52,7 @@ public final class BcISO9796d2PSSSigner {
                     .shouldBeDetectedAs(new SaltSizeFactory<>(Size.UnitType.BIT))
                     .asChildOfParameterWithId(-1)
                     .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
-                    .inBundle(() -> "bcISO9796d2PSSSigner")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_2 =
@@ -70,7 +70,7 @@ public final class BcISO9796d2PSSSigner {
                     .asChildOfParameterWithId(-1)
                     .withMethodParameter("boolean")
                     .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
-                    .inBundle(() -> "bcISO9796d2PSSSigner")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     @Unmodifiable

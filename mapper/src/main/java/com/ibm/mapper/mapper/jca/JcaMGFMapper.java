@@ -24,12 +24,11 @@ import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.MaskGenerationFunction;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 public class JcaMGFMapper implements IMapper {
 
@@ -56,8 +55,7 @@ public class JcaMGFMapper implements IMapper {
             return Optional.empty();
         }
 
-        final MaskGenerationFunction mgf =
-                new MaskGenerationFunction(algorithmOptional.get());
+        final MaskGenerationFunction mgf = new MaskGenerationFunction(algorithmOptional.get());
         return Optional.of(mgf);
     }
 

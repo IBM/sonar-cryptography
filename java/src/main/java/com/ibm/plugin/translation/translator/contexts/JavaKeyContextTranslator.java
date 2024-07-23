@@ -75,14 +75,9 @@ public final class JavaKeyContextTranslator extends AbstractContextTranslator
                     .map(
                             algorithmNode ->
                                     switch (algorithmNode.asString().trim().toLowerCase()) {
-                                        case "rsa" ->
-                                                new PublicKeyEncryption(
-                                                        algorithmNode,
-                                                        algorithmNode.getDetectionContext());
-                                        case "diffiehellman" ->
-                                                new KeyAgreement(
-                                                        algorithmNode,
-                                                        algorithmNode.getDetectionContext());
+                                        case "rsa" -> new PublicKeyEncryption(algorithmNode);
+                                        case "diffiehellman", "dh" ->
+                                                new KeyAgreement(algorithmNode);
                                         default -> algorithmNode;
                                     })
                     .map(
@@ -98,14 +93,14 @@ public final class JavaKeyContextTranslator extends AbstractContextTranslator
                                                 algorithmNode,
                                                 detectionLocation);
                                 if (detectionContext.is(PrivateKeyContext.class)) {
-                                    return new PrivateKey(key, key.getDetectionContext());
+                                    return new PrivateKey(key);
                                 } else if (detectionContext.is(PublicKeyContext.class)) {
-                                    return new PublicKey(key, key.getDetectionContext());
+                                    return new PublicKey(key);
                                 } else if (detectionContext.is(SecretKeyContext.class)) {
-                                    return new SecretKey(key, key.getDetectionContext());
+                                    return new SecretKey(key);
                                 } else {
                                     return switch (algorithmNode.asString().trim().toLowerCase()) {
-                                        case "rsa" -> new PublicKey(key, key.getDetectionContext());
+                                        case "rsa" -> new PublicKey(key);
                                         default -> algorithmNode;
                                     };
                                 }
@@ -117,7 +112,7 @@ public final class JavaKeyContextTranslator extends AbstractContextTranslator
             com.ibm.mapper.model.Algorithm algorithm =
                     new com.ibm.mapper.model.Algorithm("EC", detectionLocation);
             return Stream.of(algorithm)
-                    .map(algo -> new EllipticCurveAlgorithm(algo, detectionLocation))
+                    .map(EllipticCurveAlgorithm::new)
                     .map(
                             algo -> {
                                 algo.append(new KeyGeneration(detectionLocation));
@@ -134,15 +129,14 @@ public final class JavaKeyContextTranslator extends AbstractContextTranslator
                             new com.ibm.mapper.model.Algorithm(
                                     valueAction.asString(), detectionLocation);
                     if (valueAction.asString().equals("MGF1")) {
-                        return Optional.of(
-                                new MaskGenerationFunction(algorithm, detectionLocation));
+                        return Optional.of(new MaskGenerationFunction(algorithm));
                     }
-                    return Optional.of(new KeyDerivationFunction(algorithm, detectionLocation));
+                    return Optional.of(new KeyDerivationFunction(algorithm));
                 case KEM:
                     algorithm =
                             new com.ibm.mapper.model.Algorithm(
                                     valueAction.asString(), detectionLocation);
-                    return Optional.of(new KeyEncapsulationMechanism(algorithm, detectionLocation));
+                    return Optional.of(new KeyEncapsulationMechanism(algorithm));
                 default:
                     break;
             }

@@ -26,12 +26,11 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PasswordBasedEncryption;
 import com.ibm.mapper.utils.DetectionLocation;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class JcaPasswordBasedEncryptionMapper implements IMapper {
 
@@ -93,8 +92,7 @@ public class JcaPasswordBasedEncryptionMapper implements IMapper {
             return Optional.empty();
         }
 
-        PasswordBasedEncryption pbe =
-                new PasswordBasedEncryption(algorithmOptional.get());
+        PasswordBasedEncryption pbe = new PasswordBasedEncryption(algorithmOptional.get());
         return Optional.of(pbe);
     }
 }

@@ -24,9 +24,7 @@ import javax.annotation.Nullable;
 
 public class BlockCipher extends Cipher {
     public BlockCipher(
-            @Nonnull Algorithm algorithm,
-            @Nullable Mode mode,
-            @Nullable Padding padding) {
+            @Nonnull Algorithm algorithm, @Nullable Mode mode, @Nullable Padding padding) {
         super(algorithm, mode, padding, BlockCipher.class);
     }
 }

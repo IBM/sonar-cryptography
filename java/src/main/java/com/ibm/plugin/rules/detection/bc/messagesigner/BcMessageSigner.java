@@ -81,7 +81,7 @@ public final class BcMessageSigner {
                             .withAnyParameters()
                             .buildForContext(
                                     new SignatureContext(SignatureContext.Kind.SIGNATURE_NAME))
-                            .inBundle(() -> "bcMessageSigner")
+                            .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcMessageSignerInit.rules()));
         }
         return constructorsList;
@@ -101,7 +101,7 @@ public final class BcMessageSigner {
                         .withMethodParameter("org.bouncycastle.crypto.Digest")
                         .addDependingDetectionRules(BcDigests.rules())
                         .buildForContext(new SignatureContext(SignatureContext.Kind.SIGNATURE_NAME))
-                        .inBundle(() -> "bcMessageSigner")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcMessageSignerInit.rules()));
 
         return constructorsList;

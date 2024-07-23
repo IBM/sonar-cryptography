@@ -44,7 +44,7 @@ public final class BcRSADigestSigner {
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
                     .buildForContext(new SignatureContext(SignatureContext.Kind.RSA))
-                    .inBundle(() -> "bcRSADigestSigner")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_2 =
@@ -57,7 +57,7 @@ public final class BcRSADigestSigner {
                     .addDependingDetectionRules(BcDigests.rules())
                     .withMethodParameter("org.bouncycastle.asn1.ASN1ObjectIdentifier")
                     .buildForContext(new SignatureContext(SignatureContext.Kind.RSA))
-                    .inBundle(() -> "bcRSADigestSigner")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     @Unmodifiable

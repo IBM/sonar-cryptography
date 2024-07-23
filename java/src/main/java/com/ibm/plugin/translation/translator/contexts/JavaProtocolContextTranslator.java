@@ -31,10 +31,9 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Protocol;
 import com.ibm.mapper.model.TLSProtocol;
 import com.ibm.mapper.utils.DetectionLocation;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
-
-import java.util.Optional;
 
 public class JavaProtocolContextTranslator extends AbstractContextTranslator
         implements IContextTranslationWithKind<Tree, ProtocolContext.Kind> {
@@ -54,7 +53,7 @@ public class JavaProtocolContextTranslator extends AbstractContextTranslator
                 case TLS ->
                         Optional.of(protocol)
                                 .map(p -> new Protocol(p.asString(), detectionLocation))
-                                .map(p -> new TLSProtocol(p, detectionLocation))
+                                .map(TLSProtocol::new)
                                 .map(
                                         p -> {
                                             final SSLVersionMapper sslVersionMapper =
@@ -73,12 +72,15 @@ public class JavaProtocolContextTranslator extends AbstractContextTranslator
             };
         } else if (value instanceof CipherSuite<Tree> cipherSuite) {
             return switch (kind) {
-                /* case TLS -> {
-                    return
-                }*/
+                    /* case TLS -> {
+                        return
+                    }*/
                 default ->
                         Optional.of(cipherSuite)
-                                .map(suite -> new com.ibm.mapper.model.CipherSuite(suite.asString(), detectionLocation));
+                                .map(
+                                        suite ->
+                                                new com.ibm.mapper.model.CipherSuite(
+                                                        suite.asString(), detectionLocation));
             };
         }
 

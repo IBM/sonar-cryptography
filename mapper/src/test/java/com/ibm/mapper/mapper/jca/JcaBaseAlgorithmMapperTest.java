@@ -44,7 +44,7 @@ public class JcaBaseAlgorithmMapperTest {
 
         assertThat(algorithmOptional).isPresent();
         assertThat(algorithmOptional.get().is(Algorithm.class)).isTrue();
-        assertThat(algorithmOptional.get().getName()).isEqualTo("DiffieHellman");
+        assertThat(algorithmOptional.get().getName()).isEqualTo("DH");
 
         assertThat(algorithmOptional.get().hasChildOfType(KeyLength.class)).isPresent();
         assertThat(algorithmOptional.get().hasChildOfType(KeyLength.class).get().asString())
@@ -62,7 +62,7 @@ public class JcaBaseAlgorithmMapperTest {
 
         assertThat(algorithmOptional).isPresent();
         assertThat(algorithmOptional.get().is(Algorithm.class)).isTrue();
-        assertThat(algorithmOptional.get().getName()).isEqualTo("diffiehellman");
+        assertThat(algorithmOptional.get().getName()).isEqualTo("dh");
 
         assertThat(algorithmOptional.get().hasChildOfType(KeyLength.class)).isPresent();
         assertThat(algorithmOptional.get().hasChildOfType(KeyLength.class).get().asString())

@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class KeyExchangeAlgorithmMapper implements IMapper {
 
-    private final Map<String, String> nameMap = Map.of("DHE", "diffiehellman");
+    private final Map<String, String> nameMap = Map.of("DHE", "dh");
 
     @NotNull @Override
     public Optional<? extends INode> parse(
@@ -44,6 +44,6 @@ public class KeyExchangeAlgorithmMapper implements IMapper {
         }
         final String name = Optional.ofNullable(nameMap.get(str)).orElse(str);
         final Algorithm algorithm = new Algorithm(name, detectionLocation);
-        return Optional.of(new KeyAgreement(algorithm, detectionLocation));
+        return Optional.of(new KeyAgreement(algorithm));
     }
 }

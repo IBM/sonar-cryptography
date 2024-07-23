@@ -19,8 +19,6 @@
  */
 package com.ibm.plugin.rules.detection.bc.derivationfunction;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.ValueAction;
@@ -35,7 +33,6 @@ import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
-import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.sonar.java.checks.verifier.CheckVerifier;
@@ -43,6 +40,10 @@ import org.sonar.plugins.java.api.JavaCheck;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class BcKDFCounterBytesGeneratorTest extends TestBase {
     @Test
@@ -111,7 +112,7 @@ class BcKDFCounterBytesGeneratorTest extends TestBase {
         INode macNode = keyDerivationFunctionNode.getChildren().get(Mac.class);
         assertThat(macNode).isNotNull();
         assertThat(macNode.getChildren()).hasSize(3);
-        assertThat(macNode.asString()).isEqualTo("HMAC-SHA-256");
+        assertThat(macNode.asString()).isEqualTo("HMAC-SHA256");
 
         // Digest under Mac under KeyDerivationFunction
         INode digestNode = macNode.getChildren().get(Digest.class);
@@ -122,8 +123,8 @@ class BcKDFCounterBytesGeneratorTest extends TestBase {
         // MessageDigest under Mac under KeyDerivationFunction
         INode messageDigestNode = macNode.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode).isNotNull();
-        assertThat(messageDigestNode.getChildren()).hasSize(1);
-        assertThat(messageDigestNode.asString()).isEqualTo("SHA-256");
+        assertThat(messageDigestNode.getChildren()).isEmpty();
+        assertThat(messageDigestNode.asString()).isEqualTo("SHA256");
 
         // Tag under Mac under KeyDerivationFunction
         INode tagNode = macNode.getChildren().get(Tag.class);

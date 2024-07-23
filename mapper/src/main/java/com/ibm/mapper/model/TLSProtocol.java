@@ -20,11 +20,10 @@
 package com.ibm.mapper.model;
 
 import com.ibm.mapper.model.collections.CipherSuiteCollection;
-import org.jetbrains.annotations.NotNull;
-
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
 
 public class TLSProtocol extends Protocol {
 

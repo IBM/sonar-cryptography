@@ -33,7 +33,7 @@ public class Padding extends Property {
             @Nonnull DetectionLocation detectionLocation,
             @Nonnull final Class<? extends Padding> asKind) {
         super(asKind, detectionLocation, padding.getChildren());
-        this.name = padding.getName();
+        this.name = applyStandardNaming(padding.getName());
     }
 
     public Padding(
@@ -41,12 +41,12 @@ public class Padding extends Property {
             @Nonnull DetectionLocation detectionLocation,
             @Nonnull Map<Class<? extends INode>, INode> children) {
         super(Padding.class, detectionLocation, children);
-        this.name = name;
+        this.name = applyStandardNaming(name);
     }
 
     public Padding(@Nonnull Padding padding) {
         super(padding.type, padding.detectionLocation, padding.children);
-        this.name = padding.name;
+        this.name = applyStandardNaming(padding.name);
     }
 
     @Nonnull
@@ -91,5 +91,19 @@ public class Padding extends Property {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), name);
+    }
+
+    @Nonnull
+    protected String applyStandardNaming(final @Nonnull String name) {
+        return (switch (name.toLowerCase()) {
+                    case "iso10126padding", "iso10126" -> "ISO10126";
+                    case "oaeppadding", "oaep" -> "OAEP";
+                    case "pkcs1padding", "pkcs1" -> "PKCS1";
+                    case "pkcs5padding", "pkcs5" -> "PKCS5";
+                    case "ssl3padding", "ssl3" -> "SSL3";
+                    case "nopadding" -> "";
+                    default -> name;
+                })
+                .toUpperCase();
     }
 }

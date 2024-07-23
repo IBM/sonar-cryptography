@@ -26,10 +26,6 @@ public class TestConfig extends Configuration {
     @Nonnull
     @Override
     public String changeStringValue(@Nonnull String value) {
-        if (value.contains("Padding")) {
-            return value.replace("Padding", "");
-        }
-
         return value.toLowerCase();
     }
 }

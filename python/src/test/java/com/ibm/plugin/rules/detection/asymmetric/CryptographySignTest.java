@@ -19,8 +19,6 @@
  */
 package com.ibm.plugin.rules.detection.asymmetric;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.KeyAction;
@@ -36,8 +34,6 @@ import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.plugin.TestBase;
-import java.util.List;
-import javax.annotation.Nonnull;
 import org.junit.jupiter.api.Test;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
@@ -45,7 +41,12 @@ import org.sonar.plugins.python.api.symbols.Symbol;
 import org.sonar.plugins.python.api.tree.Tree;
 import org.sonar.python.checks.utils.PythonCheckVerifier;
 
-public class CryptographySignTest extends TestBase {
+import javax.annotation.Nonnull;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+class CryptographySignTest extends TestBase {
     @Test
     void test() {
         PythonCheckVerifier.verify(
@@ -85,7 +86,7 @@ public class CryptographySignTest extends TestBase {
         // MessageDigest under Signature
         INode messageDigestNode = signatureNode.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode).isNotNull();
-        assertThat(messageDigestNode.asString()).isEqualTo("SHA512");
+        assertThat(messageDigestNode.asString()).isEqualTo("SHA-512");
 
         // EllipticCurveAlgorithm under Signature
         INode signNode = signatureNode.getChildren().get(Sign.class);

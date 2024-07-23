@@ -23,7 +23,12 @@ import com.ibm.enricher.utils.Utils;
 import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.jca.JcaMGFMapper;
 import com.ibm.mapper.mapper.jca.JcaMessageDigestMapper;
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.MaskGenerationFunction;
+import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.Oid;
+import com.ibm.mapper.model.SaltLength;
+import com.ibm.mapper.model.Signature;
 import java.util.Map;
 import javax.annotation.Nonnull;
 
@@ -77,7 +82,7 @@ public class RSASSASignatureEnricher implements ISignatureEnricher {
          */
         if (signature.hasChildOfType(MessageDigest.class).isEmpty()) {
             new JcaMessageDigestMapper()
-                    .parse("SHA-1", signature.getDetectionContext(), Configuration.DEFAULT)
+                    .parse("SHA1", signature.getDetectionContext(), Configuration.DEFAULT)
                     .ifPresent(signature::append);
         }
         if (signature.hasChildOfType(MaskGenerationFunction.class).isEmpty()) {
@@ -87,7 +92,7 @@ public class RSASSASignatureEnricher implements ISignatureEnricher {
                             mgf -> {
                                 new JcaMessageDigestMapper()
                                         .parse(
-                                                "SHA-1",
+                                                "SHA1",
                                                 signature.getDetectionContext(),
                                                 Configuration.DEFAULT)
                                         .ifPresent(mgf::append);

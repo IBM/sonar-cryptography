@@ -106,17 +106,17 @@ public final class JavaDigestContextTranslator extends AbstractContextTranslator
                     new com.ibm.mapper.model.Algorithm(digestName, detectionLocation);
             MessageDigest messageDigest;
 
-            switch (kind) {
-                case MGF1, MGF:
-                    return Optional.of(new MaskGenerationFunction(algorithm, detectionLocation));
-                default:
+            return switch (kind) {
+                case MGF1, MGF -> Optional.of(new MaskGenerationFunction(algorithm));
+                default -> {
                     if (digestSize != null) {
-                        messageDigest = new MessageDigest(algorithm, digestSize, detectionLocation);
+                        messageDigest = new MessageDigest(algorithm, digestSize);
                     } else {
-                        messageDigest = new MessageDigest(algorithm, detectionLocation);
+                        messageDigest = new MessageDigest(algorithm);
                     }
-                    return Optional.of(messageDigest);
-            }
+                    yield Optional.of(messageDigest);
+                }
+            };
         } else if (value instanceof com.ibm.engine.model.DigestSize) {
             return Optional.of(
                     new DigestSize(Integer.parseInt(value.asString()), detectionLocation));

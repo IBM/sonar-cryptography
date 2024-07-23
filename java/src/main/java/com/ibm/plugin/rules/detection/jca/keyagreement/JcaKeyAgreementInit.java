@@ -41,7 +41,7 @@ public final class JcaKeyAgreementInit {
                     .forMethods("init")
                     .withMethodParameter(KEY_TYPE) // TODO: add rule to resolve key
                     .buildForContext(new SecretKeyContext(KeyContext.Kind.NONE))
-                    .inBundle(() -> "JcaKeyAgreementInit")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> KEY_AGREEMENT2 =
@@ -53,7 +53,7 @@ public final class JcaKeyAgreementInit {
                     .withMethodParameter("java.security.spec.AlgorithmParameterSpec")
                     .addDependingDetectionRules(JcaAlgorithmParameterSpec.rules())
                     .buildForContext(new SecretKeyContext(KeyContext.Kind.NONE))
-                    .inBundle(() -> "JcaKeyAgreementInit")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> KEY_AGREEMENT3 =
@@ -66,7 +66,7 @@ public final class JcaKeyAgreementInit {
                     .addDependingDetectionRules(JcaAlgorithmParameterSpec.rules())
                     .withMethodParameter("java.security.SecureRandom")
                     .buildForContext(new SecretKeyContext(KeyContext.Kind.NONE))
-                    .inBundle(() -> "JcaKeyAgreementInit")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> KEY_AGREEMENT4 =
@@ -77,7 +77,7 @@ public final class JcaKeyAgreementInit {
                     .withMethodParameter(KEY_TYPE) // TODO: add rule to resolve key
                     .withMethodParameter("java.security.SecureRandom")
                     .buildForContext(new SecretKeyContext(KeyContext.Kind.NONE))
-                    .inBundle(() -> "JcaKeyAgreementInit")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private JcaKeyAgreementInit() {

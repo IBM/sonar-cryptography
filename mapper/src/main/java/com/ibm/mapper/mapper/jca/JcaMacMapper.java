@@ -86,7 +86,7 @@ public class JcaMacMapper implements IMapper {
         Optional<MessageDigest> messageDigestOptional =
                 jcaMessageDigestMapper.parse(messageDigest, detectionLocation, configuration);
         messageDigestOptional.ifPresent(mac::append);
-
+        mac.apply(configuration);
         return Optional.of(mac);
     }
 

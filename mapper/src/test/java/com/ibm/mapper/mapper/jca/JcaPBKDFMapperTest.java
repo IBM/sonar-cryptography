@@ -62,7 +62,7 @@ class JcaPBKDFMapperTest {
         assertThat(child.is(MessageDigest.class)).isTrue();
 
         MessageDigest messageDigest = (MessageDigest) child;
-        assertThat(messageDigest.getName()).isEqualTo("SHA-256");
+        assertThat(messageDigest.getName()).isEqualTo("SHA256");
         assertThat(messageDigest.getDigestSize()).isPresent();
         assertThat(messageDigest.getDigestSize().get().getValue()).isEqualTo(256);
     }

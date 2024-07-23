@@ -25,9 +25,7 @@ import javax.annotation.Nullable;
 public class StreamCipher extends Cipher {
 
     public StreamCipher(
-            @Nonnull Algorithm algorithm,
-            @Nullable Mode mode,
-            @Nullable Padding padding) {
+            @Nonnull Algorithm algorithm, @Nullable Mode mode, @Nullable Padding padding) {
         super(algorithm, mode, padding, StreamCipher.class);
     }
 }

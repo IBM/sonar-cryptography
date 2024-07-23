@@ -20,7 +20,12 @@
 package com.ibm.enricher.algorithm;
 
 import com.ibm.enricher.utils.Utils;
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Mac;
+import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.Oid;
+import com.ibm.mapper.model.Signature;
 import java.util.Map;
 import javax.annotation.Nonnull;
 
@@ -44,7 +49,7 @@ public class AlgorithmEnricher implements IAlgorithmEnricher {
                             new Oid("1.2.840.113549.1.1.1", algorithm.getDetectionContext());
                     algorithm.append(oid);
                 }
-                case "DIFFIEHELLMAN" -> {
+                case "DH" -> {
                     final Oid oid =
                             new Oid("1.2.840.113549.1.3.1", algorithm.getDetectionContext());
                     algorithm.append(oid);

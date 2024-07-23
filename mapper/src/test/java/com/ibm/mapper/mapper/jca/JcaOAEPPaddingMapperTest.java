@@ -70,7 +70,7 @@ class JcaOAEPPaddingMapperTest {
 
         assertThat(oaepPAdding).isPresent();
         assertThat(oaepPAdding.get().is(OptimalAsymmetricEncryptionPadding.class)).isTrue();
-        assertThat(oaepPAdding.get().getName()).isEqualTo("OAEPPadding");
+        assertThat(oaepPAdding.get().getName()).isEqualTo("OAEP");
         assertThat(oaepPAdding.get().hasChildren()).isFalse();
     }
 

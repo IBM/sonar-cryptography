@@ -51,7 +51,7 @@ public final class BcIESEngine {
                     .withMethodParameter("org.bouncycastle.crypto.Mac")
                     .addDependingDetectionRules(BcMac.rules())
                     .buildForContext(new CipherContext(CipherContext.Kind.ASYMMETRIC_CIPHER_ENGINE))
-                    .inBundle(() -> "bcIESEngine")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcIESEngineInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_2 =
@@ -69,7 +69,7 @@ public final class BcIESEngine {
                     .withMethodParameter("org.bouncycastle.crypto.BufferedBlockCipher")
                     .addDependingDetectionRules(BcBufferedBlockCipher.rules())
                     .buildForContext(new CipherContext(CipherContext.Kind.ASYMMETRIC_CIPHER_ENGINE))
-                    .inBundle(() -> "bcIESEngine")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcIESEngineInit.rules());
 
     @Unmodifiable

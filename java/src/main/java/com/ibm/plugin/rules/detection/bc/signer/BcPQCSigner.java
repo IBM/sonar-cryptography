@@ -55,7 +55,7 @@ public final class BcPQCSigner {
                         .addDependingDetectionRules(BcDigests.rules())
                         .buildForContext(
                                 new SignatureContext(SignatureContext.Kind.DIGEST_MESSAGE_WRAPPER))
-                        .inBundle(() -> "bcPQCSigner")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcSignerInit.rules()));
 
         constructorsList.add(
@@ -71,7 +71,7 @@ public final class BcPQCSigner {
                         .addDependingDetectionRules(BcDigests.rules())
                         .buildForContext(
                                 new SignatureContext(SignatureContext.Kind.DIGEST_MESSAGE_WRAPPER))
-                        .inBundle(() -> "bcPQCSigner")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcSignerInit.rules()));
 
         return constructorsList;

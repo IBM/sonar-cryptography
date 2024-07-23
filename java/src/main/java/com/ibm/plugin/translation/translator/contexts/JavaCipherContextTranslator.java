@@ -28,8 +28,10 @@ import com.ibm.engine.model.OperationMode;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.IDetectionContext;
+import com.ibm.engine.rule.IBundle;
 import com.ibm.mapper.AbstractContextTranslator;
 import com.ibm.mapper.IContextTranslationWithKind;
+import com.ibm.mapper.ITranslator;
 import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.bc.BcOperationModeEncryptionMapper;
 import com.ibm.mapper.mapper.bc.BcOperationModeWrappingMapper;
@@ -52,15 +54,15 @@ import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Encapsulate;
 import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.mapper.utils.DetectionLocation;
-import com.ibm.plugin.translation.translator.JavaTranslator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+
 public final class JavaCipherContextTranslator extends AbstractContextTranslator
-        implements IContextTranslationWithKind<Tree, CipherContext.Kind> {
+        implements IContextTranslationWithKind<Tree> {
 
     public JavaCipherContextTranslator(@NotNull Configuration configuration) {
         super(configuration);
@@ -68,8 +70,20 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
 
     @NotNull @Override
     public Optional<INode> translate(
+            @NotNull IBundle bundleIdentifier,
             @NotNull IValue<Tree> value,
-            @NotNull CipherContext.Kind kind,
+            @NotNull IDetectionContext detectionContext,
+            @NotNull DetectionLocation detectionLocation) {
+        return switch (bundleIdentifier.getIdentifier()) {
+            case "JCA" -> translateJCA(value, detectionContext, detectionLocation);
+            case "BC" -> translateBC(value, detectionContext, detectionLocation);
+            default -> Optional.empty();
+        };
+    }
+
+    @NotNull
+    public Optional<INode> translateJCA(
+            @NotNull IValue<Tree> value,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
         if (value instanceof Algorithm<Tree>) {
@@ -77,6 +91,30 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
             return jcaAlgorithmMapper
                     .parse(value.asString(), detectionLocation, configuration)
                     .map(a -> a);
+        } else if (value instanceof OperationMode<Tree> operationMode) {
+            JcaCipherOperationModeMapper jcaCipherOperationModeMapper =
+                    new JcaCipherOperationModeMapper();
+            return jcaCipherOperationModeMapper
+                    .parse(operationMode.asString(), detectionLocation, configuration)
+                    .map(f -> f);
+        } else if (value instanceof CipherAction<Tree> cipherAction) {
+            return switch (cipherAction.getAction()) {
+                case WRAP -> Optional.of(new Encapsulate(detectionLocation));
+                default -> Optional.empty();
+            };
+        }
+        return Optional.empty();
+    }
+
+    @NotNull
+    public Optional<INode> translateBC(
+            @NotNull IValue<Tree> value,
+            @NotNull IDetectionContext detectionContext,
+            @NotNull DetectionLocation detectionLocation) {
+        final CipherContext.Kind kind = ((CipherContext) detectionContext).kind();
+
+        if (value instanceof Algorithm<Tree>) {
+
         } else if (value instanceof OperationMode<Tree> operationMode) {
             return switch (kind) {
                 case ENCRYPTION_STATUS -> {
@@ -94,11 +132,7 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
                             .map(f -> f);
                 }
                 default -> {
-                    JcaCipherOperationModeMapper jcaCipherOperationModeMapper =
-                            new JcaCipherOperationModeMapper();
-                    yield jcaCipherOperationModeMapper
-                            .parse(operationMode.asString(), detectionLocation, configuration)
-                            .map(f -> f);
+
                 }
             };
         } else if (value instanceof CipherAction<Tree> cipherAction) {
@@ -123,39 +157,34 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
                                     new com.ibm.mapper.model.Algorithm(
                                             valueAction.asString(), detectionLocation),
                                     null,
-                                    null,
-                                    detectionLocation));
+                                    null));
                 case ASYMMETRIC_CIPHER_ENGINE_SIGNATURE:
                     return Optional.of(
                             new PublicKeyEncryption(
                                     new com.ibm.mapper.model.Algorithm(
-                                            valueAction.asString(), detectionLocation),
-                                    detectionLocation));
+                                            valueAction.asString(), detectionLocation)));
                 case WRAP_RFC:
                     // TODO: Should the RFC value be reflected in the translation? Where?
                     return Optional.of(
                             new BlockCipher(
                                     new com.ibm.mapper.model.Algorithm(
-                                            JavaTranslator.UNKNOWN, detectionLocation),
+                                            ITranslator.UNKNOWN, detectionLocation),
                                     null,
-                                    null,
-                                    detectionLocation));
+                                    null));
                 case STREAM_CIPHER_ENGINE:
                     return Optional.of(
                             new StreamCipher(
                                     new com.ibm.mapper.model.Algorithm(
                                             valueAction.asString(), detectionLocation),
                                     null,
-                                    null,
-                                    detectionLocation));
+                                    null));
                 case HASH:
                     return Optional.of(
                             // TODO: Is `Cipher` right? (and we need something that
                             //  dinstinguishes this Hash cipher from the Main cipher)
                             new Cipher(
                                     new com.ibm.mapper.model.Algorithm(
-                                            valueAction.asString(), detectionLocation),
-                                    detectionLocation));
+                                            valueAction.asString(), detectionLocation)));
                 case BLOCK_CIPHER, BUFFERED_BLOCK_CIPHER:
                     String blockCipherString = null;
                     String modeString = valueAction.asString();
@@ -194,19 +223,16 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
                             new com.ibm.mapper.model.Algorithm(
                                     blockCipherString != null
                                             ? blockCipherString
-                                            : JavaTranslator.UNKNOWN,
+                                            : ITranslator.UNKNOWN,
                                     detectionLocation);
                     blockCipher =
                             new BlockCipher(
-                                    algorithm,
-                                    addMode ? mode : null,
-                                    addPadding ? padding : null,
-                                    detectionLocation);
+                                    algorithm, addMode ? mode : null, addPadding ? padding : null);
                     return Optional.of(blockCipher);
                 case AEAD_BLOCK_CIPHER:
                     String modeName = valueAction.asString();
 
-                    String defaultAlgorithmName = JavaTranslator.UNKNOWN;
+                    String defaultAlgorithmName = ITranslator.UNKNOWN;
                     // Some mode implementations assume a default BlockCipher
                     switch (modeName) {
                         case "GCM-SIV":
@@ -225,9 +251,7 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
                     algorithm =
                             new com.ibm.mapper.model.Algorithm(
                                     defaultAlgorithmName, detectionLocation);
-                    ae =
-                            new AuthenticatedEncryption(
-                                    algorithm, mode, null, null, detectionLocation);
+                    ae = new AuthenticatedEncryption(algorithm, mode, null, null);
                     return Optional.of(ae);
                 case AEAD_ENGINE:
                     ae =
@@ -236,8 +260,7 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
                                             valueAction.asString(), detectionLocation),
                                     null,
                                     null,
-                                    null,
-                                    detectionLocation);
+                                    null);
                     return Optional.of(ae);
                 case CHACHA20POLY1305:
                     ae =
@@ -246,13 +269,11 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
                                             "ChaCha20Poly1305", detectionLocation),
                                     null,
                                     null,
-                                    null,
-                                    detectionLocation);
+                                    null);
                     Mac mac =
                             new Mac(
                                     new com.ibm.mapper.model.Algorithm(
-                                            "Poly1305", detectionLocation),
-                                    detectionLocation);
+                                            "Poly1305", detectionLocation));
                     mac.append(new Tag(detectionLocation));
                     mac.append(new Digest(detectionLocation));
 
@@ -262,25 +283,21 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
                                     new com.ibm.mapper.model.Algorithm(
                                             "ChaCha20", detectionLocation),
                                     null,
-                                    null,
-                                    detectionLocation));
+                                    null));
                     return Optional.of(ae);
                 case ENCODING:
                     blockCipher =
                             new BlockCipher(
                                     new com.ibm.mapper.model.Algorithm(
-                                            JavaTranslator.UNKNOWN, detectionLocation),
+                                            ITranslator.UNKNOWN, detectionLocation),
                                     null,
-                                    null,
-                                    detectionLocation);
+                                    null);
 
                     padding =
                             new Padding(valueAction.asString(), detectionLocation, new HashMap<>());
                     switch (valueAction.asString()) {
                         case "OAEP":
-                            blockCipher.append(
-                                    new OptimalAsymmetricEncryptionPadding(
-                                            padding, detectionLocation));
+                            blockCipher.append(new OptimalAsymmetricEncryptionPadding(padding));
                             break;
                         default:
                             blockCipher.append(padding);
@@ -292,16 +309,13 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
                     pke =
                             new PublicKeyEncryption(
                                     new com.ibm.mapper.model.Algorithm(
-                                            JavaTranslator.UNKNOWN, detectionLocation),
-                                    detectionLocation);
+                                            ITranslator.UNKNOWN, detectionLocation));
 
                     padding =
                             new Padding(valueAction.asString(), detectionLocation, new HashMap<>());
                     switch (valueAction.asString()) {
                         case "OAEP":
-                            pke.append(
-                                    new OptimalAsymmetricEncryptionPadding(
-                                            padding, detectionLocation));
+                            pke.append(new OptimalAsymmetricEncryptionPadding(padding));
                             break;
                         default:
                             pke.append(padding);
@@ -313,10 +327,9 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
                     blockCipher =
                             new BlockCipher(
                                     new com.ibm.mapper.model.Algorithm(
-                                            JavaTranslator.UNKNOWN, detectionLocation),
+                                            ITranslator.UNKNOWN, detectionLocation),
                                     null,
-                                    null,
-                                    detectionLocation);
+                                    null);
                     return Optional.of(blockCipher);
                 case PADDING:
                     padding =
@@ -343,15 +356,14 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
 
                     algorithm =
                             new com.ibm.mapper.model.Algorithm(algorithmName, detectionLocation);
-                    pbe = new PasswordBasedEncryption(algorithm, detectionLocation);
+                    pbe = new PasswordBasedEncryption(algorithm);
 
                     if (valueAction.asString().equals("OpenSSLPBE")) {
                         // Default digest is MD5
                         pbe.append(
                                 new MessageDigest(
                                         new com.ibm.mapper.model.Algorithm(
-                                                "MD5", detectionLocation),
-                                        detectionLocation));
+                                                "MD5", detectionLocation)));
                     }
 
                     return Optional.of(pbe);

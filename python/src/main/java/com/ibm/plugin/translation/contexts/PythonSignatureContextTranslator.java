@@ -31,10 +31,11 @@ import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.plugin.translation.PythonEnricher;
+import org.sonar.plugins.python.api.tree.Tree;
+
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Optional;
-import javax.annotation.Nonnull;
-import org.sonar.plugins.python.api.tree.Tree;
 
 @SuppressWarnings("java:S1301")
 public final class PythonSignatureContextTranslator {
@@ -68,12 +69,12 @@ public final class PythonSignatureContextTranslator {
         switch (detectedAlgorithm.asString()) {
             case "ECDSA":
                 baseAlgorithm = new Algorithm("ECDSA", detectionLocation);
-                resAlgorithm = new Signature(baseAlgorithm, detectionLocation);
+                resAlgorithm = new Signature(baseAlgorithm);
                 return Optional.of(resAlgorithm);
             case "MGF1":
                 return Optional.of(
                         new MaskGenerationFunction(
-                                new Algorithm("MGF1", detectionLocation), detectionLocation));
+                                new Algorithm("MGF1", detectionLocation)));
             default:
                 break;
         }
@@ -90,7 +91,7 @@ public final class PythonSignatureContextTranslator {
         switch (signatureAction.getAction()) {
             case SIGN:
                 baseAlgorithm = new Algorithm(PythonEnricher.TO_BE_ENRICHED, detectionLocation);
-                resAlgorithm = new Signature(baseAlgorithm, detectionLocation);
+                resAlgorithm = new Signature(baseAlgorithm);
                 resAlgorithm.append(new Sign(detectionLocation));
                 return Optional.of(resAlgorithm);
             case VERIFY:

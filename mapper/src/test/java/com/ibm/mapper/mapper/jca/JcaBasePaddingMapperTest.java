@@ -42,7 +42,7 @@ class JcaBasePaddingMapperTest {
                         "PKCS1Padding", testDetectionLocation, Configuration.DEFAULT);
 
         assertThat(paddingOptional).isPresent();
-        assertThat(paddingOptional.get().getName()).isEqualTo("PKCS1Padding");
+        assertThat(paddingOptional.get().getName()).isEqualTo("PKCS1");
         assertThat(paddingOptional.get().is(Padding.class)).isTrue();
         assertThat(paddingOptional.get().hasChildren()).isFalse();
     }
@@ -57,7 +57,7 @@ class JcaBasePaddingMapperTest {
                 jcaBasePaddingMapper.parse("PKCS1Padding", testDetectionLocation, new TestConfig());
 
         assertThat(paddingOptional).isPresent();
-        assertThat(paddingOptional.get().getName()).isEqualTo("PKCS1");
+        assertThat(paddingOptional.get().getName()).isEqualTo("pkcs1");
         assertThat(paddingOptional.get().is(Padding.class)).isTrue();
         assertThat(paddingOptional.get().hasChildren()).isFalse();
     }

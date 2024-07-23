@@ -41,7 +41,7 @@ public final class JcaKeyGeneratorGetInstance {
                     .withMethodParameter(STRING_TYPE)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .buildForContext(new SecretKeyContext(KeyContext.Kind.NONE))
-                    .inBundle(() -> "JcaKeyGeneratorGetInstance")
+                    .inBundle(() -> "Jca")
                     .withDependingDetectionRules(JcaKeyGeneratorInit.rules());
 
     private static final IDetectionRule<Tree> KEY_GENERATOR_2 =
@@ -53,7 +53,7 @@ public final class JcaKeyGeneratorGetInstance {
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .withMethodParameter(STRING_TYPE)
                     .buildForContext(new SecretKeyContext(KeyContext.Kind.NONE))
-                    .inBundle(() -> "JcaKeyGeneratorGetInstance")
+                    .inBundle(() -> "Jca")
                     .withDependingDetectionRules(JcaKeyGeneratorInit.rules());
 
     private static final IDetectionRule<Tree> KEY_GENERATOR_3 =
@@ -65,7 +65,7 @@ public final class JcaKeyGeneratorGetInstance {
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .withMethodParameter("java.security.Provider")
                     .buildForContext(new SecretKeyContext(KeyContext.Kind.NONE))
-                    .inBundle(() -> "JcaKeyGeneratorGetInstance")
+                    .inBundle(() -> "Jca")
                     .withDependingDetectionRules(JcaKeyGeneratorInit.rules());
 
     private JcaKeyGeneratorGetInstance() {

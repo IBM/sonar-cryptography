@@ -42,7 +42,7 @@ public final class JcaDHParameterSpec {
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.PRIME_P))
                     .withMethodParameter(BIGINTEGER_TYPE)
                     .buildForContext(new KeyContext(KeyContext.Kind.DH))
-                    .inBundle(() -> "JcaDHParameterSpec")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> DH_PARAMETER_SPEC_2 =
@@ -55,7 +55,7 @@ public final class JcaDHParameterSpec {
                     .withMethodParameter(BIGINTEGER_TYPE)
                     .withMethodParameter("int")
                     .buildForContext(new KeyContext(KeyContext.Kind.DH))
-                    .inBundle(() -> "JcaDHParameterSpec")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private JcaDHParameterSpec() {

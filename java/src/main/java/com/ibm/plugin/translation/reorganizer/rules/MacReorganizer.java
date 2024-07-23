@@ -159,10 +159,7 @@ public final class MacReorganizer {
                                 // Create the new Mac node
                                 DetectionLocation detectionLocation =
                                         ((IAsset) node).getDetectionContext();
-                                Mac newMac =
-                                        new Mac(
-                                                new Algorithm(newMacName, detectionLocation),
-                                                detectionLocation);
+                                Mac newMac = new Mac(new Algorithm(newMacName, detectionLocation));
 
                                 // Add all the Mac children to the new Mac node
                                 for (Map.Entry<Class<? extends INode>, INode> childKeyValue :

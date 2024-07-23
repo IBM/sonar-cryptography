@@ -41,7 +41,7 @@ public final class JcaKeyGeneratorInit {
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
                     .buildForContext(new SecretKeyContext(KeyContext.Kind.NONE))
-                    .inBundle(() -> "JcaKeyGeneratorInit")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> KEY_GENERATOR_INIT_2 =
@@ -53,7 +53,7 @@ public final class JcaKeyGeneratorInit {
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
                     .withMethodParameter("java.security.SecureRandom")
                     .buildForContext(new SecretKeyContext(KeyContext.Kind.NONE))
-                    .inBundle(() -> "JcaKeyGeneratorInit")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> KEY_GENERATOR_INIT_3 =
@@ -64,7 +64,7 @@ public final class JcaKeyGeneratorInit {
                     .withMethodParameter("java.security.spec.AlgorithmParameterSpec")
                     .addDependingDetectionRules(JcaParameterSpec.rules())
                     .buildForContext(new SecretKeyContext(KeyContext.Kind.NONE))
-                    .inBundle(() -> "JcaKeyGeneratorInit")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> KEY_GENERATOR_INIT_4 =
@@ -76,7 +76,7 @@ public final class JcaKeyGeneratorInit {
                     .addDependingDetectionRules(JcaParameterSpec.rules())
                     .withMethodParameter("java.security.SecureRandom")
                     .buildForContext(new SecretKeyContext(KeyContext.Kind.NONE))
-                    .inBundle(() -> "JcaKeyGeneratorInit")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private JcaKeyGeneratorInit() {

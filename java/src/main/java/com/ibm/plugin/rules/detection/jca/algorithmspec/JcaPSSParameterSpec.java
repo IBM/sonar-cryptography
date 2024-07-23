@@ -43,7 +43,7 @@ public final class JcaPSSParameterSpec {
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new SaltSizeFactory<>(Size.UnitType.BYTE))
                     .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
-                    .inBundle(() -> "JcaPSSParameterSpec")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> PSS_2 =
@@ -62,7 +62,7 @@ public final class JcaPSSParameterSpec {
                     .shouldBeDetectedAs(new SaltSizeFactory<>(Size.UnitType.BYTE))
                     .withMethodParameter("int")
                     .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
-                    .inBundle(() -> "JcaPSSParameterSpec")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private JcaPSSParameterSpec() {

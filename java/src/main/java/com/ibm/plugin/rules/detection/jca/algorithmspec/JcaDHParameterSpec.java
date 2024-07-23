@@ -43,7 +43,7 @@ public final class JcaDHParameterSpec {
                     .withMethodParameter(BIGINTEGER_TYPE)
                     .buildForContext(
                             new AlgorithmParameterContext(AlgorithmParameterContext.Kind.DH))
-                    .inBundle(() -> "JcaDHParameterSpec")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> DH_PARAMETER_SPEC2 =
@@ -57,7 +57,7 @@ public final class JcaDHParameterSpec {
                     .withMethodParameter("int")
                     .buildForContext(
                             new AlgorithmParameterContext(AlgorithmParameterContext.Kind.DH))
-                    .inBundle(() -> "JcaDHParameterSpec")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private JcaDHParameterSpec() {

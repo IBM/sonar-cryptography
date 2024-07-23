@@ -66,7 +66,7 @@ public final class BcSimpleSigner {
                             // We want to capture all possible constructors (some have arguments)
                             .withAnyParameters()
                             .buildForContext(new SignatureContext(SignatureContext.Kind.EdDSA))
-                            .inBundle(() -> "bcSimpleSigner")
+                            .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcSignerInit.rules()));
         }
         return constructorsList;

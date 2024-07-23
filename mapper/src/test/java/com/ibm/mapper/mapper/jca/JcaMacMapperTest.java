@@ -23,7 +23,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.configuration.TestConfig;
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Mac;
+import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.PasswordBasedEncryption;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.List;
 import java.util.Map;
@@ -117,7 +121,7 @@ class JcaMacMapperTest {
 
         assertThat(child.is(MessageDigest.class)).isTrue();
         MessageDigest messageDigest = (MessageDigest) child;
-        assertThat(messageDigest.getName()).isEqualTo("SHA-256");
+        assertThat(messageDigest.getName()).isEqualTo("SHA256");
         assertThat(messageDigest.getDefaultKeyLength()).isPresent();
         assertThat(messageDigest.getDefaultKeyLength().get().asString()).isEqualTo("256");
         assertThat(messageDigest.getDigestSize()).isPresent();
@@ -154,7 +158,7 @@ class JcaMacMapperTest {
 
         assertThat(child.is(MessageDigest.class)).isTrue();
         MessageDigest messageDigest = (MessageDigest) child;
-        assertThat(messageDigest.getName()).isEqualTo("sha-256");
+        assertThat(messageDigest.getName()).isEqualTo("sha256");
         assertThat(messageDigest.getDefaultKeyLength()).isPresent();
         assertThat(messageDigest.getDefaultKeyLength().get().asString()).isEqualTo("256");
         assertThat(messageDigest.getDigestSize()).isPresent();

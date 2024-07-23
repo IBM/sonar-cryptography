@@ -144,7 +144,7 @@ class AlgorithmTest {
         final PasswordLength passwordLength = new PasswordLength(32, detectionLocation);
         final KeyLength keyLength = new KeyLength(1024, detectionLocation);
         final PasswordBasedKeyDerivationFunction pbkdf =
-                new PasswordBasedKeyDerivationFunction(algorithm, detectionLocation);
+                new PasswordBasedKeyDerivationFunction(algorithm);
         pbkdf.append(saltLength);
         pbkdf.append(passwordLength);
         pbkdf.append(keyLength);
