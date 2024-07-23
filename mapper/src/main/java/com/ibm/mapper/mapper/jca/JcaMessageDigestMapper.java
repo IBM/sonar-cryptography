@@ -21,15 +21,20 @@ package com.ibm.mapper.mapper.jca;
 
 import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.IMapper;
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.BlockSize;
+import com.ibm.mapper.model.DigestSize;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.mapper.utils.Utils;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class JcaMessageDigestMapper implements IMapper {
     private static final List<String> validValues =
@@ -129,8 +134,7 @@ public class JcaMessageDigestMapper implements IMapper {
                                                                                 new BlockSize(
                                                                                         blockStr,
                                                                                         detectionLocation))
-                                                                .orElse(null),
-                                                        detectionLocation)));
+                                                                .orElse(null))));
             }
             if (reflectValidValues(secondHash)) {
                 algorithmMapper
@@ -154,8 +158,7 @@ public class JcaMessageDigestMapper implements IMapper {
                                                                                 new BlockSize(
                                                                                         blockStr,
                                                                                         detectionLocation))
-                                                                .orElse(null),
-                                                        detectionLocation)));
+                                                                .orElse(null))));
             }
         }
 
@@ -174,8 +177,7 @@ public class JcaMessageDigestMapper implements IMapper {
                                 .orElse(null),
                         getBlockSize(sanatizedString)
                                 .map(blockStr -> new BlockSize(blockStr, detectionLocation))
-                                .orElse(null),
-                        detectionLocation);
+                                .orElse(null));
         return Optional.of(messageDigest);
     }
 

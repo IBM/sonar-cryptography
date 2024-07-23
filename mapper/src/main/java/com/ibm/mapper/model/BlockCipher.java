@@ -19,7 +19,6 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -27,8 +26,7 @@ public class BlockCipher extends Cipher {
     public BlockCipher(
             @Nonnull Algorithm algorithm,
             @Nullable Mode mode,
-            @Nullable Padding padding,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, mode, padding, detectionLocation, BlockCipher.class);
+            @Nullable Padding padding) {
+        super(algorithm, mode, padding, BlockCipher.class);
     }
 }

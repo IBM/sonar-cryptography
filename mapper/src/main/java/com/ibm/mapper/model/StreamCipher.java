@@ -19,7 +19,6 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -28,8 +27,7 @@ public class StreamCipher extends Cipher {
     public StreamCipher(
             @Nonnull Algorithm algorithm,
             @Nullable Mode mode,
-            @Nullable Padding padding,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, mode, padding, detectionLocation, StreamCipher.class);
+            @Nullable Padding padding) {
+        super(algorithm, mode, padding, StreamCipher.class);
     }
 }

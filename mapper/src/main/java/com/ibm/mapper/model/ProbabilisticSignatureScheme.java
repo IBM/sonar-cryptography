@@ -21,8 +21,9 @@ package com.ibm.mapper.model;
 
 import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Objects;
+
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 public class ProbabilisticSignatureScheme extends Property {
 
@@ -31,9 +32,8 @@ public class ProbabilisticSignatureScheme extends Property {
     }
 
     public ProbabilisticSignatureScheme(
-            @Nonnull MaskGenerationFunction maskGenerationFunction,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(ProbabilisticSignatureScheme.class, detectionLocation);
+            @Nonnull MaskGenerationFunction maskGenerationFunction) {
+        super(ProbabilisticSignatureScheme.class, maskGenerationFunction.detectionLocation);
         this.append(maskGenerationFunction);
     }
 

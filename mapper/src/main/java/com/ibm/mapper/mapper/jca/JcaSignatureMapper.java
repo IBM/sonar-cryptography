@@ -21,13 +21,20 @@ package com.ibm.mapper.mapper.jca;
 
 import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.IMapper;
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.MaskGenerationFunction;
+import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.OutputFormat;
+import com.ibm.mapper.model.ProbabilisticSignatureScheme;
+import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class JcaSignatureMapper implements IMapper {
 
@@ -47,7 +54,7 @@ public class JcaSignatureMapper implements IMapper {
                 return Optional.empty();
             }
             final Algorithm algorithm = new Algorithm("RSASSA-PSS", detectionLocation);
-            final Signature signature = new Signature(algorithm, detectionLocation);
+            final Signature signature = new Signature(algorithm);
             final ProbabilisticSignatureScheme probabilisticSignatureScheme =
                     new ProbabilisticSignatureScheme(detectionLocation);
             signature.append(probabilisticSignatureScheme);
@@ -114,7 +121,7 @@ public class JcaSignatureMapper implements IMapper {
             return Optional.empty();
         }
 
-        Signature signature = new Signature(singatureAlgorithmOptional.get(), detectionLocation);
+        Signature signature = new Signature(singatureAlgorithmOptional.get());
         if (format != null) {
             OutputFormat outputFormat = new OutputFormat(format, detectionLocation);
             outputFormat.apply(configuration);

@@ -26,10 +26,11 @@ import com.ibm.mapper.model.EllipticCurve;
 import com.ibm.mapper.model.EllipticCurveAlgorithm;
 import com.ibm.mapper.model.KeyAgreement;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.List;
-import java.util.Optional;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Optional;
 
 public class JcaEllipticCurveMapper implements IMapper {
     private static final List<String> validValues =
@@ -82,13 +83,13 @@ public class JcaEllipticCurveMapper implements IMapper {
 
         // create ec
         EllipticCurveAlgorithm ellipticCurveAlgorithm =
-                curve.map(c -> new EllipticCurveAlgorithm(algorithm, c, detectionLocation))
-                        .orElseGet(() -> new EllipticCurveAlgorithm(algorithm, detectionLocation));
+                curve.map(c -> new EllipticCurveAlgorithm(algorithm, c))
+                        .orElseGet(() -> new EllipticCurveAlgorithm(algorithm));
 
         final String generalizedStr = str.toLowerCase().trim();
         return switch (generalizedStr) {
             case "ecdh", "ecmqv", "xdh", "x448", "x25519" ->
-                    Optional.of(new KeyAgreement(ellipticCurveAlgorithm, detectionLocation));
+                    Optional.of(new KeyAgreement(ellipticCurveAlgorithm));
             default -> Optional.of(ellipticCurveAlgorithm);
         };
     }

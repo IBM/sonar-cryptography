@@ -19,22 +19,20 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 public class PasswordBasedEncryption extends Algorithm {
     public PasswordBasedEncryption(
-            @Nonnull Algorithm algorithm, @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, PasswordBasedEncryption.class);
+            @Nonnull Algorithm algorithm) {
+        super(algorithm, algorithm.detectionLocation, PasswordBasedEncryption.class);
     }
 
     public PasswordBasedEncryption(
             @Nonnull Algorithm algorithm,
             @Nonnull MessageDigest digest,
-            @Nonnull Mac pseudoRandomFunction,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, PasswordBasedEncryption.class);
+            @Nonnull Mac pseudoRandomFunction) {
+        super(algorithm, algorithm.detectionLocation, PasswordBasedEncryption.class);
         this.append(digest);
         this.append(pseudoRandomFunction);
     }
@@ -42,9 +40,8 @@ public class PasswordBasedEncryption extends Algorithm {
     public PasswordBasedEncryption(
             @Nonnull Algorithm algorithm,
             @Nonnull MessageDigest digest,
-            @Nonnull Algorithm encryptionAlgorithm,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, PasswordBasedEncryption.class);
+            @Nonnull Algorithm encryptionAlgorithm) {
+        super(algorithm, algorithm.detectionLocation, PasswordBasedEncryption.class);
         this.append(digest);
         this.append(encryptionAlgorithm);
     }

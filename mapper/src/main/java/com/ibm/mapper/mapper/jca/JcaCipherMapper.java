@@ -126,8 +126,7 @@ public class JcaCipherMapper implements IMapper {
                                 algorithm.get(),
                                 mode,
                                 paddingOptional.orElse(null),
-                                null,
-                                detectionLocation));
+                                null));
             }
         }
 
@@ -141,16 +140,14 @@ public class JcaCipherMapper implements IMapper {
                     new BlockCipher(
                             algorithm.get(),
                             modeOptional.orElse(null),
-                            paddingOptional.orElse(null),
-                            detectionLocation);
+                            paddingOptional.orElse(null));
             return Optional.of(cipher);
         } else if (isStreamCipher(algorithmStr)) {
             StreamCipher cipher =
                     new StreamCipher(
                             algorithm.get(),
                             modeOptional.orElse(null),
-                            paddingOptional.orElse(null),
-                            detectionLocation);
+                            paddingOptional.orElse(null));
             return Optional.of(cipher);
         } else if (algorithmStr.equalsIgnoreCase("RSA")) {
             final Algorithm rsa = algorithm.get();

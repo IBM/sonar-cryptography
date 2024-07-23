@@ -24,8 +24,8 @@ import javax.annotation.Nonnull;
 
 public class SecretKey extends Key {
 
-    public SecretKey(@Nonnull Key key, @Nonnull DetectionLocation detectionLocation) {
-        super(key, detectionLocation, SecretKey.class);
+    public SecretKey(@Nonnull Key key) {
+        super(key, key.detectionLocation, SecretKey.class);
     }
 
     public SecretKey(@Nonnull String name, @Nonnull DetectionLocation detectionLocation) {

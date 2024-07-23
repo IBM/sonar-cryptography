@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 
 public class PseudorandomNumberGenerator extends Algorithm {
     public PseudorandomNumberGenerator(
-            @Nonnull Algorithm algorithm, @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, PseudorandomNumberGenerator.class);
+            @Nonnull Algorithm algorithm) {
+        super(algorithm, algorithm.detectionLocation, PseudorandomNumberGenerator.class);
     }
 }

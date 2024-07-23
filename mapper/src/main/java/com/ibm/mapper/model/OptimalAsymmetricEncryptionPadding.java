@@ -19,30 +19,27 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 public class OptimalAsymmetricEncryptionPadding extends Padding {
     public OptimalAsymmetricEncryptionPadding(
-            @Nonnull Padding padding, @Nonnull DetectionLocation detectionLocation) {
-        super(padding, detectionLocation, OptimalAsymmetricEncryptionPadding.class);
+            @Nonnull Padding padding) {
+        super(padding, padding.detectionLocation, OptimalAsymmetricEncryptionPadding.class);
     }
 
     public OptimalAsymmetricEncryptionPadding(
             @Nonnull Padding padding,
-            @Nonnull MessageDigest messageDigest,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(padding, detectionLocation, OptimalAsymmetricEncryptionPadding.class);
+            @Nonnull MessageDigest messageDigest) {
+        super(padding, padding.detectionLocation, OptimalAsymmetricEncryptionPadding.class);
         this.append(messageDigest);
     }
 
     public OptimalAsymmetricEncryptionPadding(
             @Nonnull Padding padding,
             @Nonnull MessageDigest messageDigest,
-            @Nonnull MaskGenerationFunction maskGenerationFunction,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(padding, detectionLocation, OptimalAsymmetricEncryptionPadding.class);
+            @Nonnull MaskGenerationFunction maskGenerationFunction) {
+        super(padding, padding.detectionLocation, OptimalAsymmetricEncryptionPadding.class);
         this.append(messageDigest);
         this.append(maskGenerationFunction);
     }

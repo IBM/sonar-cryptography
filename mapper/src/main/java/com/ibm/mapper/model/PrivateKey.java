@@ -27,7 +27,7 @@ public class PrivateKey extends Key {
         super(name, detectionLocation, PrivateKey.class);
     }
 
-    public PrivateKey(@Nonnull Key key, @Nonnull DetectionLocation detectionLocation) {
-        super(key, detectionLocation, PrivateKey.class);
+    public PrivateKey(@Nonnull Key key) {
+        super(key, key.detectionLocation, PrivateKey.class);
     }
 }

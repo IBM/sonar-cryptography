@@ -25,16 +25,15 @@ import javax.annotation.Nonnull;
 
 public final class Signature extends Algorithm {
 
-    public Signature(@Nonnull Algorithm algorithm, @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, Signature.class);
+    public Signature(@Nonnull Algorithm algorithm) {
+        super(algorithm, algorithm.detectionLocation, Signature.class);
     }
 
     public Signature(
             @Nonnull Algorithm algorithm,
             @Nonnull MessageDigest digest,
-            @Nonnull Algorithm signatureAlgorithm,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, Signature.class);
+            @Nonnull Algorithm signatureAlgorithm) {
+        super(algorithm, algorithm.detectionLocation, Signature.class);
         this.append(digest);
         this.append(signatureAlgorithm);
     }
@@ -43,9 +42,8 @@ public final class Signature extends Algorithm {
             @Nonnull Algorithm algorithm,
             @Nonnull MessageDigest digest,
             @Nonnull Algorithm signatureAlgorithm,
-            @Nonnull MaskGenerationFunction maskGenerationFunction,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, Signature.class);
+            @Nonnull MaskGenerationFunction maskGenerationFunction) {
+        super(algorithm, algorithm.detectionLocation, Signature.class);
         this.append(digest);
         this.append(signatureAlgorithm);
         this.append(maskGenerationFunction);
@@ -56,9 +54,8 @@ public final class Signature extends Algorithm {
             @Nonnull MessageDigest digest,
             @Nonnull Algorithm signatureAlgorithm,
             @Nonnull MaskGenerationFunction maskGenerationFunction,
-            @Nonnull OutputFormat outputFormat,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, Signature.class);
+            @Nonnull OutputFormat outputFormat) {
+        super(algorithm, algorithm.detectionLocation, Signature.class);
         this.append(digest);
         this.append(signatureAlgorithm);
         this.append(maskGenerationFunction);

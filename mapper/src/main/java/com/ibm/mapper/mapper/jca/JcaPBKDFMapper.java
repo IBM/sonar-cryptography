@@ -64,7 +64,7 @@ public class JcaPBKDFMapper implements IMapper {
         }
 
         PasswordBasedKeyDerivationFunction pbkdf =
-                new PasswordBasedKeyDerivationFunction(algorithmOptional.get(), detectionLocation);
+                new PasswordBasedKeyDerivationFunction(algorithmOptional.get());
         return Optional.of(pbkdf);
     }
 }

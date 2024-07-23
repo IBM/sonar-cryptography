@@ -80,7 +80,7 @@ public class JcaOAEPPaddingMapper implements IMapper {
             return Optional.empty();
         }
         OptimalAsymmetricEncryptionPadding oaepPadding =
-                new OptimalAsymmetricEncryptionPadding(paddingOptional.get(), detectionLocation);
+                new OptimalAsymmetricEncryptionPadding(paddingOptional.get());
         return Optional.of(oaepPadding);
     }
 }

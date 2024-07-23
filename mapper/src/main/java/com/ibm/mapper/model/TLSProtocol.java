@@ -20,24 +20,23 @@
 package com.ibm.mapper.model;
 
 import com.ibm.mapper.model.collections.CipherSuiteCollection;
-import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
+import java.util.Optional;
 
 public class TLSProtocol extends Protocol {
 
-    public TLSProtocol(@NotNull Protocol protocol, @NotNull DetectionLocation detectionLocation) {
-        super(protocol, detectionLocation, TLSProtocol.class);
+    public TLSProtocol(@NotNull Protocol protocol) {
+        super(protocol, protocol.detectionLocation, TLSProtocol.class);
     }
 
     public TLSProtocol(
             @NotNull Protocol protocol,
             @NotNull Version version,
-            @Nullable CipherSuiteCollection cipherSuiteCollection,
-            @NotNull DetectionLocation detectionLocation) {
-        super(protocol, detectionLocation, TLSProtocol.class);
+            @Nullable CipherSuiteCollection cipherSuiteCollection) {
+        super(protocol, protocol.detectionLocation, TLSProtocol.class);
         this.append(version);
         if (cipherSuiteCollection != null) {
             this.append(cipherSuiteCollection);

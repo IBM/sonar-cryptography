@@ -19,31 +19,28 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 /** PBKDF */
 public class KeyDerivationFunction extends Algorithm {
 
     protected KeyDerivationFunction(
             @Nonnull Algorithm algorithm,
-            @Nonnull DetectionLocation detectionLocation,
             @Nonnull final Class<? extends Algorithm> asKind) {
-        super(algorithm, detectionLocation, asKind);
+        super(algorithm, algorithm.detectionLocation, asKind);
     }
 
     public KeyDerivationFunction(
-            @Nonnull Algorithm algorithm, @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, KeyDerivationFunction.class);
+            @Nonnull Algorithm algorithm) {
+        super(algorithm, algorithm.detectionLocation, KeyDerivationFunction.class);
     }
 
     public KeyDerivationFunction(
             @Nonnull Algorithm algorithm,
             @Nonnull SaltLength saltLength,
-            @Nonnull KeyLength keyLength,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, KeyDerivationFunction.class);
+            @Nonnull KeyLength keyLength) {
+        super(algorithm, algorithm.detectionLocation, KeyDerivationFunction.class);
         this.append(saltLength);
         this.append(keyLength);
     }

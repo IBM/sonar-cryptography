@@ -19,7 +19,6 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -28,9 +27,8 @@ public class AuthenticatedEncryption extends Cipher {
             @Nonnull Algorithm algorithm,
             @Nullable Mode mode,
             @Nullable Padding padding,
-            @Nullable TagLength tagLength,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, mode, padding, detectionLocation, AuthenticatedEncryption.class);
+            @Nullable TagLength tagLength) {
+        super(algorithm, mode, padding, AuthenticatedEncryption.class);
         if (tagLength != null) {
             this.append(tagLength);
         }

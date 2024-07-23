@@ -72,7 +72,7 @@ public class JcaPRNGMapper implements IMapper {
             return Optional.empty();
         }
         PseudorandomNumberGenerator prng =
-                new PseudorandomNumberGenerator(algorithm.get(), detectionLocation);
+                new PseudorandomNumberGenerator(algorithm.get());
         return Optional.of(prng);
     }
 

@@ -27,7 +27,7 @@ public class PublicKey extends Key {
         super(name, detectionLocation, PublicKey.class);
     }
 
-    public PublicKey(@Nonnull Key key, @Nonnull DetectionLocation detectionLocation) {
-        super(key, detectionLocation, PublicKey.class);
+    public PublicKey(@Nonnull Key key) {
+        super(key, key.detectionLocation, PublicKey.class);
     }
 }

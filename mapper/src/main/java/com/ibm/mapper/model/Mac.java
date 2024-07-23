@@ -23,15 +23,14 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
 public final class Mac extends Algorithm {
-    public Mac(@Nonnull Algorithm algorithm, @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, Mac.class);
+    public Mac(@Nonnull Algorithm algorithm) {
+        super(algorithm, algorithm.detectionLocation, Mac.class);
     }
 
     public Mac(
             @Nonnull Algorithm algorithm,
-            @Nonnull TagLength tagLength,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, Mac.class);
+            @Nonnull TagLength tagLength) {
+        super(algorithm, algorithm.detectionLocation, Mac.class);
         this.append(tagLength);
     }
 }

@@ -80,7 +80,7 @@ public class JcaMacMapper implements IMapper {
         if (algorithm.isEmpty()) {
             return Optional.empty();
         }
-        Mac mac = new Mac(algorithm.get(), detectionLocation);
+        Mac mac = new Mac(algorithm.get());
 
         JcaMessageDigestMapper jcaMessageDigestMapper = new JcaMessageDigestMapper();
         Optional<MessageDigest> messageDigestOptional =

@@ -19,11 +19,12 @@
  */
 package com.ibm.mapper.mapper.ssl.json;
 
-import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
-public class JsonCipherSuite {
+@SuppressWarnings("java:S107")
+public final class JsonCipherSuite {
 
     @Nonnull private final String ianaName;
     @Nullable private final String gnutlsName;

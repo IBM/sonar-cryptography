@@ -24,13 +24,14 @@ import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Version;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class SSLVersionMapper implements IMapper {
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public final class SSLVersionMapper implements IMapper {
     @NotNull @Override
     public Optional<? extends INode> parse(
             @Nullable String str,

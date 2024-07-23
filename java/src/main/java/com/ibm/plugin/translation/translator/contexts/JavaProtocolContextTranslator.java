@@ -19,6 +19,7 @@
  */
 package com.ibm.plugin.translation.translator.contexts;
 
+import com.ibm.engine.model.CipherSuite;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.model.context.ProtocolContext;
@@ -30,9 +31,10 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Protocol;
 import com.ibm.mapper.model.TLSProtocol;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
+
+import java.util.Optional;
 
 public class JavaProtocolContextTranslator extends AbstractContextTranslator
         implements IContextTranslationWithKind<Tree, ProtocolContext.Kind> {
@@ -68,6 +70,15 @@ public class JavaProtocolContextTranslator extends AbstractContextTranslator
                 default ->
                         Optional.of(protocol)
                                 .map(p -> new Protocol(p.asString(), detectionLocation));
+            };
+        } else if (value instanceof CipherSuite<Tree> cipherSuite) {
+            return switch (kind) {
+                /* case TLS -> {
+                    return
+                }*/
+                default ->
+                        Optional.of(cipherSuite)
+                                .map(suite -> new com.ibm.mapper.model.CipherSuite(suite.asString(), detectionLocation));
             };
         }
 

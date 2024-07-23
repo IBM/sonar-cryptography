@@ -19,12 +19,11 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
 public class KeyEncapsulationMechanism extends Algorithm {
     public KeyEncapsulationMechanism(
-            @Nonnull Algorithm algorithm, @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, KeyEncapsulationMechanism.class);
+            @Nonnull Algorithm algorithm) {
+        super(algorithm, algorithm.detectionLocation, KeyEncapsulationMechanism.class);
     }
 }

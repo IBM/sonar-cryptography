@@ -24,6 +24,8 @@ import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.MaskGenerationFunction;
 import com.ibm.mapper.utils.DetectionLocation;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -55,11 +57,11 @@ public class JcaMGFMapper implements IMapper {
         }
 
         final MaskGenerationFunction mgf =
-                new MaskGenerationFunction(algorithmOptional.get(), detectionLocation);
+                new MaskGenerationFunction(algorithmOptional.get());
         return Optional.of(mgf);
     }
 
-    private boolean reflectValidValues(String str) {
+    private boolean reflectValidValues(@NotNull String str) {
         return validValues.stream().anyMatch(str::equalsIgnoreCase);
     }
 }
