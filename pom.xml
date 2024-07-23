@@ -42,7 +42,7 @@
         <checkstyle.version>10.15.0</checkstyle.version>
 
         <sonar.version>10.6.0.92116</sonar.version>
-        <sonar.plugin.api.version>10.9.0.2362</sonar.plugin.api.version>
+        <sonar.plugin.api.version>10.10.0.2391</sonar.plugin.api.version>
         <!-- language parser versions -->
         <sonar.java.version>8.1.0.36477</sonar.java.version>
         <sonar.python.version>4.19.0.15616</sonar.python.version>
