@@ -19,24 +19,21 @@
  */
 package com.ibm.plugin;
 
-import java.util.List;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
-import org.sonar.api.config.PropertyDefinition;
-import org.sonar.api.resources.Qualifiers;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public final class Configuration {
+import org.junit.jupiter.api.Test;
+import org.sonar.plugins.java.api.CheckRegistrar;
 
-    private Configuration() {}
+class JavaFileCheckRegistrarTest {
 
-    public static @NotNull @Unmodifiable List<PropertyDefinition> getPropertyDefinitions() {
-        return List.of(
-                PropertyDefinition.builder(Constants.CBOM_OUTPUT_NAME)
-                        .onQualifiers(Qualifiers.PROJECT)
-                        .subCategory(Constants.SUB_CATEGORY_GENERAL)
-                        .name("CBOM filename")
-                        .description("Filename for the generated CBOM")
-                        .defaultValue(Constants.CBOM_OUTPUT_NAME_DEFAULT)
-                        .build());
+    @Test
+    void checkNumberRules() {
+        CheckRegistrar.RegistrarContext context = new CheckRegistrar.RegistrarContext();
+
+        JavaCheckRegistrar registrar = new JavaCheckRegistrar();
+        registrar.register(context);
+
+        assertThat(context.checkClasses()).hasSize(1);
+        assertThat(context.testCheckClasses()).isEmpty();
     }
 }
