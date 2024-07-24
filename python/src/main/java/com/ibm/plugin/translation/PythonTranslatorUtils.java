@@ -32,9 +32,8 @@ import com.ibm.mapper.model.SecretKey;
 import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
-
-import javax.annotation.Nonnull;
 import java.util.Optional;
+import javax.annotation.Nonnull;
 
 public final class PythonTranslatorUtils {
     private PythonTranslatorUtils() {
@@ -113,10 +112,7 @@ public final class PythonTranslatorUtils {
             @Nonnull String macString,
             @Nonnull DetectionLocation detectionLocation) {
         StreamCipher cipher =
-                new StreamCipher(
-                        new Algorithm(cipherString, detectionLocation),
-                        null,
-                        null);
+                new StreamCipher(new Algorithm(cipherString, detectionLocation), null, null);
 
         cipher.append(new Mac(new Algorithm(macString, detectionLocation)));
         return cipher;

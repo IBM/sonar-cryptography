@@ -31,11 +31,10 @@ import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.plugin.translation.PythonEnricher;
-import org.sonar.plugins.python.api.tree.Tree;
-
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Optional;
+import javax.annotation.Nonnull;
+import org.sonar.plugins.python.api.tree.Tree;
 
 @SuppressWarnings("java:S1301")
 public final class PythonSignatureContextTranslator {
@@ -73,8 +72,7 @@ public final class PythonSignatureContextTranslator {
                 return Optional.of(resAlgorithm);
             case "MGF1":
                 return Optional.of(
-                        new MaskGenerationFunction(
-                                new Algorithm("MGF1", detectionLocation)));
+                        new MaskGenerationFunction(new Algorithm("MGF1", detectionLocation)));
             default:
                 break;
         }

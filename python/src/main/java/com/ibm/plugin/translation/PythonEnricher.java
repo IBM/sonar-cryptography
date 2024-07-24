@@ -39,13 +39,12 @@ import com.ibm.mapper.model.ProbabilisticSignatureScheme;
 import com.ibm.mapper.model.PublicKey;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.StreamCipher;
-import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class PythonEnricher implements IEnricher {
 
@@ -245,8 +244,7 @@ public class PythonEnricher implements IEnricher {
 
             // Create the new Signature node with the updated name, and add all of its children
             Signature signatureWithName =
-                    new Signature(
-                            new Algorithm(signatureName, signature.getDetectionContext()));
+                    new Signature(new Algorithm(signatureName, signature.getDetectionContext()));
             signature.getChildren().forEach((k, v) -> signatureWithName.append(v));
             privateKey.append(signatureWithName);
         }

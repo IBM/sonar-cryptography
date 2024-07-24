@@ -42,12 +42,11 @@ import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.plugin.rules.detection.symmetric.CryptographyCipher;
 import com.ibm.plugin.translation.PythonTranslatorUtils;
-import org.sonar.plugins.python.api.tree.Tree;
-
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.Nonnull;
+import org.sonar.plugins.python.api.tree.Tree;
 
 @SuppressWarnings("java:S1301")
 public final class PythonCipherContextTranslator {
@@ -85,8 +84,7 @@ public final class PythonCipherContextTranslator {
         switch (detection) {
             case "MGF1":
                 return Optional.of(
-                        new MaskGenerationFunction(
-                                new Algorithm(detection, detectionLocation)));
+                        new MaskGenerationFunction(new Algorithm(detection, detectionLocation)));
             default:
                 switch (kind) {
                     case NONE:
@@ -164,9 +162,7 @@ public final class PythonCipherContextTranslator {
                         if (kind.name().startsWith("AES")) {
                             // Cases "AESGCM", "AESGCMIV", "AESOCB3", "AESSIV", "AESCCM"
                             algorithm = new Algorithm("AES", detectionLocation);
-                            cipher =
-                                    new AuthenticatedEncryption(
-                                            algorithm, null, null, null);
+                            cipher = new AuthenticatedEncryption(algorithm, null, null, null);
                             cipher.append(new Decrypt(detectionLocation));
                             return Optional.of(cipher);
                         }
@@ -180,9 +176,7 @@ public final class PythonCipherContextTranslator {
                         algorithm.append(new Encrypt(detectionLocation));
                         return Optional.of(algorithm);
                     case RSA:
-                        cipher =
-                                new Cipher(
-                                        new Algorithm("RSA", detectionLocation));
+                        cipher = new Cipher(new Algorithm("RSA", detectionLocation));
                         cipher.append(new Encrypt(detectionLocation));
                         return Optional.of(cipher);
                     case CHACHA20POLY1305:
@@ -197,9 +191,7 @@ public final class PythonCipherContextTranslator {
                         if (kind.name().startsWith("AES")) {
                             // Cases "AESGCM", "AESGCMIV", "AESOCB3", "AESSIV", "AESCCM"
                             algorithm = new Algorithm("AES", detectionLocation);
-                            cipher =
-                                    new AuthenticatedEncryption(
-                                            algorithm, null, null, null);
+                            cipher = new AuthenticatedEncryption(algorithm, null, null, null);
                             cipher.append(new Encrypt(detectionLocation));
                             return Optional.of(cipher);
                         }
@@ -209,8 +201,7 @@ public final class PythonCipherContextTranslator {
             case PADDING:
                 if (kind == CipherContext.Kind.OAEP) {
                     padding = new Padding("OAEP", detectionLocation, new HashMap<>());
-                    return Optional.of(
-                            new OptimalAsymmetricEncryptionPadding(padding));
+                    return Optional.of(new OptimalAsymmetricEncryptionPadding(padding));
                 }
                 break;
             case WRAP:
@@ -222,9 +213,7 @@ public final class PythonCipherContextTranslator {
                 encapsulate.append(secretKey);
                 BlockCipher blockCipher =
                         new BlockCipher(
-                                new Algorithm(algorithmName, detectionLocation),
-                                null,
-                                null);
+                                new Algorithm(algorithmName, detectionLocation), null, null);
                 secretKey.append(blockCipher);
                 blockCipher.append(new KeyGeneration(detectionLocation));
                 return Optional.of(encapsulate);

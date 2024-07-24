@@ -19,53 +19,45 @@
  */
 package com.ibm.plugin.translation.translator.contexts;
 
-import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
-import com.ibm.engine.model.KeySize;
-import com.ibm.engine.model.MacSize;
 import com.ibm.engine.model.context.IDetectionContext;
+import com.ibm.engine.rule.IBundle;
+import com.ibm.mapper.AbstractContextTranslator;
+import com.ibm.mapper.IContextTranslationWithKind;
 import com.ibm.mapper.configuration.Configuration;
-import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.KeyLength;
-import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.utils.DetectionLocation;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
 
-import java.util.Optional;
+public abstract class AbstractJavaTranslator extends AbstractContextTranslator
+        implements IContextTranslationWithKind<Tree> {
 
-public final class JavaAlgorithmParameterContextTranslator extends AbstractJavaTranslator {
-
-    public JavaAlgorithmParameterContextTranslator(@NotNull Configuration configuration) {
+    protected AbstractJavaTranslator(@NotNull Configuration configuration) {
         super(configuration);
     }
 
-    @Override
-    protected @NotNull Optional<INode> translateJCA(
+    @NotNull @Override
+    public Optional<INode> translate(
+            @NotNull IBundle bundleIdentifier,
             @NotNull IValue<Tree> value,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
-        if (value instanceof Algorithm<Tree>) {
-            JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
-            return jcaAlgorithmMapper
-                    .parse(value.asString(), detectionLocation, configuration)
-                    .map(a -> a);
-        } else if (value instanceof KeySize<Tree> keySize) {
-            KeyLength keyLength = new KeyLength(keySize.getValue(), detectionLocation);
-            return Optional.of(keyLength);
-        } else if (value instanceof MacSize<Tree> macSize) {
-            TagLength tagLength = new TagLength(macSize.getValue(), detectionLocation);
-            return Optional.of(tagLength);
-        }
-        return Optional.empty();
+        return switch (bundleIdentifier.getIdentifier()) {
+            case "JCA" -> translateJCA(value, detectionContext, detectionLocation);
+            case "BC" -> translateBC(value, detectionContext, detectionLocation);
+            default -> Optional.empty();
+        };
     }
 
-    @Override
-    protected @NotNull Optional<INode> translateBC(
+    @NotNull protected abstract Optional<INode> translateJCA(
             @NotNull IValue<Tree> value,
             @NotNull IDetectionContext detectionContext,
-            @NotNull DetectionLocation detectionLocation) {
-        return Optional.empty();
-    }
+            @NotNull DetectionLocation detectionLocation);
+
+    @NotNull protected abstract Optional<INode> translateBC(
+            @NotNull IValue<Tree> value,
+            @NotNull IDetectionContext detectionContext,
+            @NotNull DetectionLocation detectionLocation);
 }

@@ -28,9 +28,6 @@ import com.ibm.engine.model.OperationMode;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.IDetectionContext;
-import com.ibm.engine.rule.IBundle;
-import com.ibm.mapper.AbstractContextTranslator;
-import com.ibm.mapper.IContextTranslationWithKind;
 import com.ibm.mapper.ITranslator;
 import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.bc.BcOperationModeEncryptionMapper;
@@ -54,35 +51,20 @@ import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Encapsulate;
 import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
-import org.sonar.plugins.java.api.tree.Tree;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
+import org.sonar.plugins.java.api.tree.Tree;
 
-public final class JavaCipherContextTranslator extends AbstractContextTranslator
-        implements IContextTranslationWithKind<Tree> {
+public final class JavaCipherContextTranslator extends AbstractJavaTranslator {
 
     public JavaCipherContextTranslator(@NotNull Configuration configuration) {
         super(configuration);
     }
 
-    @NotNull @Override
-    public Optional<INode> translate(
-            @NotNull IBundle bundleIdentifier,
-            @NotNull IValue<Tree> value,
-            @NotNull IDetectionContext detectionContext,
-            @NotNull DetectionLocation detectionLocation) {
-        return switch (bundleIdentifier.getIdentifier()) {
-            case "JCA" -> translateJCA(value, detectionContext, detectionLocation);
-            case "BC" -> translateBC(value, detectionContext, detectionLocation);
-            default -> Optional.empty();
-        };
-    }
-
-    @NotNull
-    public Optional<INode> translateJCA(
+    @Override
+    @NotNull public Optional<INode> translateJCA(
             @NotNull IValue<Tree> value,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
@@ -106,8 +88,8 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
         return Optional.empty();
     }
 
-    @NotNull
-    public Optional<INode> translateBC(
+    @Override
+    @NotNull public Optional<INode> translateBC(
             @NotNull IValue<Tree> value,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
@@ -131,9 +113,7 @@ public final class JavaCipherContextTranslator extends AbstractContextTranslator
                             .parse(operationMode.asString(), detectionLocation, configuration)
                             .map(f -> f);
                 }
-                default -> {
-
-                }
+                default -> {}
             };
         } else if (value instanceof CipherAction<Tree> cipherAction) {
             return switch (cipherAction.getAction()) {

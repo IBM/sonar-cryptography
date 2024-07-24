@@ -31,10 +31,9 @@ import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.plugin.rules.detection.hash.CryptographyHash;
 import com.ibm.plugin.rules.detection.symmetric.CryptographyCipher;
-import org.sonar.plugins.python.api.tree.Tree;
-
-import javax.annotation.Nonnull;
 import java.util.Optional;
+import javax.annotation.Nonnull;
+import org.sonar.plugins.python.api.tree.Tree;
 
 @SuppressWarnings("java:S1301")
 public final class PythonMacContextTranslator {

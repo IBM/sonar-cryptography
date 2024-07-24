@@ -43,17 +43,6 @@ import com.ibm.plugin.translation.contexts.PythonPrivateKeyContextTranslator;
 import com.ibm.plugin.translation.contexts.PythonPublicKeyContextTranslator;
 import com.ibm.plugin.translation.contexts.PythonSecretKeyContextTranslator;
 import com.ibm.plugin.translation.contexts.PythonSignatureContextTranslator;
-import org.jetbrains.annotations.Unmodifiable;
-import org.sonar.plugins.python.api.PythonCheck;
-import org.sonar.plugins.python.api.PythonVisitorContext;
-import org.sonar.plugins.python.api.symbols.Symbol;
-import org.sonar.plugins.python.api.tree.CallExpression;
-import org.sonar.plugins.python.api.tree.Name;
-import org.sonar.plugins.python.api.tree.Token;
-import org.sonar.plugins.python.api.tree.Tree;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -63,6 +52,16 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
+import org.sonar.plugins.python.api.PythonCheck;
+import org.sonar.plugins.python.api.PythonVisitorContext;
+import org.sonar.plugins.python.api.symbols.Symbol;
+import org.sonar.plugins.python.api.tree.CallExpression;
+import org.sonar.plugins.python.api.tree.Name;
+import org.sonar.plugins.python.api.tree.Token;
+import org.sonar.plugins.python.api.tree.Tree;
 
 public class PythonTranslator extends ITranslator<PythonCheck, Tree, Symbol, PythonVisitorContext> {
 
@@ -129,7 +128,9 @@ public class PythonTranslator extends ITranslator<PythonCheck, Tree, Symbol, Pyt
                                     .map(
                                             ivalue ->
                                                     translate(
-                                                            rootDetectionStore.getDetectionRule().bundle(),
+                                                            rootDetectionStore
+                                                                    .getDetectionRule()
+                                                                    .bundle(),
                                                             ivalue,
                                                             rootDetectionStore
                                                                     .getDetectionValueContext(),
@@ -284,7 +285,9 @@ public class PythonTranslator extends ITranslator<PythonCheck, Tree, Symbol, Pyt
                                     .map(
                                             ivalue ->
                                                     translate(
-                                                            detectionStore.getDetectionRule().bundle(),
+                                                            detectionStore
+                                                                    .getDetectionRule()
+                                                                    .bundle(),
                                                             ivalue,
                                                             detectionStore
                                                                     .getDetectionValueContext(),

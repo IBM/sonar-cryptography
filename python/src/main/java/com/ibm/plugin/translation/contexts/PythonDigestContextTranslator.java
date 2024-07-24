@@ -26,10 +26,9 @@ import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.sonar.plugins.python.api.tree.Tree;
-
-import javax.annotation.Nonnull;
 import java.util.Optional;
+import javax.annotation.Nonnull;
+import org.sonar.plugins.python.api.tree.Tree;
 
 @SuppressWarnings("java:S1301")
 public final class PythonDigestContextTranslator {
@@ -64,9 +63,7 @@ public final class PythonDigestContextTranslator {
                                         '_',
                                         '-'); // Python uses "_" (SHA3_384) but the standard way
                 // is with "-" (SHA3-384)
-                return Optional.of(
-                        new MessageDigest(
-                                new Algorithm(hashName, detectionLocation)));
+                return Optional.of(new MessageDigest(new Algorithm(hashName, detectionLocation)));
             default:
                 break;
         }

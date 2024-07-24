@@ -36,12 +36,11 @@ import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.plugin.rules.detection.hash.CryptographyHash;
 import com.ibm.plugin.rules.detection.symmetric.CryptographyCipher;
+import java.util.Optional;
+import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.plugins.python.api.tree.Tree;
-
-import javax.annotation.Nonnull;
-import java.util.Optional;
 
 @SuppressWarnings("java:S1301")
 public final class PythonKeyContextTranslator {
@@ -138,8 +137,7 @@ public final class PythonKeyContextTranslator {
                                 new Algorithm(kind.name(), detectionLocation)));
             case ConcatKDFHash, ConcatKDFHMAC, HKDF, HKDFExpand, KBKDFHMAC, KBKDFCMAC, X963KDF:
                 return Optional.of(
-                        new KeyDerivationFunction(
-                                new Algorithm(kind.name(), detectionLocation)));
+                        new KeyDerivationFunction(new Algorithm(kind.name(), detectionLocation)));
             default:
                 break;
         }

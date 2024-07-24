@@ -42,12 +42,11 @@ import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.mapper.utils.DetectionLocation;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.plugins.java.api.tree.Tree;
-
-import java.util.Optional;
 
 public final class JavaMacContextTranslator extends AbstractContextTranslator
         implements IContextTranslationWithKind<Tree, MacContext.Kind> {
