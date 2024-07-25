@@ -21,12 +21,13 @@ package com.ibm.mapper.model;
 
 import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.utils.DetectionLocation;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public class Algorithm implements IAsset {
     @Nonnull protected final Map<Class<? extends INode>, INode> children;
@@ -38,14 +39,14 @@ public class Algorithm implements IAsset {
             @Nonnull Algorithm algorithm,
             @Nonnull DetectionLocation detectionLocation,
             @Nonnull final Class<? extends Algorithm> asKind) {
-        this.name = applyStandardNaming(algorithm.getName());
+        this.name = algorithm.getName();
         this.children = algorithm.getChildren();
         this.detectionLocation = detectionLocation;
         this.kind = asKind;
     }
 
     public Algorithm(@Nonnull String name, @Nonnull DetectionLocation detectionLocation) {
-        this.name = applyStandardNaming(name);
+        this.name = name;
         this.children = new HashMap<>();
         this.detectionLocation = detectionLocation;
         this.kind = Algorithm.class;
@@ -55,7 +56,7 @@ public class Algorithm implements IAsset {
             @Nonnull String name,
             @Nonnull DetectionLocation detectionLocation,
             @Nonnull Map<Class<? extends INode>, INode> children) {
-        this.name = applyStandardNaming(name);
+        this.name = name;
         this.children = children;
         this.detectionLocation = detectionLocation;
         this.kind = Algorithm.class;
@@ -66,7 +67,7 @@ public class Algorithm implements IAsset {
             @Nonnull KeyLength keyLength,
             @Nonnull DetectionLocation detectionLocation,
             @Nonnull Map<Class<? extends INode>, INode> children) {
-        this.name = applyStandardNaming(name);
+        this.name = name;
         this.children = children;
         this.detectionLocation = detectionLocation;
         this.kind = Algorithm.class;
@@ -77,7 +78,7 @@ public class Algorithm implements IAsset {
         this.children = new HashMap<>();
         this.kind = algorithm.kind;
         this.detectionLocation = algorithm.detectionLocation;
-        this.name = applyStandardNaming(algorithm.name);
+        this.name = algorithm.name;
     }
 
     @Override
@@ -174,20 +175,5 @@ public class Algorithm implements IAsset {
     @Override
     public String toString() {
         return name;
-    }
-
-    @Nonnull
-    public String applyStandardNaming(final @Nonnull String name) {
-        return switch (name.toLowerCase()) {
-            case "sha1", "sha-1", "sha" -> "SHA1";
-            case "sha224", "sha-224" -> "SHA224";
-            case "sha256", "sha-256" -> "SHA256";
-            case "sha384", "sha-384" -> "SHA384";
-            case "sha512", "sha-512" -> "SHA512";
-            case "desede", "tripledes" -> "DESede";
-            case "desedewrap", "tripledeswrap" -> "DESedeWrap";
-            case "diffiehellman", "dh" -> "DH";
-            default -> name;
-        };
     }
 }

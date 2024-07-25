@@ -21,9 +21,10 @@ package com.ibm.mapper.model;
 
 import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.utils.DetectionLocation;
+
+import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Objects;
-import javax.annotation.Nonnull;
 
 public class Padding extends Property {
     @Nonnull private String name;
@@ -33,7 +34,7 @@ public class Padding extends Property {
             @Nonnull DetectionLocation detectionLocation,
             @Nonnull final Class<? extends Padding> asKind) {
         super(asKind, detectionLocation, padding.getChildren());
-        this.name = applyStandardNaming(padding.getName());
+        this.name = padding.getName();
     }
 
     public Padding(
@@ -41,12 +42,12 @@ public class Padding extends Property {
             @Nonnull DetectionLocation detectionLocation,
             @Nonnull Map<Class<? extends INode>, INode> children) {
         super(Padding.class, detectionLocation, children);
-        this.name = applyStandardNaming(name);
+        this.name = name;
     }
 
     public Padding(@Nonnull Padding padding) {
         super(padding.type, padding.detectionLocation, padding.children);
-        this.name = applyStandardNaming(padding.name);
+        this.name = padding.name;
     }
 
     @Nonnull
@@ -91,19 +92,5 @@ public class Padding extends Property {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), name);
-    }
-
-    @Nonnull
-    protected String applyStandardNaming(final @Nonnull String name) {
-        return (switch (name.toLowerCase()) {
-                    case "iso10126padding", "iso10126" -> "ISO10126";
-                    case "oaeppadding", "oaep" -> "OAEP";
-                    case "pkcs1padding", "pkcs1" -> "PKCS1";
-                    case "pkcs5padding", "pkcs5" -> "PKCS5";
-                    case "ssl3padding", "ssl3" -> "SSL3";
-                    case "nopadding" -> "";
-                    default -> name;
-                })
-                .toUpperCase();
     }
 }

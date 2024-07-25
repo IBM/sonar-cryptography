@@ -20,17 +20,16 @@
 package com.ibm.mapper.model;
 
 import com.ibm.mapper.configuration.Configuration;
-import com.ibm.mapper.mapper.ssl.CipherSuiteMapper;
-import com.ibm.mapper.mapper.ssl.json.JsonCipherSuite;
 import com.ibm.mapper.model.collections.AlgorithmCollection;
 import com.ibm.mapper.model.collections.IdentifierCollection;
 import com.ibm.mapper.utils.DetectionLocation;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
 
 public class CipherSuite implements IAsset {
     @Nonnull protected final Map<Class<? extends INode>, INode> children;
@@ -50,7 +49,7 @@ public class CipherSuite implements IAsset {
             @Nullable AlgorithmCollection algorithmCollection,
             @Nullable IdentifierCollection identifierCollection,
             @Nonnull DetectionLocation detectionLocation) {
-        this.name = applyStandardNaming(name);
+        this.name = name;
         this.children = new HashMap<>();
         if (algorithmCollection != null) {
             this.append(algorithmCollection);
@@ -66,7 +65,7 @@ public class CipherSuite implements IAsset {
             @Nonnull String name,
             @Nonnull DetectionLocation detectionLocation,
             @Nonnull Map<Class<? extends INode>, INode> children) {
-        this.name = applyStandardNaming(name);
+        this.name = name;
         this.children = children;
         this.detectionLocation = detectionLocation;
         this.kind = CipherSuite.class;
@@ -75,7 +74,7 @@ public class CipherSuite implements IAsset {
     private CipherSuite(@Nonnull CipherSuite cipherSuite) {
         this.children = new HashMap<>();
         this.detectionLocation = cipherSuite.detectionLocation;
-        this.name = applyStandardNaming(cipherSuite.name);
+        this.name = cipherSuite.name;
         this.kind = cipherSuite.kind;
     }
 
@@ -123,13 +122,6 @@ public class CipherSuite implements IAsset {
     @Override
     public DetectionLocation getDetectionContext() {
         return detectionLocation;
-    }
-
-    @NotNull @Override
-    public String applyStandardNaming(@NotNull String name) {
-        return CipherSuiteMapper.findCipherSuite(name)
-                .map(JsonCipherSuite::getIanaName)
-                .orElse(name);
     }
 
     @Nonnull

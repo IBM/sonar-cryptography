@@ -19,14 +19,10 @@
  */
 package com.ibm.mapper.model;
 
-import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
-/**
- * <a
- * href="https://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html#Cipher">Source</a>
- */
 public class Cipher extends Algorithm {
 
     protected Cipher(

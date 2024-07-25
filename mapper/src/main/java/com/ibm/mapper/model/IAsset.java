@@ -26,7 +26,4 @@ public interface IAsset extends INode {
 
     @Nonnull
     DetectionLocation getDetectionContext();
-
-    @Nonnull
-    String applyStandardNaming(final @Nonnull String name);
 }

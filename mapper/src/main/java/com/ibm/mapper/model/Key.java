@@ -21,12 +21,13 @@ package com.ibm.mapper.model;
 
 import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.utils.DetectionLocation;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public class Key implements IAsset {
     @Nonnull protected final Map<Class<? extends INode>, INode> children;
@@ -38,7 +39,7 @@ public class Key implements IAsset {
             @Nonnull Key key,
             @Nonnull DetectionLocation detectionLocation,
             @Nonnull final Class<? extends Key> asKind) {
-        this.name = applyStandardNaming(key.getName());
+        this.name = key.getName();
         this.children = key.getChildren();
         this.detectionLocation = detectionLocation;
         this.kind = asKind;
@@ -48,7 +49,7 @@ public class Key implements IAsset {
             @Nonnull String name,
             @Nonnull DetectionLocation detectionLocation,
             @Nonnull final Class<? extends Key> asKind) {
-        this.name = applyStandardNaming(name);
+        this.name = name;
         this.children = new HashMap<>();
         this.detectionLocation = detectionLocation;
         this.kind = asKind;
@@ -58,7 +59,7 @@ public class Key implements IAsset {
             @Nonnull String name,
             @Nonnull Algorithm algorithm,
             @Nonnull DetectionLocation detectionLocation) {
-        this.name = applyStandardNaming(name);
+        this.name = name;
         this.children = new HashMap<>();
         this.children.put(algorithm.getKind(), algorithm);
         this.detectionLocation = detectionLocation;
@@ -69,7 +70,7 @@ public class Key implements IAsset {
         this.children = new HashMap<>();
         this.kind = key.kind;
         this.detectionLocation = key.detectionLocation;
-        this.name = applyStandardNaming(key.name);
+        this.name = key.name;
     }
 
     @Nonnull
@@ -119,11 +120,6 @@ public class Key implements IAsset {
     @Override
     public DetectionLocation getDetectionContext() {
         return detectionLocation;
-    }
-
-    @NotNull @Override
-    public String applyStandardNaming(@NotNull String name) {
-        return name; // key is not different from algorithm
     }
 
     @Nonnull
