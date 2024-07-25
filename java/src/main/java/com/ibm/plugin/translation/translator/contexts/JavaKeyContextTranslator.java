@@ -29,8 +29,6 @@ import com.ibm.engine.model.context.KeyContext;
 import com.ibm.engine.model.context.PrivateKeyContext;
 import com.ibm.engine.model.context.PublicKeyContext;
 import com.ibm.engine.model.context.SecretKeyContext;
-import com.ibm.mapper.AbstractContextTranslator;
-import com.ibm.mapper.IContextTranslationWithKind;
 import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.model.EllipticCurve;
@@ -53,18 +51,15 @@ import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
 
-public final class JavaKeyContextTranslator extends AbstractContextTranslator
-        implements IContextTranslationWithKind<Tree, KeyContext.Kind> {
+public final class JavaKeyContextTranslator extends JavaAbstractLibraryTranslator {
 
     public JavaKeyContextTranslator(@NotNull Configuration configuration) {
         super(configuration);
     }
 
-    @SuppressWarnings("java:S1172")
-    @NotNull @Override
-    public Optional<INode> translate(
+    @Override
+    protected @NotNull Optional<INode> translateJCA(
             @NotNull IValue<Tree> value,
-            @NotNull KeyContext.Kind kind,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
         if (value instanceof Algorithm<Tree> algorithm) {
@@ -106,22 +101,31 @@ public final class JavaKeyContextTranslator extends AbstractContextTranslator
                                 }
                             });
         } else if (value instanceof KeySize<Tree> keySize) {
-            KeyLength keyLength = new KeyLength(keySize.getValue(), detectionLocation);
+            final KeyLength keyLength = new KeyLength(keySize.getValue(), detectionLocation);
             return Optional.of(keyLength);
         } else if (value instanceof Curve<Tree> curve) {
-            com.ibm.mapper.model.Algorithm algorithm =
+            final com.ibm.mapper.model.Algorithm algorithm =
                     new com.ibm.mapper.model.Algorithm("EC", detectionLocation);
             return Stream.of(algorithm)
                     .map(EllipticCurveAlgorithm::new)
-                    .map(
+                    .peek(
                             algo -> {
                                 algo.append(new KeyGeneration(detectionLocation));
                                 algo.append(new EllipticCurve(curve.asString(), detectionLocation));
-                                return algo;
                             })
                     .findFirst()
                     .map(a -> a);
-        } else if (value instanceof ValueAction<Tree> valueAction) {
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    protected @NotNull Optional<INode> translateBC(
+            @NotNull IValue<Tree> value,
+            @NotNull IDetectionContext detectionContext,
+            @NotNull DetectionLocation detectionLocation) {
+        if (value instanceof ValueAction<Tree> valueAction) {
+            final KeyContext.Kind kind = ((SecretKeyContext) detectionContext).kind();
             com.ibm.mapper.model.Algorithm algorithm;
             switch (kind) {
                 case KDF:

@@ -23,6 +23,7 @@ import com.ibm.engine.model.CipherSuite;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.model.context.ProtocolContext;
+import com.ibm.engine.rule.IBundle;
 import com.ibm.mapper.AbstractContextTranslator;
 import com.ibm.mapper.IContextTranslationWithKind;
 import com.ibm.mapper.configuration.Configuration;
@@ -36,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public class JavaProtocolContextTranslator extends AbstractContextTranslator
-        implements IContextTranslationWithKind<Tree, ProtocolContext.Kind> {
+        implements IContextTranslationWithKind<Tree> {
 
     public JavaProtocolContextTranslator(@NotNull Configuration configuration) {
         super(configuration);
@@ -44,10 +45,15 @@ public class JavaProtocolContextTranslator extends AbstractContextTranslator
 
     @NotNull @Override
     public Optional<INode> translate(
+            @NotNull IBundle bundleIdentifier,
             @NotNull IValue<Tree> value,
-            @NotNull ProtocolContext.Kind kind,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
+        if (!bundleIdentifier.getIdentifier().equals("SSL")) {
+            return Optional.empty();
+        }
+
+        final ProtocolContext.Kind kind = ((ProtocolContext) detectionContext).kind();
         if (value instanceof com.ibm.engine.model.Protocol<Tree> protocol) {
             return switch (kind) {
                 case TLS ->

@@ -31,10 +31,10 @@ import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
 
-public abstract class AbstractJavaTranslator extends AbstractContextTranslator
+public abstract class JavaAbstractLibraryTranslator extends AbstractContextTranslator
         implements IContextTranslationWithKind<Tree> {
 
-    protected AbstractJavaTranslator(@NotNull Configuration configuration) {
+    protected JavaAbstractLibraryTranslator(@NotNull Configuration configuration) {
         super(configuration);
     }
 
@@ -45,8 +45,8 @@ public abstract class AbstractJavaTranslator extends AbstractContextTranslator
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
         return switch (bundleIdentifier.getIdentifier()) {
-            case "JCA" -> translateJCA(value, detectionContext, detectionLocation);
-            case "BC" -> translateBC(value, detectionContext, detectionLocation);
+            case "Jca" -> translateJCA(value, detectionContext, detectionLocation);
+            case "Bc" -> translateBC(value, detectionContext, detectionLocation);
             default -> Optional.empty();
         };
     }

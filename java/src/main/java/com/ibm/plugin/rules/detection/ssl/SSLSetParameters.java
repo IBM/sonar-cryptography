@@ -37,7 +37,7 @@ public final class SSLSetParameters {
                     .withMethodParameter("javax.net.ssl.SSLParameters")
                     .addDependingDetectionRules(SSLParametersSetProtocols.rules())
                     .buildForContext(new ProtocolContext(ProtocolContext.Kind.TLS))
-                    .inBundle(() -> "SSLParametersSetProtocols")
+                    .inBundle(() -> "SSL")
                     .withoutDependingDetectionRules();
 
     private SSLSetParameters() {

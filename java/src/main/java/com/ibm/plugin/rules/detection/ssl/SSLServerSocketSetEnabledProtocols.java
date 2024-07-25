@@ -38,7 +38,7 @@ public final class SSLServerSocketSetEnabledProtocols {
                     .withMethodParameter("java.lang.String[]")
                     .shouldBeDetectedAs(new ProtocolFactory<>())
                     .buildForContext(new ProtocolContext(ProtocolContext.Kind.TLS))
-                    .inBundle(() -> "SSLServerSocketSetEnabledProtocols")
+                    .inBundle(() -> "SSL")
                     .withoutDependingDetectionRules();
 
     private SSLServerSocketSetEnabledProtocols() {

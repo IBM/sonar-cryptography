@@ -93,7 +93,7 @@ public final class SecureRandomGetInstance {
                     .withMethodParameter(BYTE_ARRAY_TYPE)
                     .shouldBeDetectedAs(new SeedSizeFactory<>())
                     .buildForContext(new PRNGContext())
-                    .inBundle(() -> "JcaSecureRandom")
+                    .inBundle(() -> "Random")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> SECURE_RANDOM_2 =
@@ -104,7 +104,7 @@ public final class SecureRandomGetInstance {
                     .withMethodParameter(BYTE_ARRAY_TYPE)
                     .shouldBeDetectedAs(new SeedSizeFactory<>())
                     .buildForContext(new PRNGContext())
-                    .inBundle(() -> "JcaSecureRandom")
+                    .inBundle(() -> "Random")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> SECURE_RANDOM_3 =
@@ -115,7 +115,7 @@ public final class SecureRandomGetInstance {
                     .withMethodParameter("long")
                     .shouldBeDetectedAs(new SeedSizeFactory<>())
                     .buildForContext(new PRNGContext())
-                    .inBundle(() -> "JcaSecureRandom")
+                    .inBundle(() -> "Random")
                     .withoutDependingDetectionRules();
 
     private SecureRandomGetInstance() {

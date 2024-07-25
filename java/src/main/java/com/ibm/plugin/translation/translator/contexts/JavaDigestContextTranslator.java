@@ -24,8 +24,6 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.DigestContext;
 import com.ibm.engine.model.context.IDetectionContext;
-import com.ibm.mapper.AbstractContextTranslator;
-import com.ibm.mapper.IContextTranslationWithKind;
 import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.jca.JcaMessageDigestMapper;
 import com.ibm.mapper.model.DigestSize;
@@ -38,17 +36,15 @@ import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
 
-public final class JavaDigestContextTranslator extends AbstractContextTranslator
-        implements IContextTranslationWithKind<Tree, DigestContext.Kind> {
+public final class JavaDigestContextTranslator extends JavaAbstractLibraryTranslator {
 
     public JavaDigestContextTranslator(@NotNull Configuration configuration) {
         super(configuration);
     }
 
-    @NotNull @Override
-    public Optional<INode> translate(
+    @Override
+    protected @NotNull Optional<INode> translateJCA(
             @NotNull IValue<Tree> value,
-            @NotNull DigestContext.Kind kind,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
         if (value instanceof Algorithm<Tree>) {
@@ -60,6 +56,18 @@ public final class JavaDigestContextTranslator extends AbstractContextTranslator
                                 algo.append(new Digest(detectionLocation));
                                 return algo;
                             });
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
+    protected @NotNull Optional<INode> translateBC(
+            @NotNull IValue<Tree> value,
+            @NotNull IDetectionContext detectionContext,
+            @NotNull DetectionLocation detectionLocation) {
+        if (value instanceof Algorithm<Tree>) {
+            return Optional.empty(); // TODO
         } else if (value instanceof ValueAction) {
             String digestName = value.asString();
             DigestSize digestSize = null;
@@ -102,20 +110,17 @@ public final class JavaDigestContextTranslator extends AbstractContextTranslator
                     break;
             }
 
-            com.ibm.mapper.model.Algorithm algorithm =
+            final com.ibm.mapper.model.Algorithm algorithm =
                     new com.ibm.mapper.model.Algorithm(digestName, detectionLocation);
-            MessageDigest messageDigest;
 
+            final DigestContext.Kind kind = ((DigestContext) detectionContext).kind();
             return switch (kind) {
                 case MGF1, MGF -> Optional.of(new MaskGenerationFunction(algorithm));
-                default -> {
-                    if (digestSize != null) {
-                        messageDigest = new MessageDigest(algorithm, digestSize);
-                    } else {
-                        messageDigest = new MessageDigest(algorithm);
-                    }
-                    yield Optional.of(messageDigest);
-                }
+                default ->
+                        Optional.of(
+                                Optional.ofNullable(digestSize)
+                                        .map(size -> new MessageDigest(algorithm, size))
+                                        .orElse(new MessageDigest(algorithm)));
             };
         } else if (value instanceof com.ibm.engine.model.DigestSize) {
             return Optional.of(

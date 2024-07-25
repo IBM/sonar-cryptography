@@ -24,9 +24,6 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.MacSize;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.IDetectionContext;
-import com.ibm.engine.model.context.MacContext;
-import com.ibm.mapper.AbstractContextTranslator;
-import com.ibm.mapper.IContextTranslationWithKind;
 import com.ibm.mapper.ITranslator;
 import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.jca.JcaMacMapper;
@@ -48,18 +45,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.plugins.java.api.tree.Tree;
 
-public final class JavaMacContextTranslator extends AbstractContextTranslator
-        implements IContextTranslationWithKind<Tree, MacContext.Kind> {
+public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslator {
     private static final Logger LOGGER = LoggerFactory.getLogger(JavaMacContextTranslator.class);
 
     public JavaMacContextTranslator(@NotNull Configuration configuration) {
         super(configuration);
     }
 
-    @NotNull @Override
-    public Optional<INode> translate(
+    @Override
+    protected @NotNull Optional<INode> translateJCA(
             @NotNull IValue<Tree> value,
-            @NotNull MacContext.Kind kind,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
         if (value instanceof com.ibm.engine.model.Algorithm<Tree>) {
@@ -72,8 +67,24 @@ public final class JavaMacContextTranslator extends AbstractContextTranslator
                                 algo.append(new Tag(detectionLocation));
                                 return algo;
                             });
-        } else if (value instanceof ValueAction<Tree> valueAction) {
-            // TODO: Write a mapper
+        } else if (value instanceof MacSize<Tree> macSize) {
+            TagLength tagLength = new TagLength(macSize.getValue(), detectionLocation);
+            return Optional.of(tagLength);
+        } else if (value instanceof BlockSize<Tree> blockSizeDetection) {
+            com.ibm.mapper.model.BlockSize blockSize =
+                    new com.ibm.mapper.model.BlockSize(
+                            blockSizeDetection.getValue(), detectionLocation);
+            return Optional.of(blockSize);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    protected @NotNull Optional<INode> translateBC(
+            @NotNull IValue<Tree> value,
+            @NotNull IDetectionContext detectionContext,
+            @NotNull DetectionLocation detectionLocation) {
+        if (value instanceof ValueAction<Tree> valueAction) {
             Algorithm baseAlgorithm;
             Algorithm macAlgorithm;
             BlockCipher blockCipher;
@@ -83,7 +94,6 @@ public final class JavaMacContextTranslator extends AbstractContextTranslator
             Mode mode;
             switch (valueAction.asString()) {
                 case "Blake3Mac":
-                    /* TODO: is this the correct MAC name? */
                     macAlgorithm = new Algorithm("BLAKE3-MAC", detectionLocation);
                     mac = new Mac(macAlgorithm);
 
@@ -91,7 +101,7 @@ public final class JavaMacContextTranslator extends AbstractContextTranslator
                     messageDigest = new MessageDigest(baseAlgorithm);
                     mac.append(messageDigest);
                     break;
-                case "BlockCipherMac", "CBCBlockCipherMac":
+                case "BlockCipherMac", "CBCBlockCipherMac", "ISO9797Alg3Mac":
                     macAlgorithm =
                             new Algorithm("CBC-MAC-" + ITranslator.UNKNOWN, detectionLocation);
                     mac = new Mac(macAlgorithm);
@@ -112,7 +122,6 @@ public final class JavaMacContextTranslator extends AbstractContextTranslator
                     mac = new Mac(macAlgorithm);
                     break;
                 case "DSTU7564Mac":
-                    /* TODO: is this the correct MAC name? */
                     macAlgorithm = new Algorithm("DSTU 7564-MAC", detectionLocation);
                     mac = new Mac(macAlgorithm);
 
@@ -121,7 +130,6 @@ public final class JavaMacContextTranslator extends AbstractContextTranslator
                     mac.append(messageDigest);
                     break;
                 case "DSTU7624Mac":
-                    /* TODO: is this the correct MAC name? */
                     macAlgorithm = new Algorithm("DSTU 7624:2014-MAC", detectionLocation);
                     mac = new Mac(macAlgorithm);
 
@@ -137,7 +145,6 @@ public final class JavaMacContextTranslator extends AbstractContextTranslator
                     mac.append(mode);
                     break;
                 case "GOST28147Mac":
-                    /* TODO: is this the correct MAC name? */
                     macAlgorithm = new Algorithm("GOST 28147-89-MAC", detectionLocation);
                     mac = new Mac(macAlgorithm);
 
@@ -148,19 +155,6 @@ public final class JavaMacContextTranslator extends AbstractContextTranslator
                 case "HMac", "OldHMac":
                     macAlgorithm = new Algorithm("HMAC-" + ITranslator.UNKNOWN, detectionLocation);
                     mac = new Mac(macAlgorithm);
-                    break;
-                case "ISO9797Alg3Mac":
-                    macAlgorithm =
-                            new Algorithm("CBC-MAC-" + ITranslator.UNKNOWN, detectionLocation);
-                    mac = new Mac(macAlgorithm);
-
-                    mode = new Mode("CBC", detectionLocation);
-                    mac.append(mode);
-
-                    /* TODO: add this default BlockCipher value in the enrichment */
-                    /* baseAlgorithm = new Algorithm("DES", detectionLocation);
-                    blockCipher = new BlockCipher(baseAlgorithm, null, null, detectionLocation);
-                    mac.append(blockCipher); */
                     break;
                 case "KMAC":
                     macAlgorithm = new Algorithm("KMAC", detectionLocation);
@@ -175,7 +169,6 @@ public final class JavaMacContextTranslator extends AbstractContextTranslator
                     mac = new Mac(macAlgorithm);
                     break;
                 case "SipHash":
-                    /* TODO: is this the correct MAC name? */
                     macAlgorithm = new Algorithm("SipHash", detectionLocation);
                     mac = new Mac(macAlgorithm);
 
@@ -184,7 +177,6 @@ public final class JavaMacContextTranslator extends AbstractContextTranslator
                     mac.append(messageDigest);
                     break;
                 case "SipHash128":
-                    /* TODO: is this the correct MAC name? */
                     macAlgorithm = new Algorithm("SipHash", detectionLocation);
                     mac = new Mac(macAlgorithm);
 
@@ -205,7 +197,6 @@ public final class JavaMacContextTranslator extends AbstractContextTranslator
                     mac.append(blockCipher);
                     break;
                 case "VMPCMac":
-                    /* TODO: is this the correct MAC name? */
                     macAlgorithm = new Algorithm("VMPC", detectionLocation);
                     mac = new Mac(macAlgorithm);
 
@@ -214,7 +205,6 @@ public final class JavaMacContextTranslator extends AbstractContextTranslator
                     mac.append(streamCipher);
                     break;
                 case "Zuc128Mac":
-                    /* TODO: is this the correct MAC name? */
                     macAlgorithm = new Algorithm("ZUC-128", detectionLocation);
                     mac = new Mac(macAlgorithm);
 
@@ -223,7 +213,6 @@ public final class JavaMacContextTranslator extends AbstractContextTranslator
                     mac.append(streamCipher);
                     break;
                 case "Zuc256Mac":
-                    /* TODO: is this the correct MAC name? */
                     macAlgorithm = new Algorithm("ZUC-256", detectionLocation);
                     mac = new Mac(macAlgorithm);
 
@@ -239,9 +228,7 @@ public final class JavaMacContextTranslator extends AbstractContextTranslator
             }
             mac.append(new Tag(detectionLocation));
             mac.append(new Digest(detectionLocation));
-
             return Optional.of(mac);
-
         } else if (value instanceof MacSize<Tree> macSize) {
             TagLength tagLength = new TagLength(macSize.getValue(), detectionLocation);
             return Optional.of(tagLength);

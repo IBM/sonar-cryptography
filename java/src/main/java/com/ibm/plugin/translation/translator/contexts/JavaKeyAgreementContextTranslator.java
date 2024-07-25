@@ -24,8 +24,6 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.KeyAction;
 import com.ibm.engine.model.KeySize;
 import com.ibm.engine.model.context.IDetectionContext;
-import com.ibm.mapper.AbstractContextTranslator;
-import com.ibm.mapper.IContextTranslation;
 import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.model.INode;
@@ -37,15 +35,14 @@ import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
 
-public class JavaKeyAgreementContextTranslator extends AbstractContextTranslator
-        implements IContextTranslation<Tree> {
+public class JavaKeyAgreementContextTranslator extends JavaAbstractLibraryTranslator {
 
     public JavaKeyAgreementContextTranslator(@NotNull Configuration configuration) {
         super(configuration);
     }
 
-    @NotNull @Override
-    public Optional<INode> translate(
+    @Override
+    protected @NotNull Optional<INode> translateJCA(
             @NotNull IValue<Tree> value,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
@@ -55,6 +52,24 @@ public class JavaKeyAgreementContextTranslator extends AbstractContextTranslator
                     .parse(algorithm.asString(), detectionLocation, configuration)
                     .map(iNode -> (com.ibm.mapper.model.Algorithm) iNode)
                     .map(KeyAgreement::new);
+        } else if (value instanceof KeySize<Tree> keySize) {
+            KeyLength keyLength = new KeyLength(keySize.getValue(), detectionLocation);
+            return Optional.of(keyLength);
+        } else if (value instanceof KeyAction<Tree> action) {
+            if (action.getAction() == KeyAction.Action.GENERATION) {
+                return Optional.of(new KeyGeneration(detectionLocation));
+            }
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    protected @NotNull Optional<INode> translateBC(
+            @NotNull IValue<Tree> value,
+            @NotNull IDetectionContext detectionContext,
+            @NotNull DetectionLocation detectionLocation) {
+        if (value instanceof Algorithm<Tree> algorithm) {
+            return Optional.empty(); // TODO
         } else if (value instanceof KeySize<Tree> keySize) {
             KeyLength keyLength = new KeyLength(keySize.getValue(), detectionLocation);
             return Optional.of(keyLength);

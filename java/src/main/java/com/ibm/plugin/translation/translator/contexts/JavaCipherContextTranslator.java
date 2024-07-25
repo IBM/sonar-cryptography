@@ -57,7 +57,7 @@ import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
 
-public final class JavaCipherContextTranslator extends AbstractJavaTranslator {
+public final class JavaCipherContextTranslator extends JavaAbstractLibraryTranslator {
 
     public JavaCipherContextTranslator(@NotNull Configuration configuration) {
         super(configuration);
@@ -95,9 +95,7 @@ public final class JavaCipherContextTranslator extends AbstractJavaTranslator {
             @NotNull DetectionLocation detectionLocation) {
         final CipherContext.Kind kind = ((CipherContext) detectionContext).kind();
 
-        if (value instanceof Algorithm<Tree>) {
-
-        } else if (value instanceof OperationMode<Tree> operationMode) {
+        if (value instanceof OperationMode<Tree> operationMode) {
             return switch (kind) {
                 case ENCRYPTION_STATUS -> {
                     BcOperationModeEncryptionMapper bcCipherOperationModeMapper =
@@ -113,15 +111,9 @@ public final class JavaCipherContextTranslator extends AbstractJavaTranslator {
                             .parse(operationMode.asString(), detectionLocation, configuration)
                             .map(f -> f);
                 }
-                default -> {}
-            };
-        } else if (value instanceof CipherAction<Tree> cipherAction) {
-            return switch (cipherAction.getAction()) {
-                case WRAP -> Optional.of(new Encapsulate(detectionLocation));
                 default -> Optional.empty();
             };
         } else if (value instanceof ValueAction<Tree> valueAction) {
-            // TODO: Write a mapper
             com.ibm.mapper.model.Algorithm algorithm;
             BlockCipher blockCipher;
             AuthenticatedEncryption ae;
@@ -144,7 +136,7 @@ public final class JavaCipherContextTranslator extends AbstractJavaTranslator {
                                     new com.ibm.mapper.model.Algorithm(
                                             valueAction.asString(), detectionLocation)));
                 case WRAP_RFC:
-                    // TODO: Should the RFC value be reflected in the translation? Where?
+                    // Should the RFC value be reflected in the translation? Where?
                     return Optional.of(
                             new BlockCipher(
                                     new com.ibm.mapper.model.Algorithm(
@@ -348,14 +340,7 @@ public final class JavaCipherContextTranslator extends AbstractJavaTranslator {
 
                     return Optional.of(pbe);
                 default:
-                    switch (valueAction.asString()) {
-                        default:
-                            // TODO: In the end, this default translation should be removed (maybe
-                            //  still translate but add a WARN log?)
-                            return Optional.of(
-                                    new com.ibm.mapper.model.Algorithm(
-                                            valueAction.asString(), detectionLocation));
-                    }
+                    return Optional.empty(); // TODO
             }
         } else if (value instanceof AlgorithmParameter<Tree> algorithmParameter) {
             int keySize;
@@ -387,14 +372,13 @@ public final class JavaCipherContextTranslator extends AbstractJavaTranslator {
             KeyLength keyLength = new KeyLength(keySize, detectionLocation);
             return Optional.of(keyLength);
         } else if (value instanceof BlockSize<Tree> blockSize) {
-            switch (kind) {
-                case BLOCK_CIPHER, WRAP_ENGINE:
-                    return Optional.of(
-                            new com.ibm.mapper.model.BlockSize(
-                                    Integer.parseInt(blockSize.asString()), detectionLocation));
-                default:
-                    return Optional.empty();
-            }
+            return switch (kind) {
+                case BLOCK_CIPHER, WRAP_ENGINE ->
+                        Optional.of(
+                                new com.ibm.mapper.model.BlockSize(
+                                        Integer.parseInt(blockSize.asString()), detectionLocation));
+                default -> Optional.empty();
+            };
         }
         return Optional.empty();
     }

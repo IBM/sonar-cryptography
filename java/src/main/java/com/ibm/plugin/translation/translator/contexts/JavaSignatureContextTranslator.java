@@ -25,8 +25,6 @@ import com.ibm.engine.model.SignatureAction;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.model.context.SignatureContext;
-import com.ibm.mapper.AbstractContextTranslator;
-import com.ibm.mapper.IContextTranslationWithKind;
 import com.ibm.mapper.ITranslator;
 import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.bc.BcOperationModeSigningMapper;
@@ -41,21 +39,20 @@ import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.model.functionality.Verify;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
 
-public final class JavaSignatureContextTranslator extends AbstractContextTranslator
-        implements IContextTranslationWithKind<Tree, SignatureContext.Kind> {
+import java.util.Optional;
+
+public final class JavaSignatureContextTranslator extends JavaAbstractLibraryTranslator {
 
     public JavaSignatureContextTranslator(@NotNull Configuration configuration) {
         super(configuration);
     }
 
-    @NotNull @Override
-    public Optional<INode> translate(
+    @Override
+    protected @NotNull Optional<INode> translateJCA(
             @NotNull IValue<Tree> value,
-            @NotNull SignatureContext.Kind kind,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
         if (value instanceof com.ibm.engine.model.Algorithm<Tree>) {
@@ -69,18 +66,17 @@ public final class JavaSignatureContextTranslator extends AbstractContextTransla
                 case VERIFY -> Optional.of(new Verify(detectionLocation));
                 case PADDING -> Optional.empty();
             };
-        } else if (value instanceof OperationMode<Tree> operationMode) {
-            switch (kind) {
-                case SIGNING_STATUS:
-                    BcOperationModeSigningMapper bcOperationModeSigningMapper =
-                            new BcOperationModeSigningMapper();
-                    return bcOperationModeSigningMapper
-                            .parse(operationMode.asString(), detectionLocation, configuration)
-                            .map(f -> f);
-                default:
-                    break;
-            }
-        } else if (value instanceof ValueAction<Tree> valueAction) {
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    protected @NotNull Optional<INode> translateBC(
+            @NotNull IValue<Tree> value,
+            @NotNull IDetectionContext detectionContext,
+            @NotNull DetectionLocation detectionLocation) {
+        final SignatureContext.Kind kind = ((SignatureContext) detectionContext).kind();
+        if (value instanceof ValueAction<Tree> valueAction) {
             Algorithm algorithm;
             Signature signature;
             EllipticCurveAlgorithm eca;
@@ -107,7 +103,7 @@ public final class JavaSignatureContextTranslator extends AbstractContextTransla
                     signature.append(eca);
                     return Optional.of(signature);
                 case ALGORITHM_AND_HASH_WRAPPER, DIGEST_MESSAGE_WRAPPER:
-                    /* TODO: Choose a better way to translate DIGEST_MESSAGE_WRAPPER */
+                    // Maybe choose a better way to translate DIGEST_MESSAGE_WRAPPER
                     algorithm = new Algorithm(ITranslator.UNKNOWN, detectionLocation);
                     signature = new Signature(algorithm);
                     return Optional.of(signature);
@@ -129,9 +125,19 @@ public final class JavaSignatureContextTranslator extends AbstractContextTransla
                     signature.append(pss);
                     return Optional.of(signature);
                 default:
-                    // TODO: temporary translation that shouldn't be used
                     algorithm = new Algorithm(valueAction.asString(), detectionLocation);
                     return Optional.of(algorithm);
+            }
+        }  else if (value instanceof OperationMode<Tree> operationMode) {
+            switch (kind) {
+                case SIGNING_STATUS:
+                    BcOperationModeSigningMapper bcOperationModeSigningMapper =
+                            new BcOperationModeSigningMapper();
+                    return bcOperationModeSigningMapper
+                            .parse(operationMode.asString(), detectionLocation, configuration)
+                            .map(f -> f);
+                default:
+                    break;
             }
         }
         return Optional.empty();

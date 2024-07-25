@@ -25,9 +25,6 @@ import com.ibm.engine.model.KeySize;
 import com.ibm.engine.model.PasswordSize;
 import com.ibm.engine.model.SaltSize;
 import com.ibm.engine.model.context.IDetectionContext;
-import com.ibm.engine.model.context.KeyContext;
-import com.ibm.mapper.AbstractContextTranslator;
-import com.ibm.mapper.IContextTranslationWithKind;
 import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.model.INode;
@@ -42,24 +39,15 @@ import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
 
-public final class JavaSecretKeyContextTranslator extends AbstractContextTranslator
-        implements IContextTranslationWithKind<Tree, KeyContext.Kind> {
+public final class JavaSecretKeyContextTranslator extends JavaAbstractLibraryTranslator {
 
     public JavaSecretKeyContextTranslator(@NotNull Configuration configuration) {
         super(configuration);
     }
 
-    /**
-     * Translates the value into the secret key context.
-     *
-     * @param value The value to translate.
-     * @return An optional containing an INode related to the SecretKey value or an empty Optional
-     *     if the translation is not possible
-     */
-    @NotNull @Override
-    public Optional<INode> translate(
+    @Override
+    protected @NotNull Optional<INode> translateJCA(
             @NotNull IValue<Tree> value,
-            @NotNull KeyContext.Kind kind,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
         if (value instanceof Algorithm<Tree> algorithm) {
@@ -82,6 +70,14 @@ public final class JavaSecretKeyContextTranslator extends AbstractContextTransla
         } else if (value instanceof SaltSize<Tree> saltSize) {
             return Optional.of(new SaltLength(saltSize.getValue(), detectionLocation));
         }
+        return Optional.empty();
+    }
+
+    @Override
+    protected @NotNull Optional<INode> translateBC(
+            @NotNull IValue<Tree> value,
+            @NotNull IDetectionContext detectionContext,
+            @NotNull DetectionLocation detectionLocation) {
         return Optional.empty();
     }
 }

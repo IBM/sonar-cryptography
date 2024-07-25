@@ -35,7 +35,7 @@ import org.sonar.plugins.java.api.tree.Tree;
 
 import java.util.Optional;
 
-public final class JavaAlgorithmParameterContextTranslator extends AbstractJavaTranslator {
+public final class JavaAlgorithmParameterContextTranslator extends JavaAbstractLibraryTranslator {
 
     public JavaAlgorithmParameterContextTranslator(@NotNull Configuration configuration) {
         super(configuration);
@@ -51,14 +51,8 @@ public final class JavaAlgorithmParameterContextTranslator extends AbstractJavaT
             return jcaAlgorithmMapper
                     .parse(value.asString(), detectionLocation, configuration)
                     .map(a -> a);
-        } else if (value instanceof KeySize<Tree> keySize) {
-            KeyLength keyLength = new KeyLength(keySize.getValue(), detectionLocation);
-            return Optional.of(keyLength);
-        } else if (value instanceof MacSize<Tree> macSize) {
-            TagLength tagLength = new TagLength(macSize.getValue(), detectionLocation);
-            return Optional.of(tagLength);
         }
-        return Optional.empty();
+        return translateCommon(value, detectionContext, detectionLocation);
     }
 
     @Override
@@ -66,6 +60,20 @@ public final class JavaAlgorithmParameterContextTranslator extends AbstractJavaT
             @NotNull IValue<Tree> value,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
+        return translateCommon(value, detectionContext, detectionLocation);
+    }
+
+    private @NotNull Optional<INode> translateCommon(
+            @NotNull IValue<Tree> value,
+            @NotNull IDetectionContext detectionContext,
+            @NotNull DetectionLocation detectionLocation) {
+        if (value instanceof KeySize<Tree> keySize) {
+            KeyLength keyLength = new KeyLength(keySize.getValue(), detectionLocation);
+            return Optional.of(keyLength);
+        } else if (value instanceof MacSize<Tree> macSize) {
+            TagLength tagLength = new TagLength(macSize.getValue(), detectionLocation);
+            return Optional.of(tagLength);
+        }
         return Optional.empty();
     }
 }

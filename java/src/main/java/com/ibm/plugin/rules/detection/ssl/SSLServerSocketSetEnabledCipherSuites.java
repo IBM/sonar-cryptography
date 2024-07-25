@@ -38,7 +38,7 @@ public final class SSLServerSocketSetEnabledCipherSuites {
                     .withMethodParameter("java.lang.String[]")
                     .shouldBeDetectedAs(new CipherSuiteFactory<>())
                     .buildForContext(new ProtocolContext(ProtocolContext.Kind.TLS))
-                    .inBundle(() -> "SSLServerSocketSetEnabledCipherSuites")
+                    .inBundle(() -> "SSL")
                     .withoutDependingDetectionRules();
 
     private SSLServerSocketSetEnabledCipherSuites() {
