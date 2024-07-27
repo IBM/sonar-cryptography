@@ -19,10 +19,10 @@
  */
 package com.ibm.mapper.model;
 
-import java.util.Optional;
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
-public final class Signature extends Algorithm {
+public class Signature extends Algorithm {
 
     public Signature(@Nonnull Algorithm algorithm) {
         super(algorithm, algorithm.detectionLocation, Signature.class);
@@ -46,19 +46,6 @@ public final class Signature extends Algorithm {
         this.append(digest);
         this.append(signatureAlgorithm);
         this.append(maskGenerationFunction);
-    }
-
-    public Signature(
-            @Nonnull Algorithm algorithm,
-            @Nonnull MessageDigest digest,
-            @Nonnull Algorithm signatureAlgorithm,
-            @Nonnull MaskGenerationFunction maskGenerationFunction,
-            @Nonnull OutputFormat outputFormat) {
-        super(algorithm, algorithm.detectionLocation, Signature.class);
-        this.append(digest);
-        this.append(signatureAlgorithm);
-        this.append(maskGenerationFunction);
-        this.append(outputFormat);
     }
 
     @Nonnull
