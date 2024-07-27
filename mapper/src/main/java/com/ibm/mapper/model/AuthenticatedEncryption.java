@@ -20,17 +20,33 @@
 package com.ibm.mapper.model;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-public class AuthenticatedEncryption extends Cipher {
+public final class AuthenticatedEncryption extends Cipher {
+
     public AuthenticatedEncryption(
             @Nonnull Algorithm algorithm,
-            @Nullable Mode mode,
-            @Nullable Padding padding,
-            @Nullable TagLength tagLength) {
-        super(algorithm, mode, padding, AuthenticatedEncryption.class);
-        if (tagLength != null) {
-            this.append(tagLength);
-        }
+            @Nonnull Mode mode) {
+        super(algorithm, AuthenticatedEncryption.class);
+        this.append(mode);
+    }
+
+    public AuthenticatedEncryption(
+            @Nonnull Algorithm algorithm,
+            @Nonnull Mode mode,
+            @Nonnull TagLength tagLength) {
+        super(algorithm, AuthenticatedEncryption.class);
+        this.append(mode);
+        this.append(tagLength);
+    }
+
+    public AuthenticatedEncryption(
+            @Nonnull Algorithm algorithm,
+            @Nonnull Mode mode,
+            @Nonnull TagLength tagLength,
+            @Nonnull Padding padding) {
+        super(algorithm, AuthenticatedEncryption.class);
+        this.append(mode);
+        this.append(tagLength);
+        this.append(padding);
     }
 }

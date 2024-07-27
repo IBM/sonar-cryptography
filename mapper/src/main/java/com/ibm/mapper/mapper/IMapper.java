@@ -19,27 +19,22 @@
  */
 package com.ibm.mapper.mapper;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
-
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Optional;
 
 public interface IMapper {
     /**
-     * This function should parse a language- and library-specific representation of a cryptographic asset or property
-     * to a common notation, which can then be enriched later.
+     * This function should parse a language- and library-specific representation of a cryptographic
+     * asset or property to a common notation, which can then be enriched later.
      *
      * @param str language- and library-specific representation
      * @param detectionLocation the location
-     * @param configuration a configuration for the mapping
      * @return a common INode
      */
     @Nonnull
     Optional<? extends INode> parse(
-            @Nullable final String str,
-            @Nonnull DetectionLocation detectionLocation,
-            @Nonnull final Configuration configuration);
+            @Nullable final String str, @Nonnull DetectionLocation detectionLocation);
 }

@@ -19,16 +19,26 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.Cipher;
+import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.Mode;
-import com.ibm.mapper.model.OptimalAsymmetricEncryptionPadding;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.PasswordBasedEncryption;
 import com.ibm.mapper.model.StreamCipher;
+import com.ibm.mapper.model.algorithm.AES;
+import com.ibm.mapper.model.algorithm.AESWrap;
+import com.ibm.mapper.model.algorithm.Blowfish;
+import com.ibm.mapper.model.algorithm.ChaCha20;
+import com.ibm.mapper.model.algorithm.DES;
+import com.ibm.mapper.model.algorithm.DESede;
+import com.ibm.mapper.model.algorithm.DESedeWrap;
+import com.ibm.mapper.model.algorithm.Poly1305;
+import com.ibm.mapper.model.algorithm.RC2;
+import com.ibm.mapper.model.algorithm.RC4;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.List;
 import java.util.Optional;
@@ -63,9 +73,7 @@ public class JcaCipherMapper implements IMapper {
     @Nonnull
     @Override
     public Optional<Algorithm> parse(
-            @Nullable final String str,
-            @Nonnull DetectionLocation detectionLocation,
-            @Nonnull final Configuration configuration) {
+            @Nullable final String str, @Nonnull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }
@@ -83,24 +91,20 @@ public class JcaCipherMapper implements IMapper {
                 slashIndex = rest.indexOf("/");
                 // mode
                 String modeStr = rest.substring(0, slashIndex);
-                JcaModeMapper jcaModeMapper = new JcaModeMapper();
-                modeOptional = jcaModeMapper.parse(modeStr, detectionLocation, configuration);
+
                 // padding
                 String paddingStr = rest.substring(slashIndex + 1);
-                JcaOAEPPaddingMapper jcaOAEPPaddingMapper = new JcaOAEPPaddingMapper();
-                Optional<OptimalAsymmetricEncryptionPadding> oaepPaddingOptional =
-                        jcaOAEPPaddingMapper.parse(str, detectionLocation, configuration);
-                if (oaepPaddingOptional.isPresent()) {
-                    paddingOptional = JcaBasePaddingMapper.generalizePadding(oaepPaddingOptional);
-                } else {
-                    JcaBasePaddingMapper jcaBasePaddingMapper = new JcaBasePaddingMapper();
-                    paddingOptional =
-                            jcaBasePaddingMapper.parse(
-                                    paddingStr, detectionLocation, configuration);
-                }
             }
         } else {
             algorithmStr = str;
+        }
+
+        if (algorithmStr.contains("_")) {
+            int index = algorithmStr.indexOf("_");
+            String keyStr = algorithmStr.substring(index + 1);
+            algorithmStr = algorithmStr.substring(0, index);
+
+            Integer size = Integer.parseInt(keyStr);
         }
 
         // check if it is pbe
@@ -161,6 +165,45 @@ public class JcaCipherMapper implements IMapper {
         }
 
         return Optional.empty();
+    }
+
+    @Nonnull
+    private Optional<? extends Cipher> map(
+            @Nonnull String cipherAlgorithm, @Nonnull DetectionLocation detectionLocation) {
+        return switch (cipherAlgorithm.toUpperCase().trim()) {
+            case "AES" -> Optional.of(new AES(detectionLocation));
+            case "AES_128" ->
+                    Optional.of(new AES(new DigestSize(128, detectionLocation), detectionLocation));
+            case "AES_192" ->
+                    Optional.of(new AES(new DigestSize(192, detectionLocation), detectionLocation));
+            case "AES_256" ->
+                    Optional.of(new AES(new DigestSize(256, detectionLocation), detectionLocation));
+
+            case "AESWRAP" -> Optional.of(new AESWrap(detectionLocation));
+            case "AESWRAP_128" ->
+                    Optional.of(
+                            new AESWrap(new DigestSize(128, detectionLocation), detectionLocation));
+            case "AESWRAP_192" ->
+                    Optional.of(
+                            new AESWrap(new DigestSize(192, detectionLocation), detectionLocation));
+            case "AESWRAP_256" ->
+                    Optional.of(
+                            new AESWrap(new DigestSize(256, detectionLocation), detectionLocation));
+
+            case "RC4", "ARCFOUR", "ARC4" -> Optional.of(new RC4(detectionLocation));
+            case "RC2", "ARC2" -> Optional.of(new RC2(detectionLocation));
+            case "BLOWFISH" -> Optional.of(new Blowfish(detectionLocation));
+            case "DES" -> Optional.of(new DES(detectionLocation));
+            case "DESEDE", "TRIPLEDES" -> Optional.of(new DESede(detectionLocation));
+            case "DESEDEWRAP", "TRIPLEDESWRAP" -> Optional.of(new DESedeWrap(detectionLocation));
+            case "CHACHA20" -> Optional.of(new ChaCha20(detectionLocation));
+            case "CHACHA20-POLY1305" -> {
+                final ChaCha20 chaCha20 = new ChaCha20(detectionLocation);
+                chaCha20.append(new Poly1305(detectionLocation));
+                yield Optional.of(chaCha20);
+            }
+            default -> Optional.empty();
+        };
     }
 
     private boolean reflectValidValues(@Nonnull final String str) {

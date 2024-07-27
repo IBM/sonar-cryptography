@@ -19,10 +19,10 @@
  */
 package com.ibm.mapper.model;
 
-import java.util.Optional;
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
-public class OptimalAsymmetricEncryptionPadding extends Padding {
+public final class OptimalAsymmetricEncryptionPadding extends Padding {
     public OptimalAsymmetricEncryptionPadding(@Nonnull Padding padding) {
         super(padding, padding.detectionLocation, OptimalAsymmetricEncryptionPadding.class);
     }

@@ -20,12 +20,23 @@
 package com.ibm.mapper.model;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class StreamCipher extends Cipher {
 
     public StreamCipher(
-            @Nonnull Algorithm algorithm, @Nullable Mode mode, @Nullable Padding padding) {
+            @Nonnull Algorithm algorithm) {
+        super(algorithm, StreamCipher.class);
+    }
+
+    public StreamCipher(
+            @Nonnull Algorithm algorithm, @Nonnull Mode mode) {
+        super(algorithm, mode, StreamCipher.class);
+    }
+
+    public StreamCipher(
+            @Nonnull Algorithm algorithm,
+            @Nonnull Mode mode,
+            @Nonnull Padding padding) {
         super(algorithm, mode, padding, StreamCipher.class);
     }
 }

@@ -19,7 +19,6 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.utils.DetectionLocation;
 
 import javax.annotation.Nonnull;
@@ -27,7 +26,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class Padding extends Property {
-    @Nonnull private String name;
+    @Nonnull private final String name;
 
     Padding(
             @Nonnull Padding padding,
@@ -58,11 +57,6 @@ public class Padding extends Property {
     @Override
     public String toString() {
         return this.name;
-    }
-
-    @Override
-    public void apply(@Nonnull Configuration configuration) {
-        this.name = configuration.changeStringValue(name);
     }
 
     @Nonnull

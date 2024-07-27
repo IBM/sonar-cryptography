@@ -21,7 +21,7 @@ package com.ibm.mapper.model;
 
 import javax.annotation.Nonnull;
 
-public class KeyEncapsulationMechanism extends Algorithm {
+public final class KeyEncapsulationMechanism extends Algorithm {
     public KeyEncapsulationMechanism(@Nonnull Algorithm algorithm) {
         super(algorithm, algorithm.detectionLocation, KeyEncapsulationMechanism.class);
     }

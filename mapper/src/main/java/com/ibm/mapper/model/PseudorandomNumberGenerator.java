@@ -21,7 +21,7 @@ package com.ibm.mapper.model;
 
 import javax.annotation.Nonnull;
 
-public class PseudorandomNumberGenerator extends Algorithm {
+public final class PseudorandomNumberGenerator extends Algorithm {
     public PseudorandomNumberGenerator(@Nonnull Algorithm algorithm) {
         super(algorithm, algorithm.detectionLocation, PseudorandomNumberGenerator.class);
     }

@@ -19,9 +19,9 @@
  */
 package com.ibm.mapper.model.functionality;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.model.Property;
 import com.ibm.mapper.utils.DetectionLocation;
+
 import javax.annotation.Nonnull;
 
 public abstract class Functionality extends Property {
@@ -34,11 +34,6 @@ public abstract class Functionality extends Property {
 
     protected Functionality(@Nonnull Functionality functionality) {
         super(functionality.type, functionality.detectionLocation, functionality.children);
-    }
-
-    @Override
-    public void apply(@Nonnull Configuration configuration) {
-        // nothing
     }
 
     @Nonnull

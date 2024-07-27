@@ -20,37 +20,47 @@
 package com.ibm.mapper.model;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class Cipher extends Algorithm {
 
-    protected Cipher(
-            @Nonnull Algorithm algorithm,
-            @Nullable Mode mode,
-            @Nullable Padding padding,
-            @Nonnull final Class<? extends Cipher> asKind) {
+    public Cipher(@Nonnull Algorithm algorithm,
+                  @Nonnull final Class<? extends Cipher> asKind) {
         super(algorithm, algorithm.detectionLocation, asKind);
-        if (mode != null) {
-            this.append(mode);
-        }
-        if (padding != null) {
-            this.append(padding);
-        }
+    }
+
+    public Cipher(@Nonnull Algorithm algorithm,
+                  @Nonnull Mode mode,
+                  @Nonnull final Class<? extends Cipher> asKind) {
+        super(algorithm, algorithm.detectionLocation, asKind);
+        this.append(mode);
+    }
+
+    public Cipher(@Nonnull Algorithm algorithm,
+                  @Nonnull Mode mode,
+                  @Nonnull Padding padding,
+                  @Nonnull final Class<? extends Cipher> asKind) {
+        super(algorithm, algorithm.detectionLocation, asKind);
+        this.append(mode);
+        this.append(padding);
     }
 
     public Cipher(@Nonnull Algorithm algorithm) {
         super(algorithm, algorithm.detectionLocation, Cipher.class);
     }
 
-    public Cipher(@Nonnull Algorithm algorithm, @Nullable Mode mode, @Nullable Padding padding) {
+    public Cipher(@Nonnull Algorithm algorithm,
+                  @Nonnull Mode mode) {
         super(algorithm, algorithm.detectionLocation, Cipher.class);
-        if (mode != null) {
-            this.append(mode);
-        }
-        if (padding != null) {
-            this.append(padding);
-        }
+        this.append(mode);
+    }
+
+    public Cipher(@Nonnull Algorithm algorithm,
+                  @Nonnull Mode mode,
+                  @Nonnull Padding padding) {
+        super(algorithm, algorithm.detectionLocation, Cipher.class);
+        this.append(mode);
+        this.append(padding);
     }
 
     @Nonnull

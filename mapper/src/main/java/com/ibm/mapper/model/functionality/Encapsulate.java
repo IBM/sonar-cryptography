@@ -23,7 +23,7 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class Encapsulate extends Functionality {
+public final class Encapsulate extends Functionality {
     public Encapsulate(@Nonnull DetectionLocation detectionLocation) {
         super(Encapsulate.class, detectionLocation);
     }

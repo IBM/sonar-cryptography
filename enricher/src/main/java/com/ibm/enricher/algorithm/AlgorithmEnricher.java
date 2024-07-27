@@ -26,8 +26,9 @@ import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.Signature;
-import java.util.Map;
+
 import javax.annotation.Nonnull;
+import java.util.Map;
 
 public class AlgorithmEnricher implements IAlgorithmEnricher {
 
@@ -40,8 +41,8 @@ public class AlgorithmEnricher implements IAlgorithmEnricher {
             final SignatureEnricher signatureEnricher = new SignatureEnricher();
             signatureEnricher.enrich(signature, Map.of());
         } else if (algorithm instanceof MessageDigest || algorithm instanceof Mac) {
-            final HashAlgorithmEnricher hashAlgorithmEnricher = new HashAlgorithmEnricher();
-            hashAlgorithmEnricher.enrich(algorithm, dependingNodes);
+            final DigestAlgorithmEnricher digestAlgorithmEnricher = new DigestAlgorithmEnricher();
+            digestAlgorithmEnricher.enrich(algorithm, dependingNodes);
         } else {
             switch (algorithmName) {
                 case "RSA" -> {

@@ -19,7 +19,6 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,7 +32,7 @@ public class Key implements IAsset {
     @Nonnull protected final Map<Class<? extends INode>, INode> children;
     @Nonnull protected final Class<? extends Key> kind;
     @Nonnull protected final DetectionLocation detectionLocation;
-    @Nonnull protected String name;
+    @Nonnull protected final Algorithm.Name name;
 
     protected Key(
             @Nonnull Key key,
@@ -46,24 +45,14 @@ public class Key implements IAsset {
     }
 
     protected Key(
-            @Nonnull String name,
+            @Nonnull Algorithm algorithm,
             @Nonnull DetectionLocation detectionLocation,
             @Nonnull final Class<? extends Key> asKind) {
-        this.name = name;
-        this.children = new HashMap<>();
-        this.detectionLocation = detectionLocation;
-        this.kind = asKind;
-    }
-
-    public Key(
-            @Nonnull String name,
-            @Nonnull Algorithm algorithm,
-            @Nonnull DetectionLocation detectionLocation) {
-        this.name = name;
+        this.name = algorithm.name;
         this.children = new HashMap<>();
         this.children.put(algorithm.getKind(), algorithm);
         this.detectionLocation = detectionLocation;
-        this.kind = Key.class;
+        this.kind = asKind;
     }
 
     private Key(@Nonnull Key key) {
@@ -74,14 +63,14 @@ public class Key implements IAsset {
     }
 
     @Nonnull
-    public String getName() {
+    public Algorithm.Name getName() {
         return name;
     }
 
     @Nonnull
     @Override
     public String asString() {
-        return name;
+        return name.name();
     }
 
     @Override
@@ -109,11 +98,6 @@ public class Key implements IAsset {
     @Override
     public Class<? extends INode> getKind() {
         return this.kind;
-    }
-
-    @Override
-    public void apply(@Nonnull Configuration configuration) {
-        this.name = configuration.changeStringValue(this.name);
     }
 
     @Nonnull

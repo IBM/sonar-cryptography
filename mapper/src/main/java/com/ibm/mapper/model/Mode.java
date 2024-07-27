@@ -19,14 +19,14 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.utils.DetectionLocation;
+
+import javax.annotation.Nonnull;
 import java.util.Objects;
 import java.util.Optional;
-import javax.annotation.Nonnull;
 
 public final class Mode extends Property {
-    @Nonnull private String name;
+    @Nonnull private final String name;
 
     public Mode(@Nonnull String name, @Nonnull DetectionLocation detectionLocation) {
         super(Mode.class, detectionLocation);
@@ -64,11 +64,6 @@ public final class Mode extends Property {
     @Override
     public String toString() {
         return this.name;
-    }
-
-    @Override
-    public void apply(@Nonnull Configuration configuration) {
-        this.name = configuration.changeStringValue(name);
     }
 
     @Nonnull

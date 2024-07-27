@@ -19,14 +19,14 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Objects;
+
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
-public class Oid extends Property {
+public final class Oid extends Property {
 
-    @Nonnull private String value;
+    @Nonnull private final String value;
 
     public Oid(@Nonnull String value, @Nonnull DetectionLocation detectionLocation) {
         super(Oid.class, detectionLocation);
@@ -41,11 +41,6 @@ public class Oid extends Property {
     @Nonnull
     public String getValue() {
         return value;
-    }
-
-    @Override
-    public void apply(@Nonnull Configuration configuration) {
-        this.value = configuration.changeStringValue(this.value);
     }
 
     @Nonnull

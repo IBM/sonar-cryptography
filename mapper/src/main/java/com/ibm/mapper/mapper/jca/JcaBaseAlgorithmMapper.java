@@ -19,99 +19,74 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.algorithm.AES;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.apache.commons.lang3.tuple.Pair;
+import java.util.Optional;
 
 class JcaBaseAlgorithmMapper implements IMapper {
-
-    @Nonnull
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    public static <T extends Algorithm> Optional<Algorithm> generalizeAlgorithm(
-            @Nonnull Optional<T> optional) {
-        if (optional.isEmpty()) {
-            return Optional.empty();
-        }
-        T val = optional.get();
-        return Optional.of(val);
-    }
-
     @Nonnull
     @Override
     public Optional<Algorithm> parse(
             @Nullable final String str,
-            @Nonnull DetectionLocation detectionLocation,
-            @Nonnull final Configuration configuration) {
-        return parseAndAddChildren(str, detectionLocation, configuration, new HashMap<>());
-    }
-
-    @Nonnull
-    public Optional<Algorithm> parseAndAddChildren(
-            @Nullable final String str,
-            @Nonnull DetectionLocation detectionLocation,
-            @Nonnull final Configuration configuration,
-            @Nonnull Map<Class<? extends INode>, INode> children) {
+            @Nonnull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }
-        final Pair<String, Integer> algorithmWithKeySize = getDefaultKeySize(str);
-        final String algorithmName = algorithmWithKeySize.getLeft();
 
-        final Algorithm algorithm;
-        // check for key length
-        if (algorithmWithKeySize.getValue() != null) {
-            // create key length node
-            final KeyLength defaultKeyLength =
-                    new KeyLength(
-                            configuration.changeIntValue(algorithmWithKeySize.getValue()),
-                            detectionLocation);
-            algorithm = new Algorithm(algorithmName, defaultKeyLength, detectionLocation, children);
+        String algorithmStr = str;
+        @Nullable final Integer keySize;
+        if (str.contains("_")) {
+            String keyStr = str.substring(str.indexOf("_") + 1);
+            algorithmStr = str.substring(0, str.indexOf("_"));
+            keySize = Integer.parseInt(keyStr);
         } else {
-            algorithm = new Algorithm(algorithmName, detectionLocation, children);
+            keySize = null;
         }
-        algorithm.apply(configuration);
-        return Optional.of(algorithm);
+
+        return Optional.ofNullable(map(algorithmStr))
+                .map(name -> new Algorithm(name, detectionLocation))
+                .map(algorithm -> {
+                    if (keySize != null) {
+                        algorithm.append(new KeyLength(keySize, detectionLocation));
+                    }
+                    return algorithm;
+                });
     }
 
-    /**
-     * Source for the default key size's <a
-     * href="https://docs.oracle.com/en/java/javase/17/security/oracle-providers.html">Default key
-     * sizes</a>
-     *
-     * @param algorithm the algorithm string
-     * @return a pair of algorithm and key size
-     */
-    @Nonnull
-    private Pair<String, Integer> getDefaultKeySize(@Nonnull final String algorithm) {
-        if (algorithm.contains("_")) {
-            int index = algorithm.indexOf("_");
-            String keyStr = algorithm.substring(index + 1);
-            Integer size = Integer.parseInt(keyStr);
-            return Pair.of(algorithm.substring(0, index), size);
-        } else {
-            return switch (algorithm.trim().toLowerCase()) {
-                case "des" -> Pair.of(algorithm, 56);
-                case "desede", "desedewrap" -> Pair.of(algorithm, 168);
-                case "aes", "aeswrap", "arcfour", "blowfish", "ecies", "rc2", "rc4", "rc5" ->
-                        Pair.of(algorithm, 128);
-                case "sha-224", "hmacsha224" -> Pair.of(algorithm, 224);
-                case "sha-384", "hmacsha384" -> Pair.of(algorithm, 384);
-                case "chacha20", "sha-256", "hmacsha256" -> Pair.of(algorithm, 256);
-                case "hmacmd5", "sha-1", "hmacsha1", "sha-512", "hmacsha512" ->
-                        Pair.of(algorithm, 512);
-                case "rsa" -> Pair.of(algorithm, 2048);
-                case "diffiehellman" -> Pair.of(algorithm, 3072);
-                default -> Pair.of(algorithm, null);
-            };
-        }
+    @Nullable
+    private Optional<? extends Algorithm> map(@Nonnull String algorithm) {
+        return switch (algorithm.toUpperCase().trim()) {
+            case "AES" -> new AES()
+            case "SHA1" -> Algorithm.Name.SHA1;
+            case "SHA" -> Algorithm.Name.SHA;
+            case "SHA3" -> Algorithm.Name.SHA3;
+            case "BLOWFISH" -> Algorithm.Name.BLOWFISH;
+            case "DES" -> Algorithm.Name.DES;
+            case "DESEDE", "TRIPLEDES" -> Algorithm.Name.DESEDE;
+            case "RC2" -> Algorithm.Name.RC2;
+            case "RC4", "ARCFOUR" -> Algorithm.Name.RC4;
+            case "RC5" -> Algorithm.Name.RC5;
+            case "RSA" -> Algorithm.Name.RSA;
+            case "DSA" -> Algorithm.Name.DSA;
+            case "MD2" -> Algorithm.Name.MD2;
+            case "MD5" -> Algorithm.Name.MD5;
+            case "CHACHA20" -> Algorithm.Name.CHA_CHA_20;
+            case "POLY1305" -> Algorithm.Name.POLY1305;
+            case "DH", "DIFFIEHELLMAN" -> Algorithm.Name.DH;
+            case "ECDH" -> Algorithm.Name.ECDH;
+            case "EDDSA" -> Algorithm.Name.ED_DSA;
+            case "ED25519" -> Algorithm.Name.ED_25519;
+            case "ED448" -> Algorithm.Name.ED_448;
+            case "X25519" -> Algorithm.Name.X25519;
+            case "X448" -> Algorithm.Name.X448;
+            case "XDH" -> Algorithm.Name.XDH;
+            default -> null;
+        };
     }
 }

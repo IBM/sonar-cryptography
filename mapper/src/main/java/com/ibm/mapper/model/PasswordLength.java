@@ -19,13 +19,13 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Objects;
-import javax.annotation.Nonnull;
 
-public class PasswordLength extends Property {
-    @Nonnull private Integer value; // in bit
+import javax.annotation.Nonnull;
+import java.util.Objects;
+
+public final class PasswordLength extends Property {
+    @Nonnull private final Integer value; // in bit
 
     public PasswordLength(@Nonnull Integer value, @Nonnull DetectionLocation detectionLocation) {
         super(PasswordLength.class, detectionLocation);
@@ -40,11 +40,6 @@ public class PasswordLength extends Property {
     @Nonnull
     public Integer getValue() {
         return value;
-    }
-
-    @Override
-    public void apply(@Nonnull Configuration configuration) {
-        this.value = configuration.changeIntValue(value);
     }
 
     @Nonnull

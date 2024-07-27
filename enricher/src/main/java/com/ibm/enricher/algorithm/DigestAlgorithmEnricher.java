@@ -26,7 +26,7 @@ import com.ibm.mapper.model.Oid;
 import java.util.Map;
 import javax.annotation.Nonnull;
 
-public class HashAlgorithmEnricher implements IAlgorithmEnricher {
+public class DigestAlgorithmEnricher implements IAlgorithmEnricher {
 
     private static final String NIST_HASH_OID_BASE = "2.16.840.1.101.3.4.2";
 

@@ -22,13 +22,12 @@ package com.ibm.mapper.model;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class SecretKey extends Key {
-
+public final class SecretKey extends Key {
     public SecretKey(@Nonnull Key key) {
         super(key, key.detectionLocation, SecretKey.class);
     }
 
-    public SecretKey(@Nonnull String name, @Nonnull DetectionLocation detectionLocation) {
-        super(name, detectionLocation, SecretKey.class);
+    public SecretKey(@Nonnull Algorithm algorithm, @Nonnull DetectionLocation detectionLocation) {
+        super(algorithm, detectionLocation, SecretKey.class);
     }
 }

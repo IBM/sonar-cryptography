@@ -19,10 +19,9 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.configuration.Configuration;
+import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Optional;
-import javax.annotation.Nonnull;
 
 public interface INode {
     void append(@Nonnull INode child);
@@ -36,8 +35,6 @@ public interface INode {
 
     @Nonnull
     Class<? extends INode> getKind();
-
-    void apply(@Nonnull Configuration configuration);
 
     @Nonnull
     String asString();

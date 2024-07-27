@@ -19,13 +19,13 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Objects;
-import javax.annotation.Nonnull;
 
-public class EllipticCurve extends Property {
-    @Nonnull private String value;
+import javax.annotation.Nonnull;
+import java.util.Objects;
+
+public final class EllipticCurve extends Property {
+    @Nonnull private final String value;
 
     public EllipticCurve(@Nonnull String value, @Nonnull DetectionLocation detectionLocation) {
         super(EllipticCurve.class, detectionLocation);
@@ -40,11 +40,6 @@ public class EllipticCurve extends Property {
     @Nonnull
     public String getValue() {
         return value;
-    }
-
-    @Override
-    public void apply(@Nonnull Configuration configuration) {
-        this.value = configuration.changeStringValue(value);
     }
 
     @Nonnull

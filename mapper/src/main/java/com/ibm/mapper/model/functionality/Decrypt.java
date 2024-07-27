@@ -23,7 +23,7 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class Decrypt extends Functionality {
+public final class Decrypt extends Functionality {
     public Decrypt(@Nonnull DetectionLocation detectionLocation) {
         super(Decrypt.class, detectionLocation);
     }

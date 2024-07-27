@@ -22,9 +22,9 @@ package com.ibm.mapper.model;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class PublicKey extends Key {
-    public PublicKey(@Nonnull String name, @Nonnull DetectionLocation detectionLocation) {
-        super(name, detectionLocation, PublicKey.class);
+public final class PublicKey extends Key {
+    public PublicKey(@Nonnull Algorithm algorithm, @Nonnull DetectionLocation detectionLocation) {
+        super(algorithm, detectionLocation, PublicKey.class);
     }
 
     public PublicKey(@Nonnull Key key) {

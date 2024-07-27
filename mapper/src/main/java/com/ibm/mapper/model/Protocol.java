@@ -19,7 +19,6 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,7 +31,11 @@ public class Protocol implements IAsset {
     @Nonnull protected final Map<Class<? extends INode>, INode> children;
     @Nonnull protected final Class<? extends Protocol> kind;
     @Nonnull protected final DetectionLocation detectionLocation;
-    @Nonnull protected String type;
+    @Nonnull protected final Type type;
+
+    public enum Type {
+        TLS
+    }
 
     protected Protocol(
             @Nonnull Protocol protocol,
@@ -44,7 +47,7 @@ public class Protocol implements IAsset {
         this.kind = asKind;
     }
 
-    public Protocol(@Nonnull String type, @Nonnull DetectionLocation detectionLocation) {
+    public Protocol(@Nonnull Type type, @Nonnull DetectionLocation detectionLocation) {
         this.type = type;
         this.children = new HashMap<>();
         this.detectionLocation = detectionLocation;
@@ -52,7 +55,7 @@ public class Protocol implements IAsset {
     }
 
     public Protocol(
-            @Nonnull String type,
+            @Nonnull Type type,
             @Nonnull DetectionLocation detectionLocation,
             @Nonnull Map<Class<? extends INode>, INode> children) {
         this.type = type;
@@ -62,7 +65,7 @@ public class Protocol implements IAsset {
     }
 
     public Protocol(
-            @Nonnull String type,
+            @Nonnull Type type,
             @Nonnull KeyLength keyLength,
             @Nonnull DetectionLocation detectionLocation,
             @Nonnull Map<Class<? extends INode>, INode> children) {
@@ -110,15 +113,10 @@ public class Protocol implements IAsset {
         return kind;
     }
 
-    @Override
-    public void apply(@Nonnull Configuration configuration) {
-        this.type = configuration.changeStringValue(this.type);
-    }
-
     @Nonnull
     @Override
     public String asString() {
-        return type;
+        return type.name();
     }
 
     @NotNull @Override
@@ -127,7 +125,7 @@ public class Protocol implements IAsset {
     }
 
     @Nonnull
-    public String getType() {
+    public Type getType() {
         return type;
     }
 
@@ -168,6 +166,6 @@ public class Protocol implements IAsset {
 
     @Override
     public String toString() {
-        return type;
+        return type.name();
     }
 }
