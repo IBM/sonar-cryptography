@@ -90,7 +90,7 @@ public final class AeadBlockCipherReorganizer {
                             List.of(
                                     new ReorganizerRuleBuilder()
                                             .createReorganizerRule()
-                                            .forNodeKind(Mac.class)
+                                            .forNodeKind(HMAC.class)
                                             .noAction(),
                                     new ReorganizerRuleBuilder()
                                             .createReorganizerRule()
@@ -100,7 +100,7 @@ public final class AeadBlockCipherReorganizer {
                             (node, parent, roots) -> {
                                 TagLength tagLength =
                                         (TagLength) node.getChildren().get(TagLength.class);
-                                Mac mac = (Mac) node.getChildren().get(Mac.class);
+                                HMAC mac = (HMAC) node.getChildren().get(HMAC.class);
 
                                 mac.append(tagLength);
                                 node.removeChildOfType(TagLength.class);

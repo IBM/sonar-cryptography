@@ -28,8 +28,8 @@ import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.MacContext;
 import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.model.functionality.Digest;
@@ -45,7 +45,7 @@ import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
-class BcGMacTest extends TestBase {
+class BcGHMACTest extends TestBase {
     @Test
     void test() {
         CheckVerifier.newVerifier()
@@ -102,7 +102,7 @@ class BcGMacTest extends TestBase {
 
         // Mac
         INode macNode = nodes.get(0);
-        assertThat(macNode.getKind()).isEqualTo(Mac.class);
+        assertThat(macNode.getKind()).isEqualTo(HMAC.class);
         assertThat(macNode.getChildren()).hasSize(4);
         assertThat(macNode.asString()).isEqualTo("GMAC-AES");
 

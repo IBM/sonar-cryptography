@@ -23,8 +23,8 @@ import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.EllipticCurve;
 import com.ibm.mapper.model.EllipticCurveAlgorithm;
+import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.KeyLength;
-import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.PrivateKey;
 import com.ibm.mapper.model.PublicKey;
@@ -114,7 +114,7 @@ public final class PythonTranslatorUtils {
         StreamCipher cipher =
                 new StreamCipher(new Algorithm(cipherString, detectionLocation), null, null);
 
-        cipher.append(new Mac(new Algorithm(macString, detectionLocation)));
+        cipher.append(new HMAC(new Algorithm(macString, detectionLocation)));
         return cipher;
     }
 

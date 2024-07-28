@@ -19,30 +19,37 @@
  */
 package com.ibm.mapper.model;
 
-import java.util.Optional;
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 public final class PasswordBasedEncryption extends Algorithm {
-    public PasswordBasedEncryption(@Nonnull Algorithm algorithm) {
-        super(algorithm, algorithm.detectionLocation, PasswordBasedEncryption.class);
+
+    // example: PBEWithHmacSHA1AndAES_128
+    public PasswordBasedEncryption(
+            @Nonnull HMAC hmac,
+            @Nonnull Cipher cipher) {
+        super(new Algorithm("PBEWith" + hmac.asString() + "and" + cipher.asString(), hmac.detectionLocation),
+                hmac.detectionLocation, PasswordBasedEncryption.class);
+        this.append(hmac);
+        this.append(cipher);
     }
 
+    // example: PBEWithMD5AndDES
     public PasswordBasedEncryption(
-            @Nonnull Algorithm algorithm,
             @Nonnull MessageDigest digest,
-            @Nonnull Mac pseudoRandomFunction) {
-        super(algorithm, algorithm.detectionLocation, PasswordBasedEncryption.class);
+            @Nonnull Cipher cipher) {
+        super(new Algorithm("PBEWith" + digest.asString() + "and" + cipher.asString(), digest.detectionLocation),
+                digest.detectionLocation, PasswordBasedEncryption.class);
         this.append(digest);
-        this.append(pseudoRandomFunction);
+        this.append(cipher);
     }
 
+    // example: PBEWithHmacSHA1
     public PasswordBasedEncryption(
-            @Nonnull Algorithm algorithm,
-            @Nonnull MessageDigest digest,
-            @Nonnull Algorithm encryptionAlgorithm) {
-        super(algorithm, algorithm.detectionLocation, PasswordBasedEncryption.class);
-        this.append(digest);
-        this.append(encryptionAlgorithm);
+            @Nonnull HMAC hmac) {
+        super(new Algorithm("PBEWith" + hmac.asString(), hmac.detectionLocation),
+                hmac.detectionLocation, PasswordBasedEncryption.class);
+        this.append(hmac);
     }
 
     @Nonnull
@@ -55,20 +62,11 @@ public final class PasswordBasedEncryption extends Algorithm {
     }
 
     @Nonnull
-    public Optional<Mac> getPseudoRandomFunction() {
-        INode node = this.getChildren().get(Mac.class);
+    public Optional<Cipher> getCipher() {
+        INode node = this.getChildren().get(Cipher.class);
         if (node == null) {
             return Optional.empty();
         }
-        return Optional.of((Mac) node);
-    }
-
-    @Nonnull
-    public Optional<Algorithm> getEncryptionAlgorithm() {
-        INode node = this.getChildren().get(Algorithm.class);
-        if (node == null) {
-            return Optional.empty();
-        }
-        return Optional.of((Algorithm) node);
+        return Optional.of((Cipher) node);
     }
 }

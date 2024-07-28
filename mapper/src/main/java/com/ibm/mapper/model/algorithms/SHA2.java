@@ -33,8 +33,8 @@ public final class SHA2 extends MessageDigest {
         this.append(new DigestSize(digestSize, detectionLocation));
     }
 
-
-    public SHA2(int digestSize,
+    public SHA2(
+            int digestSize,
             @Nonnull MessageDigest preHash,
             @Nonnull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));

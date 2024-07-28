@@ -28,8 +28,10 @@ import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.MacContext;
 import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Mac;
+import com.ibm.mapper.model.Mode;
+import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Tag;
@@ -44,11 +46,11 @@ import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
-class BcCMacTest extends TestBase {
+class BcISO9797Alg3HMACTest extends TestBase {
     @Test
     void test() {
         CheckVerifier.newVerifier()
-                .onFile("src/test/files/rules/detection/bc/mac/BcCMacTestFile.java")
+                .onFile("src/test/files/rules/detection/bc/mac/BcISO9797Alg3MacTestFile.java")
                 .withChecks(this)
                 .withClassPath(BouncyCastleJars.JARS)
                 .verifyIssues();
@@ -63,7 +65,7 @@ class BcCMacTest extends TestBase {
          * TODO: Optimally, we shouldn't have these direct detections of engines, as they appear in
          * the depending detection rules
          */
-        if (findingId == 1) {
+        if (findingId == 0) {
             return;
         }
 
@@ -75,7 +77,7 @@ class BcCMacTest extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(MacContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("CMac");
+        assertThat(value0.asString()).isEqualTo("ISO9797Alg3Mac");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
                 getStoreOfValueType(MacSize.class, detectionStore.getChildren());
@@ -83,15 +85,25 @@ class BcCMacTest extends TestBase {
         assertThat(store_1.getDetectionValueContext()).isInstanceOf(MacContext.class);
         IValue<Tree> value0_1 = store_1.getDetectionValues().get(0);
         assertThat(value0_1).isInstanceOf(MacSize.class);
-        assertThat(value0_1.asString()).isEqualTo("128");
+        assertThat(value0_1.asString()).isEqualTo("64");
 
-        DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_2 =
-                getStoreOfValueType(ValueAction.class, detectionStore.getChildren());
+        List<DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext>> stores =
+                getStoresOfValueType(ValueAction.class, detectionStore.getChildren());
+        assertThat(stores).hasSize(2);
+
+        DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_2 = stores.get(0);
         assertThat(store_2.getDetectionValues()).hasSize(1);
         assertThat(store_2.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0_2 = store_2.getDetectionValues().get(0);
         assertThat(value0_2).isInstanceOf(ValueAction.class);
         assertThat(value0_2.asString()).isEqualTo("AES");
+
+        DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_3 = stores.get(1);
+        assertThat(store_3.getDetectionValues()).hasSize(1);
+        assertThat(store_3.getDetectionValueContext()).isInstanceOf(CipherContext.class);
+        IValue<Tree> value0_3 = store_3.getDetectionValues().get(0);
+        assertThat(value0_3).isInstanceOf(ValueAction.class);
+        assertThat(value0_3.asString()).isEqualTo("ISO 7816-4:2020");
 
         /*
          * Translation
@@ -101,15 +113,9 @@ class BcCMacTest extends TestBase {
 
         // Mac
         INode macNode = nodes.get(0);
-        assertThat(macNode.getKind()).isEqualTo(Mac.class);
+        assertThat(macNode.getKind()).isEqualTo(HMAC.class);
         assertThat(macNode.getChildren()).hasSize(4);
-        assertThat(macNode.asString()).isEqualTo("CMAC-AES");
-
-        // Tag under Mac
-        INode tagNode = macNode.getChildren().get(Tag.class);
-        assertThat(tagNode).isNotNull();
-        assertThat(tagNode.getChildren()).isEmpty();
-        assertThat(tagNode.asString()).isEqualTo("TAG");
+        assertThat(macNode.asString()).isEqualTo("CBC-MAC-AES");
 
         // Digest under Mac
         INode digestNode = macNode.getChildren().get(Digest.class);
@@ -117,16 +123,34 @@ class BcCMacTest extends TestBase {
         assertThat(digestNode.getChildren()).isEmpty();
         assertThat(digestNode.asString()).isEqualTo("DIGEST");
 
+        // BlockCipher under Mac
+        INode blockCipherNode = macNode.getChildren().get(BlockCipher.class);
+        assertThat(blockCipherNode).isNotNull();
+        assertThat(blockCipherNode.getChildren()).hasSize(3);
+        assertThat(blockCipherNode.asString()).isEqualTo("AES");
+
+        // Mode under BlockCipher under Mac
+        INode modeNode = blockCipherNode.getChildren().get(Mode.class);
+        assertThat(modeNode).isNotNull();
+        assertThat(modeNode.getChildren()).isEmpty();
+        assertThat(modeNode.asString()).isEqualTo("CBC");
+
+        // Padding under BlockCipher under Mac
+        INode paddingNode = blockCipherNode.getChildren().get(Padding.class);
+        assertThat(paddingNode).isNotNull();
+        assertThat(paddingNode.getChildren()).isEmpty();
+        assertThat(paddingNode.asString()).isEqualTo("ISO 7816-4:2020");
+
+        // Tag under Mac
+        INode tagNode = macNode.getChildren().get(Tag.class);
+        assertThat(tagNode).isNotNull();
+        assertThat(tagNode.getChildren()).isEmpty();
+        assertThat(tagNode.asString()).isEqualTo("TAG");
+
         // TagLength under Mac
         INode tagLengthNode = macNode.getChildren().get(TagLength.class);
         assertThat(tagLengthNode).isNotNull();
         assertThat(tagLengthNode.getChildren()).isEmpty();
-        assertThat(tagLengthNode.asString()).isEqualTo("128");
-
-        // BlockCipher under Mac
-        INode blockCipherNode = macNode.getChildren().get(BlockCipher.class);
-        assertThat(blockCipherNode).isNotNull();
-        assertThat(blockCipherNode.getChildren()).hasSize(1);
-        assertThat(blockCipherNode.asString()).isEqualTo("AES");
+        assertThat(tagLengthNode.asString()).isEqualTo("64");
     }
 }

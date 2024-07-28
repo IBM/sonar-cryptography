@@ -21,13 +21,8 @@ package com.ibm.mapper.model;
 
 import javax.annotation.Nonnull;
 
-public final class Mac extends Algorithm {
-    public Mac(@Nonnull Algorithm algorithm) {
-        super(algorithm, algorithm.detectionLocation, Mac.class);
-    }
-
-    public Mac(@Nonnull Algorithm algorithm, @Nonnull TagLength tagLength) {
-        super(algorithm, algorithm.detectionLocation, Mac.class);
-        this.append(tagLength);
+public class HMAC extends Algorithm {
+    public HMAC(@Nonnull MessageDigest messageDigest) {
+        super(messageDigest, messageDigest.detectionLocation, HMAC.class);
     }
 }

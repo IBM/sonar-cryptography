@@ -150,7 +150,7 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
             primitives = Primitive.AE;
         } else if (primitive.is(BlockCipher.class)) {
             primitives = Primitive.BLOCK_CIPHER;
-        } else if (primitive.is(Mac.class)) {
+        } else if (primitive.is(HMAC.class)) {
             primitives = Primitive.MAC;
         } else if (primitive.is(MessageDigest.class)) {
             primitives = Primitive.HASH;

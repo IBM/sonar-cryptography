@@ -25,9 +25,9 @@ import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.MacContext;
+import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Mac;
-import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
@@ -41,11 +41,11 @@ import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
-class BcVMPCMacTest extends TestBase {
+class BcGOST28147HMACTest extends TestBase {
     @Test
     void test() {
         CheckVerifier.newVerifier()
-                .onFile("src/test/files/rules/detection/bc/mac/BcVMPCMacTestFile.java")
+                .onFile("src/test/files/rules/detection/bc/mac/BcGOST28147MacTestFile.java")
                 .withChecks(this)
                 .withClassPath(BouncyCastleJars.JARS)
                 .verifyIssues();
@@ -64,7 +64,7 @@ class BcVMPCMacTest extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(MacContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("VMPCMac");
+        assertThat(value0.asString()).isEqualTo("GOST28147Mac");
 
         /*
          * Translation
@@ -74,15 +74,9 @@ class BcVMPCMacTest extends TestBase {
 
         // Mac
         INode macNode = nodes.get(0);
-        assertThat(macNode.getKind()).isEqualTo(Mac.class);
+        assertThat(macNode.getKind()).isEqualTo(HMAC.class);
         assertThat(macNode.getChildren()).hasSize(3);
-        assertThat(macNode.asString()).isEqualTo("VMPC");
-
-        // Digest under Mac
-        INode digestNode = macNode.getChildren().get(Digest.class);
-        assertThat(digestNode).isNotNull();
-        assertThat(digestNode.getChildren()).isEmpty();
-        assertThat(digestNode.asString()).isEqualTo("DIGEST");
+        assertThat(macNode.asString()).isEqualTo("GOST 28147-89-MAC");
 
         // Tag under Mac
         INode tagNode = macNode.getChildren().get(Tag.class);
@@ -90,10 +84,16 @@ class BcVMPCMacTest extends TestBase {
         assertThat(tagNode.getChildren()).isEmpty();
         assertThat(tagNode.asString()).isEqualTo("TAG");
 
-        // StreamCipher under Mac
-        INode streamCipherNode = macNode.getChildren().get(StreamCipher.class);
-        assertThat(streamCipherNode).isNotNull();
-        assertThat(streamCipherNode.getChildren()).isEmpty();
-        assertThat(streamCipherNode.asString()).isEqualTo("VMPC");
+        // Digest under Mac
+        INode digestNode = macNode.getChildren().get(Digest.class);
+        assertThat(digestNode).isNotNull();
+        assertThat(digestNode.getChildren()).isEmpty();
+        assertThat(digestNode.asString()).isEqualTo("DIGEST");
+
+        // BlockCipher under Mac
+        INode blockCipherNode = macNode.getChildren().get(BlockCipher.class);
+        assertThat(blockCipherNode).isNotNull();
+        assertThat(blockCipherNode.getChildren()).isEmpty();
+        assertThat(blockCipherNode.asString()).isEqualTo("GOST 28147-89");
     }
 }

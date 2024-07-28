@@ -84,7 +84,7 @@ class JcaCipherMapperTest {
         assertThat(pbe.getChildren().values()).hasSize(2);
 
         assertThat(pbe.getDigest()).isPresent();
-        assertThat(pbe.getPseudoRandomFunction()).isEmpty();
+        assertThat(pbe.getCipher()).isEmpty();
         assertThat(pbe.getEncryptionAlgorithm()).isPresent();
 
         MessageDigest digest = pbe.getDigest().get();

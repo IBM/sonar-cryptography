@@ -53,7 +53,7 @@ public class JcaCipherMapper implements IMapper {
 
     @Nonnull
     @Override
-    public Optional<Algorithm> parse(
+    public Optional<? extends Cipher> parse(
             @Nullable final String str, @Nonnull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();

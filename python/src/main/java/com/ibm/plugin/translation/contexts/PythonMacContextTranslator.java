@@ -25,8 +25,8 @@ import com.ibm.engine.model.context.MacContext;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.Cipher;
+import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.plugin.rules.detection.hash.CryptographyHash;
@@ -63,7 +63,7 @@ public final class PythonMacContextTranslator {
         Algorithm algorithm;
         Cipher cipher;
         MessageDigest messageDigest;
-        Mac mac;
+        HMAC mac;
         String detection = detectedAlgorithm.asString();
         switch (kind) {
             case CMAC:
@@ -72,7 +72,7 @@ public final class PythonMacContextTranslator {
                 algorithm = new Algorithm(detection + "-CMAC", detectionLocation);
                 if (CryptographyCipher.blockCiphers.contains(detection)) {
                     cipher = new BlockCipher(algorithm, null, null);
-                    mac = new Mac(cipher);
+                    mac = new HMAC(cipher);
                     return Optional.of(mac);
                 }
                 break;
@@ -83,7 +83,7 @@ public final class PythonMacContextTranslator {
                     String hashName = detection.replace('_', '-');
                     algorithm = new Algorithm("HMAC-" + hashName, detectionLocation);
                     messageDigest = new MessageDigest(algorithm);
-                    mac = new Mac(messageDigest);
+                    mac = new HMAC(messageDigest);
                     return Optional.of(mac);
                 }
                 break;
@@ -99,11 +99,11 @@ public final class PythonMacContextTranslator {
             @Nonnull MacContext.Kind kind,
             @Nonnull DetectionLocation detectionLocation) {
         Algorithm algorithm;
-        Mac mac;
+        HMAC mac;
         switch (cipherAction.getAction()) {
             case MAC:
                 algorithm = new Algorithm(kind.name(), detectionLocation);
-                mac = new Mac(algorithm);
+                mac = new HMAC(algorithm);
                 return Optional.of(mac);
             default:
                 break;

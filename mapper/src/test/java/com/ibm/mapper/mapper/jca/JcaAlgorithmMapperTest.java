@@ -91,7 +91,7 @@ class JcaAlgorithmMapperTest {
                 jcaAlgorithmMapper.parse(
                         "HmacSHA512/224", testDetectionLocation, Configuration.DEFAULT);
         assertThat(assetOptional).isPresent();
-        assertThat(assetOptional.get().is(Mac.class)).isTrue();
+        assertThat(assetOptional.get().is(HMAC.class)).isTrue();
     }
 
     @Test

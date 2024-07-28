@@ -37,8 +37,7 @@ public class JcaMessageDigestMapper implements IMapper {
     @Nonnull
     @Override
     public Optional<MessageDigest> parse(
-            @Nullable final String str,
-            @Nonnull DetectionLocation detectionLocation) {
+            @Nullable final String str, @Nonnull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }
@@ -47,12 +46,14 @@ public class JcaMessageDigestMapper implements IMapper {
             case "MD2" -> Optional.of(new MD2(detectionLocation));
             case "MD5" -> Optional.of(new MD5(detectionLocation));
             case "SHA", "SHA1", "SHA-1" -> Optional.of(new SHA(detectionLocation));
-            case "SHA-224", "SHA224" -> Optional.of(new SHA2(224,detectionLocation));
-            case "SHA-256", "SHA256" -> Optional.of(new SHA2(256,detectionLocation));
-            case "SHA-384", "SHA384" -> Optional.of(new SHA2(384,detectionLocation));
-            case "SHA-512", "SHA512" -> Optional.of(new SHA2(512,detectionLocation));
-            case "SHA-512/224", "SHA512/224" -> Optional.of(new SHA2(224, new SHA2(512, detectionLocation), detectionLocation));
-            case "SHA-512/256", "SHA512/256" -> Optional.of(new SHA2(256, new SHA2(512, detectionLocation), detectionLocation));
+            case "SHA-224", "SHA224" -> Optional.of(new SHA2(224, detectionLocation));
+            case "SHA-256", "SHA256" -> Optional.of(new SHA2(256, detectionLocation));
+            case "SHA-384", "SHA384" -> Optional.of(new SHA2(384, detectionLocation));
+            case "SHA-512", "SHA512" -> Optional.of(new SHA2(512, detectionLocation));
+            case "SHA-512/224", "SHA512/224" ->
+                    Optional.of(new SHA2(224, new SHA2(512, detectionLocation), detectionLocation));
+            case "SHA-512/256", "SHA512/256" ->
+                    Optional.of(new SHA2(256, new SHA2(512, detectionLocation), detectionLocation));
             case "SHA3-224" -> Optional.of(new SHA3(224, detectionLocation));
             case "SHA3-256" -> Optional.of(new SHA3(256, detectionLocation));
             case "SHA3-384" -> Optional.of(new SHA3(384, detectionLocation));

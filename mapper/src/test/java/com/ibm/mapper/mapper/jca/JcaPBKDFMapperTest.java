@@ -50,10 +50,10 @@ class JcaPBKDFMapperTest {
 
         Map<Class<? extends INode>, INode> children = pbkdfOptional.get().getChildren();
         assertThat(children).hasSize(1);
-        INode child = children.get(Mac.class);
-        assertThat(child.is(Mac.class)).isTrue();
+        INode child = children.get(HMAC.class);
+        assertThat(child.is(HMAC.class)).isTrue();
 
-        Mac mac = (Mac) child;
+        HMAC mac = (HMAC) child;
         assertThat(mac.getName()).isEqualTo("HmacSHA256");
         assertThat(mac.hasChildren()).isTrue();
         children = mac.getChildren();

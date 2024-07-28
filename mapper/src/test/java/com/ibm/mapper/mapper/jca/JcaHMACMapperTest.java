@@ -24,8 +24,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.configuration.TestConfig;
 import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PasswordBasedEncryption;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
-class JcaMacMapperTest {
+class JcaHMACMapperTest {
 
     @Test
     void truncatedDigest() {
@@ -108,9 +108,9 @@ class JcaMacMapperTest {
 
         assertThat(pbe.getDigest()).isEmpty();
         assertThat(pbe.getEncryptionAlgorithm()).isEmpty();
-        assertThat(pbe.getPseudoRandomFunction()).isPresent();
+        assertThat(pbe.getCipher()).isPresent();
 
-        Optional<Mac> mac = pbe.getPseudoRandomFunction();
+        Optional<HMAC> mac = pbe.getCipher();
         assertThat(mac).isPresent();
         assertThat(mac.get().getName()).isEqualTo("HmacSHA256");
         assertThat(mac.get().hasChildren()).isTrue();
@@ -145,9 +145,9 @@ class JcaMacMapperTest {
 
         assertThat(pbe.getDigest()).isEmpty();
         assertThat(pbe.getEncryptionAlgorithm()).isEmpty();
-        assertThat(pbe.getPseudoRandomFunction()).isPresent();
+        assertThat(pbe.getCipher()).isPresent();
 
-        Optional<Mac> mac = pbe.getPseudoRandomFunction();
+        Optional<HMAC> mac = pbe.getCipher();
         assertThat(mac).isPresent();
         assertThat(mac.get().getName()).isEqualTo("hmacsha256");
         assertThat(mac.get().hasChildren()).isTrue();

@@ -30,8 +30,8 @@ import com.ibm.engine.model.context.AlgorithmParameterContext;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.MacContext;
 import com.ibm.mapper.model.AuthenticatedEncryption;
+import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.model.functionality.Digest;
@@ -127,7 +127,7 @@ class BcChaCha20Poly1305Test extends TestBase {
         assertThat(encryptNode1.asString()).isEqualTo("ENCRYPT");
 
         // Mac under AuthenticatedEncryption
-        INode macNode1 = authenticatedEncryptionNode1.getChildren().get(Mac.class);
+        INode macNode1 = authenticatedEncryptionNode1.getChildren().get(HMAC.class);
         assertThat(macNode1).isNotNull();
         assertThat(macNode1.getChildren()).hasSize(3);
         assertThat(macNode1.asString()).isEqualTo("Poly1305");

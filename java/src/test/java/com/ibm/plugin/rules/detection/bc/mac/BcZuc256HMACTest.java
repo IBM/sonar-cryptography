@@ -24,11 +24,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.ValueAction;
-import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.MacContext;
-import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
@@ -42,12 +41,11 @@ import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
-class BcPoly1305Test extends TestBase {
-
+class BcZuc256HMACTest extends TestBase {
     @Test
     void test() {
         CheckVerifier.newVerifier()
-                .onFile("src/test/files/rules/detection/bc/mac/BcPoly1305TestFile.java")
+                .onFile("src/test/files/rules/detection/bc/mac/BcZuc256MacTestFile.java")
                 .withChecks(this)
                 .withClassPath(BouncyCastleJars.JARS)
                 .verifyIssues();
@@ -58,14 +56,6 @@ class BcPoly1305Test extends TestBase {
             int findingId,
             @NotNull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
             @NotNull List<INode> nodes) {
-        /**
-         * TODO: Optimally, we shouldn't have these direct detections of engines, as they appear in
-         * the depending detection rules
-         */
-        if (findingId == 0) {
-            return;
-        }
-
         /*
          * Detection Store
          */
@@ -74,17 +64,7 @@ class BcPoly1305Test extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(MacContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("Poly1305");
-
-        if (findingId == 1) {
-            DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
-                    getStoreOfValueType(ValueAction.class, detectionStore.getChildren());
-            assertThat(store_1.getDetectionValues()).hasSize(1);
-            assertThat(store_1.getDetectionValueContext()).isInstanceOf(CipherContext.class);
-            IValue<Tree> value0_1 = store_1.getDetectionValues().get(0);
-            assertThat(value0_1).isInstanceOf(ValueAction.class);
-            assertThat(value0_1.asString()).isEqualTo("AES");
-        }
+        assertThat(value0.asString()).isEqualTo("Zuc256Mac");
 
         /*
          * Translation
@@ -95,14 +75,14 @@ class BcPoly1305Test extends TestBase {
         // Mac
         INode macNode = nodes.get(0);
         assertThat(macNode.getKind()).isEqualTo(HMAC.class);
-        assertThat(macNode.getChildren()).hasSize(findingId == 1 ? 3 : 2);
-        assertThat(macNode.asString()).isEqualTo("Poly1305");
+        assertThat(macNode.getChildren()).hasSize(3);
+        assertThat(macNode.asString()).isEqualTo("ZUC-256");
 
-        // Tag under Mac
-        INode tagNode = macNode.getChildren().get(Tag.class);
-        assertThat(tagNode).isNotNull();
-        assertThat(tagNode.getChildren()).isEmpty();
-        assertThat(tagNode.asString()).isEqualTo("TAG");
+        // StreamCipher under Mac
+        INode streamCipherNode = macNode.getChildren().get(StreamCipher.class);
+        assertThat(streamCipherNode).isNotNull();
+        assertThat(streamCipherNode.getChildren()).isEmpty();
+        assertThat(streamCipherNode.asString()).isEqualTo("ZUC-256");
 
         // Digest under Mac
         INode digestNode = macNode.getChildren().get(Digest.class);
@@ -110,12 +90,10 @@ class BcPoly1305Test extends TestBase {
         assertThat(digestNode.getChildren()).isEmpty();
         assertThat(digestNode.asString()).isEqualTo("DIGEST");
 
-        if (findingId == 1) {
-            // BlockCipher under Mac
-            INode blockCipherNode = macNode.getChildren().get(BlockCipher.class);
-            assertThat(blockCipherNode).isNotNull();
-            assertThat(blockCipherNode.getChildren()).hasSize(1);
-            assertThat(blockCipherNode.asString()).isEqualTo("AES");
-        }
+        // Tag under Mac
+        INode tagNode = macNode.getChildren().get(Tag.class);
+        assertThat(tagNode).isNotNull();
+        assertThat(tagNode.getChildren()).isEmpty();
+        assertThat(tagNode.asString()).isEqualTo("TAG");
     }
 }

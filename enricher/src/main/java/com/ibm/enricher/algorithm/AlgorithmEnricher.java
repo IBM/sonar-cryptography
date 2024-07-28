@@ -21,8 +21,8 @@ package com.ibm.enricher.algorithm;
 
 import com.ibm.enricher.utils.Utils;
 import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.Signature;
@@ -39,7 +39,7 @@ public class AlgorithmEnricher implements IAlgorithmEnricher {
         if (algorithm instanceof Signature signature) {
             final SignatureEnricher signatureEnricher = new SignatureEnricher();
             signatureEnricher.enrich(signature, Map.of());
-        } else if (algorithm instanceof MessageDigest || algorithm instanceof Mac) {
+        } else if (algorithm instanceof MessageDigest || algorithm instanceof HMAC) {
             final DigestAlgorithmEnricher digestAlgorithmEnricher = new DigestAlgorithmEnricher();
             digestAlgorithmEnricher.enrich(algorithm, dependingNodes);
         } else {

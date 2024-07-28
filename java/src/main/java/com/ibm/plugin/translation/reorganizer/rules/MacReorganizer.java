@@ -22,9 +22,9 @@ package com.ibm.plugin.translation.reorganizer.rules;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.BlockSize;
+import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.IAsset;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
@@ -53,7 +53,7 @@ public final class MacReorganizer {
     private static final IReorganizerRule MOVE_NODES_UNDER_CIPHER =
             new ReorganizerRuleBuilder()
                     .createReorganizerRule()
-                    .forNodeKind(Mac.class)
+                    .forNodeKind(HMAC.class)
                     .withDetectionCondition(
                             (node, parent, roots) -> {
                                 return (node.hasChildOfType(BlockCipher.class).isPresent()
@@ -114,7 +114,7 @@ public final class MacReorganizer {
     private static final IReorganizerRule RENAME_MAC =
             new ReorganizerRuleBuilder()
                     .createReorganizerRule()
-                    .forNodeKind(Mac.class)
+                    .forNodeKind(HMAC.class)
                     .withDetectionCondition(
                             (node, parent, roots) -> {
                                 return node.asString().contains(JavaTranslator.UNKNOWN)
@@ -159,7 +159,8 @@ public final class MacReorganizer {
                                 // Create the new Mac node
                                 DetectionLocation detectionLocation =
                                         ((IAsset) node).getDetectionContext();
-                                Mac newMac = new Mac(new Algorithm(newMacName, detectionLocation));
+                                HMAC newMac =
+                                        new HMAC(new Algorithm(newMacName, detectionLocation));
 
                                 // Add all the Mac children to the new Mac node
                                 for (Map.Entry<Class<? extends INode>, INode> childKeyValue :

@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.Mac;
+import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.PasswordBasedEncryption;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.List;
@@ -49,8 +49,8 @@ class JcaPasswordBasedEncryptionMapperTest {
 
         assertThat(pbe.getChildren()).hasSize(2);
         assertThat(pbe.getDigest()).isEmpty();
-        assertThat(pbe.getPseudoRandomFunction()).isPresent();
-        Mac mac = pbe.getPseudoRandomFunction().get();
+        assertThat(pbe.getCipher()).isPresent();
+        HMAC mac = pbe.getCipher().get();
 
         assertThat(mac.getName()).isEqualTo("HmacSHA256");
         assertThat(mac.getChildren()).hasSize(2);

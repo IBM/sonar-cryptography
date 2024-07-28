@@ -37,9 +37,9 @@ import com.ibm.mapper.mapper.jca.JcaCipherOperationModeMapper;
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.Cipher;
+import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
-import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.OptimalAsymmetricEncryptionPadding;
@@ -242,8 +242,8 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                                     null,
                                     null,
                                     null);
-                    Mac mac =
-                            new Mac(
+                    HMAC mac =
+                            new HMAC(
                                     new com.ibm.mapper.model.Algorithm(
                                             "Poly1305", detectionLocation));
                     mac.append(new Tag(detectionLocation));
