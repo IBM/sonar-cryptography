@@ -28,17 +28,17 @@ import javax.annotation.Nonnull;
 public final class SHA3 extends MessageDigest {
     private static final String NAME = "SHA3";
 
-    public SHA3(@Nonnull DigestSize digestSize, @Nonnull DetectionLocation detectionLocation) {
+    public SHA3(int digestSize, @Nonnull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
-        this.append(digestSize);
+        this.append(new DigestSize(digestSize, detectionLocation));
     }
 
     public SHA3(
-            @Nonnull DigestSize digestSize,
+            int digestSize,
             @Nonnull MessageDigest preHash,
             @Nonnull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
-        this.append(digestSize);
+        this.append(new DigestSize(digestSize, detectionLocation));
         this.append(preHash);
     }
 }

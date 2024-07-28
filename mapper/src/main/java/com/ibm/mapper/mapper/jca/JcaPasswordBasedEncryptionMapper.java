@@ -64,6 +64,8 @@ public class JcaPasswordBasedEncryptionMapper implements IMapper {
             prfOrDigestStr = str.substring(algoStartIndex);
         }
 
+
+
         JcaBaseAlgorithmMapper jcaBaseAlgorithmMapper = new JcaBaseAlgorithmMapper();
         Map<Class<? extends INode>, INode> assets = new HashMap<>();
         // pseudo random function

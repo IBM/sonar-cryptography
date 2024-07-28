@@ -39,32 +39,13 @@ import com.ibm.mapper.model.algorithms.DESedeWrap;
 import com.ibm.mapper.model.algorithms.Poly1305;
 import com.ibm.mapper.model.algorithms.RC2;
 import com.ibm.mapper.model.algorithms.RC4;
+import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class JcaCipherMapper implements IMapper {
-    private static final List<String> blockCiphers =
-            List.of(
-                    "AES",
-                    "AES_128",
-                    "AES_192",
-                    "AES_256",
-                    "AESWrap",
-                    "AESWrap_128",
-                    "AESWrap_192",
-                    "AESWrap_256",
-                    "Blowfish",
-                    "DES",
-                    "DESede",
-                    "DESedeWrap",
-                    "RC2",
-                    "RC5");
-
-    private static final List<String> streamCiphers =
-            List.of("ARCFOUR", "ChaCha20", "ECIES", "RC4");
 
     public JcaCipherMapper() {
         // nothing
@@ -99,32 +80,14 @@ public class JcaCipherMapper implements IMapper {
             algorithmStr = str;
         }
 
-        if (algorithmStr.contains("_")) {
-            int index = algorithmStr.indexOf("_");
-            String keyStr = algorithmStr.substring(index + 1);
-            algorithmStr = algorithmStr.substring(0, index);
-
-            Integer size = Integer.parseInt(keyStr);
-        }
+        Optional<? extends Cipher> possibleCipher = map(algorithmStr, detectionLocation);
 
         // check if it is pbe
         JcaPasswordBasedEncryptionMapper pbeMapper = new JcaPasswordBasedEncryptionMapper();
         Optional<PasswordBasedEncryption> pbeOptional =
-                pbeMapper.parse(algorithmStr, detectionLocation, configuration);
+                pbeMapper.parse(algorithmStr, detectionLocation);
         if (pbeOptional.isPresent()) {
             return JcaBaseAlgorithmMapper.generalizeAlgorithm(pbeOptional);
-        }
-
-        // check if algorithm is a cipher
-        if (!reflectValidValues(algorithmStr)) {
-            return Optional.empty();
-        }
-
-        JcaBaseAlgorithmMapper algorithmMapper = new JcaBaseAlgorithmMapper();
-        Optional<Algorithm> algorithm =
-                algorithmMapper.parse(algorithmStr, detectionLocation, configuration);
-        if (algorithm.isEmpty()) {
-            return Optional.empty();
         }
 
         // Authenticated Encryption check
@@ -202,19 +165,8 @@ public class JcaCipherMapper implements IMapper {
                 chaCha20.append(new Poly1305(detectionLocation));
                 yield Optional.of(chaCha20);
             }
+            case "RSA" -> Optional.of(new RSA(detectionLocation)).map(Cipher::new);
             default -> Optional.empty();
         };
-    }
-
-    private boolean reflectValidValues(@Nonnull final String str) {
-        return isBlockCipher(str) || isStreamCipher(str) || str.equalsIgnoreCase("RSA");
-    }
-
-    private boolean isBlockCipher(@Nonnull final String str) {
-        return blockCiphers.stream().anyMatch(str::equalsIgnoreCase);
-    }
-
-    private boolean isStreamCipher(@Nonnull final String str) {
-        return streamCiphers.stream().anyMatch(str::equalsIgnoreCase);
     }
 }
