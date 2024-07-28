@@ -19,9 +19,9 @@
  */
 package com.ibm.mapper.model;
 
-import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Optional;
+import javax.annotation.Nonnull;
 
 public interface INode {
     void append(@Nonnull INode child);

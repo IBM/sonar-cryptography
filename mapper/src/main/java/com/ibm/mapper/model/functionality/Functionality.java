@@ -21,7 +21,6 @@ package com.ibm.mapper.model.functionality;
 
 import com.ibm.mapper.model.Property;
 import com.ibm.mapper.utils.DetectionLocation;
-
 import javax.annotation.Nonnull;
 
 public abstract class Functionality extends Property {

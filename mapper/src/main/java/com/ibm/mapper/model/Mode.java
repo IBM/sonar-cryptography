@@ -20,10 +20,9 @@
 package com.ibm.mapper.model;
 
 import com.ibm.mapper.utils.DetectionLocation;
-
-import javax.annotation.Nonnull;
 import java.util.Objects;
 import java.util.Optional;
+import javax.annotation.Nonnull;
 
 public final class Mode extends Property {
     @Nonnull private final String name;

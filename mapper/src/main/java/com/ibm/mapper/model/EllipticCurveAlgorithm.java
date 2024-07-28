@@ -22,15 +22,15 @@ package com.ibm.mapper.model;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
-public final class EllipticCurveAlgorithm extends Algorithm {
+public class EllipticCurveAlgorithm extends PublicKeyEncryption {
 
     public EllipticCurveAlgorithm(@Nonnull Algorithm algorithm) {
-        super(algorithm, algorithm.detectionLocation, EllipticCurveAlgorithm.class);
+        super(algorithm);
     }
 
     public EllipticCurveAlgorithm(
             @Nonnull Algorithm algorithm, @Nonnull EllipticCurve ellipticCurve) {
-        super(algorithm, algorithm.detectionLocation, EllipticCurveAlgorithm.class);
+        super(algorithm);
         this.append(ellipticCurve);
     }
 

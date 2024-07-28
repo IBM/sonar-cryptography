@@ -20,10 +20,9 @@
 package com.ibm.mapper.model;
 
 import com.ibm.mapper.utils.DetectionLocation;
-
-import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Objects;
+import javax.annotation.Nonnull;
 
 public class Padding extends Property {
     @Nonnull private final String name;

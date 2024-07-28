@@ -20,11 +20,10 @@
 package com.ibm.mapper.model;
 
 import com.ibm.mapper.utils.DetectionLocation;
-
-import javax.annotation.Nonnull;
 import java.util.Objects;
+import javax.annotation.Nonnull;
 
-public final class EllipticCurve extends Property {
+public class EllipticCurve extends Property {
     @Nonnull private final String value;
 
     public EllipticCurve(@Nonnull String value, @Nonnull DetectionLocation detectionLocation) {

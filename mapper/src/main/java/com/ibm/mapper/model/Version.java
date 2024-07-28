@@ -20,7 +20,6 @@
 package com.ibm.mapper.model;
 
 import com.ibm.mapper.utils.DetectionLocation;
-
 import javax.annotation.Nonnull;
 
 public final class Version extends Property {

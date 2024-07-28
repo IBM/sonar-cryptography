@@ -19,27 +19,28 @@
  */
 package com.ibm.mapper.model;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
+import javax.annotation.Nonnull;
 
 public class Cipher extends Algorithm {
 
-    public Cipher(@Nonnull Algorithm algorithm,
-                  @Nonnull final Class<? extends Cipher> asKind) {
+    public Cipher(@Nonnull Algorithm algorithm, @Nonnull final Class<? extends Cipher> asKind) {
         super(algorithm, algorithm.detectionLocation, asKind);
     }
 
-    public Cipher(@Nonnull Algorithm algorithm,
-                  @Nonnull Mode mode,
-                  @Nonnull final Class<? extends Cipher> asKind) {
+    public Cipher(
+            @Nonnull Algorithm algorithm,
+            @Nonnull Mode mode,
+            @Nonnull final Class<? extends Cipher> asKind) {
         super(algorithm, algorithm.detectionLocation, asKind);
         this.append(mode);
     }
 
-    public Cipher(@Nonnull Algorithm algorithm,
-                  @Nonnull Mode mode,
-                  @Nonnull Padding padding,
-                  @Nonnull final Class<? extends Cipher> asKind) {
+    public Cipher(
+            @Nonnull Algorithm algorithm,
+            @Nonnull Mode mode,
+            @Nonnull Padding padding,
+            @Nonnull final Class<? extends Cipher> asKind) {
         super(algorithm, algorithm.detectionLocation, asKind);
         this.append(mode);
         this.append(padding);
@@ -49,15 +50,12 @@ public class Cipher extends Algorithm {
         super(algorithm, algorithm.detectionLocation, Cipher.class);
     }
 
-    public Cipher(@Nonnull Algorithm algorithm,
-                  @Nonnull Mode mode) {
+    public Cipher(@Nonnull Algorithm algorithm, @Nonnull Mode mode) {
         super(algorithm, algorithm.detectionLocation, Cipher.class);
         this.append(mode);
     }
 
-    public Cipher(@Nonnull Algorithm algorithm,
-                  @Nonnull Mode mode,
-                  @Nonnull Padding padding) {
+    public Cipher(@Nonnull Algorithm algorithm, @Nonnull Mode mode, @Nonnull Padding padding) {
         super(algorithm, algorithm.detectionLocation, Cipher.class);
         this.append(mode);
         this.append(padding);

@@ -39,10 +39,9 @@ import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.model.functionality.Verify;
 import com.ibm.mapper.utils.DetectionLocation;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
-
-import java.util.Optional;
 
 public final class JavaSignatureContextTranslator extends JavaAbstractLibraryTranslator {
 
@@ -128,7 +127,7 @@ public final class JavaSignatureContextTranslator extends JavaAbstractLibraryTra
                     algorithm = new Algorithm(valueAction.asString(), detectionLocation);
                     return Optional.of(algorithm);
             }
-        }  else if (value instanceof OperationMode<Tree> operationMode) {
+        } else if (value instanceof OperationMode<Tree> operationMode) {
             switch (kind) {
                 case SIGNING_STATUS:
                     BcOperationModeSigningMapper bcOperationModeSigningMapper =

@@ -22,23 +22,18 @@ package com.ibm.mapper.model;
 import com.ibm.mapper.model.collections.AlgorithmCollection;
 import com.ibm.mapper.model.collections.IdentifierCollection;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 public final class CipherSuite implements IAsset {
-    @Nonnull
-    private final Map<Class<? extends INode>, INode> children;
-    @Nonnull
-    private final DetectionLocation detectionLocation;
-    @Nonnull
-    private final Class<? extends IAsset> kind;
-    @Nonnull
-    private final String name;
+    @Nonnull private final Map<Class<? extends INode>, INode> children;
+    @Nonnull private final DetectionLocation detectionLocation;
+    @Nonnull private final Class<? extends IAsset> kind;
+    @Nonnull private final String name;
 
     public CipherSuite(@Nonnull String name, @Nonnull DetectionLocation detectionLocation) {
         this.name = name;

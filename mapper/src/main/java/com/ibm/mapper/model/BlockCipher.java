@@ -23,20 +23,15 @@ import javax.annotation.Nonnull;
 
 public class BlockCipher extends Cipher {
 
-    public BlockCipher(
-            @Nonnull Algorithm algorithm) {
+    public BlockCipher(@Nonnull Algorithm algorithm) {
         super(algorithm, BlockCipher.class);
     }
 
-    public BlockCipher(
-            @Nonnull Algorithm algorithm, @Nonnull Mode mode) {
+    public BlockCipher(@Nonnull Algorithm algorithm, @Nonnull Mode mode) {
         super(algorithm, mode, BlockCipher.class);
     }
 
-    public BlockCipher(
-            @Nonnull Algorithm algorithm,
-            @Nonnull Mode mode,
-            @Nonnull Padding padding) {
+    public BlockCipher(@Nonnull Algorithm algorithm, @Nonnull Mode mode, @Nonnull Padding padding) {
         super(algorithm, mode, padding, BlockCipher.class);
     }
 }

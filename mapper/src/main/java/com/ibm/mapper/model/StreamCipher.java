@@ -23,20 +23,16 @@ import javax.annotation.Nonnull;
 
 public class StreamCipher extends Cipher {
 
-    public StreamCipher(
-            @Nonnull Algorithm algorithm) {
+    public StreamCipher(@Nonnull Algorithm algorithm) {
         super(algorithm, StreamCipher.class);
     }
 
-    public StreamCipher(
-            @Nonnull Algorithm algorithm, @Nonnull Mode mode) {
+    public StreamCipher(@Nonnull Algorithm algorithm, @Nonnull Mode mode) {
         super(algorithm, mode, StreamCipher.class);
     }
 
     public StreamCipher(
-            @Nonnull Algorithm algorithm,
-            @Nonnull Mode mode,
-            @Nonnull Padding padding) {
+            @Nonnull Algorithm algorithm, @Nonnull Mode mode, @Nonnull Padding padding) {
         super(algorithm, mode, padding, StreamCipher.class);
     }
 }
