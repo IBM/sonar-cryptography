@@ -19,10 +19,19 @@
  */
 package com.ibm.mapper.model;
 
+import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public final class PseudorandomNumberGenerator extends Algorithm {
+public class PseudorandomNumberGenerator extends Algorithm {
+
     public PseudorandomNumberGenerator(@Nonnull Algorithm algorithm) {
         super(algorithm, algorithm.detectionLocation, PseudorandomNumberGenerator.class);
+    }
+
+    public PseudorandomNumberGenerator(@Nonnull DetectionLocation detectionLocation) {
+        super(
+                new Algorithm("PRNG", detectionLocation),
+                detectionLocation,
+                PseudorandomNumberGenerator.class);
     }
 }

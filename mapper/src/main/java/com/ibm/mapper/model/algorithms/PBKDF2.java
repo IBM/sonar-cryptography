@@ -17,37 +17,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.mapper.jca;
+package com.ibm.mapper.model.algorithms;
 
-import com.ibm.mapper.mapper.IMapper;
+import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
-import com.ibm.mapper.model.algorithms.PBKDF2;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-public class JcaPBKDFMapper implements IMapper {
+public class PBKDF2 extends PasswordBasedKeyDerivationFunction {
 
-    @Nonnull
-    @Override
-    public Optional<PasswordBasedKeyDerivationFunction> parse(
-            @Nullable String str, @Nonnull DetectionLocation detectionLocation) {
-        if (str == null) {
-            return Optional.empty();
-        }
-
-        final String generalizedStr = str.toLowerCase().trim();
-        if (!generalizedStr.contains("pbkdf2with")) {
-            return Optional.empty();
-        }
-
-        int algoStartIndex = generalizedStr.indexOf("pbkdf2with") + 10;
-        String prf = str.substring(algoStartIndex);
-
-        final JcaMacMapper jcaMacMapper = new JcaMacMapper();
-        final Optional<HMAC> macOptional = jcaMacMapper.parse(prf, detectionLocation);
-        return macOptional.map(mac -> new PBKDF2(mac, detectionLocation));
+    public PBKDF2(@Nonnull HMAC hmac, @Nonnull DetectionLocation detectionLocation) {
+        super(new Algorithm("PBKDF2", detectionLocation));
+        this.append(hmac);
     }
 }

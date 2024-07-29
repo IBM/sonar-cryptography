@@ -23,21 +23,10 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 
 /** PBKDF */
-public final class PasswordBasedKeyDerivationFunction extends KeyDerivationFunction {
+public class PasswordBasedKeyDerivationFunction extends KeyDerivationFunction {
 
     public PasswordBasedKeyDerivationFunction(@Nonnull Algorithm algorithm) {
         super(algorithm, PasswordBasedKeyDerivationFunction.class);
-    }
-
-    public PasswordBasedKeyDerivationFunction(
-            @Nonnull Algorithm algorithm,
-            @Nonnull SaltLength saltLength,
-            @Nonnull NumberOfIterations iterations,
-            @Nonnull KeyLength keyLength) {
-        super(algorithm, PasswordBasedKeyDerivationFunction.class);
-        this.append(saltLength);
-        this.append(iterations);
-        this.append(keyLength);
     }
 
     @Nonnull

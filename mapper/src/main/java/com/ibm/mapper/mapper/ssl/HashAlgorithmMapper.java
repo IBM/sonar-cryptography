@@ -19,7 +19,6 @@
  */
 package com.ibm.mapper.mapper.ssl;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.Cipher;
@@ -33,9 +32,7 @@ public final class HashAlgorithmMapper implements IMapper {
 
     @NotNull @Override
     public Optional<? extends INode> parse(
-            @Nullable String str,
-            @NotNull DetectionLocation detectionLocation,
-            @NotNull Configuration configuration) {
+            @Nullable String str, @NotNull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }

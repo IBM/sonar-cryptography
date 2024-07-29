@@ -19,7 +19,6 @@
  */
 package com.ibm.mapper.mapper.ssl;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Version;
@@ -33,9 +32,7 @@ import org.jetbrains.annotations.Nullable;
 public final class SSLVersionMapper implements IMapper {
     @NotNull @Override
     public Optional<? extends INode> parse(
-            @Nullable String str,
-            @NotNull DetectionLocation detectionLocation,
-            @NotNull Configuration configuration) {
+            @Nullable String str, @NotNull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }
