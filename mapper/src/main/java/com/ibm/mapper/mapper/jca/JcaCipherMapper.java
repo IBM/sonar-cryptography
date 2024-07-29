@@ -20,15 +20,12 @@
 package com.ibm.mapper.mapper.jca;
 
 import com.ibm.mapper.mapper.IMapper;
-import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
-import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.PasswordBasedEncryption;
-import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.model.algorithms.AES;
 import com.ibm.mapper.model.algorithms.AESWrap;
 import com.ibm.mapper.model.algorithms.Blowfish;
@@ -40,10 +37,13 @@ import com.ibm.mapper.model.algorithms.Poly1305;
 import com.ibm.mapper.model.algorithms.RC2;
 import com.ibm.mapper.model.algorithms.RC4;
 import com.ibm.mapper.model.algorithms.RSA;
+import com.ibm.mapper.model.mode.CCM;
+import com.ibm.mapper.model.mode.GCM;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class JcaCipherMapper implements IMapper {
 
@@ -61,7 +61,7 @@ public class JcaCipherMapper implements IMapper {
 
         String algorithmStr;
         Optional<Mode> modeOptional = Optional.empty();
-        Optional<Padding> paddingOptional = Optional.empty();
+        Optional<? extends Padding> paddingOptional = Optional.empty();
         if (str.contains("/")) {
             int slashIndex = str.indexOf("/");
             algorithmStr = str.substring(0, slashIndex);
@@ -70,16 +70,17 @@ public class JcaCipherMapper implements IMapper {
             if (rest.contains("/")) {
                 slashIndex = rest.indexOf("/");
                 // mode
-                String modeStr = rest.substring(0, slashIndex);
-
+                final String modeStr = rest.substring(0, slashIndex);
+                final JcaModeMapper jcaModeMapper = new JcaModeMapper();
+                modeOptional = jcaModeMapper.parse(modeStr, detectionLocation);
                 // padding
                 String paddingStr = rest.substring(slashIndex + 1);
+                final JcaPaddingMapper jcaPaddingMapper = new JcaPaddingMapper();
+                paddingOptional = jcaPaddingMapper.parse(paddingStr, detectionLocation);
             }
         } else {
             algorithmStr = str;
         }
-
-
 
         // check if it is pbe
         JcaPasswordBasedEncryptionMapper pbeMapper = new JcaPasswordBasedEncryptionMapper();
@@ -90,45 +91,24 @@ public class JcaCipherMapper implements IMapper {
         }
 
         Optional<? extends Cipher> possibleCipher = map(algorithmStr, detectionLocation);
+        if (possibleCipher.isEmpty()) {
+            return Optional.empty();
+        }
+        final Cipher cipher = possibleCipher.get();
 
         // Authenticated Encryption check
         if (modeOptional.isPresent()) {
-            Mode mode = modeOptional.get();
-            if (mode.getName().toLowerCase().contains("gcm")
-                    || mode.getName().toLowerCase().contains("ccm")) {
-                return Optional.of(
-                        new AuthenticatedEncryption(
-                                algorithm.get(), mode, paddingOptional.orElse(null), null));
+            final Mode mode = modeOptional.get();
+            if (mode instanceof GCM || mode instanceof CCM) {
+                return paddingOptional
+                        .map(padding -> new AuthenticatedEncryption(cipher, mode, padding))
+                        .or(() -> Optional.of(new AuthenticatedEncryption(cipher, mode)));
             }
         }
 
-        if (algorithmStr.contains("RSA") && (modeOptional.isEmpty() || paddingOptional.isEmpty())) {
-            // not a cipher
-            return Optional.empty();
-        }
-
-        if (isBlockCipher(algorithmStr)) {
-            BlockCipher cipher =
-                    new BlockCipher(
-                            algorithm.get(),
-                            modeOptional.orElse(null),
-                            paddingOptional.orElse(null));
-            return Optional.of(cipher);
-        } else if (isStreamCipher(algorithmStr)) {
-            StreamCipher cipher =
-                    new StreamCipher(
-                            algorithm.get(),
-                            modeOptional.orElse(null),
-                            paddingOptional.orElse(null));
-            return Optional.of(cipher);
-        } else if (algorithmStr.equalsIgnoreCase("RSA")) {
-            final Algorithm rsa = algorithm.get();
-            modeOptional.ifPresent(rsa::append);
-            paddingOptional.ifPresent(rsa::append);
-            return algorithm;
-        }
-
-        return Optional.empty();
+        modeOptional.ifPresent(cipher::append);
+        paddingOptional.ifPresent(cipher::append);
+        return Optional.of(cipher);
     }
 
     @Nonnull

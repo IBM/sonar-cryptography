@@ -25,10 +25,9 @@ import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PasswordBasedEncryption;
 import com.ibm.mapper.utils.DetectionLocation;
-
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Optional;
 
 public class JcaPasswordBasedEncryptionMapper implements IMapper {
 
@@ -39,8 +38,7 @@ public class JcaPasswordBasedEncryptionMapper implements IMapper {
     @Nonnull
     @Override
     public Optional<PasswordBasedEncryption> parse(
-            @Nullable final String str,
-            @Nonnull DetectionLocation detectionLocation) {
+            @Nullable final String str, @Nonnull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }
@@ -70,12 +68,12 @@ public class JcaPasswordBasedEncryptionMapper implements IMapper {
 
         // hmac
         JcaMacMapper macMapper = new JcaMacMapper();
-        Optional<HMAC> macOptional =
-                macMapper.parse(hmacOrDigestStr, detectionLocation);
+        Optional<HMAC> macOptional = macMapper.parse(hmacOrDigestStr, detectionLocation);
         if (macOptional.isPresent()) {
             // heck for cipher
-            return Optional.of(cipher.map(c -> new PasswordBasedEncryption(macOptional.get(), c))
-                    .orElse(new PasswordBasedEncryption(macOptional.get())));
+            return Optional.of(
+                    cipher.map(c -> new PasswordBasedEncryption(macOptional.get(), c))
+                            .orElse(new PasswordBasedEncryption(macOptional.get())));
         }
 
         // digest

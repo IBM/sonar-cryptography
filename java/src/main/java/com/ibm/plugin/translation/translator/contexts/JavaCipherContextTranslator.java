@@ -42,7 +42,6 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Mode;
-import com.ibm.mapper.model.OptimalAsymmetricEncryptionPadding;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.PasswordBasedEncryption;
 import com.ibm.mapper.model.PublicKeyEncryption;
@@ -50,6 +49,7 @@ import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Encapsulate;
 import com.ibm.mapper.model.functionality.Tag;
+import com.ibm.mapper.model.padding.OAEP;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.HashMap;
 import java.util.List;
@@ -269,7 +269,7 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                             new Padding(valueAction.asString(), detectionLocation, new HashMap<>());
                     switch (valueAction.asString()) {
                         case "OAEP":
-                            blockCipher.append(new OptimalAsymmetricEncryptionPadding(padding));
+                            blockCipher.append(new OAEP(padding));
                             break;
                         default:
                             blockCipher.append(padding);
@@ -287,7 +287,7 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                             new Padding(valueAction.asString(), detectionLocation, new HashMap<>());
                     switch (valueAction.asString()) {
                         case "OAEP":
-                            pke.append(new OptimalAsymmetricEncryptionPadding(padding));
+                            pke.append(new OAEP(padding));
                             break;
                         default:
                             pke.append(padding);

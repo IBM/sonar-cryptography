@@ -23,8 +23,8 @@ import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
-import com.ibm.mapper.model.OptimalAsymmetricEncryptionPadding;
 import com.ibm.mapper.model.PublicKeyEncryption;
+import com.ibm.mapper.model.padding.OAEP;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.mapper.reorganizer.builder.ReorganizerRuleBuilder;
 import com.ibm.plugin.translation.translator.JavaTranslator;
@@ -124,7 +124,7 @@ public final class AsymmetricBlockCipherReorganizer {
                             List.of(
                                     new ReorganizerRuleBuilder()
                                             .createReorganizerRule()
-                                            .forNodeKind(OptimalAsymmetricEncryptionPadding.class)
+                                            .forNodeKind(OAEP.class)
                                             .noAction(),
                                     new ReorganizerRuleBuilder()
                                             .createReorganizerRule()
@@ -132,9 +132,7 @@ public final class AsymmetricBlockCipherReorganizer {
                                             .noAction()))
                     .perform(
                             (node, parent, roots) -> {
-                                INode oaepChild =
-                                        node.getChildren()
-                                                .get(OptimalAsymmetricEncryptionPadding.class);
+                                INode oaepChild = node.getChildren().get(OAEP.class);
                                 INode messageDigestChild =
                                         node.getChildren().get(MessageDigest.class).deepCopy();
 

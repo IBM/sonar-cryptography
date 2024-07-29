@@ -19,39 +19,42 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.IMapper;
-import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Padding;
+import com.ibm.mapper.model.padding.ISO10126;
+import com.ibm.mapper.model.padding.PKCS1;
+import com.ibm.mapper.model.padding.PKCS5;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class JcaPaddingMapper implements IMapper {
 
-    private static final JcaBasePaddingMapper JCA_BASE_PADDING_MAPPER = new JcaBasePaddingMapper();
-
-    private static final List<IMapper> jcaSpecificPaddingMappers =
-            List.of(new JcaOAEPPaddingMapper());
-
     @Nonnull
     @Override
-    public Optional<? extends INode> parse(
-            @Nullable String str,
-            @Nonnull DetectionLocation detectionLocation,
-            @Nonnull Configuration configuration) {
+    public Optional<? extends Padding> parse(
+            @Nullable String str, @Nonnull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }
 
-        for (IMapper mapper : jcaSpecificPaddingMappers) {
-            Optional<? extends INode> asset = mapper.parse(str, detectionLocation, configuration);
-            if (asset.isPresent()) {
-                return asset;
-            }
+        if (str.toUpperCase().contains("OAEP")) {
+            final JcaOAEPPaddingMapper jcaOAEPPaddingMapper = new JcaOAEPPaddingMapper();
+            return jcaOAEPPaddingMapper.parse(str, detectionLocation);
         }
 
-        return JCA_BASE_PADDING_MAPPER.parse(str, detectionLocation, configuration);
+        return map(str, detectionLocation);
+    }
+
+    @Nonnull
+    private Optional<Padding> map(
+            @Nonnull String padding, @Nonnull DetectionLocation detectionLocation) {
+        return switch (padding.toUpperCase().trim()) {
+            case "ISO10126PADDING" -> Optional.of(new ISO10126(detectionLocation));
+            case "PKCS1PADDING" -> Optional.of(new PKCS1(detectionLocation));
+            case "PKCS5PADDING" -> Optional.of(new PKCS5(detectionLocation));
+            default -> Optional.empty();
+        };
     }
 }

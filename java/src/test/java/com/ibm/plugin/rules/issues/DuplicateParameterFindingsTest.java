@@ -29,8 +29,8 @@ import com.ibm.engine.model.context.DigestContext;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MaskGenerationFunction;
 import com.ibm.mapper.model.MessageDigest;
-import com.ibm.mapper.model.OptimalAsymmetricEncryptionPadding;
 import com.ibm.mapper.model.PublicKeyEncryption;
+import com.ibm.mapper.model.padding.OAEP;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
 import java.util.List;
@@ -134,9 +134,7 @@ class DuplicateParameterFindingsTest extends TestBase {
 
         // OptimalAsymmetricEncryptionPadding under PublicKeyEncryption
         INode optimalAsymmetricEncryptionPaddingNode =
-                publicKeyEncryptionNode1
-                        .getChildren()
-                        .get(OptimalAsymmetricEncryptionPadding.class);
+                publicKeyEncryptionNode1.getChildren().get(OAEP.class);
         assertThat(optimalAsymmetricEncryptionPaddingNode).isNotNull();
         assertThat(optimalAsymmetricEncryptionPaddingNode.getChildren()).isEmpty();
         assertThat(optimalAsymmetricEncryptionPaddingNode.asString()).isEqualTo("OAEP");

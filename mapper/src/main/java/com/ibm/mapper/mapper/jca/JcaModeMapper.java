@@ -32,10 +32,9 @@ import com.ibm.mapper.model.mode.OFB;
 import com.ibm.mapper.model.mode.PCBC;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.mapper.utils.Utils;
-
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Optional;
 
 public class JcaModeMapper implements IMapper {
 
@@ -46,8 +45,7 @@ public class JcaModeMapper implements IMapper {
     @Nonnull
     @Override
     public Optional<Mode> parse(
-            @Nullable final String str,
-            @Nonnull final DetectionLocation detectionLocation) {
+            @Nullable final String str, @Nonnull final DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }
@@ -58,15 +56,15 @@ public class JcaModeMapper implements IMapper {
         // remove numeric values
         String modeString = str.replaceAll("\\d", "");
         return map(modeString, detectionLocation)
-                .map(mode -> {
-                    optionalBlockSize.ifPresent(mode::append);
-                    return mode;
-                });
+                .map(
+                        mode -> {
+                            optionalBlockSize.ifPresent(mode::append);
+                            return mode;
+                        });
     }
 
     @Nonnull
-    private Optional<Mode> map(
-            @Nonnull String mode, @Nonnull DetectionLocation detectionLocation) {
+    private Optional<Mode> map(@Nonnull String mode, @Nonnull DetectionLocation detectionLocation) {
         return switch (mode.toUpperCase().trim()) {
             case "ECB" -> Optional.of(new ECB(detectionLocation));
             case "CBC" -> Optional.of(new CBC(detectionLocation));
@@ -79,5 +77,4 @@ public class JcaModeMapper implements IMapper {
             default -> Optional.empty();
         };
     }
-
 }

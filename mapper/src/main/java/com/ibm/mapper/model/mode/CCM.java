@@ -23,9 +23,9 @@ import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
-public final class CTS extends Mode {
+public final class CCM extends Mode {
 
-    public CTS(@NotNull DetectionLocation detectionLocation) {
-        super("CTS", detectionLocation);
+    public CCM(@NotNull DetectionLocation detectionLocation) {
+        super("CCM", detectionLocation);
     }
 }

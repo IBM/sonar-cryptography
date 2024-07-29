@@ -19,36 +19,41 @@
  */
 package com.ibm.mapper.model;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
+import javax.annotation.Nonnull;
 
 public final class PasswordBasedEncryption extends Algorithm {
 
     // example: PBEWithHmacSHA1AndAES_128
-    public PasswordBasedEncryption(
-            @Nonnull HMAC hmac,
-            @Nonnull Cipher cipher) {
-        super(new Algorithm("PBEWith" + hmac.asString() + "and" + cipher.asString(), hmac.detectionLocation),
-                hmac.detectionLocation, PasswordBasedEncryption.class);
+    public PasswordBasedEncryption(@Nonnull HMAC hmac, @Nonnull Cipher cipher) {
+        super(
+                new Algorithm(
+                        "PBEWith" + hmac.asString() + "and" + cipher.asString(),
+                        hmac.detectionLocation),
+                hmac.detectionLocation,
+                PasswordBasedEncryption.class);
         this.append(hmac);
         this.append(cipher);
     }
 
     // example: PBEWithMD5AndDES
-    public PasswordBasedEncryption(
-            @Nonnull MessageDigest digest,
-            @Nonnull Cipher cipher) {
-        super(new Algorithm("PBEWith" + digest.asString() + "and" + cipher.asString(), digest.detectionLocation),
-                digest.detectionLocation, PasswordBasedEncryption.class);
+    public PasswordBasedEncryption(@Nonnull MessageDigest digest, @Nonnull Cipher cipher) {
+        super(
+                new Algorithm(
+                        "PBEWith" + digest.asString() + "and" + cipher.asString(),
+                        digest.detectionLocation),
+                digest.detectionLocation,
+                PasswordBasedEncryption.class);
         this.append(digest);
         this.append(cipher);
     }
 
     // example: PBEWithHmacSHA1
-    public PasswordBasedEncryption(
-            @Nonnull HMAC hmac) {
-        super(new Algorithm("PBEWith" + hmac.asString(), hmac.detectionLocation),
-                hmac.detectionLocation, PasswordBasedEncryption.class);
+    public PasswordBasedEncryption(@Nonnull HMAC hmac) {
+        super(
+                new Algorithm("PBEWith" + hmac.asString(), hmac.detectionLocation),
+                hmac.detectionLocation,
+                PasswordBasedEncryption.class);
         this.append(hmac);
     }
 

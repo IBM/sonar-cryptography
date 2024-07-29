@@ -23,10 +23,9 @@ import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.PasswordBasedEncryption;
 import com.ibm.mapper.utils.DetectionLocation;
-
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Optional;
 
 public class JcaMacMapper implements IMapper {
 
@@ -41,9 +40,7 @@ public class JcaMacMapper implements IMapper {
         // check if it is pbe
         JcaPasswordBasedEncryptionMapper pbeMapper = new JcaPasswordBasedEncryptionMapper();
         Optional<PasswordBasedEncryption> pbeOptional = pbeMapper.parse(str, detectionLocation);
-        if (pbeOptional.isPresent()) {
-
-        }
+        if (pbeOptional.isPresent()) {}
 
         final String messageDigestStr =
                 str.substring(str.toLowerCase().trim().indexOf("Hmac".toLowerCase()) + 4)

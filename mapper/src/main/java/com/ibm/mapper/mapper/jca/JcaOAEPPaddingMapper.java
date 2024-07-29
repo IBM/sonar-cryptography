@@ -19,21 +19,21 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.IMapper;
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.MaskGenerationFunction;
+import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.padding.OAEP;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.*;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class JcaOAEPPaddingMapper implements IMapper {
+
     @Nonnull
     @Override
-    public Optional<OptimalAsymmetricEncryptionPadding> parse(
-            @Nullable final String str,
-            @Nonnull final DetectionLocation detectionLocation,
-            @Nonnull final Configuration configuration) {
+    public Optional<OAEP> parse(
+            @Nullable final String str, @Nonnull final DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }
@@ -42,7 +42,6 @@ public class JcaOAEPPaddingMapper implements IMapper {
             return Optional.empty();
         }
 
-        Map<Class<? extends INode>, INode> assets = new HashMap<>();
         if (str.contains("OAEPWith")) {
             String digestStr;
             String mgfStr = null;
@@ -59,28 +58,34 @@ public class JcaOAEPPaddingMapper implements IMapper {
             }
 
             // digest
-            JcaMessageDigestMapper jcaMessageDigestMapper = new JcaMessageDigestMapper();
+            final JcaMessageDigestMapper jcaMessageDigestMapper = new JcaMessageDigestMapper();
             Optional<MessageDigest> messageDigestOptional =
-                    jcaMessageDigestMapper.parse(digestStr, detectionLocation, configuration);
-            messageDigestOptional.ifPresent(digest -> assets.put(digest.getKind(), digest));
+                    jcaMessageDigestMapper.parse(digestStr, detectionLocation);
+
             // mgf
+            Optional<MaskGenerationFunction> mgfOptional = Optional.empty();
             if (mgfStr != null) {
-                JcaMGFMapper jcaMGFMapper = new JcaMGFMapper();
-                Optional<MaskGenerationFunction> mgfOptional =
-                        jcaMGFMapper.parse(mgfStr, detectionLocation, configuration);
-                mgfOptional.ifPresent(mgf -> assets.put(mgf.getKind(), mgf));
+                final JcaMGFMapper jcaMGFMapper = new JcaMGFMapper();
+                mgfOptional = jcaMGFMapper.parse(mgfStr, detectionLocation);
+            }
+
+            if (messageDigestOptional.isPresent()) {
+                return mgfOptional
+                        .map(
+                                maskGenerationFunction ->
+                                        new OAEP(
+                                                messageDigestOptional.get(),
+                                                maskGenerationFunction,
+                                                detectionLocation))
+                        .or(
+                                () ->
+                                        Optional.of(
+                                                new OAEP(
+                                                        messageDigestOptional.get(),
+                                                        detectionLocation)));
             }
         }
 
-        JcaBasePaddingMapper jcaBasePaddingMapper = new JcaBasePaddingMapper();
-        Optional<Padding> paddingOptional =
-                jcaBasePaddingMapper.parseAndAddChildren(
-                        str, detectionLocation, configuration, assets);
-        if (paddingOptional.isEmpty()) {
-            return Optional.empty();
-        }
-        OptimalAsymmetricEncryptionPadding oaepPadding =
-                new OptimalAsymmetricEncryptionPadding(paddingOptional.get());
-        return Optional.of(oaepPadding);
+        return Optional.of(new OAEP(detectionLocation));
     }
 }

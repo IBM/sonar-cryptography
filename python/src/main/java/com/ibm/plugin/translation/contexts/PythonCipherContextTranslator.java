@@ -31,7 +31,6 @@ import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MaskGenerationFunction;
 import com.ibm.mapper.model.Mode;
-import com.ibm.mapper.model.OptimalAsymmetricEncryptionPadding;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.SecretKey;
 import com.ibm.mapper.model.StreamCipher;
@@ -39,6 +38,7 @@ import com.ibm.mapper.model.functionality.Decrypt;
 import com.ibm.mapper.model.functionality.Encapsulate;
 import com.ibm.mapper.model.functionality.Encrypt;
 import com.ibm.mapper.model.functionality.KeyGeneration;
+import com.ibm.mapper.model.padding.OAEP;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.plugin.rules.detection.symmetric.CryptographyCipher;
 import com.ibm.plugin.translation.PythonTranslatorUtils;
@@ -201,7 +201,7 @@ public final class PythonCipherContextTranslator {
             case PADDING:
                 if (kind == CipherContext.Kind.OAEP) {
                     padding = new Padding("OAEP", detectionLocation, new HashMap<>());
-                    return Optional.of(new OptimalAsymmetricEncryptionPadding(padding));
+                    return Optional.of(new OAEP(padding));
                 }
                 break;
             case WRAP:

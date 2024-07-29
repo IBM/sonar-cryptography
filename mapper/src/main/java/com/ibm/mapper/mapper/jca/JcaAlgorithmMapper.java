@@ -22,22 +22,19 @@ package com.ibm.mapper.mapper.jca;
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.List;
-import java.util.Optional;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Optional;
 
 public class JcaAlgorithmMapper implements IMapper {
-
-    private static final JcaBaseAlgorithmMapper JCA_BASE_ALGORITHM_MAPPER =
-            new JcaBaseAlgorithmMapper();
 
     /** IMPORTANT: order matters here */
     private static final List<IMapper> jcaSpecificAlgorithmMappers =
             List.of(
                     // algorithms
                     new JcaCipherMapper(),
-                    new JcaEllipticCurveMapper(),
                     new JcaMacMapper(),
                     new JcaMessageDigestMapper(),
                     new JcaMGFMapper(),
@@ -60,7 +57,6 @@ public class JcaAlgorithmMapper implements IMapper {
                 return asset;
             }
         }
-
-        return JCA_BASE_ALGORITHM_MAPPER.parse(str, detectionLocation);
+        return Optional.empty();
     }
 }

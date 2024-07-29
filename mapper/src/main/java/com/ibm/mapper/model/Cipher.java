@@ -24,16 +24,20 @@ import javax.annotation.Nonnull;
 
 public class Cipher extends Algorithm {
 
-    public Cipher(@Nonnull Algorithm algorithm, @Nonnull final Class<? extends Cipher> asKind) {
+    protected Cipher(@Nonnull Algorithm algorithm, @Nonnull final Class<? extends Cipher> asKind) {
         super(algorithm, algorithm.detectionLocation, asKind);
     }
 
-    public Cipher(
+    protected Cipher(
             @Nonnull Algorithm algorithm,
             @Nonnull Mode mode,
             @Nonnull final Class<? extends Cipher> asKind) {
         super(algorithm, algorithm.detectionLocation, asKind);
         this.append(mode);
+    }
+
+    public Cipher(@Nonnull Algorithm algorithm) {
+        super(algorithm, algorithm.detectionLocation, Cipher.class);
     }
 
     public Cipher(
@@ -44,10 +48,6 @@ public class Cipher extends Algorithm {
         super(algorithm, algorithm.detectionLocation, asKind);
         this.append(mode);
         this.append(padding);
-    }
-
-    public Cipher(@Nonnull Algorithm algorithm) {
-        super(algorithm, algorithm.detectionLocation, Cipher.class);
     }
 
     public Cipher(@Nonnull Algorithm algorithm, @Nonnull Mode mode) {

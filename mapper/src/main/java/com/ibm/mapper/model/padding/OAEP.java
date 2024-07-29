@@ -17,27 +17,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model;
+package com.ibm.mapper.model.padding;
 
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.MaskGenerationFunction;
+import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.Padding;
+import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
-public final class OptimalAsymmetricEncryptionPadding extends Padding {
-    public OptimalAsymmetricEncryptionPadding(@Nonnull Padding padding) {
-        super(padding, padding.detectionLocation, OptimalAsymmetricEncryptionPadding.class);
+/** OptimalAsymmetricEncryptionPadding */
+public final class OAEP extends Padding {
+    private static final String NAME = "OAEP";
+
+    public OAEP(@Nonnull DetectionLocation detectionLocation) {
+        super(NAME, detectionLocation);
     }
 
-    public OptimalAsymmetricEncryptionPadding(
-            @Nonnull Padding padding, @Nonnull MessageDigest messageDigest) {
-        super(padding, padding.detectionLocation, OptimalAsymmetricEncryptionPadding.class);
+    public OAEP(
+            @Nonnull MessageDigest messageDigest, @Nonnull DetectionLocation detectionLocation) {
+        super(NAME, detectionLocation);
         this.append(messageDigest);
     }
 
-    public OptimalAsymmetricEncryptionPadding(
-            @Nonnull Padding padding,
+    public OAEP(
             @Nonnull MessageDigest messageDigest,
-            @Nonnull MaskGenerationFunction maskGenerationFunction) {
-        super(padding, padding.detectionLocation, OptimalAsymmetricEncryptionPadding.class);
+            @Nonnull MaskGenerationFunction maskGenerationFunction,
+            @Nonnull DetectionLocation detectionLocation) {
+        super(NAME, detectionLocation);
         this.append(messageDigest);
         this.append(maskGenerationFunction);
     }

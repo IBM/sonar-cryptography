@@ -17,15 +17,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.mode;
+package com.ibm.mapper.model.padding;
 
-import com.ibm.mapper.model.Mode;
+import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
-public final class CTS extends Mode {
+public final class PKCS1 extends Padding {
 
-    public CTS(@NotNull DetectionLocation detectionLocation) {
-        super("CTS", detectionLocation);
+    public PKCS1(@NotNull DetectionLocation detectionLocation) {
+        super("PKCS1", detectionLocation);
     }
 }

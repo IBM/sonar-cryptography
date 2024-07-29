@@ -20,30 +20,27 @@
 package com.ibm.mapper.model;
 
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Map;
+import java.util.HashMap;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 
 public class Padding extends Property {
     @Nonnull private final String name;
 
-    Padding(
-            @Nonnull Padding padding,
-            @Nonnull DetectionLocation detectionLocation,
-            @Nonnull final Class<? extends Padding> asKind) {
-        super(asKind, detectionLocation, padding.getChildren());
-        this.name = padding.getName();
-    }
-
-    public Padding(
-            @Nonnull String name,
-            @Nonnull DetectionLocation detectionLocation,
-            @Nonnull Map<Class<? extends INode>, INode> children) {
-        super(Padding.class, detectionLocation, children);
+    protected Padding(@Nonnull String name, @Nonnull DetectionLocation detectionLocation) {
+        super(Padding.class, detectionLocation, new HashMap<>());
         this.name = name;
     }
 
-    public Padding(@Nonnull Padding padding) {
+    protected Padding(
+            @Nonnull String name,
+            @Nonnull DetectionLocation detectionLocation,
+            @Nonnull Class<? extends Padding> kind) {
+        super(kind, detectionLocation, new HashMap<>());
+        this.name = name;
+    }
+
+    private Padding(@Nonnull Padding padding) {
         super(padding.type, padding.detectionLocation, padding.children);
         this.name = padding.name;
     }

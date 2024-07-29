@@ -17,15 +17,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.mode;
+package com.ibm.mapper.model.mgf;
 
-import com.ibm.mapper.model.Mode;
+import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.MaskGenerationFunction;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
-public final class CTS extends Mode {
+public final class MGF1 extends MaskGenerationFunction {
 
-    public CTS(@NotNull DetectionLocation detectionLocation) {
-        super("CTS", detectionLocation);
+    public MGF1(@Nonnull DetectionLocation detectionLocation) {
+        super(new Algorithm("MGF1", detectionLocation));
     }
 }

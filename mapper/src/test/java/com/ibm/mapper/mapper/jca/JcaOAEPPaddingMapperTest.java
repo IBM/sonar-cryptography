@@ -25,7 +25,7 @@ import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.configuration.TestConfig;
 import com.ibm.mapper.model.MaskGenerationFunction;
 import com.ibm.mapper.model.MessageDigest;
-import com.ibm.mapper.model.OptimalAsymmetricEncryptionPadding;
+import com.ibm.mapper.model.padding.OAEP;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.List;
 import java.util.Optional;
@@ -39,13 +39,13 @@ class JcaOAEPPaddingMapperTest {
                 new DetectionLocation("testfile", 1, 1, List.of("test"));
 
         JcaOAEPPaddingMapper jcaOAEPPaddingMapper = new JcaOAEPPaddingMapper();
-        Optional<OptimalAsymmetricEncryptionPadding> oaepPAdding =
+        Optional<OAEP> oaepPAdding =
                 jcaOAEPPaddingMapper.parse(
                         "OAEPWithMD5AndMGF1Padding", testDetectionLocation, Configuration.DEFAULT);
 
         assertThat(oaepPAdding).isPresent();
-        assertThat(oaepPAdding.get().is(OptimalAsymmetricEncryptionPadding.class)).isTrue();
-        OptimalAsymmetricEncryptionPadding oaep = oaepPAdding.get();
+        assertThat(oaepPAdding.get().is(OAEP.class)).isTrue();
+        OAEP oaep = oaepPAdding.get();
 
         Optional<MessageDigest> messageDigestOptional = oaep.getDigest();
         assertThat(messageDigestOptional).isPresent();
@@ -64,12 +64,12 @@ class JcaOAEPPaddingMapperTest {
                 new DetectionLocation("testfile", 1, 1, List.of("test"));
 
         JcaOAEPPaddingMapper jcaOAEPPaddingMapper = new JcaOAEPPaddingMapper();
-        Optional<OptimalAsymmetricEncryptionPadding> oaepPAdding =
+        Optional<OAEP> oaepPAdding =
                 jcaOAEPPaddingMapper.parse(
                         "OAEPPadding", testDetectionLocation, Configuration.DEFAULT);
 
         assertThat(oaepPAdding).isPresent();
-        assertThat(oaepPAdding.get().is(OptimalAsymmetricEncryptionPadding.class)).isTrue();
+        assertThat(oaepPAdding.get().is(OAEP.class)).isTrue();
         assertThat(oaepPAdding.get().getName()).isEqualTo("OAEP");
         assertThat(oaepPAdding.get().hasChildren()).isFalse();
     }
@@ -80,13 +80,13 @@ class JcaOAEPPaddingMapperTest {
                 new DetectionLocation("testfile", 1, 1, List.of("test"));
 
         JcaOAEPPaddingMapper jcaOAEPPaddingMapper = new JcaOAEPPaddingMapper();
-        Optional<OptimalAsymmetricEncryptionPadding> oaepPAdding =
+        Optional<OAEP> oaepPAdding =
                 jcaOAEPPaddingMapper.parse(
                         "OAEPWithMD5AndMGF1Padding", testDetectionLocation, new TestConfig());
 
         assertThat(oaepPAdding).isPresent();
-        assertThat(oaepPAdding.get().is(OptimalAsymmetricEncryptionPadding.class)).isTrue();
-        OptimalAsymmetricEncryptionPadding oaep = oaepPAdding.get();
+        assertThat(oaepPAdding.get().is(OAEP.class)).isTrue();
+        OAEP oaep = oaepPAdding.get();
 
         Optional<MessageDigest> messageDigestOptional = oaep.getDigest();
         assertThat(messageDigestOptional).isPresent();
