@@ -19,16 +19,15 @@
  */
 package com.ibm.mapper.mapper.jca;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.padding.OAEP;
 import com.ibm.mapper.model.padding.PKCS1;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
 import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 class JcaPaddingMapperTest {
 
@@ -39,8 +38,7 @@ class JcaPaddingMapperTest {
 
         JcaPaddingMapper jcaPaddingMapper = new JcaPaddingMapper();
         Optional<? extends INode> asset =
-                jcaPaddingMapper.parse(
-                        "PKCS1Padding", testDetectionLocation);
+                jcaPaddingMapper.parse("PKCS1Padding", testDetectionLocation);
         assertThat(asset).isPresent();
         assertThat(asset.get()).isInstanceOf(PKCS1.class);
     }
@@ -52,8 +50,7 @@ class JcaPaddingMapperTest {
 
         JcaPaddingMapper jcaPaddingMapper = new JcaPaddingMapper();
         Optional<? extends INode> asset =
-                jcaPaddingMapper.parse(
-                        "OAEPWithMD5AndMGF1Padding", testDetectionLocation);
+                jcaPaddingMapper.parse("OAEPWithMD5AndMGF1Padding", testDetectionLocation);
         assertThat(asset).isPresent();
         assertThat(asset.get()).isInstanceOf(OAEP.class);
     }

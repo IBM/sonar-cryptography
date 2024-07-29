@@ -19,16 +19,15 @@
  */
 package com.ibm.mapper.mapper.jca;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.mode.CCM;
 import com.ibm.mapper.model.mode.OFB;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
 import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 class JcaModeMapperTest {
 
@@ -38,8 +37,7 @@ class JcaModeMapperTest {
                 new DetectionLocation("testfile", 1, 1, List.of("test"));
 
         JcaModeMapper jcaModeMapper = new JcaModeMapper();
-        Optional<Mode> modeOptional =
-                jcaModeMapper.parse("CCM", testDetectionLocation);
+        Optional<Mode> modeOptional = jcaModeMapper.parse("CCM", testDetectionLocation);
 
         assertThat(modeOptional).isPresent();
         assertThat(modeOptional.get()).isInstanceOf(CCM.class);
@@ -52,8 +50,7 @@ class JcaModeMapperTest {
                 new DetectionLocation("testfile", 1, 1, List.of("test"));
 
         JcaModeMapper jcaModeMapper = new JcaModeMapper();
-        Optional<Mode> modeOptional =
-                jcaModeMapper.parse("OFB32", testDetectionLocation);
+        Optional<Mode> modeOptional = jcaModeMapper.parse("OFB32", testDetectionLocation);
 
         assertThat(modeOptional).isPresent();
         assertThat(modeOptional.get()).isInstanceOf(OFB.class);

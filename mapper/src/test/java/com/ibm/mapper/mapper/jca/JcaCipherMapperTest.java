@@ -19,6 +19,8 @@
  */
 package com.ibm.mapper.mapper.jca;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.Cipher;
@@ -32,12 +34,9 @@ import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.mode.CFB;
 import com.ibm.mapper.model.mode.ECB;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
 import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 class JcaCipherMapperTest {
 
@@ -48,8 +47,7 @@ class JcaCipherMapperTest {
 
         JcaCipherMapper jcaCipherMapper = new JcaCipherMapper();
         Optional<? extends Algorithm> cipherOptional =
-                jcaCipherMapper.parse(
-                        "AES/ECB/PKCS5Padding", testDetectionLocation);
+                jcaCipherMapper.parse("AES/ECB/PKCS5Padding", testDetectionLocation);
 
         assertThat(cipherOptional).isPresent();
         assertThat(cipherOptional.get().is(BlockCipher.class)).isTrue();
@@ -73,8 +71,7 @@ class JcaCipherMapperTest {
 
         JcaCipherMapper jcaCipherMapper = new JcaCipherMapper();
         Optional<? extends Algorithm> cipherOptional =
-                jcaCipherMapper.parse(
-                        "PBEWithMD5AndDES", testDetectionLocation);
+                jcaCipherMapper.parse("PBEWithMD5AndDES", testDetectionLocation);
 
         assertThat(cipherOptional).isPresent();
         assertThat(cipherOptional.get().is(PasswordBasedEncryption.class)).isTrue();
@@ -105,8 +102,7 @@ class JcaCipherMapperTest {
 
         JcaCipherMapper jcaCipherMapper = new JcaCipherMapper();
         Optional<? extends Algorithm> cipherOptional =
-                jcaCipherMapper.parse(
-                        "AES/CFB8/NoPadding", testDetectionLocation);
+                jcaCipherMapper.parse("AES/CFB8/NoPadding", testDetectionLocation);
 
         assertThat(cipherOptional).isPresent();
         assertThat(cipherOptional.get().is(BlockCipher.class)).isTrue();

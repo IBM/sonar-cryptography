@@ -70,7 +70,8 @@ public class JcaPasswordBasedEncryptionMapper implements IMapper {
 
         // hmac
         JcaMacMapper macMapper = new JcaMacMapper();
-        Optional<? extends Algorithm> macOptional = macMapper.parse(hmacOrDigestStr, detectionLocation);
+        Optional<? extends Algorithm> macOptional =
+                macMapper.parse(hmacOrDigestStr, detectionLocation);
         if (macOptional.isPresent() && macOptional.get() instanceof HMAC hmac) {
             if (cipherOptional.isPresent() && cipherOptional.get() instanceof Cipher cipher) {
                 return Optional.of(new PasswordBasedEncryption(hmac, cipher));
@@ -83,8 +84,9 @@ public class JcaPasswordBasedEncryptionMapper implements IMapper {
         JcaMessageDigestMapper messageDigestMapper = new JcaMessageDigestMapper();
         Optional<MessageDigest> messageDigestOptional =
                 messageDigestMapper.parse(hmacOrDigestStr, detectionLocation);
-        if (messageDigestOptional.isPresent() &&
-                cipherOptional.isPresent() && cipherOptional.get() instanceof Cipher cipher) {
+        if (messageDigestOptional.isPresent()
+                && cipherOptional.isPresent()
+                && cipherOptional.get() instanceof Cipher cipher) {
             return Optional.of(new PasswordBasedEncryption(messageDigestOptional.get(), cipher));
         }
 

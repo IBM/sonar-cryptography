@@ -76,13 +76,14 @@ public final class PasswordBasedEncryption extends Algorithm {
     @Nonnull
     public Optional<Cipher> getCipher() {
         return this.getChildren().values().stream()
-                .map(n -> {
-                    if (n instanceof Cipher cipher) {
-                        return cipher;
-                    } else {
-                        return null;
-                    }
-                })
+                .map(
+                        n -> {
+                            if (n instanceof Cipher cipher) {
+                                return cipher;
+                            } else {
+                                return null;
+                            }
+                        })
                 .filter(Objects::nonNull)
                 .findFirst();
     }

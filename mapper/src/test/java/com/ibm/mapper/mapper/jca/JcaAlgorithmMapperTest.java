@@ -19,6 +19,8 @@
  */
 package com.ibm.mapper.mapper.jca;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.HMAC;
@@ -31,12 +33,9 @@ import com.ibm.mapper.model.PseudorandomNumberGenerator;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
 import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 class JcaAlgorithmMapperTest {
 
@@ -47,8 +46,7 @@ class JcaAlgorithmMapperTest {
 
         JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
         Optional<? extends INode> assetOptional =
-                jcaAlgorithmMapper.parse(
-                        "AES/CFB8/NoPadding", testDetectionLocation);
+                jcaAlgorithmMapper.parse("AES/CFB8/NoPadding", testDetectionLocation);
         assertThat(assetOptional).isPresent();
         assertThat(assetOptional.get().is(BlockCipher.class)).isTrue();
     }
@@ -60,8 +58,7 @@ class JcaAlgorithmMapperTest {
 
         JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
         Optional<? extends INode> assetOptional =
-                jcaAlgorithmMapper.parse(
-                        "ChaCha20/NONE/NoPadding", testDetectionLocation);
+                jcaAlgorithmMapper.parse("ChaCha20/NONE/NoPadding", testDetectionLocation);
         assertThat(assetOptional).isPresent();
         assertThat(assetOptional.get().is(StreamCipher.class)).isTrue();
     }
@@ -73,8 +70,7 @@ class JcaAlgorithmMapperTest {
 
         JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
         Optional<? extends INode> assetOptional =
-                jcaAlgorithmMapper.parse(
-                        "AES/GCM/NoPadding", testDetectionLocation);
+                jcaAlgorithmMapper.parse("AES/GCM/NoPadding", testDetectionLocation);
         assertThat(assetOptional).isPresent();
         assertThat(assetOptional.get().is(AuthenticatedEncryption.class)).isTrue();
     }
@@ -98,8 +94,7 @@ class JcaAlgorithmMapperTest {
 
         JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
         Optional<? extends INode> assetOptional =
-                jcaAlgorithmMapper.parse(
-                        "HmacSHA512/224", testDetectionLocation);
+                jcaAlgorithmMapper.parse("HmacSHA512/224", testDetectionLocation);
         assertThat(assetOptional).isPresent();
         assertThat(assetOptional.get().is(HMAC.class)).isTrue();
     }
@@ -111,8 +106,7 @@ class JcaAlgorithmMapperTest {
 
         JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
         Optional<? extends INode> assetOptional =
-                jcaAlgorithmMapper.parse(
-                        "SHA-512/224", testDetectionLocation);
+                jcaAlgorithmMapper.parse("SHA-512/224", testDetectionLocation);
         assertThat(assetOptional).isPresent();
         assertThat(assetOptional.get().is(MessageDigest.class)).isTrue();
     }
@@ -124,8 +118,7 @@ class JcaAlgorithmMapperTest {
 
         JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
         Optional<? extends INode> assetOptional =
-                jcaAlgorithmMapper.parse(
-                        "PBEWithHmacSHA256AndAES", testDetectionLocation);
+                jcaAlgorithmMapper.parse("PBEWithHmacSHA256AndAES", testDetectionLocation);
         assertThat(assetOptional).isPresent();
         assertThat(assetOptional.get().is(PasswordBasedEncryption.class)).isTrue();
     }
@@ -137,8 +130,7 @@ class JcaAlgorithmMapperTest {
 
         JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
         Optional<? extends INode> assetOptional =
-                jcaAlgorithmMapper.parse(
-                        "PBKDF2WithHmacSHA256", testDetectionLocation);
+                jcaAlgorithmMapper.parse("PBKDF2WithHmacSHA256", testDetectionLocation);
         assertThat(assetOptional).isPresent();
         assertThat(assetOptional.get().is(PasswordBasedKeyDerivationFunction.class)).isTrue();
     }
@@ -162,8 +154,7 @@ class JcaAlgorithmMapperTest {
 
         JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
         Optional<? extends INode> assetOptional =
-                jcaAlgorithmMapper.parse(
-                        "SHA384withDSA", testDetectionLocation);
+                jcaAlgorithmMapper.parse("SHA384withDSA", testDetectionLocation);
         assertThat(assetOptional).isPresent();
         assertThat(assetOptional.get().is(Signature.class)).isTrue();
     }

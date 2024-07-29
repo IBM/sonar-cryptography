@@ -41,10 +41,9 @@ import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.mode.CCM;
 import com.ibm.mapper.model.mode.GCM;
 import com.ibm.mapper.utils.DetectionLocation;
-
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Optional;
 
 public class JcaCipherMapper implements IMapper {
 

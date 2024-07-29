@@ -25,12 +25,11 @@ import com.ibm.mapper.mapper.ssl.json.JsonCipherSuites;
 import com.ibm.mapper.model.CipherSuite;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Optional;
+import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class CipherSuiteMapper implements IMapper {
 

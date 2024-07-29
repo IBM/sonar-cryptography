@@ -19,19 +19,18 @@
  */
 package com.ibm.mapper.mapper.jca;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
 import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 class JcaPBKDFMapperTest {
 
@@ -42,8 +41,7 @@ class JcaPBKDFMapperTest {
 
         JcaPBKDFMapper jcaPBKDFMapper = new JcaPBKDFMapper();
         Optional<PasswordBasedKeyDerivationFunction> pbkdfOptional =
-                jcaPBKDFMapper.parse(
-                        "PBKDF2WithHmacSHA256", testDetectionLocation);
+                jcaPBKDFMapper.parse("PBKDF2WithHmacSHA256", testDetectionLocation);
 
         assertThat(pbkdfOptional).isPresent();
         assertThat(pbkdfOptional.get().getName()).isEqualTo("PBKDF2WithHmacSHA256");

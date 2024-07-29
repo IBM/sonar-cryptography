@@ -20,13 +20,12 @@
 package com.ibm.mapper.model;
 
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class Algorithm implements IAsset {
     @Nonnull protected final Map<Class<? extends INode>, INode> children;
@@ -35,8 +34,7 @@ public class Algorithm implements IAsset {
     @Nonnull protected final String name;
 
     public Algorithm(
-            @Nonnull Algorithm algorithm,
-            @Nonnull final Class<? extends Algorithm> asKind) {
+            @Nonnull Algorithm algorithm, @Nonnull final Class<? extends Algorithm> asKind) {
         this.name = algorithm.getName();
         this.children = algorithm.getChildren();
         this.detectionLocation = algorithm.detectionLocation;

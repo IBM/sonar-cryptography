@@ -19,19 +19,18 @@
  */
 package com.ibm.mapper.mapper.jca;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PasswordBasedEncryption;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 class JcaHMACMapperTest {
 
@@ -98,8 +97,7 @@ class JcaHMACMapperTest {
 
         JcaMacMapper jcaMacMapper = new JcaMacMapper();
         Optional<? extends Algorithm> macOptional =
-                jcaMacMapper.parse(
-                        "PBEWithHmacSHA256", testDetectionLocation);
+                jcaMacMapper.parse("PBEWithHmacSHA256", testDetectionLocation);
 
         assertThat(macOptional).isPresent();
         assertThat(macOptional.get().is(PasswordBasedEncryption.class)).isTrue();

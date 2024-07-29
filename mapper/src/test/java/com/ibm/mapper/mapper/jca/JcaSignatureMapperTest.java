@@ -38,8 +38,7 @@ class JcaSignatureMapperTest {
 
         JcaSignatureMapper jcaSignatureMapper = new JcaSignatureMapper();
         Optional<Signature> signatureOptional =
-                jcaSignatureMapper.parse(
-                        "NONEwithRSA", testDetectionLocation);
+                jcaSignatureMapper.parse("NONEwithRSA", testDetectionLocation);
 
         assertThat(signatureOptional).isPresent();
         assertThat(signatureOptional.get().getName()).isEqualTo("NONEwithRSA");
@@ -54,8 +53,7 @@ class JcaSignatureMapperTest {
 
         JcaSignatureMapper jcaSignatureMapper = new JcaSignatureMapper();
         Optional<Signature> signatureOptional =
-                jcaSignatureMapper.parse(
-                        "SHA384withDSA", testDetectionLocation);
+                jcaSignatureMapper.parse("SHA384withDSA", testDetectionLocation);
 
         assertThat(signatureOptional).isPresent();
         assertThat(signatureOptional.get().getName()).isEqualTo("SHA384withDSA");
@@ -79,8 +77,7 @@ class JcaSignatureMapperTest {
 
         JcaSignatureMapper jcaSignatureMapper = new JcaSignatureMapper();
         Optional<Signature> signatureOptional =
-                jcaSignatureMapper.parse(
-                        "SHA3-224withECDSA", testDetectionLocation);
+                jcaSignatureMapper.parse("SHA3-224withECDSA", testDetectionLocation);
 
         assertThat(signatureOptional).isPresent();
         assertThat(signatureOptional.get().getName()).isEqualTo("SHA3-224withECDSA");
@@ -104,8 +101,7 @@ class JcaSignatureMapperTest {
 
         JcaSignatureMapper jcaSignatureMapper = new JcaSignatureMapper();
         Optional<Signature> signatureOptional =
-                jcaSignatureMapper.parse(
-                        "SHA1withDSAinP1363Format", testDetectionLocation);
+                jcaSignatureMapper.parse("SHA1withDSAinP1363Format", testDetectionLocation);
 
         assertThat(signatureOptional).isPresent();
         assertThat(signatureOptional.get().getName()).isEqualTo("SHA1withDSAinP1363Format");
@@ -130,8 +126,7 @@ class JcaSignatureMapperTest {
 
         JcaSignatureMapper jcaSignatureMapper = new JcaSignatureMapper();
         Optional<Signature> signatureOptional =
-                jcaSignatureMapper.parse(
-                        "RSASSA-PSS", testDetectionLocation);
+                jcaSignatureMapper.parse("RSASSA-PSS", testDetectionLocation);
 
         assertThat(signatureOptional).isPresent();
         assertThat(signatureOptional.get().getName()).isEqualTo("RSASSA-PSS");

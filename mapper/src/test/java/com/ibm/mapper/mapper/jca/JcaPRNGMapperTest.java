@@ -19,17 +19,16 @@
  */
 package com.ibm.mapper.mapper.jca;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PseudorandomNumberGenerator;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 class JcaPRNGMapperTest {
 
@@ -40,8 +39,7 @@ class JcaPRNGMapperTest {
 
         JcaPRNGMapper jcaPRNGMapper = new JcaPRNGMapper();
         Optional<PseudorandomNumberGenerator> prngOptional =
-                jcaPRNGMapper.parse(
-                        "NativePRNGBlocking", testDetectionLocation);
+                jcaPRNGMapper.parse("NativePRNGBlocking", testDetectionLocation);
         assertThat(prngOptional).isPresent();
         assertThat(prngOptional.get().getName()).isEqualTo("NativePRNGBlocking");
         assertThat(prngOptional.get().hasChildren()).isFalse();

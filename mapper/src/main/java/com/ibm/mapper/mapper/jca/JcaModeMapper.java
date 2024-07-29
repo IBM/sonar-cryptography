@@ -33,10 +33,9 @@ import com.ibm.mapper.model.mode.OFB;
 import com.ibm.mapper.model.mode.PCBC;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.mapper.utils.Utils;
-
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Optional;
 
 public class JcaModeMapper implements IMapper {
 

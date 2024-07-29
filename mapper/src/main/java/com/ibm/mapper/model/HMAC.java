@@ -23,6 +23,14 @@ import javax.annotation.Nonnull;
 
 public class HMAC extends Algorithm {
     public HMAC(@Nonnull MessageDigest messageDigest) {
-        super(messageDigest, HMAC.class);
+        super(new Algorithm("Hmac" + buildDigestName(messageDigest) , messageDigest.detectionLocation), HMAC.class);
+        this.append(messageDigest);
+    }
+
+    @Nonnull
+    private static String buildDigestName(@Nonnull MessageDigest messageDigest) {
+        return messageDigest.getDigestSize()
+                .map(size -> messageDigest.asString() + size.asString())
+                .orElse(messageDigest.asString());
     }
 }

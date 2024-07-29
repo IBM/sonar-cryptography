@@ -29,8 +29,6 @@ public class PseudorandomNumberGenerator extends Algorithm {
     }
 
     public PseudorandomNumberGenerator(@Nonnull DetectionLocation detectionLocation) {
-        super(
-                new Algorithm("PRNG", detectionLocation),
-                PseudorandomNumberGenerator.class);
+        super(new Algorithm("PRNG", detectionLocation), PseudorandomNumberGenerator.class);
     }
 }

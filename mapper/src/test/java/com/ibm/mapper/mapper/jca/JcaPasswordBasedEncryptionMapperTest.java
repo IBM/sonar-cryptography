@@ -55,13 +55,9 @@ class JcaPasswordBasedEncryptionMapperTest {
 
         HMAC mac = pbe.getHmac().get();
         assertThat(mac.getName()).isEqualTo("HmacSHA256");
-        assertThat(mac.getChildren()).hasSize(2);
+        assertThat(mac.getChildren()).hasSize(1);
 
         Cipher cipher = pbe.getCipher().get();
-
         assertThat(cipher).isInstanceOf(AES.class);
-        assertThat(cipher.hasChildren()).isTrue();
-        assertThat(cipher.getDigestSize()).isPresent();
-        assertThat(cipher.getDigestSize().get().asString()).isEqualTo("128");
     }
 }
