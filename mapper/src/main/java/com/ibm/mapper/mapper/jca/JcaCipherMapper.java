@@ -62,7 +62,6 @@ public class JcaCipherMapper implements IMapper {
         String algorithmStr;
         Optional<Mode> modeOptional = Optional.empty();
         Optional<Padding> paddingOptional = Optional.empty();
-
         if (str.contains("/")) {
             int slashIndex = str.indexOf("/");
             algorithmStr = str.substring(0, slashIndex);
@@ -80,15 +79,17 @@ public class JcaCipherMapper implements IMapper {
             algorithmStr = str;
         }
 
-        Optional<? extends Cipher> possibleCipher = map(algorithmStr, detectionLocation);
+
 
         // check if it is pbe
         JcaPasswordBasedEncryptionMapper pbeMapper = new JcaPasswordBasedEncryptionMapper();
         Optional<PasswordBasedEncryption> pbeOptional =
                 pbeMapper.parse(algorithmStr, detectionLocation);
         if (pbeOptional.isPresent()) {
-            return JcaBaseAlgorithmMapper.generalizeAlgorithm(pbeOptional);
+            // pbe
         }
+
+        Optional<? extends Cipher> possibleCipher = map(algorithmStr, detectionLocation);
 
         // Authenticated Encryption check
         if (modeOptional.isPresent()) {

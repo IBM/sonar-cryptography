@@ -23,26 +23,15 @@ import javax.annotation.Nonnull;
 
 public final class AuthenticatedEncryption extends Cipher {
 
-    public AuthenticatedEncryption(@Nonnull Algorithm algorithm, @Nonnull Mode mode) {
-        super(algorithm, AuthenticatedEncryption.class);
+    public AuthenticatedEncryption(@Nonnull Cipher cipher, @Nonnull Mode mode) {
+        super(cipher, AuthenticatedEncryption.class);
         this.append(mode);
     }
 
     public AuthenticatedEncryption(
-            @Nonnull Algorithm algorithm, @Nonnull Mode mode, @Nonnull TagLength tagLength) {
-        super(algorithm, AuthenticatedEncryption.class);
+            @Nonnull Cipher cipher, @Nonnull Mode mode, @Nonnull Padding padding) {
+        super(cipher, AuthenticatedEncryption.class);
         this.append(mode);
-        this.append(tagLength);
-    }
-
-    public AuthenticatedEncryption(
-            @Nonnull Algorithm algorithm,
-            @Nonnull Mode mode,
-            @Nonnull TagLength tagLength,
-            @Nonnull Padding padding) {
-        super(algorithm, AuthenticatedEncryption.class);
-        this.append(mode);
-        this.append(tagLength);
         this.append(padding);
     }
 }
