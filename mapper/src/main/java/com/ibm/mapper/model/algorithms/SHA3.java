@@ -29,7 +29,7 @@ public final class SHA3 extends MessageDigest {
     private static final String NAME = "SHA3";
 
     public SHA3(int digestSize, @Nonnull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
+        super(new Algorithm(NAME + "-" + digestSize, detectionLocation));
         this.append(new DigestSize(digestSize, detectionLocation));
     }
 
@@ -37,7 +37,7 @@ public final class SHA3 extends MessageDigest {
             int digestSize,
             @Nonnull MessageDigest preHash,
             @Nonnull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
+        super(new Algorithm(NAME + "-" + digestSize, detectionLocation));
         this.append(new DigestSize(digestSize, detectionLocation));
         this.append(preHash);
     }

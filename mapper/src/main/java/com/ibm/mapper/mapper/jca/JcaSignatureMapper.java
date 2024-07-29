@@ -24,15 +24,17 @@ import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.OutputFormat;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.algorithms.DSA;
+import com.ibm.mapper.model.algorithms.ECDSA;
 import com.ibm.mapper.model.algorithms.Ed25519;
 import com.ibm.mapper.model.algorithms.Ed448;
 import com.ibm.mapper.model.algorithms.EdDSA;
 import com.ibm.mapper.model.algorithms.RSA;
-import com.ibm.mapper.model.algorithms.RSSssaPSS;
+import com.ibm.mapper.model.algorithms.RSAssaPSS;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class JcaSignatureMapper implements IMapper {
 
@@ -54,10 +56,6 @@ public class JcaSignatureMapper implements IMapper {
         JcaMessageDigestMapper jcaMessageDigestMapper = new JcaMessageDigestMapper();
         final Optional<MessageDigest> messageDigestOptional =
                 jcaMessageDigestMapper.parse(digestStr, detectionLocation);
-        if (messageDigestOptional.isEmpty()) {
-            return Optional.empty();
-        }
-        final MessageDigest messageDigest = messageDigestOptional.get();
 
         int encryptStartPos = hashEndPos + 4;
         String signatureStr = str.substring(encryptStartPos);
@@ -74,7 +72,7 @@ public class JcaSignatureMapper implements IMapper {
         return map(signatureStr, detectionLocation)
                 .map(
                         signature -> {
-                            signature.append(messageDigest);
+                            messageDigestOptional.ifPresent(signature::append);
                             if (format != null) {
                                 signature.append(new OutputFormat(format, detectionLocation));
                             }
@@ -89,7 +87,8 @@ public class JcaSignatureMapper implements IMapper {
             case "ED25519" -> Optional.of(new Ed25519(detectionLocation));
             case "ED448" -> Optional.of(new Ed448(detectionLocation));
             case "EDDSA" -> Optional.of(new EdDSA(detectionLocation));
-            case "RSASSA-PSS" -> Optional.of(new RSSssaPSS(detectionLocation));
+            case "RSASSA-PSS" -> Optional.of(new RSAssaPSS(detectionLocation));
+            case "ECDSA" -> Optional.of(new ECDSA(detectionLocation));
             case "DSA" -> Optional.of(new DSA(detectionLocation));
             case "RSA" -> Optional.of(new RSA(detectionLocation)).map(Signature::new);
             default -> Optional.empty();

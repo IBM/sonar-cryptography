@@ -25,9 +25,9 @@ import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
-public final class RSSssaPSS extends Signature {
+public final class RSAssaPSS extends Signature {
 
-    public RSSssaPSS(@NotNull DetectionLocation detectionLocation) {
+    public RSAssaPSS(@NotNull DetectionLocation detectionLocation) {
         super(new Algorithm("RSASSA-PSS", detectionLocation));
         this.append(new ProbabilisticSignatureScheme(detectionLocation));
         this.append(new RSA(detectionLocation));

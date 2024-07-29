@@ -28,6 +28,10 @@ import org.jetbrains.annotations.NotNull;
 public final class ECDSA extends Signature {
     private static final String NAME = "ECDSA";
 
+    public ECDSA(@NotNull DetectionLocation detectionLocation) {
+        super(new Algorithm(NAME, detectionLocation));
+    }
+
     public ECDSA(
             @NotNull EllipticCurve ellipticCurve, @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
