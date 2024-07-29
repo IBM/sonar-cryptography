@@ -19,28 +19,30 @@
  */
 package com.ibm.mapper.mapper.jca;
 
+import com.ibm.mapper.model.KeyAgreement;
+import com.ibm.mapper.model.algorithms.x448;
+import com.ibm.mapper.utils.DetectionLocation;
 import org.junit.jupiter.api.Test;
 
-class JcaEllipticCurveAlgorithmMapperTest {
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+
+class JcaKeyAgreementMapperTest {
 
     @Test
     void base() {
-        /*DetectionLocation testDetectionLocation =
+        DetectionLocation testDetectionLocation =
                 new DetectionLocation("testfile", 1, 1, List.of("test"));
 
-        JcaEllipticCurveMapper jcaEllipticCurveMapper = new JcaEllipticCurveMapper();
-        Optional<Algorithm> ellipticCurveOptional =
-                jcaEllipticCurveMapper.parse("X448", testDetectionLocation, Configuration.DEFAULT);
+        JcaKeyAgreementMapper jcaKeyAgreementMapperTest = new JcaKeyAgreementMapper();
+        Optional<KeyAgreement> keyAgreementOptional =
+                jcaKeyAgreementMapperTest.parse("X448", testDetectionLocation);
 
-        assertThat(ellipticCurveOptional).isPresent();
-        assertThat(ellipticCurveOptional.get().getName()).isEqualTo("X448");
-        assertThat(((KeyAgreement) ellipticCurveOptional.get()).hasChildOfType(EllipticCurve.class))
-                .isPresent();
-        assertThat(
-                        ((KeyAgreement) ellipticCurveOptional.get())
-                                .hasChildOfType(EllipticCurve.class)
-                                .get()
-                                .asString())
-                .isEqualTo("curve448");*/
+        assertThat(keyAgreementOptional).isPresent();
+        assertThat(keyAgreementOptional.get()).isInstanceOf(x448.class);
+        assertThat(keyAgreementOptional.get().is(KeyAgreement.class)).isTrue();
     }
 }
