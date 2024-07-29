@@ -28,26 +28,6 @@ public class Signature extends Algorithm {
         super(algorithm, algorithm.detectionLocation, Signature.class);
     }
 
-    public Signature(
-            @Nonnull Algorithm algorithm,
-            @Nonnull MessageDigest digest,
-            @Nonnull Algorithm signatureAlgorithm) {
-        super(algorithm, algorithm.detectionLocation, Signature.class);
-        this.append(digest);
-        this.append(signatureAlgorithm);
-    }
-
-    public Signature(
-            @Nonnull Algorithm algorithm,
-            @Nonnull MessageDigest digest,
-            @Nonnull Algorithm signatureAlgorithm,
-            @Nonnull MaskGenerationFunction maskGenerationFunction) {
-        super(algorithm, algorithm.detectionLocation, Signature.class);
-        this.append(digest);
-        this.append(signatureAlgorithm);
-        this.append(maskGenerationFunction);
-    }
-
     @Nonnull
     public Optional<OutputFormat> getFormat() {
         INode node = this.getChildren().get(OutputFormat.class);
@@ -64,24 +44,6 @@ public class Signature extends Algorithm {
             return Optional.empty();
         }
         return Optional.of((MessageDigest) node);
-    }
-
-    @Nonnull
-    public Optional<Algorithm> getSignatureAlgorithm() {
-        INode node = this.getChildren().get(Algorithm.class);
-        if (node == null) {
-            return Optional.empty();
-        }
-        return Optional.of((Algorithm) node);
-    }
-
-    @Nonnull
-    public Optional<MaskGenerationFunction> getMGF() {
-        INode node = this.getChildren().get(MaskGenerationFunction.class);
-        if (node == null) {
-            return Optional.empty();
-        }
-        return Optional.of((MaskGenerationFunction) node);
     }
 
     public boolean isProbabilisticSignatureScheme() {

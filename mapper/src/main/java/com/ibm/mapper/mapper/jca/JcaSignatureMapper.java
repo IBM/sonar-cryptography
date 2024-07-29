@@ -19,18 +19,17 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.IMapper;
-import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.MaskGenerationFunction;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.OutputFormat;
-import com.ibm.mapper.model.ProbabilisticSignatureScheme;
 import com.ibm.mapper.model.Signature;
+import com.ibm.mapper.model.algorithms.DSA;
+import com.ibm.mapper.model.algorithms.Ed25519;
+import com.ibm.mapper.model.algorithms.Ed448;
+import com.ibm.mapper.model.algorithms.EdDSA;
+import com.ibm.mapper.model.algorithms.RSA;
+import com.ibm.mapper.model.algorithms.RSSssaPSS;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,93 +39,60 @@ public class JcaSignatureMapper implements IMapper {
     @Nonnull
     @Override
     public Optional<Signature> parse(
-            @Nullable String str,
-            @Nonnull DetectionLocation detectionLocation,
-            @Nonnull Configuration configuration) {
+            @Nullable String str, @Nonnull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }
 
         final String generalizedStr = str.toLowerCase().trim();
         if (!generalizedStr.contains("with")) {
-            if (!generalizedStr.equalsIgnoreCase("RSASSA-PSS")) {
-                return Optional.empty();
-            }
-            final Algorithm algorithm = new Algorithm("RSASSA-PSS", detectionLocation);
-            final Signature signature = new Signature(algorithm);
-            final ProbabilisticSignatureScheme probabilisticSignatureScheme =
-                    new ProbabilisticSignatureScheme(detectionLocation);
-            signature.append(probabilisticSignatureScheme);
-
-            final JcaBaseAlgorithmMapper jcaBaseAlgorithmMapper = new JcaBaseAlgorithmMapper();
-            jcaBaseAlgorithmMapper
-                    .parse("RSA", detectionLocation, configuration)
-                    .ifPresent(signature::append);
-
-            return Optional.of(signature);
+            return map(str, detectionLocation);
         }
 
-        Map<Class<? extends INode>, INode> assets = new HashMap<>();
         int hashEndPos = generalizedStr.indexOf("with");
         String digestStr = str.substring(0, hashEndPos);
         JcaMessageDigestMapper jcaMessageDigestMapper = new JcaMessageDigestMapper();
-        Optional<MessageDigest> messageDigestOptional =
-                jcaMessageDigestMapper.parse(digestStr, detectionLocation, configuration);
-        messageDigestOptional.ifPresent(digest -> assets.put(digest.getKind(), digest));
+        final Optional<MessageDigest> messageDigestOptional =
+                jcaMessageDigestMapper.parse(digestStr, detectionLocation);
+        if (messageDigestOptional.isEmpty()) {
+            return Optional.empty();
+        }
+        final MessageDigest messageDigest = messageDigestOptional.get();
 
         int encryptStartPos = hashEndPos + 4;
         String signatureStr = str.substring(encryptStartPos);
-        String mgf = null;
-        String format = null;
-
-        if (generalizedStr.contains("and")) {
-            int andStartPos = generalizedStr.indexOf("and");
-            int andEndPos = andStartPos + 3;
-            signatureStr = str.substring(encryptStartPos, andStartPos);
-            if (generalizedStr.contains("in") && generalizedStr.contains("format")) {
-                int inStartPos = generalizedStr.indexOf("in");
-                int inEndPos = inStartPos + 2;
-                mgf = str.substring(andEndPos, inStartPos);
-                format = str.substring(inEndPos);
-            } else {
-                mgf = str.substring(andEndPos);
-            }
-        } else if (generalizedStr.contains("in") && generalizedStr.contains("format")) {
+        final String format;
+        if (generalizedStr.contains("in") && generalizedStr.contains("format")) {
             int inStartPos = generalizedStr.indexOf("in");
             int inEndPos = inStartPos + 2;
             signatureStr = str.substring(encryptStartPos, inStartPos);
             format = str.substring(inEndPos);
+        } else {
+            format = null;
         }
 
-        if (mgf != null) {
-            final JcaMGFMapper jcaMGFMapper = new JcaMGFMapper();
-            Optional<MaskGenerationFunction> mgfOptional =
-                    jcaMGFMapper.parse(mgf, detectionLocation, configuration);
-            mgfOptional.ifPresent(
-                    maskGenerationFunction ->
-                            assets.put(maskGenerationFunction.getKind(), maskGenerationFunction));
-        }
+        return map(signatureStr, detectionLocation)
+                .map(
+                        signature -> {
+                            signature.append(messageDigest);
+                            if (format != null) {
+                                signature.append(new OutputFormat(format, detectionLocation));
+                            }
+                            return signature;
+                        });
+    }
 
-        final JcaBaseAlgorithmMapper jcaBaseAlgorithmMapper = new JcaBaseAlgorithmMapper();
-        Optional<Algorithm> signatureOptional =
-                jcaBaseAlgorithmMapper.parse(signatureStr, detectionLocation, configuration);
-        signatureOptional.ifPresent(signature -> assets.put(signature.getKind(), signature));
-
-        // generate Signature
-        Optional<Algorithm> singatureAlgorithmOptional =
-                jcaBaseAlgorithmMapper.parseAndAddChildren(
-                        str, detectionLocation, configuration, assets);
-        if (singatureAlgorithmOptional.isEmpty()) {
-            return Optional.empty();
-        }
-
-        Signature signature = new Signature(singatureAlgorithmOptional.get());
-        if (format != null) {
-            OutputFormat outputFormat = new OutputFormat(format, detectionLocation);
-            outputFormat.apply(configuration);
-            signature.append(outputFormat);
-        }
-
-        return Optional.of(signature);
+    @Nonnull
+    private Optional<Signature> map(
+            @Nonnull String signature, @Nonnull DetectionLocation detectionLocation) {
+        return switch (signature.toUpperCase().trim()) {
+            case "ED25519" -> Optional.of(new Ed25519(detectionLocation));
+            case "ED448" -> Optional.of(new Ed448(detectionLocation));
+            case "EDDSA" -> Optional.of(new EdDSA(detectionLocation));
+            case "RSASSA-PSS" -> Optional.of(new RSSssaPSS(detectionLocation));
+            case "DSA" -> Optional.of(new DSA(detectionLocation));
+            case "RSA" -> Optional.of(new RSA(detectionLocation)).map(Signature::new);
+            default -> Optional.empty();
+        };
     }
 }

@@ -17,29 +17,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.mapper.jca;
+package com.ibm.mapper.model.algorithms;
 
-import com.ibm.mapper.mapper.IMapper;
-import com.ibm.mapper.model.MaskGenerationFunction;
-import com.ibm.mapper.model.algorithms.MGF1;
+import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.ProbabilisticSignatureScheme;
+import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
-public class JcaMGFMapper implements IMapper {
+public final class RSSssaPSS extends Signature {
 
-    @Nonnull
-    @Override
-    public Optional<MaskGenerationFunction> parse(
-            @Nullable String str, @Nonnull DetectionLocation detectionLocation) {
-        if (str == null) {
-            return Optional.empty();
-        }
-
-        return switch (str.toUpperCase().trim()) {
-            case "MGF1" -> Optional.of(new MGF1(detectionLocation));
-            default -> Optional.empty();
-        };
+    public RSSssaPSS(@NotNull DetectionLocation detectionLocation) {
+        super(new Algorithm("RSASSA-PSS", detectionLocation));
+        this.append(new ProbabilisticSignatureScheme(detectionLocation));
+        this.append(new RSA(detectionLocation));
     }
 }
