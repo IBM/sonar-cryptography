@@ -19,16 +19,16 @@
  */
 package com.ibm.mapper.model;
 
-import java.util.Optional;
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 public class MessageDigest extends Algorithm {
     public MessageDigest(@Nonnull Algorithm algorithm) {
-        super(algorithm, algorithm.detectionLocation, MessageDigest.class);
+        super(algorithm, MessageDigest.class);
     }
 
     public MessageDigest(@Nonnull Algorithm algorithm, @Nonnull DigestSize digestSize) {
-        super(algorithm, algorithm.detectionLocation, MessageDigest.class);
+        super(algorithm, MessageDigest.class);
         this.append(digestSize);
     }
 
@@ -36,7 +36,7 @@ public class MessageDigest extends Algorithm {
             @Nonnull Algorithm algorithm,
             @Nonnull DigestSize digestSize,
             @Nonnull BlockSize blockSize) {
-        super(algorithm, algorithm.detectionLocation, MessageDigest.class);
+        super(algorithm, MessageDigest.class);
         this.append(digestSize);
         this.append(blockSize);
     }

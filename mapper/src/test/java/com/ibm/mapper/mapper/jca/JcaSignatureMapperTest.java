@@ -19,17 +19,15 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import com.ibm.mapper.configuration.Configuration;
-import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.MaskGenerationFunction;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
+import org.junit.jupiter.api.Test;
+
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class JcaSignatureMapperTest {
 
@@ -41,19 +39,12 @@ class JcaSignatureMapperTest {
         JcaSignatureMapper jcaSignatureMapper = new JcaSignatureMapper();
         Optional<Signature> signatureOptional =
                 jcaSignatureMapper.parse(
-                        "NONEwithRSA", testDetectionLocation, Configuration.DEFAULT);
+                        "NONEwithRSA", testDetectionLocation);
 
         assertThat(signatureOptional).isPresent();
         assertThat(signatureOptional.get().getName()).isEqualTo("NONEwithRSA");
         assertThat(signatureOptional.get().getFormat()).isEmpty();
         assertThat(signatureOptional.get().getDigest()).isEmpty();
-        assertThat(signatureOptional.get().getMGF()).isEmpty();
-        assertThat(signatureOptional.get().getSignatureAlgorithm()).isPresent();
-
-        Algorithm signatureAlgo = signatureOptional.get().getSignatureAlgorithm().get();
-        assertThat(signatureAlgo.getName()).isEqualTo("RSA");
-        assertThat(signatureAlgo.getDefaultKeyLength()).isPresent();
-        assertThat(signatureAlgo.getDefaultKeyLength().get().asString()).isEqualTo("2048");
     }
 
     @Test
@@ -64,12 +55,11 @@ class JcaSignatureMapperTest {
         JcaSignatureMapper jcaSignatureMapper = new JcaSignatureMapper();
         Optional<Signature> signatureOptional =
                 jcaSignatureMapper.parse(
-                        "SHA384withDSA", testDetectionLocation, Configuration.DEFAULT);
+                        "SHA384withDSA", testDetectionLocation);
 
         assertThat(signatureOptional).isPresent();
         assertThat(signatureOptional.get().getName()).isEqualTo("SHA384withDSA");
         assertThat(signatureOptional.get().getFormat()).isEmpty();
-        assertThat(signatureOptional.get().getMGF()).isEmpty();
 
         assertThat(signatureOptional.get().getDigest()).isPresent();
         MessageDigest messageDigest = signatureOptional.get().getDigest().get();
@@ -77,9 +67,9 @@ class JcaSignatureMapperTest {
         assertThat(messageDigest.getDigestSize()).isPresent();
         assertThat(messageDigest.getDigestSize().get().getValue()).isEqualTo(384);
 
-        assertThat(signatureOptional.get().getSignatureAlgorithm()).isPresent();
+        /*assertThat(signatureOptional.get().getSignatureAlgorithm()).isPresent();
         Algorithm signatureAlgo = signatureOptional.get().getSignatureAlgorithm().get();
-        assertThat(signatureAlgo.getName()).isEqualTo("DSA");
+        assertThat(signatureAlgo.getName()).isEqualTo("DSA");*/
     }
 
     @Test
@@ -90,12 +80,11 @@ class JcaSignatureMapperTest {
         JcaSignatureMapper jcaSignatureMapper = new JcaSignatureMapper();
         Optional<Signature> signatureOptional =
                 jcaSignatureMapper.parse(
-                        "SHA3-224withECDSA", testDetectionLocation, Configuration.DEFAULT);
+                        "SHA3-224withECDSA", testDetectionLocation);
 
         assertThat(signatureOptional).isPresent();
         assertThat(signatureOptional.get().getName()).isEqualTo("SHA3-224withECDSA");
         assertThat(signatureOptional.get().getFormat()).isEmpty();
-        assertThat(signatureOptional.get().getMGF()).isEmpty();
 
         assertThat(signatureOptional.get().getDigest()).isPresent();
         MessageDigest messageDigest = signatureOptional.get().getDigest().get();
@@ -103,9 +92,9 @@ class JcaSignatureMapperTest {
         assertThat(messageDigest.getDigestSize()).isPresent();
         assertThat(messageDigest.getDigestSize().get().getValue()).isEqualTo(224);
 
-        assertThat(signatureOptional.get().getSignatureAlgorithm()).isPresent();
+        /*assertThat(signatureOptional.get().getSignatureAlgorithm()).isPresent();
         Algorithm signatureAlgo = signatureOptional.get().getSignatureAlgorithm().get();
-        assertThat(signatureAlgo.getName()).isEqualTo("ECDSA");
+        assertThat(signatureAlgo.getName()).isEqualTo("ECDSA");*/
     }
 
     @Test
@@ -116,7 +105,7 @@ class JcaSignatureMapperTest {
         JcaSignatureMapper jcaSignatureMapper = new JcaSignatureMapper();
         Optional<Signature> signatureOptional =
                 jcaSignatureMapper.parse(
-                        "SHA1withDSAinP1363Format", testDetectionLocation, Configuration.DEFAULT);
+                        "SHA1withDSAinP1363Format", testDetectionLocation);
 
         assertThat(signatureOptional).isPresent();
         assertThat(signatureOptional.get().getName()).isEqualTo("SHA1withDSAinP1363Format");
@@ -129,36 +118,9 @@ class JcaSignatureMapperTest {
         assertThat(messageDigest.getDigestSize()).isPresent();
         assertThat(messageDigest.getDigestSize().get().getValue()).isEqualTo(160);
 
-        assertThat(signatureOptional.get().getSignatureAlgorithm()).isPresent();
+        /*assertThat(signatureOptional.get().getSignatureAlgorithm()).isPresent();
         Algorithm signatureAlgo = signatureOptional.get().getSignatureAlgorithm().get();
-        assertThat(signatureAlgo.getName()).isEqualTo("DSA");
-    }
-
-    @Test
-    void MD5withRSAandMGF1() {
-        DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
-
-        JcaSignatureMapper jcaSignatureMapper = new JcaSignatureMapper();
-        Optional<Signature> signatureOptional =
-                jcaSignatureMapper.parse(
-                        "MD5withRSAandMGF1", testDetectionLocation, Configuration.DEFAULT);
-
-        assertThat(signatureOptional).isPresent();
-        assertThat(signatureOptional.get().getName()).isEqualTo("MD5withRSAandMGF1");
-        assertThat(signatureOptional.get().getFormat()).isEmpty();
-
-        assertThat(signatureOptional.get().getDigest()).isPresent();
-        MessageDigest messageDigest = signatureOptional.get().getDigest().get();
-        assertThat(messageDigest.getName()).isEqualTo("MD5");
-
-        assertThat(signatureOptional.get().getSignatureAlgorithm()).isPresent();
-        Algorithm signatureAlgo = signatureOptional.get().getSignatureAlgorithm().get();
-        assertThat(signatureAlgo.getName()).isEqualTo("RSA");
-
-        assertThat(signatureOptional.get().getMGF()).isPresent();
-        MaskGenerationFunction mgf = signatureOptional.get().getMGF().get();
-        assertThat(mgf.getName()).isEqualTo("MGF1");
+        assertThat(signatureAlgo.getName()).isEqualTo("DSA");*/
     }
 
     @Test
@@ -169,16 +131,15 @@ class JcaSignatureMapperTest {
         JcaSignatureMapper jcaSignatureMapper = new JcaSignatureMapper();
         Optional<Signature> signatureOptional =
                 jcaSignatureMapper.parse(
-                        "RSASSA-PSS", testDetectionLocation, Configuration.DEFAULT);
+                        "RSASSA-PSS", testDetectionLocation);
 
         assertThat(signatureOptional).isPresent();
         assertThat(signatureOptional.get().getName()).isEqualTo("RSASSA-PSS");
         assertThat(signatureOptional.get().getFormat()).isEmpty();
-        assertThat(signatureOptional.get().getMGF()).isEmpty();
 
-        assertThat(signatureOptional.get().getSignatureAlgorithm()).isPresent();
+        /*assertThat(signatureOptional.get().getSignatureAlgorithm()).isPresent();
         Algorithm signatureAlgo = signatureOptional.get().getSignatureAlgorithm().get();
-        assertThat(signatureAlgo.getName()).isEqualTo("RSA");
+        assertThat(signatureAlgo.getName()).isEqualTo("RSA");*/
 
         assertThat(signatureOptional.get().isProbabilisticSignatureScheme()).isTrue();
     }

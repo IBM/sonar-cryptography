@@ -48,13 +48,6 @@ import com.ibm.plugin.translation.translator.contexts.JavaPRNGContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.JavaProtocolContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.JavaSecretKeyContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.JavaSignatureContextTranslator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,11 +62,18 @@ import org.sonar.plugins.java.api.tree.NewClassTree;
 import org.sonar.plugins.java.api.tree.SyntaxToken;
 import org.sonar.plugins.java.api.tree.Tree;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+
 public final class JavaTranslator
         extends ITranslator<JavaCheck, Tree, Symbol, JavaFileScannerContext> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JavaTranslator.class);
-    @Nonnull private final JavaMapperConfig javaMapperConfig = new JavaMapperConfig();
 
     public JavaTranslator() {
         // nothing
@@ -235,14 +235,14 @@ public final class JavaTranslator
         // cipher context
         if (detectionValueContext.is(CipherContext.class)) {
             JavaCipherContextTranslator javaCipherContextTranslation =
-                    new JavaCipherContextTranslator(javaMapperConfig);
+                    new JavaCipherContextTranslator();
             return javaCipherContextTranslation.translate(
                     bundleIdentifier, value, detectionValueContext, detectionLocation);
 
             // secret key context
         } else if (detectionValueContext.is(SecretKeyContext.class)) {
             JavaSecretKeyContextTranslator javaSecretKeyContextTranslation =
-                    new JavaSecretKeyContextTranslator(javaMapperConfig);
+                    new JavaSecretKeyContextTranslator();
             return javaSecretKeyContextTranslation.translate(
                     bundleIdentifier, value, detectionValueContext, detectionLocation);
 
@@ -252,56 +252,56 @@ public final class JavaTranslator
                 || detectionValueContext.is(PrivateKeyContext.class)
                 || detectionValueContext.is(SecretKeyContext.class)) {
             JavaKeyContextTranslator javaKeyContextTranslation =
-                    new JavaKeyContextTranslator(javaMapperConfig);
+                    new JavaKeyContextTranslator();
             return javaKeyContextTranslation.translate(
                     bundleIdentifier, value, detectionValueContext, detectionLocation);
 
             // key agreement context
         } else if (detectionValueContext.is(KeyAgreementContext.class)) {
             final JavaKeyAgreementContextTranslator javaKeyAgreementContextTranslator =
-                    new JavaKeyAgreementContextTranslator(javaMapperConfig);
+                    new JavaKeyAgreementContextTranslator();
             return javaKeyAgreementContextTranslator.translate(
                     bundleIdentifier, value, detectionValueContext, detectionLocation);
 
             // PRNG context
         } else if (detectionValueContext.is(PRNGContext.class)) {
             JavaPRNGContextTranslator javaPRNGContextTranslation =
-                    new JavaPRNGContextTranslator(javaMapperConfig);
+                    new JavaPRNGContextTranslator();
             return javaPRNGContextTranslation.translate(
                     bundleIdentifier, value, detectionValueContext, detectionLocation);
 
             // digest context
         } else if (detectionValueContext.is(DigestContext.class)) {
             JavaDigestContextTranslator javaDigestContextTranslation =
-                    new JavaDigestContextTranslator(javaMapperConfig);
+                    new JavaDigestContextTranslator();
             return javaDigestContextTranslation.translate(
                     bundleIdentifier, value, detectionValueContext, detectionLocation);
 
             // signature context
         } else if (detectionValueContext.is(SignatureContext.class)) {
             JavaSignatureContextTranslator javaSignatureContextTranslation =
-                    new JavaSignatureContextTranslator(javaMapperConfig);
+                    new JavaSignatureContextTranslator();
             return javaSignatureContextTranslation.translate(
                     bundleIdentifier, value, detectionValueContext, detectionLocation);
 
             // mac context
         } else if (detectionValueContext.is(MacContext.class)) {
             JavaMacContextTranslator javaMacContextTranslation =
-                    new JavaMacContextTranslator(javaMapperConfig);
+                    new JavaMacContextTranslator();
             return javaMacContextTranslation.translate(
                     bundleIdentifier, value, detectionValueContext, detectionLocation);
 
             // algorithm parameter context
         } else if (detectionValueContext.is(AlgorithmParameterContext.class)) {
             JavaAlgorithmParameterContextTranslator javaAlgorithmParameterContextTranslation =
-                    new JavaAlgorithmParameterContextTranslator(javaMapperConfig);
+                    new JavaAlgorithmParameterContextTranslator();
             return javaAlgorithmParameterContextTranslation.translate(
                     bundleIdentifier, value, detectionValueContext, detectionLocation);
 
             // protocol
         } else if (detectionValueContext.is(ProtocolContext.class)) {
             final JavaProtocolContextTranslator javaProtocolContextTranslator =
-                    new JavaProtocolContextTranslator(javaMapperConfig);
+                    new JavaProtocolContextTranslator();
             return javaProtocolContextTranslator.translate(
                     bundleIdentifier, value, detectionValueContext, detectionLocation);
         }

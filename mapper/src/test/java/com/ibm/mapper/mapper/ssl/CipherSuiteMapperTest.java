@@ -19,14 +19,14 @@
  */
 package com.ibm.mapper.mapper.ssl;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
+import org.junit.Test;
+
 import java.util.List;
 import java.util.Optional;
-import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CipherSuiteMapperTest {
 
@@ -39,8 +39,7 @@ public class CipherSuiteMapperTest {
         final Optional<? extends INode> node =
                 mapper.parse(
                         "TLS_DHE_DSS_WITH_AES_256_CBC_SHA256",
-                        testDetectionLocation,
-                        Configuration.DEFAULT);
+                        testDetectionLocation);
     }
 
     @Test

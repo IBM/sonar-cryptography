@@ -19,15 +19,16 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import com.ibm.mapper.configuration.Configuration;
-import com.ibm.mapper.configuration.TestConfig;
 import com.ibm.mapper.model.Mode;
+import com.ibm.mapper.model.mode.CCM;
+import com.ibm.mapper.model.mode.OFB;
 import com.ibm.mapper.utils.DetectionLocation;
+import org.junit.jupiter.api.Test;
+
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class JcaModeMapperTest {
 
@@ -38,10 +39,10 @@ class JcaModeMapperTest {
 
         JcaModeMapper jcaModeMapper = new JcaModeMapper();
         Optional<Mode> modeOptional =
-                jcaModeMapper.parse("CCM", testDetectionLocation, Configuration.DEFAULT);
+                jcaModeMapper.parse("CCM", testDetectionLocation);
 
         assertThat(modeOptional).isPresent();
-        assertThat(modeOptional.get().getName()).isEqualTo("CCM");
+        assertThat(modeOptional.get()).isInstanceOf(CCM.class);
         assertThat(modeOptional.get().getBlockSize()).isEmpty();
     }
 
@@ -52,25 +53,11 @@ class JcaModeMapperTest {
 
         JcaModeMapper jcaModeMapper = new JcaModeMapper();
         Optional<Mode> modeOptional =
-                jcaModeMapper.parse("OFB32", testDetectionLocation, Configuration.DEFAULT);
+                jcaModeMapper.parse("OFB32", testDetectionLocation);
 
         assertThat(modeOptional).isPresent();
-        assertThat(modeOptional.get().getName()).isEqualTo("OFB");
+        assertThat(modeOptional.get()).isInstanceOf(OFB.class);
         assertThat(modeOptional.get().getBlockSize()).isPresent();
         assertThat(modeOptional.get().getBlockSize().get().getValue()).isEqualTo(32);
-    }
-
-    @Test
-    void configuration() {
-        DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
-
-        JcaModeMapper jcaModeMapper = new JcaModeMapper();
-        Optional<Mode> modeOptional =
-                jcaModeMapper.parse("CCM", testDetectionLocation, new TestConfig());
-
-        assertThat(modeOptional).isPresent();
-        assertThat(modeOptional.get().getName()).isEqualTo("ccm");
-        assertThat(modeOptional.get().getBlockSize()).isEmpty();
     }
 }

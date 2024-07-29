@@ -24,7 +24,6 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.DigestContext;
 import com.ibm.engine.model.context.IDetectionContext;
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.jca.JcaMessageDigestMapper;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
@@ -32,15 +31,12 @@ import com.ibm.mapper.model.MaskGenerationFunction;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
 
-public final class JavaDigestContextTranslator extends JavaAbstractLibraryTranslator {
+import java.util.Optional;
 
-    public JavaDigestContextTranslator(@NotNull Configuration configuration) {
-        super(configuration);
-    }
+public final class JavaDigestContextTranslator extends JavaAbstractLibraryTranslator {
 
     @Override
     protected @NotNull Optional<INode> translateJCA(
@@ -50,7 +46,7 @@ public final class JavaDigestContextTranslator extends JavaAbstractLibraryTransl
         if (value instanceof Algorithm<Tree>) {
             JcaMessageDigestMapper messageDigestMapper = new JcaMessageDigestMapper();
             return messageDigestMapper
-                    .parse(value.asString(), detectionLocation, configuration)
+                    .parse(value.asString(), detectionLocation)
                     .map(
                             algo -> {
                                 algo.append(new Digest(detectionLocation));

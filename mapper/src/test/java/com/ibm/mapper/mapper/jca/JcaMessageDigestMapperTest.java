@@ -19,17 +19,16 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import com.ibm.mapper.configuration.Configuration;
-import com.ibm.mapper.configuration.TestConfig;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
+import org.junit.jupiter.api.Test;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class JcaMessageDigestMapperTest {
 
@@ -41,7 +40,7 @@ class JcaMessageDigestMapperTest {
         JcaMessageDigestMapper jcaMessageDigestMapper = new JcaMessageDigestMapper();
         Optional<MessageDigest> messageDigestOptional =
                 jcaMessageDigestMapper.parse(
-                        "SHA3-224", testDetectionLocation, Configuration.DEFAULT);
+                        "SHA3-224", testDetectionLocation);
 
         assertThat(messageDigestOptional).isPresent();
         assertThat(messageDigestOptional.get().getName()).isEqualTo("SHA3-224");
@@ -59,7 +58,7 @@ class JcaMessageDigestMapperTest {
         JcaMessageDigestMapper jcaMessageDigestMapper = new JcaMessageDigestMapper();
         Optional<MessageDigest> messageDigestOptional =
                 jcaMessageDigestMapper.parse(
-                        "SHA-512/224", testDetectionLocation, Configuration.DEFAULT);
+                        "SHA-512/224", testDetectionLocation);
         assertThat(messageDigestOptional).isPresent();
 
         MessageDigest messageDigest = messageDigestOptional.get();
@@ -81,7 +80,7 @@ class JcaMessageDigestMapperTest {
 
         JcaMessageDigestMapper jcaMessageDigestMapper = new JcaMessageDigestMapper();
         Optional<MessageDigest> messageDigestOptional =
-                jcaMessageDigestMapper.parse("SHA3-224", testDetectionLocation, new TestConfig());
+                jcaMessageDigestMapper.parse("SHA3-224", testDetectionLocation);
 
         assertThat(messageDigestOptional).isPresent();
         assertThat(messageDigestOptional.get().getName()).isEqualTo("sha3-224");

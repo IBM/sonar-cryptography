@@ -20,6 +20,7 @@
 package com.ibm.mapper.mapper.jca;
 
 import com.ibm.mapper.mapper.IMapper;
+import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.model.DigestSize;
@@ -40,9 +41,10 @@ import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.mode.CCM;
 import com.ibm.mapper.model.mode.GCM;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class JcaCipherMapper implements IMapper {
 
@@ -52,7 +54,7 @@ public class JcaCipherMapper implements IMapper {
 
     @Nonnull
     @Override
-    public Optional<? extends Cipher> parse(
+    public Optional<? extends Algorithm> parse(
             @Nullable final String str, @Nonnull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
@@ -87,6 +89,7 @@ public class JcaCipherMapper implements IMapper {
                 pbeMapper.parse(algorithmStr, detectionLocation);
         if (pbeOptional.isPresent()) {
             // pbe
+            return pbeOptional;
         }
 
         Optional<? extends Cipher> possibleCipher = map(algorithmStr, detectionLocation);

@@ -20,14 +20,16 @@
 package com.ibm.mapper.mapper.jca;
 
 import com.ibm.mapper.mapper.IMapper;
+import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PasswordBasedEncryption;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class JcaPasswordBasedEncryptionMapper implements IMapper {
 
@@ -60,28 +62,30 @@ public class JcaPasswordBasedEncryptionMapper implements IMapper {
         }
 
         // cipher
-        Optional<? extends Cipher> cipher = Optional.empty();
+        Optional<? extends Algorithm> cipherOptional = Optional.empty();
         if (cipherStr != null) {
             JcaCipherMapper cipherMapper = new JcaCipherMapper();
-            cipher = cipherMapper.parse(cipherStr, detectionLocation);
+            cipherOptional = cipherMapper.parse(cipherStr, detectionLocation);
         }
 
         // hmac
         JcaMacMapper macMapper = new JcaMacMapper();
-        Optional<HMAC> macOptional = macMapper.parse(hmacOrDigestStr, detectionLocation);
-        if (macOptional.isPresent()) {
-            // heck for cipher
-            return Optional.of(
-                    cipher.map(c -> new PasswordBasedEncryption(macOptional.get(), c))
-                            .orElse(new PasswordBasedEncryption(macOptional.get())));
+        Optional<? extends Algorithm> macOptional = macMapper.parse(hmacOrDigestStr, detectionLocation);
+        if (macOptional.isPresent() && macOptional.get() instanceof HMAC hmac) {
+            if (cipherOptional.isPresent() && cipherOptional.get() instanceof Cipher cipher) {
+                return Optional.of(new PasswordBasedEncryption(hmac, cipher));
+            } else {
+                return Optional.of(new PasswordBasedEncryption(hmac));
+            }
         }
 
         // digest
         JcaMessageDigestMapper messageDigestMapper = new JcaMessageDigestMapper();
         Optional<MessageDigest> messageDigestOptional =
                 messageDigestMapper.parse(hmacOrDigestStr, detectionLocation);
-        if (messageDigestOptional.isPresent()) {
-            return cipher.map(c -> new PasswordBasedEncryption(messageDigestOptional.get(), c));
+        if (messageDigestOptional.isPresent() &&
+                cipherOptional.isPresent() && cipherOptional.get() instanceof Cipher cipher) {
+            return Optional.of(new PasswordBasedEncryption(messageDigestOptional.get(), cipher));
         }
 
         return Optional.empty();

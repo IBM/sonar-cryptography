@@ -19,20 +19,19 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import com.ibm.mapper.configuration.Configuration;
-import com.ibm.mapper.configuration.TestConfig;
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.HMAC;
+import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PasswordBasedEncryption;
 import com.ibm.mapper.utils.DetectionLocation;
+import org.junit.jupiter.api.Test;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class JcaHMACMapperTest {
 
@@ -42,8 +41,8 @@ class JcaHMACMapperTest {
                 new DetectionLocation("testfile", 1, 1, List.of("test"));
 
         JcaMacMapper jcaMacMapper = new JcaMacMapper();
-        Optional<Algorithm> macOptional =
-                jcaMacMapper.parse("HmacSHA512/224", testDetectionLocation, Configuration.DEFAULT);
+        Optional<? extends Algorithm> macOptional =
+                jcaMacMapper.parse("HmacSHA512/224", testDetectionLocation);
 
         assertThat(macOptional).isPresent();
         assertThat(macOptional.get().getName()).isEqualTo("HmacSHA512/224");
@@ -72,8 +71,8 @@ class JcaHMACMapperTest {
                 new DetectionLocation("testfile", 1, 1, List.of("test"));
 
         JcaMacMapper jcaMacMapper = new JcaMacMapper();
-        Optional<Algorithm> macOptional =
-                jcaMacMapper.parse("HmacMD5", testDetectionLocation, Configuration.DEFAULT);
+        Optional<? extends Algorithm> macOptional =
+                jcaMacMapper.parse("HmacMD5", testDetectionLocation);
 
         assertThat(macOptional).isPresent();
         assertThat(macOptional.get().getName()).isEqualTo("HmacMD5");
@@ -98,19 +97,19 @@ class JcaHMACMapperTest {
                 new DetectionLocation("testfile", 1, 1, List.of("test"));
 
         JcaMacMapper jcaMacMapper = new JcaMacMapper();
-        Optional<Algorithm> macOptional =
+        Optional<? extends Algorithm> macOptional =
                 jcaMacMapper.parse(
-                        "PBEWithHmacSHA256", testDetectionLocation, Configuration.DEFAULT);
+                        "PBEWithHmacSHA256", testDetectionLocation);
 
         assertThat(macOptional).isPresent();
         assertThat(macOptional.get().is(PasswordBasedEncryption.class)).isTrue();
         PasswordBasedEncryption pbe = (PasswordBasedEncryption) macOptional.get();
 
         assertThat(pbe.getDigest()).isEmpty();
-        assertThat(pbe.getEncryptionAlgorithm()).isEmpty();
-        assertThat(pbe.getCipher()).isPresent();
+        assertThat(pbe.getCipher()).isEmpty();
+        assertThat(pbe.getHmac()).isPresent();
 
-        Optional<HMAC> mac = pbe.getCipher();
+        Optional<Cipher> mac = pbe.getCipher();
         assertThat(mac).isPresent();
         assertThat(mac.get().getName()).isEqualTo("HmacSHA256");
         assertThat(mac.get().hasChildren()).isTrue();
@@ -122,45 +121,6 @@ class JcaHMACMapperTest {
         assertThat(child.is(MessageDigest.class)).isTrue();
         MessageDigest messageDigest = (MessageDigest) child;
         assertThat(messageDigest.getName()).isEqualTo("SHA256");
-        assertThat(messageDigest.getDefaultKeyLength()).isPresent();
-        assertThat(messageDigest.getDefaultKeyLength().get().asString()).isEqualTo("256");
-        assertThat(messageDigest.getDigestSize()).isPresent();
-        assertThat(messageDigest.getDigestSize().get().getValue()).isEqualTo(256);
-        assertThat(messageDigest.getBlockSize()).isPresent();
-        assertThat(messageDigest.getBlockSize().get().getValue()).isEqualTo(512);
-    }
-
-    @Test
-    void configuration() {
-        DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
-
-        JcaMacMapper jcaMacMapper = new JcaMacMapper();
-        Optional<Algorithm> macOptional =
-                jcaMacMapper.parse("PBEWithHmacSHA256", testDetectionLocation, new TestConfig());
-
-        assertThat(macOptional).isPresent();
-        assertThat(macOptional.get().is(PasswordBasedEncryption.class)).isTrue();
-        PasswordBasedEncryption pbe = (PasswordBasedEncryption) macOptional.get();
-
-        assertThat(pbe.getDigest()).isEmpty();
-        assertThat(pbe.getEncryptionAlgorithm()).isEmpty();
-        assertThat(pbe.getCipher()).isPresent();
-
-        Optional<HMAC> mac = pbe.getCipher();
-        assertThat(mac).isPresent();
-        assertThat(mac.get().getName()).isEqualTo("hmacsha256");
-        assertThat(mac.get().hasChildren()).isTrue();
-
-        Map<Class<? extends INode>, INode> children = mac.get().getChildren();
-        assertThat(children).hasSize(2);
-        INode child = children.get(MessageDigest.class);
-
-        assertThat(child.is(MessageDigest.class)).isTrue();
-        MessageDigest messageDigest = (MessageDigest) child;
-        assertThat(messageDigest.getName()).isEqualTo("sha256");
-        assertThat(messageDigest.getDefaultKeyLength()).isPresent();
-        assertThat(messageDigest.getDefaultKeyLength().get().asString()).isEqualTo("256");
         assertThat(messageDigest.getDigestSize()).isPresent();
         assertThat(messageDigest.getDigestSize().get().getValue()).isEqualTo(256);
         assertThat(messageDigest.getBlockSize()).isPresent();

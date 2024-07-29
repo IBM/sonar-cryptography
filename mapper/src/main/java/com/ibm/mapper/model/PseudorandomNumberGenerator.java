@@ -25,13 +25,12 @@ import javax.annotation.Nonnull;
 public class PseudorandomNumberGenerator extends Algorithm {
 
     public PseudorandomNumberGenerator(@Nonnull Algorithm algorithm) {
-        super(algorithm, algorithm.detectionLocation, PseudorandomNumberGenerator.class);
+        super(algorithm, PseudorandomNumberGenerator.class);
     }
 
     public PseudorandomNumberGenerator(@Nonnull DetectionLocation detectionLocation) {
         super(
                 new Algorithm("PRNG", detectionLocation),
-                detectionLocation,
                 PseudorandomNumberGenerator.class);
     }
 }

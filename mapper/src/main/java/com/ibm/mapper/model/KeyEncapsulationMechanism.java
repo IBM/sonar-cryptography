@@ -23,6 +23,6 @@ import javax.annotation.Nonnull;
 
 public final class KeyEncapsulationMechanism extends Algorithm {
     public KeyEncapsulationMechanism(@Nonnull Algorithm algorithm) {
-        super(algorithm, algorithm.detectionLocation, KeyEncapsulationMechanism.class);
+        super(algorithm, KeyEncapsulationMechanism.class);
     }
 }

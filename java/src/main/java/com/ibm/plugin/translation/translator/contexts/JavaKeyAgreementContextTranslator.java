@@ -24,22 +24,18 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.KeyAction;
 import com.ibm.engine.model.KeySize;
 import com.ibm.engine.model.context.IDetectionContext;
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyAgreement;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
 
-public class JavaKeyAgreementContextTranslator extends JavaAbstractLibraryTranslator {
+import java.util.Optional;
 
-    public JavaKeyAgreementContextTranslator(@NotNull Configuration configuration) {
-        super(configuration);
-    }
+public class JavaKeyAgreementContextTranslator extends JavaAbstractLibraryTranslator {
 
     @Override
     protected @NotNull Optional<INode> translateJCA(
@@ -49,7 +45,7 @@ public class JavaKeyAgreementContextTranslator extends JavaAbstractLibraryTransl
         if (value instanceof Algorithm<Tree> algorithm) {
             final JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
             return jcaAlgorithmMapper
-                    .parse(algorithm.asString(), detectionLocation, configuration)
+                    .parse(algorithm.asString(), detectionLocation)
                     .map(iNode -> (com.ibm.mapper.model.Algorithm) iNode)
                     .map(KeyAgreement::new);
         } else if (value instanceof KeySize<Tree> keySize) {

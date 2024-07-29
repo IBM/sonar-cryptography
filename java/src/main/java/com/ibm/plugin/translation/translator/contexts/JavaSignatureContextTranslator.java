@@ -26,7 +26,6 @@ import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.model.context.SignatureContext;
 import com.ibm.mapper.ITranslator;
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.bc.BcOperationModeSigningMapper;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.model.Algorithm;
@@ -39,15 +38,12 @@ import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.model.functionality.Verify;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
 
-public final class JavaSignatureContextTranslator extends JavaAbstractLibraryTranslator {
+import java.util.Optional;
 
-    public JavaSignatureContextTranslator(@NotNull Configuration configuration) {
-        super(configuration);
-    }
+public final class JavaSignatureContextTranslator extends JavaAbstractLibraryTranslator {
 
     @Override
     protected @NotNull Optional<INode> translateJCA(
@@ -57,7 +53,7 @@ public final class JavaSignatureContextTranslator extends JavaAbstractLibraryTra
         if (value instanceof com.ibm.engine.model.Algorithm<Tree>) {
             final JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
             return jcaAlgorithmMapper
-                    .parse(value.asString(), detectionLocation, configuration)
+                    .parse(value.asString(), detectionLocation)
                     .map(a -> a);
         } else if (value instanceof SignatureAction<Tree> signatureAction) {
             return switch (signatureAction.getAction()) {
@@ -133,7 +129,7 @@ public final class JavaSignatureContextTranslator extends JavaAbstractLibraryTra
                     BcOperationModeSigningMapper bcOperationModeSigningMapper =
                             new BcOperationModeSigningMapper();
                     return bcOperationModeSigningMapper
-                            .parse(operationMode.asString(), detectionLocation, configuration)
+                            .parse(operationMode.asString(), detectionLocation)
                             .map(f -> f);
                 default:
                     break;

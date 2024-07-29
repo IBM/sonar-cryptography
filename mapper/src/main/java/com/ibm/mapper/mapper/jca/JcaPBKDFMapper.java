@@ -20,13 +20,15 @@
 package com.ibm.mapper.mapper.jca;
 
 import com.ibm.mapper.mapper.IMapper;
+import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
 import com.ibm.mapper.model.algorithms.PBKDF2;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class JcaPBKDFMapper implements IMapper {
 
@@ -47,7 +49,10 @@ public class JcaPBKDFMapper implements IMapper {
         String prf = str.substring(algoStartIndex);
 
         final JcaMacMapper jcaMacMapper = new JcaMacMapper();
-        final Optional<HMAC> macOptional = jcaMacMapper.parse(prf, detectionLocation);
-        return macOptional.map(mac -> new PBKDF2(mac, detectionLocation));
+        final Optional<? extends Algorithm> macOptional = jcaMacMapper.parse(prf, detectionLocation);
+        if (macOptional.isPresent() && macOptional.get() instanceof HMAC hmac) {
+            return macOptional.map(mac -> new PBKDF2(hmac, detectionLocation));
+        }
+        return Optional.empty();
     }
 }

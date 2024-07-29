@@ -20,12 +20,13 @@
 package com.ibm.mapper.model;
 
 import com.ibm.mapper.utils.DetectionLocation;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public class Algorithm implements IAsset {
     @Nonnull protected final Map<Class<? extends INode>, INode> children;
@@ -33,40 +34,12 @@ public class Algorithm implements IAsset {
     @Nonnull protected final DetectionLocation detectionLocation;
     @Nonnull protected final String name;
 
-    public enum Name {
-        AES,
-        SHA1,
-        SHA,
-        SHA3,
-        BLOWFISH,
-        DES,
-        DESEDE, // Triple DES
-        RC2,
-        RC4, // ARCFOUR
-        RC5,
-        RSA,
-        DSA,
-        MD2,
-        MD5,
-        CHA_CHA_20,
-        POLY1305,
-        DH,
-        ECDH,
-        ED_DSA,
-        ED_25519,
-        ED_448,
-        X25519,
-        X448,
-        XDH
-    }
-
     public Algorithm(
             @Nonnull Algorithm algorithm,
-            @Nonnull DetectionLocation detectionLocation,
             @Nonnull final Class<? extends Algorithm> asKind) {
         this.name = algorithm.getName();
         this.children = algorithm.getChildren();
-        this.detectionLocation = detectionLocation;
+        this.detectionLocation = algorithm.detectionLocation;
         this.kind = asKind;
     }
 
@@ -101,15 +74,6 @@ public class Algorithm implements IAsset {
     @Nonnull
     public String getName() {
         return name;
-    }
-
-    @Nonnull
-    public Optional<KeyLength> getDefaultKeyLength() {
-        INode node = this.getChildren().get(KeyLength.class);
-        if (node == null) {
-            return Optional.empty();
-        }
-        return Optional.of((KeyLength) node);
     }
 
     @Nonnull

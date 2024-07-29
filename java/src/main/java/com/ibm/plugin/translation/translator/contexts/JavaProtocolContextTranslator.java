@@ -36,12 +36,8 @@ import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
 
-public class JavaProtocolContextTranslator extends AbstractContextTranslator
+public class JavaProtocolContextTranslator
         implements IContextTranslationWithKind<Tree> {
-
-    public JavaProtocolContextTranslator(@NotNull Configuration configuration) {
-        super(configuration);
-    }
 
     @NotNull @Override
     public Optional<INode> translate(
@@ -67,8 +63,7 @@ public class JavaProtocolContextTranslator extends AbstractContextTranslator
                                             sslVersionMapper
                                                     .parse(
                                                             p.asString(),
-                                                            detectionLocation,
-                                                            configuration)
+                                                            detectionLocation)
                                                     .ifPresent(p::append);
                                             return p;
                                         });

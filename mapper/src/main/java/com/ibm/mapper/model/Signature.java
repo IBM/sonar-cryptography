@@ -19,13 +19,13 @@
  */
 package com.ibm.mapper.model;
 
-import java.util.Optional;
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 public class Signature extends Algorithm {
 
     public Signature(@Nonnull Algorithm algorithm) {
-        super(algorithm, algorithm.detectionLocation, Signature.class);
+        super(algorithm, Signature.class);
     }
 
     @Nonnull

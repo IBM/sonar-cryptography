@@ -24,6 +24,6 @@ import javax.annotation.Nonnull;
 public class MaskGenerationFunction extends Algorithm {
 
     public MaskGenerationFunction(@Nonnull Algorithm algorithm) {
-        super(algorithm, algorithm.detectionLocation, MaskGenerationFunction.class);
+        super(algorithm, MaskGenerationFunction.class);
     }
 }

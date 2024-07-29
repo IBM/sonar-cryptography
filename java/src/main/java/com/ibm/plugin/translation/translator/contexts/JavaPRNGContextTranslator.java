@@ -23,24 +23,18 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.SeedSize;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.rule.IBundle;
-import com.ibm.mapper.AbstractContextTranslator;
 import com.ibm.mapper.IContextTranslationWithKind;
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.jca.JcaPRNGMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.PseudorandomNumberGenerator;
 import com.ibm.mapper.model.Seed;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
 
-public final class JavaPRNGContextTranslator extends AbstractContextTranslator
-        implements IContextTranslationWithKind<Tree> {
+import java.util.Optional;
 
-    public JavaPRNGContextTranslator(@NotNull Configuration configuration) {
-        super(configuration);
-    }
+public final class JavaPRNGContextTranslator implements IContextTranslationWithKind<Tree> {
 
     @NotNull @Override
     public Optional<INode> translate(
@@ -55,7 +49,7 @@ public final class JavaPRNGContextTranslator extends AbstractContextTranslator
         if (value instanceof SeedSize<Tree> seedSize) {
             JcaPRNGMapper jcaPRNGMapper = new JcaPRNGMapper();
             Optional<PseudorandomNumberGenerator> prngOptional =
-                    jcaPRNGMapper.parse("NativePRNG", detectionLocation, configuration);
+                    jcaPRNGMapper.parse("NativePRNG", detectionLocation);
             return prngOptional.map(
                     prng -> {
                         Seed seed = new Seed(seedSize.getValue(), detectionLocation);

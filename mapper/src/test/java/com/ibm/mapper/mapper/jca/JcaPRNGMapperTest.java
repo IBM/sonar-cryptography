@@ -19,17 +19,17 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PseudorandomNumberGenerator;
 import com.ibm.mapper.utils.DetectionLocation;
+import org.junit.jupiter.api.Test;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class JcaPRNGMapperTest {
 
@@ -41,7 +41,7 @@ class JcaPRNGMapperTest {
         JcaPRNGMapper jcaPRNGMapper = new JcaPRNGMapper();
         Optional<PseudorandomNumberGenerator> prngOptional =
                 jcaPRNGMapper.parse(
-                        "NativePRNGBlocking", testDetectionLocation, Configuration.DEFAULT);
+                        "NativePRNGBlocking", testDetectionLocation);
         assertThat(prngOptional).isPresent();
         assertThat(prngOptional.get().getName()).isEqualTo("NativePRNGBlocking");
         assertThat(prngOptional.get().hasChildren()).isFalse();
@@ -54,7 +54,7 @@ class JcaPRNGMapperTest {
 
         JcaPRNGMapper jcaPRNGMapper = new JcaPRNGMapper();
         Optional<PseudorandomNumberGenerator> prngOptional =
-                jcaPRNGMapper.parse("SHA1PRNG", testDetectionLocation, Configuration.DEFAULT);
+                jcaPRNGMapper.parse("SHA1PRNG", testDetectionLocation);
         assertThat(prngOptional).isPresent();
         assertThat(prngOptional.get().getName()).isEqualTo("SHA1PRNG");
         assertThat(prngOptional.get().hasChildren()).isTrue();

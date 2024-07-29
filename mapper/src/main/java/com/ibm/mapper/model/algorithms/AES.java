@@ -25,8 +25,9 @@ import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 public final class AES extends BlockCipher {
     private static final String NAME = "AES";

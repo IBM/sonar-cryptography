@@ -53,10 +53,6 @@ import org.sonar.plugins.java.api.tree.Tree;
 
 public final class JavaKeyContextTranslator extends JavaAbstractLibraryTranslator {
 
-    public JavaKeyContextTranslator(@NotNull Configuration configuration) {
-        super(configuration);
-    }
-
     @Override
     protected @NotNull Optional<INode> translateJCA(
             @NotNull IValue<Tree> value,
@@ -65,7 +61,7 @@ public final class JavaKeyContextTranslator extends JavaAbstractLibraryTranslato
         if (value instanceof Algorithm<Tree> algorithm) {
             JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
             return jcaAlgorithmMapper
-                    .parse(algorithm.asString(), detectionLocation, configuration)
+                    .parse(algorithm.asString(), detectionLocation)
                     .map(iNode -> (com.ibm.mapper.model.Algorithm) iNode)
                     .map(
                             algorithmNode ->

@@ -19,25 +19,25 @@
  */
 package com.ibm.mapper.model;
 
-import java.util.Optional;
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 public class Cipher extends Algorithm {
 
     protected Cipher(@Nonnull Algorithm algorithm, @Nonnull final Class<? extends Cipher> asKind) {
-        super(algorithm, algorithm.detectionLocation, asKind);
+        super(algorithm, asKind);
     }
 
     protected Cipher(
             @Nonnull Algorithm algorithm,
             @Nonnull Mode mode,
             @Nonnull final Class<? extends Cipher> asKind) {
-        super(algorithm, algorithm.detectionLocation, asKind);
+        super(algorithm, asKind);
         this.append(mode);
     }
 
     public Cipher(@Nonnull Algorithm algorithm) {
-        super(algorithm, algorithm.detectionLocation, Cipher.class);
+        super(algorithm, Cipher.class);
     }
 
     public Cipher(
@@ -45,18 +45,18 @@ public class Cipher extends Algorithm {
             @Nonnull Mode mode,
             @Nonnull Padding padding,
             @Nonnull final Class<? extends Cipher> asKind) {
-        super(algorithm, algorithm.detectionLocation, asKind);
+        super(algorithm, asKind);
         this.append(mode);
         this.append(padding);
     }
 
     public Cipher(@Nonnull Algorithm algorithm, @Nonnull Mode mode) {
-        super(algorithm, algorithm.detectionLocation, Cipher.class);
+        super(algorithm, Cipher.class);
         this.append(mode);
     }
 
     public Cipher(@Nonnull Algorithm algorithm, @Nonnull Mode mode, @Nonnull Padding padding) {
-        super(algorithm, algorithm.detectionLocation, Cipher.class);
+        super(algorithm, Cipher.class);
         this.append(mode);
         this.append(padding);
     }
@@ -77,5 +77,14 @@ public class Cipher extends Algorithm {
             return Optional.empty();
         }
         return Optional.of((Padding) node);
+    }
+
+    @Nonnull
+    public Optional<DigestSize> getDigestSize() {
+        INode node = this.getChildren().get(DigestSize.class);
+        if (node == null) {
+            return Optional.empty();
+        }
+        return Optional.of((DigestSize) node);
     }
 }

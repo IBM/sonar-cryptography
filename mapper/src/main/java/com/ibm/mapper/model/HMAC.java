@@ -23,6 +23,6 @@ import javax.annotation.Nonnull;
 
 public class HMAC extends Algorithm {
     public HMAC(@Nonnull MessageDigest messageDigest) {
-        super(messageDigest, messageDigest.detectionLocation, HMAC.class);
+        super(messageDigest, HMAC.class);
     }
 }

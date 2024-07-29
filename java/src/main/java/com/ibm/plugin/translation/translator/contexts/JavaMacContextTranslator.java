@@ -48,10 +48,6 @@ import org.sonar.plugins.java.api.tree.Tree;
 public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslator {
     private static final Logger LOGGER = LoggerFactory.getLogger(JavaMacContextTranslator.class);
 
-    public JavaMacContextTranslator(@NotNull Configuration configuration) {
-        super(configuration);
-    }
-
     @Override
     protected @NotNull Optional<INode> translateJCA(
             @NotNull IValue<Tree> value,
@@ -60,7 +56,7 @@ public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslato
         if (value instanceof com.ibm.engine.model.Algorithm<Tree>) {
             JcaMacMapper jcaMacMapper = new JcaMacMapper();
             return jcaMacMapper
-                    .parse(value.asString(), detectionLocation, configuration)
+                    .parse(value.asString(), detectionLocation)
                     .map(
                             algo -> {
                                 algo.append(new Digest(detectionLocation));

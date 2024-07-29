@@ -19,17 +19,18 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import com.ibm.mapper.configuration.Configuration;
-import com.ibm.mapper.configuration.TestConfig;
 import com.ibm.mapper.model.MaskGenerationFunction;
 import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.algorithms.MD5;
+import com.ibm.mapper.model.algorithms.MGF1;
 import com.ibm.mapper.model.padding.OAEP;
 import com.ibm.mapper.utils.DetectionLocation;
+import org.junit.jupiter.api.Test;
+
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class JcaOAEPPaddingMapperTest {
 
@@ -41,21 +42,19 @@ class JcaOAEPPaddingMapperTest {
         JcaOAEPPaddingMapper jcaOAEPPaddingMapper = new JcaOAEPPaddingMapper();
         Optional<OAEP> oaepPAdding =
                 jcaOAEPPaddingMapper.parse(
-                        "OAEPWithMD5AndMGF1Padding", testDetectionLocation, Configuration.DEFAULT);
+                        "OAEPWithMD5AndMGF1Padding", testDetectionLocation);
 
         assertThat(oaepPAdding).isPresent();
-        assertThat(oaepPAdding.get().is(OAEP.class)).isTrue();
+        assertThat(oaepPAdding.get()).isInstanceOf(OAEP.class);
         OAEP oaep = oaepPAdding.get();
 
         Optional<MessageDigest> messageDigestOptional = oaep.getDigest();
         assertThat(messageDigestOptional).isPresent();
-        assertThat(messageDigestOptional.get().getName()).isEqualTo("MD5");
-        assertThat(messageDigestOptional.get().getKind()).isEqualTo(MessageDigest.class);
+        assertThat(messageDigestOptional.get()).isInstanceOf(MD5.class);
 
         Optional<MaskGenerationFunction> maskGenerationFunctionOptional = oaep.getMGF();
         assertThat(maskGenerationFunctionOptional).isPresent();
-        assertThat(maskGenerationFunctionOptional.get().getName()).isEqualTo("MGF1");
-        assertThat(maskGenerationFunctionOptional.get().is(MaskGenerationFunction.class)).isTrue();
+        assertThat(maskGenerationFunctionOptional.get()).isInstanceOf(MGF1.class);
     }
 
     @Test
@@ -66,36 +65,10 @@ class JcaOAEPPaddingMapperTest {
         JcaOAEPPaddingMapper jcaOAEPPaddingMapper = new JcaOAEPPaddingMapper();
         Optional<OAEP> oaepPAdding =
                 jcaOAEPPaddingMapper.parse(
-                        "OAEPPadding", testDetectionLocation, Configuration.DEFAULT);
+                        "OAEPPadding", testDetectionLocation);
 
         assertThat(oaepPAdding).isPresent();
-        assertThat(oaepPAdding.get().is(OAEP.class)).isTrue();
-        assertThat(oaepPAdding.get().getName()).isEqualTo("OAEP");
+        assertThat(oaepPAdding.get()).isInstanceOf(OAEP.class);
         assertThat(oaepPAdding.get().hasChildren()).isFalse();
-    }
-
-    @Test
-    void configuration() {
-        DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
-
-        JcaOAEPPaddingMapper jcaOAEPPaddingMapper = new JcaOAEPPaddingMapper();
-        Optional<OAEP> oaepPAdding =
-                jcaOAEPPaddingMapper.parse(
-                        "OAEPWithMD5AndMGF1Padding", testDetectionLocation, new TestConfig());
-
-        assertThat(oaepPAdding).isPresent();
-        assertThat(oaepPAdding.get().is(OAEP.class)).isTrue();
-        OAEP oaep = oaepPAdding.get();
-
-        Optional<MessageDigest> messageDigestOptional = oaep.getDigest();
-        assertThat(messageDigestOptional).isPresent();
-        assertThat(messageDigestOptional.get().getName()).isEqualTo("md5");
-        assertThat(messageDigestOptional.get().getKind()).isEqualTo(MessageDigest.class);
-
-        Optional<MaskGenerationFunction> maskGenerationFunctionOptional = oaep.getMGF();
-        assertThat(maskGenerationFunctionOptional).isPresent();
-        assertThat(maskGenerationFunctionOptional.get().getName()).isEqualTo("mgf1");
-        assertThat(maskGenerationFunctionOptional.get().is(MaskGenerationFunction.class)).isTrue();
     }
 }

@@ -23,6 +23,6 @@ import javax.annotation.Nonnull;
 
 public class KeyAgreement extends Algorithm {
     public KeyAgreement(@Nonnull Algorithm algorithm) {
-        super(algorithm, algorithm.detectionLocation, KeyAgreement.class);
+        super(algorithm, KeyAgreement.class);
     }
 }

@@ -24,21 +24,17 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.KeySize;
 import com.ibm.engine.model.MacSize;
 import com.ibm.engine.model.context.IDetectionContext;
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
 
-public final class JavaAlgorithmParameterContextTranslator extends JavaAbstractLibraryTranslator {
+import java.util.Optional;
 
-    public JavaAlgorithmParameterContextTranslator(@NotNull Configuration configuration) {
-        super(configuration);
-    }
+public final class JavaAlgorithmParameterContextTranslator extends JavaAbstractLibraryTranslator {
 
     @Override
     protected @NotNull Optional<INode> translateJCA(
@@ -48,14 +44,14 @@ public final class JavaAlgorithmParameterContextTranslator extends JavaAbstractL
         if (value instanceof Algorithm<Tree>) {
             JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
             return jcaAlgorithmMapper
-                    .parse(value.asString(), detectionLocation, configuration)
+                    .parse(value.asString(), detectionLocation)
                     .map(a -> a);
         }
         return translateCommon(value, detectionContext, detectionLocation);
     }
 
-    @Override
-    protected @NotNull Optional<INode> translateBC(
+    @NotNull
+    protected Optional<INode> translateBC(
             @NotNull IValue<Tree> value,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {

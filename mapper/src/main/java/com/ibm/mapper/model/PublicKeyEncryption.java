@@ -23,6 +23,6 @@ import javax.annotation.Nonnull;
 
 public class PublicKeyEncryption extends Algorithm {
     public PublicKeyEncryption(@Nonnull Algorithm algorithm) {
-        super(algorithm, algorithm.detectionLocation, PublicKeyEncryption.class);
+        super(algorithm, PublicKeyEncryption.class);
     }
 }

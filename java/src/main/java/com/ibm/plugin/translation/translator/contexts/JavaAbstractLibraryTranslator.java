@@ -22,21 +22,15 @@ package com.ibm.plugin.translation.translator.contexts;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.rule.IBundle;
-import com.ibm.mapper.AbstractContextTranslator;
 import com.ibm.mapper.IContextTranslationWithKind;
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
 
-public abstract class JavaAbstractLibraryTranslator extends AbstractContextTranslator
-        implements IContextTranslationWithKind<Tree> {
+import java.util.Optional;
 
-    protected JavaAbstractLibraryTranslator(@NotNull Configuration configuration) {
-        super(configuration);
-    }
+public abstract class JavaAbstractLibraryTranslator implements IContextTranslationWithKind<Tree> {
 
     @NotNull @Override
     public Optional<INode> translate(

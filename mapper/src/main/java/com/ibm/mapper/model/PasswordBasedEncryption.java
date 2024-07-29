@@ -19,8 +19,9 @@
  */
 package com.ibm.mapper.model;
 
-import java.util.Optional;
 import javax.annotation.Nonnull;
+import java.util.Objects;
+import java.util.Optional;
 
 public final class PasswordBasedEncryption extends Algorithm {
 
@@ -30,7 +31,6 @@ public final class PasswordBasedEncryption extends Algorithm {
                 new Algorithm(
                         "PBEWith" + hmac.asString() + "and" + cipher.asString(),
                         hmac.detectionLocation),
-                hmac.detectionLocation,
                 PasswordBasedEncryption.class);
         this.append(hmac);
         this.append(cipher);
@@ -42,7 +42,6 @@ public final class PasswordBasedEncryption extends Algorithm {
                 new Algorithm(
                         "PBEWith" + digest.asString() + "and" + cipher.asString(),
                         digest.detectionLocation),
-                digest.detectionLocation,
                 PasswordBasedEncryption.class);
         this.append(digest);
         this.append(cipher);
@@ -52,9 +51,17 @@ public final class PasswordBasedEncryption extends Algorithm {
     public PasswordBasedEncryption(@Nonnull HMAC hmac) {
         super(
                 new Algorithm("PBEWith" + hmac.asString(), hmac.detectionLocation),
-                hmac.detectionLocation,
                 PasswordBasedEncryption.class);
         this.append(hmac);
+    }
+
+    @Nonnull
+    public Optional<HMAC> getHmac() {
+        INode node = this.getChildren().get(HMAC.class);
+        if (node == null) {
+            return Optional.empty();
+        }
+        return Optional.of((HMAC) node);
     }
 
     @Nonnull
@@ -68,10 +75,15 @@ public final class PasswordBasedEncryption extends Algorithm {
 
     @Nonnull
     public Optional<Cipher> getCipher() {
-        INode node = this.getChildren().get(Cipher.class);
-        if (node == null) {
-            return Optional.empty();
-        }
-        return Optional.of((Cipher) node);
+        return this.getChildren().values().stream()
+                .map(n -> {
+                    if (n instanceof Cipher cipher) {
+                        return cipher;
+                    } else {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .findFirst();
     }
 }

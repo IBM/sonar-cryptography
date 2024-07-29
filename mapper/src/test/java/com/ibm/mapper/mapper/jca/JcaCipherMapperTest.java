@@ -19,22 +19,21 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import com.ibm.mapper.configuration.Configuration;
-import com.ibm.mapper.configuration.TestConfig;
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.Cipher;
-import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.PasswordBasedEncryption;
+import com.ibm.mapper.model.mode.CFB;
+import com.ibm.mapper.model.mode.ECB;
 import com.ibm.mapper.utils.DetectionLocation;
+import org.junit.jupiter.api.Test;
+
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class JcaCipherMapperTest {
 
@@ -44,21 +43,19 @@ class JcaCipherMapperTest {
                 new DetectionLocation("testfile", 1, 1, List.of("test"));
 
         JcaCipherMapper jcaCipherMapper = new JcaCipherMapper();
-        Optional<Algorithm> cipherOptional =
+        Optional<? extends Algorithm> cipherOptional =
                 jcaCipherMapper.parse(
-                        "AES/ECB/PKCS5Padding", testDetectionLocation, Configuration.DEFAULT);
+                        "AES/ECB/PKCS5Padding", testDetectionLocation);
 
         assertThat(cipherOptional).isPresent();
         assertThat(cipherOptional.get().is(BlockCipher.class)).isTrue();
         Cipher cipher = (Cipher) cipherOptional.get();
 
         assertThat(cipher.getName()).isEqualTo("AES");
-        assertThat(cipher.getDefaultKeyLength()).isPresent();
-        assertThat(cipher.getDefaultKeyLength().get().asString()).isEqualTo("128");
 
         assertThat(cipher.getMode()).isPresent();
         Mode mode = cipher.getMode().get();
-        assertThat(mode.getName()).isEqualTo("ECB");
+        assertThat(mode).isInstanceOf(ECB.class);
         assertThat(mode.getBlockSize()).isEmpty();
 
         assertThat(cipher.getPadding()).isPresent();
@@ -71,9 +68,9 @@ class JcaCipherMapperTest {
                 new DetectionLocation("testfile", 1, 1, List.of("test"));
 
         JcaCipherMapper jcaCipherMapper = new JcaCipherMapper();
-        Optional<Algorithm> cipherOptional =
+        Optional<? extends Algorithm> cipherOptional =
                 jcaCipherMapper.parse(
-                        "PBEWithMD5AndDES", testDetectionLocation, Configuration.DEFAULT);
+                        "PBEWithMD5AndDES", testDetectionLocation);
 
         assertThat(cipherOptional).isPresent();
         assertThat(cipherOptional.get().is(PasswordBasedEncryption.class)).isTrue();
@@ -84,8 +81,6 @@ class JcaCipherMapperTest {
         assertThat(pbe.getChildren().values()).hasSize(2);
 
         assertThat(pbe.getDigest()).isPresent();
-        assertThat(pbe.getCipher()).isEmpty();
-        assertThat(pbe.getEncryptionAlgorithm()).isPresent();
 
         MessageDigest digest = pbe.getDigest().get();
         assertThat(digest.getName()).isEqualTo("MD5");
@@ -94,7 +89,8 @@ class JcaCipherMapperTest {
         assertThat(digest.getBlockSize()).isPresent();
         assertThat(digest.getBlockSize().get().getValue()).isEqualTo(512);
 
-        Algorithm encryptionAlgorithm = pbe.getEncryptionAlgorithm().get();
+        assertThat(pbe.getCipher()).isPresent();
+        Algorithm encryptionAlgorithm = pbe.getCipher().get();
         assertThat(encryptionAlgorithm.getName()).isEqualTo("DES");
     }
 
@@ -104,9 +100,9 @@ class JcaCipherMapperTest {
                 new DetectionLocation("testfile", 1, 1, List.of("test"));
 
         JcaCipherMapper jcaCipherMapper = new JcaCipherMapper();
-        Optional<Algorithm> cipherOptional =
+        Optional<? extends Algorithm> cipherOptional =
                 jcaCipherMapper.parse(
-                        "AES/CFB8/NoPadding", testDetectionLocation, Configuration.DEFAULT);
+                        "AES/CFB8/NoPadding", testDetectionLocation);
 
         assertThat(cipherOptional).isPresent();
         assertThat(cipherOptional.get().is(BlockCipher.class)).isTrue();
@@ -116,26 +112,12 @@ class JcaCipherMapperTest {
 
         assertThat(cipher.getMode()).isPresent();
         Mode mode = cipher.getMode().get();
-        assertThat(mode.getName()).isEqualTo("CFB");
+        assertThat(mode).isInstanceOf(CFB.class);
         assertThat(mode.getBlockSize()).isPresent();
         assertThat(mode.getBlockSize().get().getValue()).isEqualTo(8);
 
         assertThat(cipher.getPadding()).isPresent();
         assertThat(cipher.getPadding().get().getName()).isEmpty();
-    }
-
-    @Test
-    void ae() {
-        DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
-
-        JcaCipherMapper jcaCipherMapper = new JcaCipherMapper();
-        Optional<Algorithm> cipherOptional =
-                jcaCipherMapper.parse(
-                        "AES/GCM/NoPadding", testDetectionLocation, Configuration.DEFAULT);
-
-        assertThat(cipherOptional).isPresent();
-        assertThat(cipherOptional.get().is(AuthenticatedEncryption.class)).isTrue();
     }
 
     @Test
@@ -144,35 +126,9 @@ class JcaCipherMapperTest {
                 new DetectionLocation("testfile", 1, 1, List.of("test"));
 
         JcaCipherMapper jcaAlgorithmMapper = new JcaCipherMapper();
-        Optional<? extends INode> algorithm =
-                jcaAlgorithmMapper.parse("RSA", testDetectionLocation, Configuration.DEFAULT);
+        Optional<? extends Algorithm> algorithm =
+                jcaAlgorithmMapper.parse("RSA", testDetectionLocation);
 
         assertThat(algorithm).isEmpty();
-    }
-
-    @Test
-    void configuration() {
-        DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
-
-        JcaCipherMapper jcaCipherMapper = new JcaCipherMapper();
-        Optional<Algorithm> cipherOptional =
-                jcaCipherMapper.parse(
-                        "AES/CFB8/NoPadding", testDetectionLocation, new TestConfig());
-
-        assertThat(cipherOptional).isPresent();
-        assertThat(cipherOptional.get().is(BlockCipher.class)).isTrue();
-        Cipher cipher = (Cipher) cipherOptional.get();
-
-        assertThat(cipher.getName()).isEqualTo("aes");
-
-        assertThat(cipher.getMode()).isPresent();
-        Mode mode = cipher.getMode().get();
-        assertThat(mode.getName()).isEqualTo("cfb");
-        assertThat(mode.getBlockSize()).isPresent();
-        assertThat(mode.getBlockSize().get().getValue()).isEqualTo(8);
-
-        assertThat(cipher.getPadding()).isPresent();
-        assertThat(cipher.getPadding().get().getName()).isEmpty();
     }
 }

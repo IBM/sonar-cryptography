@@ -19,16 +19,17 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import com.ibm.mapper.configuration.Configuration;
-import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.PasswordBasedEncryption;
+import com.ibm.mapper.model.algorithms.AES;
 import com.ibm.mapper.utils.DetectionLocation;
+import org.junit.jupiter.api.Test;
+
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class JcaPasswordBasedEncryptionMapperTest {
 
@@ -41,7 +42,7 @@ class JcaPasswordBasedEncryptionMapperTest {
                 new JcaPasswordBasedEncryptionMapper();
         Optional<PasswordBasedEncryption> pbeOpt =
                 jcaPasswordBasedEncryptionMapper.parse(
-                        "PBEWithHmacSHA256AndAES", testDetectionLocation, Configuration.DEFAULT);
+                        "PBEWithHmacSHA256AndAES", testDetectionLocation);
 
         assertThat(pbeOpt).isPresent();
         PasswordBasedEncryption pbe = pbeOpt.get();
@@ -50,16 +51,17 @@ class JcaPasswordBasedEncryptionMapperTest {
         assertThat(pbe.getChildren()).hasSize(2);
         assertThat(pbe.getDigest()).isEmpty();
         assertThat(pbe.getCipher()).isPresent();
-        HMAC mac = pbe.getCipher().get();
+        assertThat(pbe.getHmac()).isPresent();
 
+        HMAC mac = pbe.getHmac().get();
         assertThat(mac.getName()).isEqualTo("HmacSHA256");
         assertThat(mac.getChildren()).hasSize(2);
 
-        assertThat(pbe.getEncryptionAlgorithm()).isPresent();
-        Algorithm algorithm = pbe.getEncryptionAlgorithm().get();
+        Cipher cipher = pbe.getCipher().get();
 
-        assertThat(algorithm.hasChildren()).isTrue();
-        assertThat(algorithm.getDefaultKeyLength()).isPresent();
-        assertThat(algorithm.getDefaultKeyLength().get().asString()).isEqualTo("128");
+        assertThat(cipher).isInstanceOf(AES.class);
+        assertThat(cipher.hasChildren()).isTrue();
+        assertThat(cipher.getDigestSize()).isPresent();
+        assertThat(cipher.getDigestSize().get().asString()).isEqualTo("128");
     }
 }

@@ -59,10 +59,6 @@ import org.sonar.plugins.java.api.tree.Tree;
 
 public final class JavaCipherContextTranslator extends JavaAbstractLibraryTranslator {
 
-    public JavaCipherContextTranslator(@NotNull Configuration configuration) {
-        super(configuration);
-    }
-
     @Override
     @NotNull public Optional<INode> translateJCA(
             @NotNull IValue<Tree> value,
@@ -71,13 +67,13 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
         if (value instanceof Algorithm<Tree>) {
             JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
             return jcaAlgorithmMapper
-                    .parse(value.asString(), detectionLocation, configuration)
+                    .parse(value.asString(), detectionLocation)
                     .map(a -> a);
         } else if (value instanceof OperationMode<Tree> operationMode) {
             JcaCipherOperationModeMapper jcaCipherOperationModeMapper =
                     new JcaCipherOperationModeMapper();
             return jcaCipherOperationModeMapper
-                    .parse(operationMode.asString(), detectionLocation, configuration)
+                    .parse(operationMode.asString(), detectionLocation)
                     .map(f -> f);
         } else if (value instanceof CipherAction<Tree> cipherAction) {
             return switch (cipherAction.getAction()) {
@@ -101,14 +97,14 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                     BcOperationModeEncryptionMapper bcCipherOperationModeMapper =
                             new BcOperationModeEncryptionMapper();
                     yield bcCipherOperationModeMapper
-                            .parse(operationMode.asString(), detectionLocation, configuration)
+                            .parse(operationMode.asString(), detectionLocation)
                             .map(f -> f);
                 }
                 case WRAPPING_STATUS -> {
                     BcOperationModeWrappingMapper bcOperationModeWrappingMapper =
                             new BcOperationModeWrappingMapper();
                     yield bcOperationModeWrappingMapper
-                            .parse(operationMode.asString(), detectionLocation, configuration)
+                            .parse(operationMode.asString(), detectionLocation)
                             .map(f -> f);
                 }
                 default -> Optional.empty();
