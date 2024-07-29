@@ -92,14 +92,15 @@ public class JcaCipherMapper implements IMapper {
             return pbeOptional;
         }
 
-        Optional<? extends Cipher> possibleCipher = map(algorithmStr, detectionLocation);
+        Optional<? extends Algorithm> possibleCipher = map(algorithmStr, detectionLocation);
         if (possibleCipher.isEmpty()) {
             return Optional.empty();
         }
-        final Cipher cipher = possibleCipher.get();
+        final Algorithm algorithm = possibleCipher.get();
 
+        // todo: move to enricher
         // Authenticated Encryption check
-        if (modeOptional.isPresent()) {
+        if (modeOptional.isPresent() && algorithm instanceof Cipher cipher) {
             final Mode mode = modeOptional.get();
             if (mode instanceof GCM || mode instanceof CCM) {
                 return paddingOptional
@@ -108,13 +109,13 @@ public class JcaCipherMapper implements IMapper {
             }
         }
 
-        modeOptional.ifPresent(cipher::append);
-        paddingOptional.ifPresent(cipher::append);
-        return Optional.of(cipher);
+        modeOptional.ifPresent(algorithm::append);
+        paddingOptional.ifPresent(algorithm::append);
+        return Optional.of(algorithm);
     }
 
     @Nonnull
-    private Optional<? extends Cipher> map(
+    private Optional<? extends Algorithm> map(
             @Nonnull String cipherAlgorithm, @Nonnull DetectionLocation detectionLocation) {
         return switch (cipherAlgorithm.toUpperCase().trim()) {
             case "AES" -> Optional.of(new AES(detectionLocation));
@@ -148,7 +149,7 @@ public class JcaCipherMapper implements IMapper {
                 chaCha20.append(new Poly1305(detectionLocation));
                 yield Optional.of(chaCha20);
             }
-            case "RSA" -> Optional.of(new RSA(detectionLocation)).map(Cipher::new);
+            case "RSA" -> Optional.of(new RSA(detectionLocation));
             default -> Optional.empty();
         };
     }

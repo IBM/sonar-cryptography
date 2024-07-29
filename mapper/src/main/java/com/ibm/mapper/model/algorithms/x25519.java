@@ -20,15 +20,16 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.EllipticCurveAlgorithm;
+import com.ibm.mapper.model.KeyAgreement;
 import com.ibm.mapper.model.curves.Curve25519;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
-public final class x25519 extends EllipticCurveAlgorithm {
+public final class x25519 extends KeyAgreement {
     private static final String NAME = "x25519";
 
     public x25519(@NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation), new Curve25519(detectionLocation));
+        super(new Algorithm(NAME, detectionLocation));
+        this.append(new Curve25519(detectionLocation));
     }
 }

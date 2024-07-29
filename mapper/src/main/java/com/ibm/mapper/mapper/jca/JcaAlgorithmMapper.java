@@ -22,10 +22,11 @@ package com.ibm.mapper.mapper.jca;
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.List;
-import java.util.Optional;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Optional;
 
 public class JcaAlgorithmMapper implements IMapper {
 
@@ -40,6 +41,7 @@ public class JcaAlgorithmMapper implements IMapper {
                     new JcaPasswordBasedEncryptionMapper(),
                     new JcaPBKDFMapper(),
                     new JcaPRNGMapper(),
+                    new JcaKeyAgreementMapper(),
                     new JcaSignatureMapper());
 
     @Nonnull

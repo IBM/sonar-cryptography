@@ -80,7 +80,7 @@ class JcaAlgorithmMapperTest {
     }
 
     @Test
-    void ecc() {
+    void keyAgreement() {
         DetectionLocation testDetectionLocation =
                 new DetectionLocation("testfile", 1, 1, List.of("test"));
 

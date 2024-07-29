@@ -21,14 +21,19 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.EllipticCurve;
-import com.ibm.mapper.model.EllipticCurveAlgorithm;
+import com.ibm.mapper.model.KeyAgreement;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
-public final class XDH extends EllipticCurveAlgorithm {
+public final class XDH extends KeyAgreement {
     private static final String NAME = "XDH";
 
+    public XDH(@NotNull DetectionLocation detectionLocation) {
+        super(new Algorithm(NAME, detectionLocation));
+    }
+
     public XDH(@NotNull EllipticCurve ellipticCurve, @NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation), ellipticCurve);
+        super(new Algorithm(NAME, detectionLocation));
+        this.append(ellipticCurve);
     }
 }

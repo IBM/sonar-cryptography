@@ -23,6 +23,7 @@ import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.mode.CBC;
+import com.ibm.mapper.model.mode.CCM;
 import com.ibm.mapper.model.mode.CFB;
 import com.ibm.mapper.model.mode.CTR;
 import com.ibm.mapper.model.mode.CTS;
@@ -32,9 +33,10 @@ import com.ibm.mapper.model.mode.OFB;
 import com.ibm.mapper.model.mode.PCBC;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.mapper.utils.Utils;
-import java.util.Optional;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class JcaModeMapper implements IMapper {
 
@@ -74,6 +76,7 @@ public class JcaModeMapper implements IMapper {
             case "CTR" -> Optional.of(new CTR(detectionLocation));
             case "CTS" -> Optional.of(new CTS(detectionLocation));
             case "GCM" -> Optional.of(new GCM(detectionLocation));
+            case "CCM" -> Optional.of(new CCM(detectionLocation));
             default -> Optional.empty();
         };
     }

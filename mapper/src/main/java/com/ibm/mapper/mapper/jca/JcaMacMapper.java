@@ -47,6 +47,10 @@ public class JcaMacMapper implements IMapper {
             return pbeOptional;
         }
 
+        if (str.toLowerCase().contains("with")) {
+            return Optional.empty();
+        }
+
         final String messageDigestStr =
                 str.substring(str.toLowerCase().trim().indexOf("Hmac".toLowerCase()) + 4)
                         .replace("-", "");

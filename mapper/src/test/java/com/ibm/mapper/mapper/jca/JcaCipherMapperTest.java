@@ -25,6 +25,10 @@ import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.PasswordBasedEncryption;
+import com.ibm.mapper.model.algorithms.AES;
+import com.ibm.mapper.model.algorithms.DES;
+import com.ibm.mapper.model.algorithms.MD5;
+import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.mode.CFB;
 import com.ibm.mapper.model.mode.ECB;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -83,7 +87,7 @@ class JcaCipherMapperTest {
         assertThat(pbe.getDigest()).isPresent();
 
         MessageDigest digest = pbe.getDigest().get();
-        assertThat(digest.getName()).isEqualTo("MD5");
+        assertThat(digest).isInstanceOf(MD5.class);
         assertThat(digest.getDigestSize()).isPresent();
         assertThat(digest.getDigestSize().get().getValue()).isEqualTo(128);
         assertThat(digest.getBlockSize()).isPresent();
@@ -91,7 +95,7 @@ class JcaCipherMapperTest {
 
         assertThat(pbe.getCipher()).isPresent();
         Algorithm encryptionAlgorithm = pbe.getCipher().get();
-        assertThat(encryptionAlgorithm.getName()).isEqualTo("DES");
+        assertThat(encryptionAlgorithm).isInstanceOf(DES.class);
     }
 
     @Test
@@ -108,7 +112,7 @@ class JcaCipherMapperTest {
         assertThat(cipherOptional.get().is(BlockCipher.class)).isTrue();
         Cipher cipher = (Cipher) cipherOptional.get();
 
-        assertThat(cipher.getName()).isEqualTo("AES");
+        assertThat(cipher).isInstanceOf(AES.class);
 
         assertThat(cipher.getMode()).isPresent();
         Mode mode = cipher.getMode().get();
@@ -116,8 +120,7 @@ class JcaCipherMapperTest {
         assertThat(mode.getBlockSize()).isPresent();
         assertThat(mode.getBlockSize().get().getValue()).isEqualTo(8);
 
-        assertThat(cipher.getPadding()).isPresent();
-        assertThat(cipher.getPadding().get().getName()).isEmpty();
+        assertThat(cipher.getPadding()).isEmpty();
     }
 
     @Test
@@ -129,6 +132,7 @@ class JcaCipherMapperTest {
         Optional<? extends Algorithm> algorithm =
                 jcaAlgorithmMapper.parse("RSA", testDetectionLocation);
 
-        assertThat(algorithm).isEmpty();
+        assertThat(algorithm).isPresent();
+        assertThat(algorithm.get()).isInstanceOf(RSA.class);
     }
 }

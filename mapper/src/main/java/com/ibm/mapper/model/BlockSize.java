@@ -20,8 +20,9 @@
 package com.ibm.mapper.model;
 
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Objects;
+
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 public final class BlockSize extends Property {
     @Nonnull private final Integer value;

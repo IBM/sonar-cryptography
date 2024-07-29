@@ -29,7 +29,7 @@ public final class PasswordBasedEncryption extends Algorithm {
     public PasswordBasedEncryption(@Nonnull HMAC hmac, @Nonnull Cipher cipher) {
         super(
                 new Algorithm(
-                        "PBEWith" + hmac.asString() + "and" + cipher.asString(),
+                        "PBEWith" + hmac.asString() + "And" + cipher.asString(),
                         hmac.detectionLocation),
                 PasswordBasedEncryption.class);
         this.append(hmac);
@@ -40,7 +40,7 @@ public final class PasswordBasedEncryption extends Algorithm {
     public PasswordBasedEncryption(@Nonnull MessageDigest digest, @Nonnull Cipher cipher) {
         super(
                 new Algorithm(
-                        "PBEWith" + digest.asString() + "and" + cipher.asString(),
+                        "PBEWith" + digest.asString() + "And" + cipher.asString(),
                         digest.detectionLocation),
                 PasswordBasedEncryption.class);
         this.append(digest);
