@@ -19,18 +19,20 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
+import com.ibm.mapper.model.algorithms.PBKDF2;
 import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.utils.DetectionLocation;
+import org.junit.jupiter.api.Test;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class JcaPBKDFMapperTest {
 
@@ -44,7 +46,9 @@ class JcaPBKDFMapperTest {
                 jcaPBKDFMapper.parse("PBKDF2WithHmacSHA256", testDetectionLocation);
 
         assertThat(pbkdfOptional).isPresent();
-        assertThat(pbkdfOptional.get().getName()).isEqualTo("PBKDF2WithHmacSHA256");
+        assertThat(pbkdfOptional.get()).isInstanceOf(PBKDF2.class);
+        assertThat(pbkdfOptional.get().is(PasswordBasedKeyDerivationFunction.class)).isTrue();
+        assertThat(pbkdfOptional.get().getName()).isEqualTo("PBKDF2");
         assertThat(pbkdfOptional.get().getIterations()).isEmpty();
         assertThat(pbkdfOptional.get().getSalt()).isEmpty();
         assertThat(pbkdfOptional.get().hasChildren()).isTrue();
@@ -58,7 +62,7 @@ class JcaPBKDFMapperTest {
         assertThat(mac.getName()).isEqualTo("HmacSHA256");
         assertThat(mac.hasChildren()).isTrue();
         children = mac.getChildren();
-        assertThat(children).hasSize(2);
+        assertThat(children).hasSize(1);
         child = children.get(MessageDigest.class);
         assertThat(child.is(MessageDigest.class)).isTrue();
 

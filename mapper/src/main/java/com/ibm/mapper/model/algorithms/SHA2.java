@@ -37,8 +37,14 @@ public final class SHA2 extends MessageDigest {
             int digestSize,
             @Nonnull MessageDigest preHash,
             @Nonnull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME+digestSize, detectionLocation));
+        super(new Algorithm(buildPreHashName(digestSize, preHash), detectionLocation));
         this.append(new DigestSize(digestSize, detectionLocation));
         this.append(preHash);
+    }
+
+    @Nonnull
+    private static String buildPreHashName(int digestSize, @Nonnull MessageDigest preHash) {
+        return preHash.getDigestSize().map(size -> NAME + size.asString() + "/" + digestSize)
+                .orElse(NAME+digestSize);
     }
 }

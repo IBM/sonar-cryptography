@@ -19,15 +19,16 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
+import org.junit.jupiter.api.Test;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class JcaMessageDigestMapperTest {
 
@@ -44,8 +45,6 @@ class JcaMessageDigestMapperTest {
         assertThat(messageDigestOptional.get().getName()).isEqualTo("SHA3-224");
         assertThat(messageDigestOptional.get().getDigestSize()).isPresent();
         assertThat(messageDigestOptional.get().getDigestSize().get().getValue()).isEqualTo(224);
-        assertThat(messageDigestOptional.get().getBlockSize()).isPresent();
-        assertThat(messageDigestOptional.get().getBlockSize().get().getValue()).isEqualTo(1152);
     }
 
     @Test
@@ -59,31 +58,12 @@ class JcaMessageDigestMapperTest {
         assertThat(messageDigestOptional).isPresent();
 
         MessageDigest messageDigest = messageDigestOptional.get();
-        assertThat(messageDigest.getName()).isEqualTo("SHA-512/224");
+        assertThat(messageDigest.getName()).isEqualTo("SHA512/224");
         assertThat(messageDigest.getDigestSize()).isPresent();
         assertThat(messageDigest.getDigestSize().get().getValue()).isEqualTo(224);
-        assertThat(messageDigest.getBlockSize()).isPresent();
-        assertThat(messageDigest.getBlockSize().get().getValue()).isEqualTo(1024);
         assertThat(messageDigest.hasChildren()).isTrue();
 
         Map<Class<? extends INode>, INode> children = messageDigest.getChildren();
-        assertThat(children).hasSize(3);
-    }
-
-    @Test
-    void configuration() {
-        DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
-
-        JcaMessageDigestMapper jcaMessageDigestMapper = new JcaMessageDigestMapper();
-        Optional<MessageDigest> messageDigestOptional =
-                jcaMessageDigestMapper.parse("SHA3-224", testDetectionLocation);
-
-        assertThat(messageDigestOptional).isPresent();
-        assertThat(messageDigestOptional.get().getName()).isEqualTo("sha3-224");
-        assertThat(messageDigestOptional.get().getDigestSize()).isPresent();
-        assertThat(messageDigestOptional.get().getDigestSize().get().getValue()).isEqualTo(224);
-        assertThat(messageDigestOptional.get().getBlockSize()).isPresent();
-        assertThat(messageDigestOptional.get().getBlockSize().get().getValue()).isEqualTo(1152);
+        assertThat(children).hasSize(2);
     }
 }

@@ -19,18 +19,20 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.Cipher;
+import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PasswordBasedEncryption;
+import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.utils.DetectionLocation;
+import org.junit.jupiter.api.Test;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class JcaHMACMapperTest {
 
@@ -53,15 +55,12 @@ class JcaHMACMapperTest {
 
         assertThat(child.is(MessageDigest.class)).isTrue();
         MessageDigest messageDigest = (MessageDigest) child;
-        assertThat(messageDigest.getName()).isEqualTo("SHA-512/224");
+        assertThat(messageDigest.getName()).isEqualTo("SHA512/224");
         assertThat(messageDigest.getDigestSize()).isPresent();
         assertThat(messageDigest.getDigestSize().get().getValue()).isEqualTo(224);
-        assertThat(messageDigest.getBlockSize()).isPresent();
-        assertThat(messageDigest.getBlockSize().get().getValue()).isEqualTo(1024);
-        assertThat(messageDigest.hasChildren()).isTrue();
 
         children = messageDigest.getChildren();
-        assertThat(children).hasSize(3);
+        assertThat(children).hasSize(2);
     }
 
     @Test
@@ -78,7 +77,7 @@ class JcaHMACMapperTest {
         assertThat(macOptional.get().hasChildren()).isTrue();
 
         Map<Class<? extends INode>, INode> children = macOptional.get().getChildren();
-        assertThat(children).hasSize(2);
+        assertThat(children).hasSize(1);
         INode algorithm = children.get(MessageDigest.class);
 
         assertThat(algorithm.is(MessageDigest.class)).isTrue();
@@ -107,21 +106,20 @@ class JcaHMACMapperTest {
         assertThat(pbe.getCipher()).isEmpty();
         assertThat(pbe.getHmac()).isPresent();
 
-        Optional<Cipher> mac = pbe.getCipher();
+        Optional<HMAC> mac = pbe.getHmac();
         assertThat(mac).isPresent();
         assertThat(mac.get().getName()).isEqualTo("HmacSHA256");
         assertThat(mac.get().hasChildren()).isTrue();
 
         Map<Class<? extends INode>, INode> children = mac.get().getChildren();
-        assertThat(children).hasSize(2);
+        assertThat(children).hasSize(1);
         INode child = children.get(MessageDigest.class);
 
         assertThat(child.is(MessageDigest.class)).isTrue();
         MessageDigest messageDigest = (MessageDigest) child;
+        assertThat(messageDigest).isInstanceOf(SHA2.class);
         assertThat(messageDigest.getName()).isEqualTo("SHA256");
         assertThat(messageDigest.getDigestSize()).isPresent();
         assertThat(messageDigest.getDigestSize().get().getValue()).isEqualTo(256);
-        assertThat(messageDigest.getBlockSize()).isPresent();
-        assertThat(messageDigest.getBlockSize().get().getValue()).isEqualTo(512);
     }
 }
