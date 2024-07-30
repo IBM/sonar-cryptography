@@ -41,7 +41,7 @@ import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
-class JcaDESedeKeySpecTest extends TestBase {
+class JcaTripleDESKeySpecTest extends TestBase {
 
     @Test
     void test() {

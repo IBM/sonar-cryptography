@@ -22,6 +22,12 @@ package com.ibm.mapper.mapper.ssl;
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.model.algorithms.AES;
+import com.ibm.mapper.model.algorithms.ARIA;
+import com.ibm.mapper.model.algorithms.ChaCha20_Poly1305;
+import com.ibm.mapper.model.algorithms.DES;
+import com.ibm.mapper.model.algorithms.RC4;
+import com.ibm.mapper.model.algorithms.TripleDES;
+import com.ibm.mapper.model.mode.CBC;
 import com.ibm.mapper.model.mode.CCM;
 import com.ibm.mapper.model.mode.GCM;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -45,6 +51,20 @@ public class EncryptionAlgorithmMapper implements IMapper {
                     Optional.of(new AES(128, new CCM(detectionLocation), detectionLocation));
             case "AES 128 GCM" ->
                     Optional.of(new AES(128, new GCM(detectionLocation), detectionLocation));
+            case "AES 128 CBC" ->
+                    Optional.of(new AES(128, new CBC(detectionLocation), detectionLocation));
+            case "AES 256 GCM" ->
+                    Optional.of(new AES(256, new GCM(detectionLocation), detectionLocation));
+            case "AES 256 CBC" ->
+                    Optional.of(new AES(256, new CBC(detectionLocation), detectionLocation));
+            case "CHACHA20 POLY1305" -> Optional.of(new ChaCha20_Poly1305(detectionLocation));
+            case "DES40 CBC" -> Optional.of(new DES(40, detectionLocation));
+            case "RC4 40" -> Optional.of(new RC4(40, detectionLocation));
+            case "3DES EDE CBC" ->
+                    Optional.of(new TripleDES(new CBC(detectionLocation), detectionLocation));
+            case "ARIA 128 CBC" ->
+                    Optional.of(new ARIA(128, new CBC(detectionLocation), detectionLocation));
+
             default -> Optional.empty();
         };
     }

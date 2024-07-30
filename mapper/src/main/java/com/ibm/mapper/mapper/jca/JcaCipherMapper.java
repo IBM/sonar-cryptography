@@ -31,12 +31,12 @@ import com.ibm.mapper.model.algorithms.AESWrap;
 import com.ibm.mapper.model.algorithms.Blowfish;
 import com.ibm.mapper.model.algorithms.ChaCha20;
 import com.ibm.mapper.model.algorithms.DES;
-import com.ibm.mapper.model.algorithms.DESede;
 import com.ibm.mapper.model.algorithms.DESedeWrap;
 import com.ibm.mapper.model.algorithms.Poly1305;
 import com.ibm.mapper.model.algorithms.RC2;
 import com.ibm.mapper.model.algorithms.RC4;
 import com.ibm.mapper.model.algorithms.RSA;
+import com.ibm.mapper.model.algorithms.TripleDES;
 import com.ibm.mapper.model.mode.CCM;
 import com.ibm.mapper.model.mode.GCM;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -130,7 +130,7 @@ public class JcaCipherMapper implements IMapper {
             case "RC2", "ARC2" -> Optional.of(new RC2(detectionLocation));
             case "BLOWFISH" -> Optional.of(new Blowfish(detectionLocation));
             case "DES" -> Optional.of(new DES(detectionLocation));
-            case "DESEDE", "TRIPLEDES" -> Optional.of(new DESede(detectionLocation));
+            case "DESEDE" -> Optional.of(new TripleDES(detectionLocation));
             case "DESEDEWRAP", "TRIPLEDESWRAP" -> Optional.of(new DESedeWrap(detectionLocation));
             case "CHACHA20" -> Optional.of(new ChaCha20(detectionLocation));
             case "CHACHA20-POLY1305" -> {

@@ -28,31 +28,47 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class DES extends BlockCipher {
-    private static final String NAME = "DES";
+// default is EDE mode
+public final class TripleDES extends BlockCipher {
+    private static final String NAME = "3DES"; // TripleDES
 
-    public DES(@NotNull DetectionLocation detectionLocation) {
+    public TripleDES(@NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
     }
 
-    public DES(int digestSize, @NotNull DetectionLocation detectionLocation) {
+    public TripleDES(int digestSize, @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
         this.append(new DigestSize(digestSize, detectionLocation));
     }
 
-    public DES(int digestSize, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+    public TripleDES(
+            int digestSize, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
         this.append(new DigestSize(digestSize, detectionLocation));
         this.append(mode);
     }
 
-    public DES(
+    public TripleDES(
             int digestSize,
             @Nonnull Mode mode,
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
         this.append(new DigestSize(digestSize, detectionLocation));
+        this.append(mode);
+        this.append(padding);
+    }
+
+    public TripleDES(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+        super(new Algorithm(NAME, detectionLocation));
+        this.append(mode);
+    }
+
+    public TripleDES(
+            @Nonnull Mode mode,
+            @Nonnull Padding padding,
+            @NotNull DetectionLocation detectionLocation) {
+        super(new Algorithm(NAME, detectionLocation));
         this.append(mode);
         this.append(padding);
     }

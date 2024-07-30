@@ -17,25 +17,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model;
+package com.ibm.mapper.model.algorithms;
 
+import com.ibm.mapper.model.AuthenticatedEncryption;
+import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class AuthenticatedEncryption extends Cipher {
+public final class ChaCha20_Poly1305 extends AuthenticatedEncryption {
 
-    public AuthenticatedEncryption(@Nonnull Cipher cipher) {
-        super(cipher, AuthenticatedEncryption.class);
-    }
-
-    public AuthenticatedEncryption(@Nonnull Cipher cipher, @Nonnull Mode mode) {
-        super(cipher, AuthenticatedEncryption.class);
-        this.append(mode);
-    }
-
-    public AuthenticatedEncryption(
-            @Nonnull Cipher cipher, @Nonnull Mode mode, @Nonnull Padding padding) {
-        super(cipher, AuthenticatedEncryption.class);
-        this.append(mode);
-        this.append(padding);
+    public ChaCha20_Poly1305(@Nonnull DetectionLocation detectionLocation) {
+        super(new ChaCha20(detectionLocation));
+        this.append(new Poly1305(detectionLocation));
     }
 }

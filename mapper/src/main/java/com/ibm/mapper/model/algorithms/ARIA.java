@@ -28,34 +28,31 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class DESede extends BlockCipher {
-    private static final String NAME = "DESede"; // TripleDES
+public final class ARIA extends BlockCipher {
+    private static final String NAME = "ARIA";
 
-    public DESede(@NotNull DetectionLocation detectionLocation) {
+    public ARIA(@NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
     }
 
-    public DESede(@Nonnull DigestSize digestSize, @NotNull DetectionLocation detectionLocation) {
+    public ARIA(int digestSize, @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
-        this.append(digestSize);
+        this.append(new DigestSize(digestSize, detectionLocation));
     }
 
-    public DESede(
-            @Nonnull DigestSize digestSize,
-            @Nonnull Mode mode,
-            @NotNull DetectionLocation detectionLocation) {
+    public ARIA(int digestSize, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
-        this.append(digestSize);
+        this.append(new DigestSize(digestSize, detectionLocation));
         this.append(mode);
     }
 
-    public DESede(
-            @Nonnull DigestSize digestSize,
+    public ARIA(
+            int digestSize,
             @Nonnull Mode mode,
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
-        this.append(digestSize);
+        this.append(new DigestSize(digestSize, detectionLocation));
         this.append(mode);
         this.append(padding);
     }
