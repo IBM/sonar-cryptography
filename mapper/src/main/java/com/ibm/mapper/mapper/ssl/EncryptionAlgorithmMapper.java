@@ -27,13 +27,17 @@ import com.ibm.mapper.model.algorithms.Camellia;
 import com.ibm.mapper.model.algorithms.ChaCha20_Poly1305;
 import com.ibm.mapper.model.algorithms.DES;
 import com.ibm.mapper.model.algorithms.GOST28147;
+import com.ibm.mapper.model.algorithms.GOSTR34122015;
+import com.ibm.mapper.model.algorithms.RC2;
 import com.ibm.mapper.model.algorithms.RC4;
 import com.ibm.mapper.model.algorithms.SEED;
 import com.ibm.mapper.model.algorithms.TripleDES;
 import com.ibm.mapper.model.mode.CBC;
 import com.ibm.mapper.model.mode.CCM;
 import com.ibm.mapper.model.mode.CNT;
+import com.ibm.mapper.model.mode.CTR;
 import com.ibm.mapper.model.mode.GCM;
+import com.ibm.mapper.model.mode.MGM;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
@@ -64,7 +68,9 @@ public class EncryptionAlgorithmMapper implements IMapper {
             case "CHACHA20 POLY1305" -> Optional.of(new ChaCha20_Poly1305(detectionLocation));
             case "RC4 40" -> Optional.of(new RC4(40, detectionLocation));
             case "RC4 128" -> Optional.of(new RC4(128, detectionLocation));
-            case "DES40 CBC" -> Optional.of(new DES(40, detectionLocation));
+            case "RC2 CBC 40" ->
+                    Optional.of(new RC2(40, new CBC(detectionLocation), detectionLocation));
+            case "DES40 CBC", "DES CBC 40" -> Optional.of(new DES(40, detectionLocation));
             case "DES CBC" -> Optional.of(new DES(new CBC(detectionLocation), detectionLocation));
             case "3DES EDE CBC" ->
                     Optional.of(new TripleDES(new CBC(detectionLocation), detectionLocation));
@@ -87,6 +93,14 @@ public class EncryptionAlgorithmMapper implements IMapper {
             case "SEED CBC" -> Optional.of(new SEED(new CBC(detectionLocation), detectionLocation));
             case "28147 CNT" ->
                     Optional.of(new GOST28147(new CNT(detectionLocation), detectionLocation));
+            case "MAGMA CTR" ->
+                    Optional.of(new GOST28147(new CTR(detectionLocation), detectionLocation));
+            case "MAGMA MGM L", "MAGMA MGM S" ->
+                    Optional.of(new GOST28147(new MGM(detectionLocation), detectionLocation));
+            case "KUZNYECHIK CTR" ->
+                    Optional.of(new GOSTR34122015(new CTR(detectionLocation), detectionLocation));
+            case "KUZNYECHIK MGM L", "KUZNYECHIK MGM S" ->
+                    Optional.of(new GOSTR34122015(new MGM(detectionLocation), detectionLocation));
             default -> Optional.empty();
         };
     }
