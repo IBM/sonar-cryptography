@@ -24,17 +24,16 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.model.context.ProtocolContext;
 import com.ibm.engine.rule.IBundle;
-import com.ibm.mapper.AbstractContextTranslator;
 import com.ibm.mapper.IContextTranslationWithKind;
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.ssl.SSLVersionMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Protocol;
-import com.ibm.mapper.model.TLSProtocol;
+import com.ibm.mapper.model.protocl.TLS;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
+
+import java.util.Optional;
 
 public class JavaProtocolContextTranslator
         implements IContextTranslationWithKind<Tree> {
@@ -54,18 +53,16 @@ public class JavaProtocolContextTranslator
             return switch (kind) {
                 case TLS ->
                         Optional.of(protocol)
-                                .map(p -> new Protocol(p.asString(), detectionLocation))
-                                .map(TLSProtocol::new)
                                 .map(
                                         p -> {
                                             final SSLVersionMapper sslVersionMapper =
                                                     new SSLVersionMapper();
-                                            sslVersionMapper
+                                            return sslVersionMapper
                                                     .parse(
                                                             p.asString(),
                                                             detectionLocation)
-                                                    .ifPresent(p::append);
-                                            return p;
+                                                    .map(TLS::new)
+                                                    .orElse(new TLS(detectionLocation));
                                         });
                 default ->
                         Optional.of(protocol)

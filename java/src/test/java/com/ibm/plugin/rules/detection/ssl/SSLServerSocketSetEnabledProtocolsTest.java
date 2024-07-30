@@ -19,17 +19,14 @@
  */
 package com.ibm.plugin.rules.detection.ssl;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.Protocol;
 import com.ibm.engine.model.context.ProtocolContext;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.TLSProtocol;
 import com.ibm.mapper.model.Version;
+import com.ibm.mapper.model.protocl.TLS;
 import com.ibm.plugin.TestBase;
-import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.sonar.java.checks.verifier.CheckVerifier;
@@ -37,6 +34,10 @@ import org.sonar.plugins.java.api.JavaCheck;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class SSLServerSocketSetEnabledProtocolsTest extends TestBase {
 
@@ -77,7 +78,7 @@ class SSLServerSocketSetEnabledProtocolsTest extends TestBase {
         assertThat(nodes).hasSize(2);
         // TLSProtocol
         INode tLSProtocolNode = nodes.get(0);
-        assertThat(tLSProtocolNode.getKind()).isEqualTo(TLSProtocol.class);
+        assertThat(tLSProtocolNode.getKind()).isEqualTo(TLS.class);
         assertThat(tLSProtocolNode.getChildren()).hasSize(1);
         assertThat(tLSProtocolNode.asString()).containsAnyOf("TLSv1.2", "TLSv1.3");
 
@@ -89,7 +90,7 @@ class SSLServerSocketSetEnabledProtocolsTest extends TestBase {
 
         // TLSProtocol
         INode tLSProtocolNode1 = nodes.get(1);
-        assertThat(tLSProtocolNode1.getKind()).isEqualTo(TLSProtocol.class);
+        assertThat(tLSProtocolNode1.getKind()).isEqualTo(TLS.class);
         assertThat(tLSProtocolNode1.getChildren()).hasSize(1);
         assertThat(tLSProtocolNode.asString()).containsAnyOf("TLSv1.2", "TLSv1.3");
 

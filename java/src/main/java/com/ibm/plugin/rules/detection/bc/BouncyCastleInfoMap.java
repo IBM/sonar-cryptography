@@ -19,12 +19,12 @@
  */
 package com.ibm.plugin.rules.detection.bc;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Instantiate this class to easily store information related to a cryptographic class name. Using
@@ -35,9 +35,9 @@ import javax.annotation.Nullable;
  */
 public class BouncyCastleInfoMap {
 
-    private Map<String, Info> map = new ConcurrentHashMap<>();
+    private final Map<String, Info> map = new ConcurrentHashMap<>();
 
-    public class Info {
+    public static class Info {
         @Nullable private String name;
 
         public String getName() {
@@ -71,13 +71,13 @@ public class BouncyCastleInfoMap {
 
     public class InfoBuilder {
 
-        private String key;
+        private final String key;
 
         public InfoBuilder(String key) {
             this.key = key;
         }
 
-        private static String errorMessage = "Unexpected missing key in InfoBuilder: ";
+        private static final String errorMessage = "Unexpected missing key in InfoBuilder: ";
 
         public InfoBuilder putName(@Nonnull String name) {
             if (!map.containsKey(key)) {

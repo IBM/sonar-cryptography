@@ -20,18 +20,28 @@
 package com.ibm.mapper.model;
 
 import com.ibm.mapper.utils.DetectionLocation;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public class Key implements IAsset {
     @Nonnull protected final Map<Class<? extends INode>, INode> children;
     @Nonnull protected final Class<? extends Key> kind;
     @Nonnull protected final DetectionLocation detectionLocation;
     @Nonnull protected final String name;
+
+    public Key(
+            @Nonnull Algorithm algorithm) {
+        this.name = algorithm.name;
+        this.children = new HashMap<>();
+        this.children.put(algorithm.getKind(), algorithm);
+        this.detectionLocation = algorithm.detectionLocation;
+        this.kind = Key.class;
+    }
 
     protected Key(
             @Nonnull Key key,
@@ -45,12 +55,11 @@ public class Key implements IAsset {
 
     protected Key(
             @Nonnull Algorithm algorithm,
-            @Nonnull DetectionLocation detectionLocation,
             @Nonnull final Class<? extends Key> asKind) {
         this.name = algorithm.name;
         this.children = new HashMap<>();
         this.children.put(algorithm.getKind(), algorithm);
-        this.detectionLocation = detectionLocation;
+        this.detectionLocation = algorithm.detectionLocation;
         this.kind = asKind;
     }
 

@@ -20,59 +20,24 @@
 package com.ibm.mapper.model;
 
 import com.ibm.mapper.utils.DetectionLocation;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public class Protocol implements IAsset {
     @Nonnull protected final Map<Class<? extends INode>, INode> children;
     @Nonnull protected final Class<? extends Protocol> kind;
     @Nonnull protected final DetectionLocation detectionLocation;
-    @Nonnull protected final Type type;
+    @Nonnull protected final String type;
 
-    public enum Type {
-        TLS
-    }
-
-    protected Protocol(
-            @Nonnull Protocol protocol,
-            @Nonnull DetectionLocation detectionLocation,
-            @Nonnull final Class<? extends Protocol> asKind) {
-        this.type = protocol.getType();
-        this.children = protocol.getChildren();
-        this.detectionLocation = detectionLocation;
-        this.kind = asKind;
-    }
-
-    public Protocol(@Nonnull Type type, @Nonnull DetectionLocation detectionLocation) {
+    public Protocol(@Nonnull String type, @Nonnull DetectionLocation detectionLocation) {
         this.type = type;
         this.children = new HashMap<>();
         this.detectionLocation = detectionLocation;
         this.kind = Protocol.class;
-    }
-
-    public Protocol(
-            @Nonnull Type type,
-            @Nonnull DetectionLocation detectionLocation,
-            @Nonnull Map<Class<? extends INode>, INode> children) {
-        this.type = type;
-        this.children = children;
-        this.detectionLocation = detectionLocation;
-        this.kind = Protocol.class;
-    }
-
-    public Protocol(
-            @Nonnull Type type,
-            @Nonnull KeyLength keyLength,
-            @Nonnull DetectionLocation detectionLocation,
-            @Nonnull Map<Class<? extends INode>, INode> children) {
-        this.type = type;
-        this.children = children;
-        this.detectionLocation = detectionLocation;
-        this.kind = Protocol.class;
-        this.append(keyLength);
     }
 
     private Protocol(@Nonnull Protocol protocol) {
@@ -115,7 +80,7 @@ public class Protocol implements IAsset {
     @Nonnull
     @Override
     public String asString() {
-        return type.name();
+        return type;
     }
 
     @NotNull @Override
@@ -124,7 +89,7 @@ public class Protocol implements IAsset {
     }
 
     @Nonnull
-    public Type getType() {
+    public String getType() {
         return type;
     }
 
@@ -165,6 +130,6 @@ public class Protocol implements IAsset {
 
     @Override
     public String toString() {
-        return type.name();
+        return type;
     }
 }

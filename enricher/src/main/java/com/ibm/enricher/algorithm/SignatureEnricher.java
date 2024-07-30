@@ -20,13 +20,13 @@
 package com.ibm.enricher.algorithm;
 
 import com.ibm.enricher.utils.Utils;
-import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Signature;
+
+import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Optional;
-import javax.annotation.Nonnull;
 
 public class SignatureEnricher implements ISignatureEnricher {
 
@@ -34,21 +34,15 @@ public class SignatureEnricher implements ISignatureEnricher {
     public void enrich(
             @Nonnull Signature signature,
             @Nonnull Map<Class<? extends INode>, INode> dependingNodes) {
-        final Optional<Algorithm> promiseSignatureAlgorithm = signature.getSignatureAlgorithm();
         final Optional<MessageDigest> promiseMessageDigest = signature.getDigest();
-
-        if (promiseSignatureAlgorithm.isEmpty()) {
-            return;
-        }
 
         Map<Class<? extends INode>, INode> newDependingNodes = Map.of();
         if (promiseMessageDigest.isPresent()) {
             newDependingNodes = Map.of(MessageDigest.class, promiseMessageDigest.get());
         }
 
-        final Algorithm signatureAlgorithm = promiseSignatureAlgorithm.get();
         final String signatureAlgorithmName =
-                Utils.sanitiseAlgorithmName(signatureAlgorithm.asString());
+                Utils.sanitiseAlgorithmName(signature.asString());
         switch (signatureAlgorithmName) {
             case "DSA" -> {
                 final DSASignatureEnricher dsaSignatureEnricher = new DSASignatureEnricher();

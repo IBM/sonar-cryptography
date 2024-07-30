@@ -19,17 +19,19 @@
  */
 package com.ibm.output.cyclonedx;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.Version;
+import com.ibm.mapper.model.protocl.TLS;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.output.cyclondx.CBOMOutputFile;
-import java.util.Collections;
-import java.util.List;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.component.crypto.CryptoProperties;
 import org.cyclonedx.model.component.crypto.enums.ProtocolType;
 import org.junit.jupiter.api.Test;
+
+import java.util.Collections;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class ProtocolTest {
 
@@ -40,8 +42,7 @@ class ProtocolTest {
 
         final CBOMOutputFile outputFile = new CBOMOutputFile();
 
-        final TLSProtocol tlsProtocol = new TLSProtocol(new Protocol("TLSv1.3", detectionLocation));
-        tlsProtocol.append(new Version("1.3", detectionLocation));
+        final TLS tlsProtocol = new TLS(new Version("1.3", detectionLocation));
 
         outputFile.add(List.of(tlsProtocol));
 

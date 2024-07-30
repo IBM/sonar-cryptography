@@ -25,19 +25,18 @@ import com.ibm.engine.model.KeySize;
 import com.ibm.engine.model.PasswordSize;
 import com.ibm.engine.model.SaltSize;
 import com.ibm.engine.model.context.IDetectionContext;
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Key;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.PasswordLength;
 import com.ibm.mapper.model.SaltLength;
 import com.ibm.mapper.model.SecretKey;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
+
+import java.util.Optional;
 
 public final class JavaSecretKeyContextTranslator extends JavaAbstractLibraryTranslator {
 
@@ -56,7 +55,6 @@ public final class JavaSecretKeyContextTranslator extends JavaAbstractLibraryTra
                                 algo.append(new KeyGeneration(detectionLocation));
                                 return algo;
                             })
-                    .map(algo -> new Key(algo.asString(), algo, detectionLocation))
                     .map(SecretKey::new);
         } else if (value instanceof KeySize<Tree> keySize) {
             KeyLength keyLength = new KeyLength(keySize.getValue(), detectionLocation);

@@ -19,11 +19,11 @@
  */
 package com.ibm.output.cyclondx.builder;
 
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.CipherSuite;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Protocol;
 import com.ibm.mapper.model.collections.CipherSuiteCollection;
-import java.util.List;
-import java.util.UUID;
-import javax.annotation.Nonnull;
+import com.ibm.mapper.model.protocl.TLS;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Evidence;
 import org.cyclonedx.model.component.crypto.CryptoProperties;
@@ -33,6 +33,10 @@ import org.cyclonedx.model.component.crypto.enums.ProtocolType;
 import org.cyclonedx.model.component.evidence.Occurrence;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.UUID;
 
 public class ProtocolComponentBuilder implements IProtocolComponentBuilder {
     @Nonnull private final Component component;
@@ -76,7 +80,7 @@ public class ProtocolComponentBuilder implements IProtocolComponentBuilder {
             return new ProtocolComponentBuilder(component, cryptoProperties, protocolProperties);
         }
 
-        if (type instanceof TLSProtocol) {
+        if (type instanceof TLS) {
             protocolProperties.setType(ProtocolType.TLS);
         } else {
             protocolProperties.setType(ProtocolType.OTHER);

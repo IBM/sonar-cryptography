@@ -19,18 +19,17 @@
  */
 package com.ibm.output.cyclonedx;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
+import com.ibm.mapper.model.PasswordLength;
+import com.ibm.mapper.model.SaltLength;
 import com.ibm.mapper.model.functionality.Encrypt;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.output.cyclondx.CBOMOutputFile;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.component.crypto.AlgorithmProperties;
@@ -39,6 +38,12 @@ import org.cyclonedx.model.component.crypto.enums.AssetType;
 import org.cyclonedx.model.component.crypto.enums.CryptoFunction;
 import org.cyclonedx.model.component.evidence.Occurrence;
 import org.junit.jupiter.api.Test;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class AlgorithmTest {
 
@@ -79,7 +84,7 @@ class AlgorithmTest {
                 new DetectionLocation(filePath, 1, 1, Collections.emptyList());
         JcaAlgorithmMapper algorithmMapper = new JcaAlgorithmMapper();
         Optional<? extends INode> algorithmOptional =
-                algorithmMapper.parse("RSA", detectionLocation, Configuration.DEFAULT);
+                algorithmMapper.parse("RSA", detectionLocation);
         assertThat(algorithmOptional).isPresent();
         assertThat(algorithmOptional.get().is(Algorithm.class)).isTrue();
 

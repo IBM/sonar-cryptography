@@ -28,34 +28,19 @@ import com.ibm.engine.model.OperationMode;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.IDetectionContext;
-import com.ibm.mapper.ITranslator;
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.bc.BcOperationModeEncryptionMapper;
 import com.ibm.mapper.mapper.bc.BcOperationModeWrappingMapper;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.mapper.jca.JcaCipherOperationModeMapper;
-import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
-import com.ibm.mapper.model.Cipher;
-import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
-import com.ibm.mapper.model.MessageDigest;
-import com.ibm.mapper.model.Mode;
-import com.ibm.mapper.model.Padding;
-import com.ibm.mapper.model.PasswordBasedEncryption;
-import com.ibm.mapper.model.PublicKeyEncryption;
-import com.ibm.mapper.model.StreamCipher;
-import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Encapsulate;
-import com.ibm.mapper.model.functionality.Tag;
-import com.ibm.mapper.model.padding.OAEP;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
+
+import java.util.Optional;
 
 public final class JavaCipherContextTranslator extends JavaAbstractLibraryTranslator {
 
@@ -110,23 +95,21 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                 default -> Optional.empty();
             };
         } else if (value instanceof ValueAction<Tree> valueAction) {
-            com.ibm.mapper.model.Algorithm algorithm;
-            BlockCipher blockCipher;
-            AuthenticatedEncryption ae;
-            PublicKeyEncryption pke;
-            Mode mode;
-            Padding padding;
-            PasswordBasedEncryption pbe;
+//            com.ibm.mapper.model.Algorithm algorithm;
+//            BlockCipher blockCipher;
+//            AuthenticatedEncryption ae;
+//            PublicKeyEncryption pke;
+//            Mode mode;
+//            Padding padding;
+//            PasswordBasedEncryption pbe;
 
             switch (kind) {
                 case ASYMMETRIC_CIPHER_ENGINE, BLOCK_CIPHER_ENGINE, WRAP_ENGINE:
                     return Optional.of(
                             new BlockCipher(
                                     new com.ibm.mapper.model.Algorithm(
-                                            valueAction.asString(), detectionLocation),
-                                    null,
-                                    null));
-                case ASYMMETRIC_CIPHER_ENGINE_SIGNATURE:
+                                            valueAction.asString(), detectionLocation)));
+                /*case ASYMMETRIC_CIPHER_ENGINE_SIGNATURE:
                     return Optional.of(
                             new PublicKeyEncryption(
                                     new com.ibm.mapper.model.Algorithm(
@@ -136,21 +119,15 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                     return Optional.of(
                             new BlockCipher(
                                     new com.ibm.mapper.model.Algorithm(
-                                            ITranslator.UNKNOWN, detectionLocation),
-                                    null,
-                                    null));
+                                            ITranslator.UNKNOWN, detectionLocation)));
                 case STREAM_CIPHER_ENGINE:
                     return Optional.of(
                             new StreamCipher(
                                     new com.ibm.mapper.model.Algorithm(
-                                            valueAction.asString(), detectionLocation),
-                                    null,
-                                    null));
+                                            valueAction.asString(), detectionLocation)));
                 case HASH:
                     return Optional.of(
-                            // TODO: Is `Cipher` right? (and we need something that
-                            //  dinstinguishes this Hash cipher from the Main cipher)
-                            new Cipher(
+                            new MessageDigest(
                                     new com.ibm.mapper.model.Algorithm(
                                             valueAction.asString(), detectionLocation)));
                 case BLOCK_CIPHER, BUFFERED_BLOCK_CIPHER:
@@ -186,7 +163,7 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                     }
 
                     mode = new Mode(modeString, detectionLocation);
-                    padding = new Padding(paddingString, detectionLocation, new HashMap<>());
+                    padding = new Padding(paddingString, detectionLocation);
                     algorithm =
                             new com.ibm.mapper.model.Algorithm(
                                     blockCipherString != null
@@ -219,16 +196,14 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                     algorithm =
                             new com.ibm.mapper.model.Algorithm(
                                     defaultAlgorithmName, detectionLocation);
-                    ae = new AuthenticatedEncryption(algorithm, mode, null, null);
+                    final Cipher cipher = new Cipher(algorithm);
+                    ae = new AuthenticatedEncryption(cipher, mode);
                     return Optional.of(ae);
                 case AEAD_ENGINE:
                     ae =
                             new AuthenticatedEncryption(
                                     new com.ibm.mapper.model.Algorithm(
-                                            valueAction.asString(), detectionLocation),
-                                    null,
-                                    null,
-                                    null);
+                                            valueAction.asString(), detectionLocation));
                     return Optional.of(ae);
                 case CHACHA20POLY1305:
                     ae =
@@ -249,20 +224,16 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                     ae.append(
                             new StreamCipher(
                                     new com.ibm.mapper.model.Algorithm(
-                                            "ChaCha20", detectionLocation),
-                                    null,
-                                    null));
+                                            "ChaCha20", detectionLocation)));
                     return Optional.of(ae);
                 case ENCODING:
                     blockCipher =
                             new BlockCipher(
                                     new com.ibm.mapper.model.Algorithm(
-                                            ITranslator.UNKNOWN, detectionLocation),
-                                    null,
-                                    null);
+                                            ITranslator.UNKNOWN, detectionLocation));
 
                     padding =
-                            new Padding(valueAction.asString(), detectionLocation, new HashMap<>());
+                            new Padding(valueAction.asString(), detectionLocation);
                     switch (valueAction.asString()) {
                         case "OAEP":
                             blockCipher.append(new OAEP(padding));
@@ -280,7 +251,7 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                                             ITranslator.UNKNOWN, detectionLocation));
 
                     padding =
-                            new Padding(valueAction.asString(), detectionLocation, new HashMap<>());
+                            new Padding(valueAction.asString(), detectionLocation);
                     switch (valueAction.asString()) {
                         case "OAEP":
                             pke.append(new OAEP(padding));
@@ -295,13 +266,11 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                     blockCipher =
                             new BlockCipher(
                                     new com.ibm.mapper.model.Algorithm(
-                                            ITranslator.UNKNOWN, detectionLocation),
-                                    null,
-                                    null);
+                                            ITranslator.UNKNOWN, detectionLocation));
                     return Optional.of(blockCipher);
                 case PADDING:
                     padding =
-                            new Padding(valueAction.asString(), detectionLocation, new HashMap<>());
+                            new Padding(valueAction.asString(), detectionLocation);
                     return Optional.of(padding);
                 case PBE:
                     String algorithmName = valueAction.asString();
@@ -334,30 +303,21 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                                                 "MD5", detectionLocation)));
                     }
 
-                    return Optional.of(pbe);
+                    return Optional.of(pbe);*/
                 default:
                     return Optional.empty(); // TODO
             }
         } else if (value instanceof AlgorithmParameter<Tree> algorithmParameter) {
             int keySize;
             switch (algorithmParameter.asString()) {
-                case "ascon128":
-                    keySize = 128;
-                    break;
-                case "ascon128a":
+                case "ascon128", "SCHWAEMM128_128", "ascon128a", "SCHWAEMM256_128":
                     keySize = 128;
                     break;
                 case "ascon128pq":
                     keySize = 160;
                     break;
-                case "SCHWAEMM128_128":
-                    keySize = 128;
-                    break;
                 case "SCHWAEMM192_192":
                     keySize = 192;
-                    break;
-                case "SCHWAEMM256_128":
-                    keySize = 128;
                     break;
                 case "SCHWAEMM256_256":
                     keySize = 256;

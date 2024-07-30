@@ -20,18 +20,18 @@
 package com.ibm.mapper.mapper.ssl;
 
 import com.ibm.mapper.mapper.IMapper;
-import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Version;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public final class SSLVersionMapper implements IMapper {
     @NotNull @Override
-    public Optional<? extends INode> parse(
+    public Optional<Version> parse(
             @Nullable String str, @NotNull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();

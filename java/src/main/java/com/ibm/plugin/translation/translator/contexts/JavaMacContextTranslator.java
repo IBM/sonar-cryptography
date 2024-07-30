@@ -22,28 +22,19 @@ package com.ibm.plugin.translation.translator.contexts;
 import com.ibm.engine.model.BlockSize;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.MacSize;
-import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.IDetectionContext;
-import com.ibm.mapper.ITranslator;
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.jca.JcaMacMapper;
-import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.BlockCipher;
-import com.ibm.mapper.model.DigestSize;
-import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.MessageDigest;
-import com.ibm.mapper.model.Mode;
-import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.plugins.java.api.tree.Tree;
+
+import java.util.Optional;
 
 public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslator {
     private static final Logger LOGGER = LoggerFactory.getLogger(JavaMacContextTranslator.class);
@@ -80,7 +71,7 @@ public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslato
             @NotNull IValue<Tree> value,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
-        if (value instanceof ValueAction<Tree> valueAction) {
+        /*if (value instanceof ValueAction<Tree> valueAction) {
             Algorithm baseAlgorithm;
             Algorithm macAlgorithm;
             BlockCipher blockCipher;
@@ -233,7 +224,7 @@ public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslato
                     new com.ibm.mapper.model.BlockSize(
                             blockSizeDetection.getValue(), detectionLocation);
             return Optional.of(blockSize);
-        }
+        }*/
         return Optional.empty();
     }
 }

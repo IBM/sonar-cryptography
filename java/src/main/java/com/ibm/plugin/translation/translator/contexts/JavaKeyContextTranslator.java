@@ -29,7 +29,6 @@ import com.ibm.engine.model.context.KeyContext;
 import com.ibm.engine.model.context.PrivateKeyContext;
 import com.ibm.engine.model.context.PublicKeyContext;
 import com.ibm.engine.model.context.SecretKeyContext;
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.model.EllipticCurve;
 import com.ibm.mapper.model.EllipticCurveAlgorithm;
@@ -46,10 +45,11 @@ import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.SecretKey;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
-import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
+
+import java.util.Optional;
+import java.util.stream.Stream;
 
 public final class JavaKeyContextTranslator extends JavaAbstractLibraryTranslator {
 
@@ -77,12 +77,8 @@ public final class JavaKeyContextTranslator extends JavaAbstractLibraryTranslato
                                 return algorithmNode;
                             })
                     .map(
-                            algorithmNode -> {
-                                final Key key =
-                                        new Key(
-                                                algorithmNode.asString(),
-                                                algorithmNode,
-                                                detectionLocation);
+                            algo -> {
+                                final Key key = new Key(algo);
                                 if (detectionContext.is(PrivateKeyContext.class)) {
                                     return new PrivateKey(key);
                                 } else if (detectionContext.is(PublicKeyContext.class)) {
@@ -90,9 +86,9 @@ public final class JavaKeyContextTranslator extends JavaAbstractLibraryTranslato
                                 } else if (detectionContext.is(SecretKeyContext.class)) {
                                     return new SecretKey(key);
                                 } else {
-                                    return switch (algorithmNode.asString().trim().toLowerCase()) {
+                                    return switch (algo.asString().trim().toLowerCase()) {
                                         case "rsa" -> new PublicKey(key);
-                                        default -> algorithmNode;
+                                        default -> algo;
                                     };
                                 }
                             });

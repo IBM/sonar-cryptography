@@ -26,13 +26,14 @@ import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleInfoMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
+
+import javax.annotation.Nonnull;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public final class BcAEADCipherEngine {
 
@@ -40,7 +41,7 @@ public final class BcAEADCipherEngine {
         // nothing
     }
 
-    private static BouncyCastleInfoMap infoMap = new BouncyCastleInfoMap();
+    private static final BouncyCastleInfoMap infoMap = new BouncyCastleInfoMap();
 
     static {
         infoMap.putKey("AsconEngine").putParameterClass("AsconParameters");
@@ -60,9 +61,9 @@ public final class BcAEADCipherEngine {
         List<IDetectionRule<Tree>> constructorsList = new LinkedList<>();
 
         for (Map.Entry<String, BouncyCastleInfoMap.Info> entry : infoMap.entrySet()) {
-            String engine = entry.getKey();
-            String engineName = infoMap.getDisplayName(engine, "Engine");
-            String parameters = entry.getValue().getParameterClass();
+            final String engine = entry.getKey();
+            final String engineName = infoMap.getDisplayName(engine, "Engine");
+            final String parameters = entry.getValue().getParameterClass();
 
             if (parameters == null) {
                 constructorsList.add(

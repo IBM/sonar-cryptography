@@ -19,17 +19,17 @@
  */
 package com.ibm.enricher.algorithm;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.jca.JcaSignatureMapper;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
+import org.junit.jupiter.api.Test;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class SignatureEnricherTest {
 
@@ -41,7 +41,7 @@ class SignatureEnricherTest {
         final JcaSignatureMapper jcaSignatureMapper = new JcaSignatureMapper();
         final Optional<Signature> signatureOptional =
                 jcaSignatureMapper.parse(
-                        "SHA256withDSA", testDetectionLocation, Configuration.DEFAULT);
+                        "SHA256withDSA", testDetectionLocation);
 
         assertThat(signatureOptional).isPresent();
         final Signature signature = signatureOptional.get();
@@ -60,7 +60,7 @@ class SignatureEnricherTest {
         final JcaSignatureMapper jcaSignatureMapper = new JcaSignatureMapper();
         final Optional<Signature> signatureOptional =
                 jcaSignatureMapper.parse(
-                        "RSASSA-PSS", testDetectionLocation, Configuration.DEFAULT);
+                        "RSASSA-PSS", testDetectionLocation);
 
         assertThat(signatureOptional).isPresent();
         final Signature signature = signatureOptional.get();
@@ -79,7 +79,7 @@ class SignatureEnricherTest {
         final JcaSignatureMapper jcaSignatureMapper = new JcaSignatureMapper();
         final Optional<Signature> signatureOptional =
                 jcaSignatureMapper.parse(
-                        "MD5withRSA", testDetectionLocation, Configuration.DEFAULT);
+                        "MD5withRSA", testDetectionLocation);
 
         assertThat(signatureOptional).isPresent();
         final Signature signature = signatureOptional.get();
