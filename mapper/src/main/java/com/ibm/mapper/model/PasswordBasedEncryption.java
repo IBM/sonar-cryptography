@@ -19,9 +19,9 @@
  */
 package com.ibm.mapper.model;
 
-import javax.annotation.Nonnull;
 import java.util.Objects;
 import java.util.Optional;
+import javax.annotation.Nonnull;
 
 public final class PasswordBasedEncryption extends Algorithm {
 

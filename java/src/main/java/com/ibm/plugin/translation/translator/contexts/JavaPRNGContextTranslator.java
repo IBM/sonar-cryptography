@@ -29,10 +29,9 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.PseudorandomNumberGenerator;
 import com.ibm.mapper.model.Seed;
 import com.ibm.mapper.utils.DetectionLocation;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
-
-import java.util.Optional;
 
 public final class JavaPRNGContextTranslator implements IContextTranslationWithKind<Tree> {
 

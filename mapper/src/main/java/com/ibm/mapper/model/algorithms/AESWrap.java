@@ -35,27 +35,25 @@ public final class AESWrap extends BlockCipher {
         super(new Algorithm(NAME, detectionLocation));
     }
 
-    public AESWrap(@Nonnull DigestSize digestSize, @NotNull DetectionLocation detectionLocation) {
+    public AESWrap(int digestSize, @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
-        this.append(digestSize);
+        this.append(new DigestSize(digestSize, detectionLocation));
     }
 
     public AESWrap(
-            @Nonnull DigestSize digestSize,
-            @Nonnull Mode mode,
-            @NotNull DetectionLocation detectionLocation) {
+            int digestSize, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
-        this.append(digestSize);
+        this.append(new DigestSize(digestSize, detectionLocation));
         this.append(mode);
     }
 
     public AESWrap(
-            @Nonnull DigestSize digestSize,
+            int digestSize,
             @Nonnull Mode mode,
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
-        this.append(digestSize);
+        this.append(new DigestSize(digestSize, detectionLocation));
         this.append(mode);
         this.append(padding);
     }

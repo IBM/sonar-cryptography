@@ -28,9 +28,8 @@ import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.SaltLength;
 import com.ibm.mapper.model.Signature;
-
-import javax.annotation.Nonnull;
 import java.util.Map;
+import javax.annotation.Nonnull;
 
 public class RSASSASignatureEnricher implements ISignatureEnricher {
 
@@ -91,9 +90,7 @@ public class RSASSASignatureEnricher implements ISignatureEnricher {
                     .map(
                             mgf -> {
                                 new JcaMessageDigestMapper()
-                                        .parse(
-                                                "SHA1",
-                                                signature.getDetectionContext())
+                                        .parse("SHA1", signature.getDetectionContext())
                                         .ifPresent(mgf::append);
                                 return mgf;
                             })

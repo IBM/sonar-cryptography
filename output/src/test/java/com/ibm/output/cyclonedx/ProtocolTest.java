@@ -19,19 +19,18 @@
  */
 package com.ibm.output.cyclonedx;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.ibm.mapper.model.Version;
 import com.ibm.mapper.model.protocol.TLS;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.output.cyclondx.CBOMOutputFile;
+import java.util.Collections;
+import java.util.List;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.component.crypto.CryptoProperties;
 import org.cyclonedx.model.component.crypto.enums.ProtocolType;
 import org.junit.jupiter.api.Test;
-
-import java.util.Collections;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class ProtocolTest {
 

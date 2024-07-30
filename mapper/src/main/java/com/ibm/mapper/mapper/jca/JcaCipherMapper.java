@@ -23,7 +23,6 @@ import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.Cipher;
-import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.PasswordBasedEncryption;
@@ -118,23 +117,14 @@ public class JcaCipherMapper implements IMapper {
             @Nonnull String cipherAlgorithm, @Nonnull DetectionLocation detectionLocation) {
         return switch (cipherAlgorithm.toUpperCase().trim()) {
             case "AES" -> Optional.of(new AES(detectionLocation));
-            case "AES_128" ->
-                    Optional.of(new AES(new DigestSize(128, detectionLocation), detectionLocation));
-            case "AES_192" ->
-                    Optional.of(new AES(new DigestSize(192, detectionLocation), detectionLocation));
-            case "AES_256" ->
-                    Optional.of(new AES(new DigestSize(256, detectionLocation), detectionLocation));
+            case "AES_128" -> Optional.of(new AES(128, detectionLocation));
+            case "AES_192" -> Optional.of(new AES(192, detectionLocation));
+            case "AES_256" -> Optional.of(new AES(256, detectionLocation));
 
             case "AESWRAP" -> Optional.of(new AESWrap(detectionLocation));
-            case "AESWRAP_128" ->
-                    Optional.of(
-                            new AESWrap(new DigestSize(128, detectionLocation), detectionLocation));
-            case "AESWRAP_192" ->
-                    Optional.of(
-                            new AESWrap(new DigestSize(192, detectionLocation), detectionLocation));
-            case "AESWRAP_256" ->
-                    Optional.of(
-                            new AESWrap(new DigestSize(256, detectionLocation), detectionLocation));
+            case "AESWRAP_128" -> Optional.of(new AESWrap(128, detectionLocation));
+            case "AESWRAP_192" -> Optional.of(new AESWrap(192, detectionLocation));
+            case "AESWRAP_256" -> Optional.of(new AESWrap(256, detectionLocation));
 
             case "RC4", "ARCFOUR", "ARC4" -> Optional.of(new RC4(detectionLocation));
             case "RC2", "ARC2" -> Optional.of(new RC2(detectionLocation));

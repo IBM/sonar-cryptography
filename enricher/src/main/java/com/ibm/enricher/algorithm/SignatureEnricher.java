@@ -23,10 +23,9 @@ import com.ibm.enricher.utils.Utils;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Signature;
-
-import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Optional;
+import javax.annotation.Nonnull;
 
 public class SignatureEnricher implements ISignatureEnricher {
 
@@ -41,8 +40,7 @@ public class SignatureEnricher implements ISignatureEnricher {
             newDependingNodes = Map.of(MessageDigest.class, promiseMessageDigest.get());
         }
 
-        final String signatureAlgorithmName =
-                Utils.sanitiseAlgorithmName(signature.asString());
+        final String signatureAlgorithmName = Utils.sanitiseAlgorithmName(signature.asString());
         switch (signatureAlgorithmName) {
             case "DSA" -> {
                 final DSASignatureEnricher dsaSignatureEnricher = new DSASignatureEnricher();

@@ -45,11 +45,10 @@ import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.SecretKey;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
-import org.sonar.plugins.java.api.tree.Tree;
-
 import java.util.Optional;
 import java.util.stream.Stream;
+import org.jetbrains.annotations.NotNull;
+import org.sonar.plugins.java.api.tree.Tree;
 
 public final class JavaKeyContextTranslator extends JavaAbstractLibraryTranslator {
 

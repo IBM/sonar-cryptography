@@ -31,10 +31,9 @@ import com.ibm.mapper.model.MaskGenerationFunction;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.utils.DetectionLocation;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
-
-import java.util.Optional;
 
 public final class JavaDigestContextTranslator extends JavaAbstractLibraryTranslator {
 

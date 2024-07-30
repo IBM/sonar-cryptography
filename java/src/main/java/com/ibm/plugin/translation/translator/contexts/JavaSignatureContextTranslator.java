@@ -38,10 +38,9 @@ import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.model.functionality.Verify;
 import com.ibm.mapper.utils.DetectionLocation;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
-
-import java.util.Optional;
 
 public final class JavaSignatureContextTranslator extends JavaAbstractLibraryTranslator {
 
@@ -52,9 +51,7 @@ public final class JavaSignatureContextTranslator extends JavaAbstractLibraryTra
             @NotNull DetectionLocation detectionLocation) {
         if (value instanceof com.ibm.engine.model.Algorithm<Tree>) {
             final JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
-            return jcaAlgorithmMapper
-                    .parse(value.asString(), detectionLocation)
-                    .map(a -> a);
+            return jcaAlgorithmMapper.parse(value.asString(), detectionLocation).map(a -> a);
         } else if (value instanceof SignatureAction<Tree> signatureAction) {
             return switch (signatureAction.getAction()) {
                 case SIGN -> Optional.of(new Sign(detectionLocation));

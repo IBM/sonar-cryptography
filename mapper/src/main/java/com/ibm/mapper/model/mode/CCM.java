@@ -20,6 +20,7 @@
 package com.ibm.mapper.model.mode;
 
 import com.ibm.mapper.model.Mode;
+import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,5 +28,10 @@ public final class CCM extends Mode {
 
     public CCM(@NotNull DetectionLocation detectionLocation) {
         super("CCM", detectionLocation);
+    }
+
+    public CCM(int tagLength, @NotNull DetectionLocation detectionLocation) {
+        super("CCM", detectionLocation);
+        this.append(new TagLength(tagLength, detectionLocation));
     }
 }

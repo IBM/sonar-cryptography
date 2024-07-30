@@ -30,13 +30,11 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Protocol;
 import com.ibm.mapper.model.protocol.TLS;
 import com.ibm.mapper.utils.DetectionLocation;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
 
-import java.util.Optional;
-
-public class JavaProtocolContextTranslator
-        implements IContextTranslationWithKind<Tree> {
+public class JavaProtocolContextTranslator implements IContextTranslationWithKind<Tree> {
 
     @NotNull @Override
     public Optional<INode> translate(
@@ -58,9 +56,7 @@ public class JavaProtocolContextTranslator
                                             final SSLVersionMapper sslVersionMapper =
                                                     new SSLVersionMapper();
                                             return sslVersionMapper
-                                                    .parse(
-                                                            p.asString(),
-                                                            detectionLocation)
+                                                    .parse(p.asString(), detectionLocation)
                                                     .map(TLS::new)
                                                     .orElse(new TLS(detectionLocation));
                                         });

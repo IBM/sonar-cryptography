@@ -33,10 +33,9 @@ import com.ibm.mapper.model.SaltLength;
 import com.ibm.mapper.model.SecretKey;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
-
-import java.util.Optional;
 
 public final class JavaSecretKeyContextTranslator extends JavaAbstractLibraryTranslator {
 

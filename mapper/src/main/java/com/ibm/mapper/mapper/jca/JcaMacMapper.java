@@ -24,10 +24,9 @@ import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.PasswordBasedEncryption;
 import com.ibm.mapper.utils.DetectionLocation;
-
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Optional;
 
 public class JcaMacMapper implements IMapper {
 

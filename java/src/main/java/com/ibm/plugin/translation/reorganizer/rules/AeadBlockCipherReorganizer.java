@@ -24,10 +24,9 @@ import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.mapper.reorganizer.builder.ReorganizerRuleBuilder;
-import org.jetbrains.annotations.Unmodifiable;
-
-import javax.annotation.Nonnull;
 import java.util.List;
+import javax.annotation.Nonnull;
+import org.jetbrains.annotations.Unmodifiable;
 
 public final class AeadBlockCipherReorganizer {
 
@@ -114,6 +113,6 @@ public final class AeadBlockCipherReorganizer {
     @Unmodifiable
     @Nonnull
     public static List<IReorganizerRule> rules() {
-        return List.of(MOVE_TAG_LENGTH_UNDER_MAC); //MERGE_AE_AND_BLOCK_CIPHER
+        return List.of(MOVE_TAG_LENGTH_UNDER_MAC); // MERGE_AE_AND_BLOCK_CIPHER
     }
 }

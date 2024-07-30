@@ -24,6 +24,9 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Protocol;
 import com.ibm.mapper.model.collections.CipherSuiteCollection;
 import com.ibm.mapper.model.protocol.TLS;
+import java.util.List;
+import java.util.UUID;
+import javax.annotation.Nonnull;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Evidence;
 import org.cyclonedx.model.component.crypto.CryptoProperties;
@@ -33,10 +36,6 @@ import org.cyclonedx.model.component.crypto.enums.ProtocolType;
 import org.cyclonedx.model.component.evidence.Occurrence;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.annotation.Nonnull;
-import java.util.List;
-import java.util.UUID;
 
 public class ProtocolComponentBuilder implements IProtocolComponentBuilder {
     @Nonnull private final Component component;

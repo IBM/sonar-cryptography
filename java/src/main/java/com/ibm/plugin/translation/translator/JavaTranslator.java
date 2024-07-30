@@ -48,6 +48,13 @@ import com.ibm.plugin.translation.translator.contexts.JavaPRNGContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.JavaProtocolContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.JavaSecretKeyContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.JavaSignatureContextTranslator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,14 +68,6 @@ import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.NewClassTree;
 import org.sonar.plugins.java.api.tree.SyntaxToken;
 import org.sonar.plugins.java.api.tree.Tree;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 public final class JavaTranslator
         extends ITranslator<JavaCheck, Tree, Symbol, JavaFileScannerContext> {
@@ -251,8 +250,7 @@ public final class JavaTranslator
                 || detectionValueContext.is(PublicKeyContext.class)
                 || detectionValueContext.is(PrivateKeyContext.class)
                 || detectionValueContext.is(SecretKeyContext.class)) {
-            JavaKeyContextTranslator javaKeyContextTranslation =
-                    new JavaKeyContextTranslator();
+            JavaKeyContextTranslator javaKeyContextTranslation = new JavaKeyContextTranslator();
             return javaKeyContextTranslation.translate(
                     bundleIdentifier, value, detectionValueContext, detectionLocation);
 
@@ -265,8 +263,7 @@ public final class JavaTranslator
 
             // PRNG context
         } else if (detectionValueContext.is(PRNGContext.class)) {
-            JavaPRNGContextTranslator javaPRNGContextTranslation =
-                    new JavaPRNGContextTranslator();
+            JavaPRNGContextTranslator javaPRNGContextTranslation = new JavaPRNGContextTranslator();
             return javaPRNGContextTranslation.translate(
                     bundleIdentifier, value, detectionValueContext, detectionLocation);
 
@@ -286,8 +283,7 @@ public final class JavaTranslator
 
             // mac context
         } else if (detectionValueContext.is(MacContext.class)) {
-            JavaMacContextTranslator javaMacContextTranslation =
-                    new JavaMacContextTranslator();
+            JavaMacContextTranslator javaMacContextTranslation = new JavaMacContextTranslator();
             return javaMacContextTranslation.translate(
                     bundleIdentifier, value, detectionValueContext, detectionLocation);
 

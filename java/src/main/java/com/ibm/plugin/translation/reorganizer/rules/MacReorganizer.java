@@ -28,14 +28,13 @@ import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.mapper.reorganizer.builder.ReorganizerRuleBuilder;
-import org.jetbrains.annotations.Unmodifiable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.annotation.Nonnull;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nonnull;
+import org.jetbrains.annotations.Unmodifiable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class MacReorganizer {
     private static final Logger LOGGER = LoggerFactory.getLogger(MacReorganizer.class);
@@ -183,6 +182,6 @@ public final class MacReorganizer {
     @Unmodifiable
     @Nonnull
     public static List<IReorganizerRule> rules() {
-        return List.of(MOVE_NODES_UNDER_CIPHER); //RENAME_MAC
+        return List.of(MOVE_NODES_UNDER_CIPHER); // RENAME_MAC
     }
 }

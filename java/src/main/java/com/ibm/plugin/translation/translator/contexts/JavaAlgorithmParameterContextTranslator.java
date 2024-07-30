@@ -29,10 +29,9 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.utils.DetectionLocation;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
-
-import java.util.Optional;
 
 public final class JavaAlgorithmParameterContextTranslator extends JavaAbstractLibraryTranslator {
 
@@ -43,15 +42,12 @@ public final class JavaAlgorithmParameterContextTranslator extends JavaAbstractL
             @NotNull DetectionLocation detectionLocation) {
         if (value instanceof Algorithm<Tree>) {
             JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
-            return jcaAlgorithmMapper
-                    .parse(value.asString(), detectionLocation)
-                    .map(a -> a);
+            return jcaAlgorithmMapper.parse(value.asString(), detectionLocation).map(a -> a);
         }
         return translateCommon(value, detectionContext, detectionLocation);
     }
 
-    @NotNull
-    protected Optional<INode> translateBC(
+    @NotNull protected Optional<INode> translateBC(
             @NotNull IValue<Tree> value,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {

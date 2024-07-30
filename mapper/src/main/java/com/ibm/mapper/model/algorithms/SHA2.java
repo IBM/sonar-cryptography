@@ -29,7 +29,7 @@ public final class SHA2 extends MessageDigest {
     private static final String NAME = "SHA";
 
     public SHA2(int digestSize, @Nonnull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME+digestSize, detectionLocation));
+        super(new Algorithm(NAME + digestSize, detectionLocation));
         this.append(new DigestSize(digestSize, detectionLocation));
     }
 
@@ -44,7 +44,8 @@ public final class SHA2 extends MessageDigest {
 
     @Nonnull
     private static String buildPreHashName(int digestSize, @Nonnull MessageDigest preHash) {
-        return preHash.getDigestSize().map(size -> NAME + size.asString() + "/" + digestSize)
-                .orElse(NAME+digestSize);
+        return preHash.getDigestSize()
+                .map(size -> NAME + size.asString() + "/" + digestSize)
+                .orElse(NAME + digestSize);
     }
 }

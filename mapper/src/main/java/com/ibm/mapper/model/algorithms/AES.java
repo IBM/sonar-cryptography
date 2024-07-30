@@ -35,27 +35,24 @@ public final class AES extends BlockCipher {
         super(new Algorithm(NAME, detectionLocation));
     }
 
-    public AES(@Nonnull DigestSize digestSize, @NotNull DetectionLocation detectionLocation) {
+    public AES(int digestSize, @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
-        this.append(digestSize);
+        this.append(new DigestSize(digestSize, detectionLocation));
     }
 
-    public AES(
-            @Nonnull DigestSize digestSize,
-            @Nonnull Mode mode,
-            @NotNull DetectionLocation detectionLocation) {
+    public AES(int digestSize, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
-        this.append(digestSize);
+        this.append(new DigestSize(digestSize, detectionLocation));
         this.append(mode);
     }
 
     public AES(
-            @Nonnull DigestSize digestSize,
+            int digestSize,
             @Nonnull Mode mode,
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
-        this.append(digestSize);
+        this.append(new DigestSize(digestSize, detectionLocation));
         this.append(mode);
         this.append(padding);
     }

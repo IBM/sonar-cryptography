@@ -20,9 +20,10 @@
 package com.ibm.mapper.mapper.ssl;
 
 import com.ibm.mapper.mapper.IMapper;
-import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.Cipher;
-import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.algorithms.AES;
+import com.ibm.mapper.model.mode.CCM;
+import com.ibm.mapper.model.mode.GCM;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
@@ -31,14 +32,20 @@ import org.jetbrains.annotations.Nullable;
 public class EncryptionAlgorithmMapper implements IMapper {
 
     @NotNull @Override
-    public Optional<? extends INode> parse(
+    public Optional<Cipher> parse(
             @Nullable String str, @NotNull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }
 
-        final String name = str.replace(" ", "-").toLowerCase();
-        final Algorithm algorithm = new Algorithm(name, detectionLocation);
-        return Optional.of(new Cipher(algorithm));
+        return switch (str) {
+            case "AES 128 CCM 8" ->
+                    Optional.of(new AES(128, new CCM(8, detectionLocation), detectionLocation));
+            case "AES 128 CCM" ->
+                    Optional.of(new AES(128, new CCM(detectionLocation), detectionLocation));
+            case "AES 128 GCM" ->
+                    Optional.of(new AES(128, new GCM(detectionLocation), detectionLocation));
+            default -> Optional.empty();
+        };
     }
 }

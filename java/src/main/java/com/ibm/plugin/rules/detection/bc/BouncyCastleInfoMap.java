@@ -19,12 +19,12 @@
  */
 package com.ibm.plugin.rules.detection.bc;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Instantiate this class to easily store information related to a cryptographic class name. Using
