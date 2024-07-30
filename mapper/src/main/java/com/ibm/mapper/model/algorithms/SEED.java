@@ -28,25 +28,39 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class ARIA extends BlockCipher {
-    private static final String NAME = "ARIA";
+public class SEED extends BlockCipher {
+    private static final String NAME = "SEED";
 
-    public ARIA(@NotNull DetectionLocation detectionLocation) {
+    public SEED(@NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
     }
 
-    public ARIA(int digestSize, @NotNull DetectionLocation detectionLocation) {
+    public SEED(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+        super(new Algorithm(NAME, detectionLocation));
+        this.append(mode);
+    }
+
+    public SEED(
+            @Nonnull Mode mode,
+            @Nonnull Padding padding,
+            @NotNull DetectionLocation detectionLocation) {
+        super(new Algorithm(NAME, detectionLocation));
+        this.append(mode);
+        this.append(padding);
+    }
+
+    public SEED(int digestSize, @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
         this.append(new DigestSize(digestSize, detectionLocation));
     }
 
-    public ARIA(int digestSize, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+    public SEED(int digestSize, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
         this.append(new DigestSize(digestSize, detectionLocation));
         this.append(mode);
     }
 
-    public ARIA(
+    public SEED(
             int digestSize,
             @Nonnull Mode mode,
             @Nonnull Padding padding,

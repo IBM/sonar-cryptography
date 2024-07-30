@@ -22,13 +22,17 @@ package com.ibm.mapper.mapper.ssl;
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.model.algorithms.AES;
-import com.ibm.mapper.model.algorithms.ARIA;
+import com.ibm.mapper.model.algorithms.Aria;
+import com.ibm.mapper.model.algorithms.Camellia;
 import com.ibm.mapper.model.algorithms.ChaCha20_Poly1305;
 import com.ibm.mapper.model.algorithms.DES;
+import com.ibm.mapper.model.algorithms.GOST28147;
 import com.ibm.mapper.model.algorithms.RC4;
+import com.ibm.mapper.model.algorithms.SEED;
 import com.ibm.mapper.model.algorithms.TripleDES;
 import com.ibm.mapper.model.mode.CBC;
 import com.ibm.mapper.model.mode.CCM;
+import com.ibm.mapper.model.mode.CNT;
 import com.ibm.mapper.model.mode.GCM;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
@@ -58,13 +62,31 @@ public class EncryptionAlgorithmMapper implements IMapper {
             case "AES 256 CBC" ->
                     Optional.of(new AES(256, new CBC(detectionLocation), detectionLocation));
             case "CHACHA20 POLY1305" -> Optional.of(new ChaCha20_Poly1305(detectionLocation));
-            case "DES40 CBC" -> Optional.of(new DES(40, detectionLocation));
             case "RC4 40" -> Optional.of(new RC4(40, detectionLocation));
+            case "RC4 128" -> Optional.of(new RC4(128, detectionLocation));
+            case "DES40 CBC" -> Optional.of(new DES(40, detectionLocation));
+            case "DES CBC" -> Optional.of(new DES(new CBC(detectionLocation), detectionLocation));
             case "3DES EDE CBC" ->
                     Optional.of(new TripleDES(new CBC(detectionLocation), detectionLocation));
             case "ARIA 128 CBC" ->
-                    Optional.of(new ARIA(128, new CBC(detectionLocation), detectionLocation));
-
+                    Optional.of(new Aria(128, new CBC(detectionLocation), detectionLocation));
+            case "ARIA 128 GCM" ->
+                    Optional.of(new Aria(128, new GCM(detectionLocation), detectionLocation));
+            case "ARIA 256 CBC" ->
+                    Optional.of(new Aria(256, new CBC(detectionLocation), detectionLocation));
+            case "ARIA 256 GCM" ->
+                    Optional.of(new Aria(256, new GCM(detectionLocation), detectionLocation));
+            case "CAMELLIA 128 CBC" ->
+                    Optional.of(new Camellia(128, new CBC(detectionLocation), detectionLocation));
+            case "CAMELLIA 128 GCM" ->
+                    Optional.of(new Camellia(128, new GCM(detectionLocation), detectionLocation));
+            case "CAMELLIA 256 CBC" ->
+                    Optional.of(new Camellia(256, new CBC(detectionLocation), detectionLocation));
+            case "CAMELLIA 256 GCM" ->
+                    Optional.of(new Camellia(256, new GCM(detectionLocation), detectionLocation));
+            case "SEED CBC" -> Optional.of(new SEED(new CBC(detectionLocation), detectionLocation));
+            case "28147 CNT" ->
+                    Optional.of(new GOST28147(new CNT(detectionLocation), detectionLocation));
             default -> Optional.empty();
         };
     }

@@ -28,45 +28,32 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class DES extends BlockCipher {
-    private static final String NAME = "DES";
+public final class Camellia extends BlockCipher {
+    private static final String NAME = "Camellia";
 
-    public DES(@NotNull DetectionLocation detectionLocation) {
+    public Camellia(@NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
     }
 
-    public DES(int digestSize, @NotNull DetectionLocation detectionLocation) {
+    public Camellia(int digestSize, @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
         this.append(new DigestSize(digestSize, detectionLocation));
     }
 
-    public DES(int digestSize, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+    public Camellia(
+            int digestSize, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
         this.append(new DigestSize(digestSize, detectionLocation));
         this.append(mode);
     }
 
-    public DES(
+    public Camellia(
             int digestSize,
             @Nonnull Mode mode,
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
         this.append(new DigestSize(digestSize, detectionLocation));
-        this.append(mode);
-        this.append(padding);
-    }
-
-    public DES(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
-        this.append(mode);
-    }
-
-    public DES(
-            @Nonnull Mode mode,
-            @Nonnull Padding padding,
-            @NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
         this.append(mode);
         this.append(padding);
     }
