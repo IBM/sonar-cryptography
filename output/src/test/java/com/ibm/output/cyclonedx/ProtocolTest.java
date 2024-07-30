@@ -20,7 +20,7 @@
 package com.ibm.output.cyclonedx;
 
 import com.ibm.mapper.model.Version;
-import com.ibm.mapper.model.protocl.TLS;
+import com.ibm.mapper.model.protocol.TLS;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.output.cyclondx.CBOMOutputFile;
 import org.cyclonedx.model.Bom;

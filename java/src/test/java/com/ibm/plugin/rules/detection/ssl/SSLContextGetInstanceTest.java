@@ -25,7 +25,7 @@ import com.ibm.engine.model.Protocol;
 import com.ibm.engine.model.context.ProtocolContext;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Version;
-import com.ibm.mapper.model.protocl.TLS;
+import com.ibm.mapper.model.protocol.TLS;
 import com.ibm.plugin.TestBase;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;

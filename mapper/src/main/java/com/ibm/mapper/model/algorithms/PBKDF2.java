@@ -25,7 +25,7 @@ import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class PBKDF2 extends PasswordBasedKeyDerivationFunction {
+public final class PBKDF2 extends PasswordBasedKeyDerivationFunction {
 
     public PBKDF2(@Nonnull HMAC hmac, @Nonnull DetectionLocation detectionLocation) {
         super(new Algorithm("PBKDF2", detectionLocation));

@@ -1,4 +1,4 @@
-package com.ibm.mapper.model.protocl;
+package com.ibm.mapper.model.protocol;
 
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Protocol;

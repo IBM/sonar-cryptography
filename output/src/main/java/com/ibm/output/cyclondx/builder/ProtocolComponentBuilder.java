@@ -23,7 +23,7 @@ import com.ibm.mapper.model.CipherSuite;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Protocol;
 import com.ibm.mapper.model.collections.CipherSuiteCollection;
-import com.ibm.mapper.model.protocl.TLS;
+import com.ibm.mapper.model.protocol.TLS;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Evidence;
 import org.cyclonedx.model.component.crypto.CryptoProperties;
