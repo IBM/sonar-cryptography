@@ -62,7 +62,7 @@ public final class BcBlockCipherPadding {
                             .shouldBeDetectedAs(new ValueActionFactory<>(paddingName))
                             .withoutParameters()
                             .buildForContext(new CipherContext(CipherContext.Kind.PADDING))
-                            .inBundle(() -> "BcBlockCipherPadding")
+                            .inBundle(() -> "Bc")
                             .withoutDependingDetectionRules());
         }
         return constructorsList;

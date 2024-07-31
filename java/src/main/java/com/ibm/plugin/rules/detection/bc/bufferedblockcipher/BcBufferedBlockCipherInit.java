@@ -45,7 +45,7 @@ public final class BcBufferedBlockCipherInit {
                     .withMethodParameter("org.bouncycastle.crypto.CipherParameters")
                     .addDependingDetectionRules(BcCipherParameters.rules())
                     .buildForContext(new CipherContext(CipherContext.Kind.ENCRYPTION_STATUS))
-                    .inBundle(() -> "BcBufferedBlockCipherInit")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     @Unmodifiable

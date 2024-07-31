@@ -43,7 +43,7 @@ public final class BcSM2Engine {
                     .shouldBeDetectedAs(new ValueActionFactory<>("SM2"))
                     .withoutParameters()
                     .buildForContext(new CipherContext(CipherContext.Kind.ASYMMETRIC_CIPHER_ENGINE))
-                    .inBundle(() -> "bcSM2Engine")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSM2EngineInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_2 =
@@ -55,7 +55,7 @@ public final class BcSM2Engine {
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
                     .buildForContext(new CipherContext(CipherContext.Kind.ASYMMETRIC_CIPHER_ENGINE))
-                    .inBundle(() -> "bcSM2Engine")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSM2EngineInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_3 =
@@ -68,7 +68,7 @@ public final class BcSM2Engine {
                     .addDependingDetectionRules(BcDigests.rules())
                     .withMethodParameter("org.bouncycastle.crypto.engines.SM2Engine$Mode")
                     .buildForContext(new CipherContext(CipherContext.Kind.ASYMMETRIC_CIPHER_ENGINE))
-                    .inBundle(() -> "bcSM2Engine")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSM2EngineInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_4 =
@@ -79,7 +79,7 @@ public final class BcSM2Engine {
                     .shouldBeDetectedAs(new ValueActionFactory<>("SM2"))
                     .withMethodParameter("org.bouncycastle.crypto.engines.SM2Engine$Mode")
                     .buildForContext(new CipherContext(CipherContext.Kind.ASYMMETRIC_CIPHER_ENGINE))
-                    .inBundle(() -> "bcSM2Engine")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSM2EngineInit.rules());
 
     @Unmodifiable

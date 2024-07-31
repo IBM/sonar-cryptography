@@ -19,7 +19,6 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,15 +31,13 @@ public class Algorithm implements IAsset {
     @Nonnull protected final Map<Class<? extends INode>, INode> children;
     @Nonnull protected final Class<? extends Algorithm> kind;
     @Nonnull protected final DetectionLocation detectionLocation;
-    @Nonnull protected String name;
+    @Nonnull protected final String name;
 
-    protected Algorithm(
-            @Nonnull Algorithm algorithm,
-            @Nonnull DetectionLocation detectionLocation,
-            @Nonnull final Class<? extends Algorithm> asKind) {
+    public Algorithm(
+            @Nonnull Algorithm algorithm, @Nonnull final Class<? extends Algorithm> asKind) {
         this.name = algorithm.getName();
         this.children = algorithm.getChildren();
-        this.detectionLocation = detectionLocation;
+        this.detectionLocation = algorithm.detectionLocation;
         this.kind = asKind;
     }
 
@@ -49,28 +46,6 @@ public class Algorithm implements IAsset {
         this.children = new HashMap<>();
         this.detectionLocation = detectionLocation;
         this.kind = Algorithm.class;
-    }
-
-    public Algorithm(
-            @Nonnull String name,
-            @Nonnull DetectionLocation detectionLocation,
-            @Nonnull Map<Class<? extends INode>, INode> children) {
-        this.name = name;
-        this.children = children;
-        this.detectionLocation = detectionLocation;
-        this.kind = Algorithm.class;
-    }
-
-    public Algorithm(
-            @Nonnull String name,
-            @Nonnull KeyLength keyLength,
-            @Nonnull DetectionLocation detectionLocation,
-            @Nonnull Map<Class<? extends INode>, INode> children) {
-        this.name = name;
-        this.children = children;
-        this.detectionLocation = detectionLocation;
-        this.kind = Algorithm.class;
-        this.append(keyLength);
     }
 
     private Algorithm(@Nonnull Algorithm algorithm) {
@@ -100,22 +75,8 @@ public class Algorithm implements IAsset {
     }
 
     @Nonnull
-    public Optional<KeyLength> getDefaultKeyLength() {
-        INode node = this.getChildren().get(KeyLength.class);
-        if (node == null) {
-            return Optional.empty();
-        }
-        return Optional.of((KeyLength) node);
-    }
-
-    @Nonnull
     public Class<? extends Algorithm> getKind() {
         return kind;
-    }
-
-    @Override
-    public void apply(@Nonnull Configuration configuration) {
-        this.name = configuration.changeStringValue(this.name);
     }
 
     @Nonnull

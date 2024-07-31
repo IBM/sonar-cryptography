@@ -19,64 +19,36 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.IMapper;
-import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PseudorandomNumberGenerator;
+import com.ibm.mapper.model.algorithms.SHA;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.*;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class JcaPRNGMapper implements IMapper {
 
-    private static final List<String> validValues =
-            List.of(
-                    "NativePRNG",
-                    "NativePRNGBlocking",
-                    "NativePRNGNonBlocking",
-                    "PKCS11",
-                    "DRBG",
-                    "SHA1PRNG",
-                    "Windows-PRNG");
-
     @Nonnull
     @Override
     public Optional<PseudorandomNumberGenerator> parse(
-            @Nullable String str,
-            @Nonnull DetectionLocation detectionLocation,
-            @Nonnull Configuration configuration) {
+            @Nullable String str, @Nonnull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }
 
-        if (!reflectValidValues(str)) {
-            return Optional.empty();
+        if (str.toUpperCase().contains("SHA1")) {
+            return Optional.of(new PseudorandomNumberGenerator(new SHA(detectionLocation)));
         }
 
-        Map<Class<? extends INode>, INode> assets = new HashMap<>();
-        if (str.contains("SHA1")) {
-            JcaMessageDigestMapper jcaMessageDigestMapper = new JcaMessageDigestMapper();
-            Optional<MessageDigest> messageDigestOptional =
-                    jcaMessageDigestMapper.parse("SHA-1", detectionLocation, configuration);
-            messageDigestOptional.ifPresent(digest -> assets.put(digest.getKind(), digest));
-        }
-
-        JcaBaseAlgorithmMapper jcaBaseAlgorithmMapper = new JcaBaseAlgorithmMapper();
-        Optional<Algorithm> algorithm =
-                jcaBaseAlgorithmMapper.parseAndAddChildren(
-                        str, detectionLocation, configuration, assets);
-        if (algorithm.isEmpty()) {
-            return Optional.empty();
-        }
-        PseudorandomNumberGenerator prng =
-                new PseudorandomNumberGenerator(algorithm.get(), detectionLocation);
-        return Optional.of(prng);
-    }
-
-    private boolean reflectValidValues(@Nonnull String str) {
-        return validValues.stream().anyMatch(str::equalsIgnoreCase);
+        return switch (str.toUpperCase().trim()) {
+            case "NATIVEPRNG",
+                            "DRBG",
+                            "NATIVEPRNGBLOCKING",
+                            "NATIVEPRNGNONBLOCKING",
+                            "WINDOWS-PRNG" ->
+                    Optional.of(new PseudorandomNumberGenerator(detectionLocation));
+            default -> Optional.empty();
+        };
     }
 }

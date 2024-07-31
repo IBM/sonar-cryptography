@@ -19,21 +19,15 @@
  */
 package com.ibm.plugin.translation.reorganizer.rules;
 
-import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.BlockSize;
-import com.ibm.mapper.model.IAsset;
+import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Mac;
-import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.mapper.reorganizer.builder.ReorganizerRuleBuilder;
-import com.ibm.mapper.utils.DetectionLocation;
-import com.ibm.plugin.translation.translator.JavaTranslator;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +47,7 @@ public final class MacReorganizer {
     private static final IReorganizerRule MOVE_NODES_UNDER_CIPHER =
             new ReorganizerRuleBuilder()
                     .createReorganizerRule()
-                    .forNodeKind(Mac.class)
+                    .forNodeKind(HMAC.class)
                     .withDetectionCondition(
                             (node, parent, roots) -> {
                                 return (node.hasChildOfType(BlockCipher.class).isPresent()
@@ -98,7 +92,7 @@ public final class MacReorganizer {
                                         // Append the child to `cipherParent`
                                         // (only when `cipherParent` does not already have such a
                                         // child)
-                                        if (!cipherParent.hasChildOfType(kind).isPresent()) {
+                                        if (cipherParent.hasChildOfType(kind).isEmpty()) {
                                             cipherParent.append(child);
                                         }
                                         // Remove the entry from iterator (to avoid concurrency
@@ -111,13 +105,14 @@ public final class MacReorganizer {
                                 return roots;
                             });
 
+    /*
     private static final IReorganizerRule RENAME_MAC =
             new ReorganizerRuleBuilder()
                     .createReorganizerRule()
-                    .forNodeKind(Mac.class)
+                    .forNodeKind(HMAC.class)
                     .withDetectionCondition(
                             (node, parent, roots) -> {
-                                return node.asString().contains(JavaTranslator.UNKNOWN)
+                                return node.asString().contains(ITranslator.UNKNOWN)
                                         && (node.hasChildOfType(BlockCipher.class).isPresent()
                                                 || node.hasChildOfType(StreamCipher.class)
                                                         .isPresent()
@@ -145,24 +140,20 @@ public final class MacReorganizer {
                                     }
                                 }
 
-                                /*
-                                 * Create the new name of the Mac node by replacing the UNKNOWN part.
-                                 * TODO: This is a simple version where we use only the name of the reference child,
-                                 * but it could be modified to include infromation from a potential mode or size subchild
-                                 */
+                                // Create the new name of the Mac node by replacing the UNKNOWN part.
+                                // TODO: This is a simple version where we use only the name of the reference child,
+                                // but it could be modified to include infromation from a potential mode or size subchild
                                 String newMacName =
                                         node.asString()
                                                 .replace(
-                                                        JavaTranslator.UNKNOWN,
+                                                        ITranslator.UNKNOWN,
                                                         referenceChild.asString());
 
                                 // Create the new Mac node
                                 DetectionLocation detectionLocation =
                                         ((IAsset) node).getDetectionContext();
-                                Mac newMac =
-                                        new Mac(
-                                                new Algorithm(newMacName, detectionLocation),
-                                                detectionLocation);
+                                HMAC newMac =
+                                        new HMAC(new Algorithm(newMacName, detectionLocation));
 
                                 // Add all the Mac children to the new Mac node
                                 for (Map.Entry<Class<? extends INode>, INode> childKeyValue :
@@ -186,11 +177,11 @@ public final class MacReorganizer {
                                     parent.append(newMac);
                                     return roots;
                                 }
-                            });
+                            });*/
 
     @Unmodifiable
     @Nonnull
     public static List<IReorganizerRule> rules() {
-        return List.of(MOVE_NODES_UNDER_CIPHER, RENAME_MAC);
+        return List.of(MOVE_NODES_UNDER_CIPHER); // RENAME_MAC
     }
 }

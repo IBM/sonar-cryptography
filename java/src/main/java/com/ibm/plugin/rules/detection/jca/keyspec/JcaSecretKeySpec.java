@@ -46,7 +46,7 @@ public final class JcaSecretKeySpec {
                     .withMethodParameter(STRING_TYPE)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .buildForContext(new SecretKeyContext(KeyContext.Kind.NONE))
-                    .inBundle(() -> "JcaSecretKeySpec")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private JcaSecretKeySpec() {

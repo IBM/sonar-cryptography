@@ -27,9 +27,9 @@ import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.DigestContext;
 import com.ibm.engine.model.context.KeyContext;
 import com.ibm.engine.model.context.MacContext;
+import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyDerivationFunction;
-import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Tag;
@@ -108,10 +108,10 @@ class BcKDFCounterBytesGeneratorTest extends TestBase {
         assertThat(keyDerivationFunctionNode.asString()).isEqualTo("KDFCounter");
 
         // Mac under KeyDerivationFunction
-        INode macNode = keyDerivationFunctionNode.getChildren().get(Mac.class);
+        INode macNode = keyDerivationFunctionNode.getChildren().get(HMAC.class);
         assertThat(macNode).isNotNull();
         assertThat(macNode.getChildren()).hasSize(3);
-        assertThat(macNode.asString()).isEqualTo("HMAC-SHA-256");
+        assertThat(macNode.asString()).isEqualTo("HMAC-SHA256");
 
         // Digest under Mac under KeyDerivationFunction
         INode digestNode = macNode.getChildren().get(Digest.class);
@@ -122,8 +122,8 @@ class BcKDFCounterBytesGeneratorTest extends TestBase {
         // MessageDigest under Mac under KeyDerivationFunction
         INode messageDigestNode = macNode.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode).isNotNull();
-        assertThat(messageDigestNode.getChildren()).hasSize(1);
-        assertThat(messageDigestNode.asString()).isEqualTo("SHA-256");
+        assertThat(messageDigestNode.getChildren()).isEmpty();
+        assertThat(messageDigestNode.asString()).isEqualTo("SHA256");
 
         // Tag under Mac under KeyDerivationFunction
         INode tagNode = macNode.getChildren().get(Tag.class);

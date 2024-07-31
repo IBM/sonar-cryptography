@@ -50,7 +50,7 @@ public final class BcCCMParameters {
                     .withMethodParameter(BYTE_ARRAY_TYPE)
                     .buildForContext(
                             new AlgorithmParameterContext(AlgorithmParameterContext.Kind.CCM))
-                    .inBundle(() -> "BcCCMParameters")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     @Unmodifiable

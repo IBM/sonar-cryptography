@@ -53,7 +53,7 @@ public final class BcPSSSigner {
                     .addDependingDetectionRules(BcDigests.rules())
                     .withMethodParameter(BYTE_ARRAY_TYPE)
                     .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
-                    .inBundle(() -> "bcPSSSigner")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_2 =
@@ -71,7 +71,7 @@ public final class BcPSSSigner {
                             BcDigests.rules(new DigestContext(DigestContext.Kind.MGF)))
                     .withMethodParameter(BYTE_ARRAY_TYPE)
                     .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
-                    .inBundle(() -> "bcPSSSigner")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_3 =
@@ -90,7 +90,7 @@ public final class BcPSSSigner {
                     .withMethodParameter(BYTE_ARRAY_TYPE)
                     .withMethodParameter("byte")
                     .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
-                    .inBundle(() -> "bcPSSSigner")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_4 =
@@ -110,7 +110,7 @@ public final class BcPSSSigner {
                     .shouldBeDetectedAs(new SaltSizeFactory<>(Size.UnitType.BIT))
                     .asChildOfParameterWithId(-1)
                     .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
-                    .inBundle(() -> "bcPSSSigner")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_5 =
@@ -131,7 +131,7 @@ public final class BcPSSSigner {
                     .asChildOfParameterWithId(-1)
                     .withMethodParameter("byte")
                     .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
-                    .inBundle(() -> "bcPSSSigner")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_6 =
@@ -148,7 +148,7 @@ public final class BcPSSSigner {
                     .shouldBeDetectedAs(new SaltSizeFactory<>(Size.UnitType.BIT))
                     .asChildOfParameterWithId(-1)
                     .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
-                    .inBundle(() -> "bcPSSSigner")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_7 =
@@ -166,7 +166,7 @@ public final class BcPSSSigner {
                     .asChildOfParameterWithId(-1)
                     .withMethodParameter("byte")
                     .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
-                    .inBundle(() -> "bcPSSSigner")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     @Unmodifiable

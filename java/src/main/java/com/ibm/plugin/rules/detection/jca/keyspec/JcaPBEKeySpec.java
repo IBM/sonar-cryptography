@@ -45,7 +45,7 @@ public final class JcaPBEKeySpec {
                     .withMethodParameter(CHAR_ARRAY_TYPE)
                     .shouldBeDetectedAs(new KeySizeFactory<>())
                     .buildForContext(new SecretKeyContext(KeyContext.Kind.PBE))
-                    .inBundle(() -> "JcaPBEKeySpec")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> PBE_KEY_SPEC_2 =
@@ -58,7 +58,7 @@ public final class JcaPBEKeySpec {
                     .withMethodParameter(BYTE_ARRAY_TYPE)
                     .withMethodParameter("int")
                     .buildForContext(new SecretKeyContext(KeyContext.Kind.PBE))
-                    .inBundle(() -> "JcaPBEKeySpec")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> PBE_KEY_SPEC_3 =
@@ -74,7 +74,7 @@ public final class JcaPBEKeySpec {
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new KeySizeFactory<>())
                     .buildForContext(new SecretKeyContext(KeyContext.Kind.PBE))
-                    .inBundle(() -> "JcaPBEKeySpec")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private JcaPBEKeySpec() {

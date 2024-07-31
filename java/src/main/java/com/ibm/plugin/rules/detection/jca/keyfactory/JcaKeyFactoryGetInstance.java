@@ -40,7 +40,7 @@ public final class JcaKeyFactoryGetInstance {
                     .withMethodParameter(STRING_TYPE)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .buildForContext(new KeyContext(KeyContext.Kind.NONE))
-                    .inBundle(() -> "JcaKeyFactoryGetInstance")
+                    .inBundle(() -> "Jca")
                     .withDependingDetectionRules(JcaKeyFactoryGenerate.rules());
 
     private static final IDetectionRule<Tree> KEY_FACTORY_2 =
@@ -52,7 +52,7 @@ public final class JcaKeyFactoryGetInstance {
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .withMethodParameter(STRING_TYPE)
                     .buildForContext(new KeyContext(KeyContext.Kind.NONE))
-                    .inBundle(() -> "JcaKeyFactoryGetInstance")
+                    .inBundle(() -> "Jca")
                     .withDependingDetectionRules(JcaKeyFactoryGenerate.rules());
 
     private static final IDetectionRule<Tree> KEY_FACTORY_3 =
@@ -64,7 +64,7 @@ public final class JcaKeyFactoryGetInstance {
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .withMethodParameter("java.security.Provider")
                     .buildForContext(new KeyContext(KeyContext.Kind.NONE))
-                    .inBundle(() -> "JcaKeyFactoryGetInstance")
+                    .inBundle(() -> "Jca")
                     .withDependingDetectionRules(JcaKeyFactoryGenerate.rules());
 
     private JcaKeyFactoryGetInstance() {

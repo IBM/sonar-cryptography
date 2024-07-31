@@ -40,7 +40,7 @@ public final class JcaMessageDigestGetInstance {
                     .withMethodParameter(STRING_TYPE)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .buildForContext(new DigestContext())
-                    .inBundle(() -> "JcaMessageDigestGetInstance")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private JcaMessageDigestGetInstance() {

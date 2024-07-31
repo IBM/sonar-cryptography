@@ -40,7 +40,7 @@ public final class JcaMacGetInstance {
                     .withMethodParameter(STRING_TYPE)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .buildForContext(new MacContext())
-                    .inBundle(() -> "JcaMacGetInstance")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> MAC_GET_INSTANCE_2 =
@@ -52,7 +52,7 @@ public final class JcaMacGetInstance {
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .withMethodParameter(STRING_TYPE)
                     .buildForContext(new MacContext())
-                    .inBundle(() -> "JcaMacGetInstance")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> MAC_GET_INSTANCE_3 =
@@ -65,7 +65,7 @@ public final class JcaMacGetInstance {
                     .withMethodParameter(STRING_TYPE)
                     .withMethodParameter("java.security.Provider")
                     .buildForContext(new MacContext())
-                    .inBundle(() -> "JcaMacGetInstance")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private JcaMacGetInstance() {

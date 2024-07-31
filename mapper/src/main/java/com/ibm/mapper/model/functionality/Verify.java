@@ -23,7 +23,7 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class Verify extends Functionality {
+public final class Verify extends Functionality {
     public Verify(@Nonnull DetectionLocation detectionLocation) {
         super(Verify.class, detectionLocation);
     }

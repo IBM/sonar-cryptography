@@ -38,7 +38,7 @@ public final class JcaSignatureSetParameter {
                     .withMethodParameter("java.security.spec.AlgorithmParameterSpec")
                     .addDependingDetectionRules(JcaAlgorithmParameterSpec.rules())
                     .buildForContext(new SignatureContext())
-                    .inBundle(() -> "JcaSignatureSetParameter")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private JcaSignatureSetParameter() {

@@ -42,7 +42,7 @@ public final class JcaSecretKeyFactoryGetInstance {
                     .withMethodParameter(STRING_TYPE)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .buildForContext(new SecretKeyContext(KeyContext.Kind.NONE))
-                    .inBundle(() -> "JcaSecretKeyFactoryGetInstance")
+                    .inBundle(() -> "Jca")
                     .withDependingDetectionRules(
                             Stream.concat(
                                             JcaSecretKeyFactoryGenerateSecret.rules().stream(),
@@ -58,7 +58,7 @@ public final class JcaSecretKeyFactoryGetInstance {
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .withMethodParameter(STRING_TYPE)
                     .buildForContext(new SecretKeyContext(KeyContext.Kind.NONE))
-                    .inBundle(() -> "JcaSecretKeyFactoryGetInstance")
+                    .inBundle(() -> "Jca")
                     .withDependingDetectionRules(
                             Stream.concat(
                                             JcaSecretKeyFactoryGenerateSecret.rules().stream(),
@@ -74,7 +74,7 @@ public final class JcaSecretKeyFactoryGetInstance {
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .withMethodParameter("java.security.Provider")
                     .buildForContext(new SecretKeyContext(KeyContext.Kind.NONE))
-                    .inBundle(() -> "JcaSecretKeyFactoryGetInstance")
+                    .inBundle(() -> "Jca")
                     .withDependingDetectionRules(
                             Stream.concat(
                                             JcaSecretKeyFactoryGenerateSecret.rules().stream(),

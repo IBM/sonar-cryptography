@@ -142,14 +142,12 @@ public final class PythonPrivateKeyContextTranslator {
                         privateKey =
                                 PythonTranslatorUtils.generateEcPrivateKeyTranslation(
                                         "EC", "Curve25519", detectionLocation);
-                        signature =
-                                new Signature(
-                                        new Algorithm("EdDSA", detectionLocation),
-                                        detectionLocation);
+                        signature = new Signature(new Algorithm("EdDSA", detectionLocation));
                         signature.append(
                                 new MessageDigest(
-                                        new Algorithm("SHA512", detectionLocation),
-                                        detectionLocation)); // According to Wikipedia
+                                        new Algorithm(
+                                                "SHA512",
+                                                detectionLocation))); // According to Wikipedia
                         // (https://en.wikipedia.org/wiki/EdDSA#Ed25519)
                         signature.append(new Sign(detectionLocation));
                         privateKey.append(signature);
@@ -159,14 +157,12 @@ public final class PythonPrivateKeyContextTranslator {
                         privateKey =
                                 PythonTranslatorUtils.generateEcPrivateKeyTranslation(
                                         "EC", "Curve448", detectionLocation);
-                        signature =
-                                new Signature(
-                                        new Algorithm("EdDSA", detectionLocation),
-                                        detectionLocation);
+                        signature = new Signature(new Algorithm("EdDSA", detectionLocation));
                         signature.append(
                                 new MessageDigest(
-                                        new Algorithm("SHA512", detectionLocation),
-                                        detectionLocation)); // According to Wikipedia
+                                        new Algorithm(
+                                                "SHA512",
+                                                detectionLocation))); // According to Wikipedia
                         // (https://en.wikipedia.org/wiki/EdDSA#Ed25519)
                         signature.append(new Sign(detectionLocation));
                         privateKey.append(signature);

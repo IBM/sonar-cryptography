@@ -42,7 +42,7 @@ public final class BcBasicAgreementInit {
                     .withMethodParameter("org.bouncycastle.crypto.CipherParameters")
                     .addDependingDetectionRules(BcCipherParameters.rules())
                     .buildForContext(new CipherContext())
-                    .inBundle(() -> "BcBasicAgreementInit")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     @Unmodifiable

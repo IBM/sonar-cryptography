@@ -19,7 +19,6 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,15 +30,12 @@ public class Protocol implements IAsset {
     @Nonnull protected final Map<Class<? extends INode>, INode> children;
     @Nonnull protected final Class<? extends Protocol> kind;
     @Nonnull protected final DetectionLocation detectionLocation;
-    @Nonnull protected String type;
+    @Nonnull protected final String type;
 
-    protected Protocol(
-            @Nonnull Protocol protocol,
-            @Nonnull DetectionLocation detectionLocation,
-            @Nonnull final Class<? extends Protocol> asKind) {
-        this.type = protocol.getType();
+    public Protocol(@Nonnull Protocol protocol, @Nonnull final Class<? extends Protocol> asKind) {
+        this.type = protocol.type;
         this.children = protocol.getChildren();
-        this.detectionLocation = detectionLocation;
+        this.detectionLocation = protocol.detectionLocation;
         this.kind = asKind;
     }
 
@@ -48,28 +44,6 @@ public class Protocol implements IAsset {
         this.children = new HashMap<>();
         this.detectionLocation = detectionLocation;
         this.kind = Protocol.class;
-    }
-
-    public Protocol(
-            @Nonnull String type,
-            @Nonnull DetectionLocation detectionLocation,
-            @Nonnull Map<Class<? extends INode>, INode> children) {
-        this.type = type;
-        this.children = children;
-        this.detectionLocation = detectionLocation;
-        this.kind = Protocol.class;
-    }
-
-    public Protocol(
-            @Nonnull String type,
-            @Nonnull KeyLength keyLength,
-            @Nonnull DetectionLocation detectionLocation,
-            @Nonnull Map<Class<? extends INode>, INode> children) {
-        this.type = type;
-        this.children = children;
-        this.detectionLocation = detectionLocation;
-        this.kind = Protocol.class;
-        this.append(keyLength);
     }
 
     private Protocol(@Nonnull Protocol protocol) {
@@ -107,11 +81,6 @@ public class Protocol implements IAsset {
     @Nonnull
     public Class<? extends Protocol> getKind() {
         return kind;
-    }
-
-    @Override
-    public void apply(@Nonnull Configuration configuration) {
-        this.type = configuration.changeStringValue(this.type);
     }
 
     @Nonnull

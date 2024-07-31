@@ -41,7 +41,7 @@ public final class JcaDESKeySpec {
                     .withMethodParameter(BYTE_ARRAY_TYPE)
                     .shouldBeDetectedAs(new KeySizeFactory<>())
                     .buildForContext(new SecretKeyContext(KeyContext.Kind.DES))
-                    .inBundle(() -> "JcaDESKeySpec")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> DES_KEY_SPEC_2 =
@@ -53,7 +53,7 @@ public final class JcaDESKeySpec {
                     .shouldBeDetectedAs(new KeySizeFactory<>())
                     .withMethodParameter("int")
                     .buildForContext(new SecretKeyContext(KeyContext.Kind.DES))
-                    .inBundle(() -> "JcaDESKeySpec")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private JcaDESKeySpec() {

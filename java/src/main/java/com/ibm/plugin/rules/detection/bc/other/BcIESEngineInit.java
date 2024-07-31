@@ -48,7 +48,7 @@ public final class BcIESEngineInit {
                     .withMethodParameter(
                             "org.bouncycastle.crypto.generators.EphemeralKeyPairGenerator")
                     .buildForContext(new CipherContext())
-                    .inBundle(() -> "bcIESEngineInit")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_2 =
@@ -63,7 +63,7 @@ public final class BcIESEngineInit {
                     // TODO: capture?
                     .withMethodParameter("org.bouncycastle.crypto.KeyParser")
                     .buildForContext(new CipherContext())
-                    .inBundle(() -> "bcIESEngineInit")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_3 =
@@ -80,7 +80,7 @@ public final class BcIESEngineInit {
                     .withMethodParameter("org.bouncycastle.crypto.CipherParameters")
                     .addDependingDetectionRules(BcCipherParameters.rules())
                     .buildForContext(new CipherContext(CipherContext.Kind.ENCRYPTION_STATUS))
-                    .inBundle(() -> "bcIESEngineInit")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     @Unmodifiable

@@ -41,7 +41,7 @@ public final class JcaKeyAgreementGetInstance {
                     .withMethodParameter(STRING_TYPE)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .buildForContext(new KeyAgreementContext())
-                    .inBundle(() -> "JcaKeyAgreementGetInstance")
+                    .inBundle(() -> "Jca")
                     .withDependingDetectionRules(
                             Streams.concat(
                                             JcaKeyAgreementInit.rules().stream(),
@@ -57,7 +57,7 @@ public final class JcaKeyAgreementGetInstance {
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .withMethodParameter("java.security.Provider")
                     .buildForContext(new KeyAgreementContext())
-                    .inBundle(() -> "JcaKeyAgreementGetInstance")
+                    .inBundle(() -> "Jca")
                     .withDependingDetectionRules(
                             Streams.concat(
                                             JcaKeyAgreementInit.rules().stream(),
@@ -73,7 +73,7 @@ public final class JcaKeyAgreementGetInstance {
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .withMethodParameter(STRING_TYPE)
                     .buildForContext(new KeyAgreementContext())
-                    .inBundle(() -> "JcaKeyAgreementGetInstance")
+                    .inBundle(() -> "Jca")
                     .withDependingDetectionRules(
                             Streams.concat(
                                             JcaKeyAgreementInit.rules().stream(),

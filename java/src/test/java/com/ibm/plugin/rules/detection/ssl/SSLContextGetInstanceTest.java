@@ -26,8 +26,8 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.Protocol;
 import com.ibm.engine.model.context.ProtocolContext;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.TLSProtocol;
 import com.ibm.mapper.model.Version;
+import com.ibm.mapper.model.protocol.TLS;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -72,7 +72,7 @@ class SSLContextGetInstanceTest extends TestBase {
         assertThat(nodes).hasSize(1);
         // TLSProtocol
         INode tLSProtocolNode = nodes.get(0);
-        assertThat(tLSProtocolNode.getKind()).isEqualTo(TLSProtocol.class);
+        assertThat(tLSProtocolNode.getKind()).isEqualTo(TLS.class);
         assertThat(tLSProtocolNode.getChildren()).hasSize(1);
         assertThat(tLSProtocolNode.asString()).isEqualTo("TLSv1.2");
         // Version under TLSProtocol

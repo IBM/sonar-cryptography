@@ -43,7 +43,7 @@ public final class BcChaCha20Poly1305 {
                     .shouldBeDetectedAs(new ValueActionFactory<>("ChaCha20Poly1305"))
                     .withoutParameters()
                     .buildForContext(new CipherContext(CipherContext.Kind.CHACHA20POLY1305))
-                    .inBundle(() -> "BcChaCha20Poly1305")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcAEADCipherInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_2 =
@@ -55,7 +55,7 @@ public final class BcChaCha20Poly1305 {
                     .withMethodParameter("org.bouncycastle.crypto.Mac")
                     .addDependingDetectionRules(BcMac.rules())
                     .buildForContext(new CipherContext(CipherContext.Kind.CHACHA20POLY1305))
-                    .inBundle(() -> "BcChaCha20Poly1305")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcAEADCipherInit.rules());
 
     @Unmodifiable

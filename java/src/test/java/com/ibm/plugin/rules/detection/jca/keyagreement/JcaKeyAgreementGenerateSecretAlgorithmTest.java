@@ -26,7 +26,11 @@ import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.context.KeyAgreementContext;
 import com.ibm.engine.model.context.SecretKeyContext;
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.Oid;
+import com.ibm.mapper.model.SecretKey;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.plugin.TestBase;
 import java.util.List;
@@ -76,7 +80,7 @@ class JcaKeyAgreementGenerateSecretAlgorithmTest extends TestBase {
         assertThat(nodes).hasSize(1);
         INode node = nodes.get(0);
         assertThat(node).isNotNull();
-        assertThat(node.asString()).isEqualTo("DiffieHellman");
+        assertThat(node.asString()).isEqualTo("DH");
 
         INode oid = node.getChildren().get(Oid.class);
         assertThat(oid).isNotNull();

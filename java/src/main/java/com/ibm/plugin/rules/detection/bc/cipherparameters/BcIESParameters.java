@@ -51,7 +51,7 @@ public final class BcIESParameters {
                     .asChildOfParameterWithId(-1)
                     .buildForContext(
                             new AlgorithmParameterContext(AlgorithmParameterContext.Kind.IES))
-                    .inBundle(() -> "BcIESParameters")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_IES_WITH_CIPHER_PARAMETERS =
@@ -68,7 +68,7 @@ public final class BcIESParameters {
                     .asChildOfParameterWithId(-1)
                     .buildForContext(
                             new AlgorithmParameterContext(AlgorithmParameterContext.Kind.IES))
-                    .inBundle(() -> "BcIESParameters")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     @Unmodifiable

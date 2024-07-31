@@ -53,7 +53,7 @@ public final class BcGenericSigner {
                     .addDependingDetectionRules(BcDigests.rules())
                     .buildForContext(
                             new SignatureContext(SignatureContext.Kind.ALGORITHM_AND_HASH_WRAPPER))
-                    .inBundle(() -> "bcGenericSigner")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     @Unmodifiable

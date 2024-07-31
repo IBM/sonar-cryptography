@@ -19,78 +19,42 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.Mac;
-import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.PasswordBasedEncryption;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class JcaMacMapper implements IMapper {
-    private static final List<String> validValues =
-            List.of(
-                    "HmacMD5",
-                    "HmacSHA1",
-                    "HmacSHA224",
-                    "HmacSHA256",
-                    "HmacSHA384",
-                    "HmacSHA512",
-                    "HmacSHA512/224",
-                    "HmacSHA512/256",
-                    "HmacSHA3-224",
-                    "HmacSHA3-256",
-                    "HmacSHA3-384",
-                    "HmacSHA3-512");
 
     @Nonnull
     @Override
-    public Optional<Algorithm> parse(
-            @Nullable final String str,
-            @Nonnull DetectionLocation detectionLocation,
-            @Nonnull final Configuration configuration) {
+    public Optional<? extends Algorithm> parse(
+            @Nullable final String str, @Nonnull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }
 
         // check if it is pbe
         JcaPasswordBasedEncryptionMapper pbeMapper = new JcaPasswordBasedEncryptionMapper();
-        Optional<PasswordBasedEncryption> pbeOptional =
-                pbeMapper.parse(str, detectionLocation, configuration);
+        Optional<PasswordBasedEncryption> pbeOptional = pbeMapper.parse(str, detectionLocation);
         if (pbeOptional.isPresent()) {
-            return JcaBaseAlgorithmMapper.generalizeAlgorithm(pbeOptional);
+            // pbe
+            return pbeOptional;
         }
 
-        if (!reflectValidValues(str)) {
+        if (str.toLowerCase().contains("with")) {
             return Optional.empty();
         }
 
-        final String generalizedStr = str.toLowerCase().trim();
-        int hashAlgoPos = generalizedStr.indexOf("Hmac".toLowerCase()) + 4;
-        String messageDigest = str.substring(hashAlgoPos).replace("-", "");
-
-        // mac
-        JcaBaseAlgorithmMapper algorithmMapper = new JcaBaseAlgorithmMapper();
-        Optional<Algorithm> algorithm =
-                algorithmMapper.parse(str, detectionLocation, configuration);
-        if (algorithm.isEmpty()) {
-            return Optional.empty();
-        }
-        Mac mac = new Mac(algorithm.get(), detectionLocation);
+        final String messageDigestStr =
+                str.substring(str.toLowerCase().trim().indexOf("Hmac".toLowerCase()) + 4)
+                        .replace("-", "");
 
         JcaMessageDigestMapper jcaMessageDigestMapper = new JcaMessageDigestMapper();
-        Optional<MessageDigest> messageDigestOptional =
-                jcaMessageDigestMapper.parse(messageDigest, detectionLocation, configuration);
-        messageDigestOptional.ifPresent(mac::append);
-
-        return Optional.of(mac);
-    }
-
-    private boolean reflectValidValues(@Nonnull final String str) {
-        return validValues.stream().anyMatch(str::equalsIgnoreCase);
+        return jcaMessageDigestMapper.parse(messageDigestStr, detectionLocation).map(HMAC::new);
     }
 }

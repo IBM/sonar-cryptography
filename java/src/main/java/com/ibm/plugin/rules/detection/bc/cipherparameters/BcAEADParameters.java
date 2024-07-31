@@ -50,7 +50,7 @@ public final class BcAEADParameters {
                     .withMethodParameter(BYTE_ARRAY_TYPE)
                     .buildForContext(
                             new AlgorithmParameterContext(AlgorithmParameterContext.Kind.AEAD))
-                    .inBundle(() -> "BcAEADParameters")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_2 =
@@ -67,7 +67,7 @@ public final class BcAEADParameters {
                     .withMethodParameter(BYTE_ARRAY_TYPE)
                     .buildForContext(
                             new AlgorithmParameterContext(AlgorithmParameterContext.Kind.AEAD))
-                    .inBundle(() -> "BcAEADParameters")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     @Unmodifiable

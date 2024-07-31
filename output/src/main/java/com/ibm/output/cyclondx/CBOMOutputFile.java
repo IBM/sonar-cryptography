@@ -29,7 +29,6 @@ import com.ibm.mapper.model.Key;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Oid;
-import com.ibm.mapper.model.OptimalAsymmetricEncryptionPadding;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.ParameterSetIdentifier;
 import com.ibm.mapper.model.PasswordLength;
@@ -47,6 +46,7 @@ import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.mapper.model.functionality.Verify;
+import com.ibm.mapper.model.padding.OAEP;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.output.Constants;
 import com.ibm.output.IOutputFile;
@@ -131,10 +131,7 @@ public class CBOMOutputFile implements IOutputFile {
                                         children.get(DigestSize.class),
                                         children.get(BlockSize.class),
                                         children.get(ParameterSetIdentifier.class)))
-                        .padding(
-                                Utils.oneOf(
-                                        children.get(OptimalAsymmetricEncryptionPadding.class),
-                                        children.get(Padding.class)))
+                        .padding(Utils.oneOf(children.get(OAEP.class), children.get(Padding.class)))
                         .cryptoFunctions(
                                 Utils.allExisting(
                                         children.get(Decapsulate.class),

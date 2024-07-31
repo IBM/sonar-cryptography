@@ -19,7 +19,6 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,37 +31,32 @@ public class Key implements IAsset {
     @Nonnull protected final Map<Class<? extends INode>, INode> children;
     @Nonnull protected final Class<? extends Key> kind;
     @Nonnull protected final DetectionLocation detectionLocation;
-    @Nonnull protected String name;
+    @Nonnull protected final String name;
+
+    public Key(@Nonnull Algorithm algorithm) {
+        this.name = algorithm.name;
+        this.children = new HashMap<>();
+        this.children.put(algorithm.getKind(), algorithm);
+        this.detectionLocation = algorithm.detectionLocation;
+        this.kind = Key.class;
+    }
 
     protected Key(
             @Nonnull Key key,
             @Nonnull DetectionLocation detectionLocation,
             @Nonnull final Class<? extends Key> asKind) {
-        this.name = key.getName();
+        this.name = key.name;
         this.children = key.getChildren();
         this.detectionLocation = detectionLocation;
         this.kind = asKind;
     }
 
-    protected Key(
-            @Nonnull String name,
-            @Nonnull DetectionLocation detectionLocation,
-            @Nonnull final Class<? extends Key> asKind) {
-        this.name = name;
-        this.children = new HashMap<>();
-        this.detectionLocation = detectionLocation;
-        this.kind = asKind;
-    }
-
-    public Key(
-            @Nonnull String name,
-            @Nonnull Algorithm algorithm,
-            @Nonnull DetectionLocation detectionLocation) {
-        this.name = name;
+    protected Key(@Nonnull Algorithm algorithm, @Nonnull final Class<? extends Key> asKind) {
+        this.name = algorithm.name;
         this.children = new HashMap<>();
         this.children.put(algorithm.getKind(), algorithm);
-        this.detectionLocation = detectionLocation;
-        this.kind = Key.class;
+        this.detectionLocation = algorithm.detectionLocation;
+        this.kind = asKind;
     }
 
     private Key(@Nonnull Key key) {
@@ -108,11 +102,6 @@ public class Key implements IAsset {
     @Override
     public Class<? extends INode> getKind() {
         return this.kind;
-    }
-
-    @Override
-    public void apply(@Nonnull Configuration configuration) {
-        this.name = configuration.changeStringValue(this.name);
     }
 
     @Nonnull

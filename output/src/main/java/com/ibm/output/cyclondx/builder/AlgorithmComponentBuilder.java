@@ -21,6 +21,7 @@ package com.ibm.output.cyclondx.builder;
 
 import com.ibm.mapper.model.*;
 import com.ibm.mapper.model.functionality.*;
+import com.ibm.mapper.model.padding.OAEP;
 import java.util.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -150,7 +151,7 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
             primitives = Primitive.AE;
         } else if (primitive.is(BlockCipher.class)) {
             primitives = Primitive.BLOCK_CIPHER;
-        } else if (primitive.is(Mac.class)) {
+        } else if (primitive.is(HMAC.class)) {
             primitives = Primitive.MAC;
         } else if (primitive.is(MessageDigest.class)) {
             primitives = Primitive.HASH;
@@ -199,7 +200,7 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
         }
 
         org.cyclonedx.model.component.crypto.enums.Padding p;
-        if (padding.is(OptimalAsymmetricEncryptionPadding.class)) {
+        if (padding.is(OAEP.class)) {
             p = org.cyclonedx.model.component.crypto.enums.Padding.OAEP;
         } else if (padding.is(Padding.class)) {
             final String paddingStr = padding.asString().toLowerCase();

@@ -70,7 +70,7 @@ public final class BcAsymCipherEngine {
                             .shouldBeDetectedAs(new ValueActionFactory<>(engineName))
                             .withoutParameters()
                             .buildForContext(context)
-                            .inBundle(() -> "BcAsymCipherEngine")
+                            .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcAsymCipherInit.rules()));
         }
         return constructorsList;

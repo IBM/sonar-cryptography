@@ -81,7 +81,7 @@ public final class BcBlockCipher {
                             .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                             .addDependingDetectionRules(BcBlockCipherEngine.rules())
                             .buildForContext(context)
-                            .inBundle(() -> "BcBlockCipher")
+                            .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcBlockCipherInit.rules()));
         }
         return constructorsList;
@@ -104,7 +104,7 @@ public final class BcBlockCipher {
                         .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                         .addDependingDetectionRules(BcBlockCipherEngine.rules())
                         .buildForContext(context)
-                        .inBundle(() -> "BcBlockCipher")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcBlockCipherInit.rules()));
 
         constructorsList.add(
@@ -116,7 +116,7 @@ public final class BcBlockCipher {
                         .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                         .addDependingDetectionRules(BcBlockCipherEngine.rules())
                         .buildForContext(context)
-                        .inBundle(() -> "BcBlockCipher")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcBlockCipherInit.rules()));
 
         constructorsList.add(
@@ -131,7 +131,7 @@ public final class BcBlockCipher {
                         .shouldBeDetectedAs(new BlockSizeFactory<>(Size.UnitType.BIT))
                         .asChildOfParameterWithId(-1)
                         .buildForContext(context)
-                        .inBundle(() -> "BcBlockCipher")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcBlockCipherInit.rules()));
 
         constructorsList.add(
@@ -146,7 +146,7 @@ public final class BcBlockCipher {
                         .shouldBeDetectedAs(new BlockSizeFactory<>(Size.UnitType.BIT))
                         .asChildOfParameterWithId(-1)
                         .buildForContext(context)
-                        .inBundle(() -> "BcBlockCipher")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcBlockCipherInit.rules()));
 
         constructorsList.add(
@@ -163,7 +163,7 @@ public final class BcBlockCipher {
                         .shouldBeDetectedAs(new BlockSizeFactory<>(Size.UnitType.BIT))
                         .asChildOfParameterWithId(-1)
                         .buildForContext(context)
-                        .inBundle(() -> "BcBlockCipher")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcBlockCipherInit.rules()));
 
         constructorsList.add(
@@ -180,7 +180,7 @@ public final class BcBlockCipher {
                         .shouldBeDetectedAs(new BlockSizeFactory<>(Size.UnitType.BIT))
                         .asChildOfParameterWithId(-1)
                         .buildForContext(context)
-                        .inBundle(() -> "BcBlockCipher")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcBlockCipherInit.rules()));
 
         constructorsList.add(
@@ -195,7 +195,7 @@ public final class BcBlockCipher {
                         .shouldBeDetectedAs(new BlockSizeFactory<>(Size.UnitType.BIT))
                         .asChildOfParameterWithId(-1)
                         .buildForContext(context)
-                        .inBundle(() -> "BcBlockCipher")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcBlockCipherInit.rules()));
 
         constructorsList.add(
@@ -209,7 +209,7 @@ public final class BcBlockCipher {
                         .addDependingDetectionRules(BcBlockCipherEngine.rules())
                         .withMethodParameter("boolean")
                         .buildForContext(context)
-                        .inBundle(() -> "BcBlockCipher")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcBlockCipherInit.rules()));
 
         return constructorsList;

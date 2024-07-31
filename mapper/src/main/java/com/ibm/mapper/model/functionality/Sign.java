@@ -23,7 +23,7 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class Sign extends Functionality {
+public final class Sign extends Functionality {
     public Sign(@Nonnull DetectionLocation detectionLocation) {
         super(Sign.class, detectionLocation);
     }

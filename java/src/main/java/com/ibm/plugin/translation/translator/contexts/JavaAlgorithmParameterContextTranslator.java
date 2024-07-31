@@ -23,11 +23,7 @@ import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.KeySize;
 import com.ibm.engine.model.MacSize;
-import com.ibm.engine.model.context.AlgorithmParameterContext;
 import com.ibm.engine.model.context.IDetectionContext;
-import com.ibm.mapper.AbstractContextTranslator;
-import com.ibm.mapper.IContextTranslationWithKind;
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
@@ -37,27 +33,32 @@ import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
 
-public final class JavaAlgorithmParameterContextTranslator extends AbstractContextTranslator
-        implements IContextTranslationWithKind<Tree, AlgorithmParameterContext.Kind> {
+public final class JavaAlgorithmParameterContextTranslator extends JavaAbstractLibraryTranslator {
 
-    public JavaAlgorithmParameterContextTranslator(@NotNull Configuration configuration) {
-        super(configuration);
-    }
-
-    @NotNull @Override
-    public Optional<INode> translate(
+    @Override
+    protected @NotNull Optional<INode> translateJCA(
             @NotNull IValue<Tree> value,
-            @NotNull AlgorithmParameterContext.Kind kind,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
         if (value instanceof Algorithm<Tree>) {
             JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
-            return jcaAlgorithmMapper
-                    .parse(value.asString(), detectionLocation, configuration)
-                    .map(a -> a);
+            return jcaAlgorithmMapper.parse(value.asString(), detectionLocation).map(a -> a);
+        }
+        return translateCommon(value, detectionContext, detectionLocation);
+    }
 
-            // TODO: Write a mapper for translations below?
-        } else if (value instanceof KeySize<Tree> keySize) {
+    @NotNull protected Optional<INode> translateBC(
+            @NotNull IValue<Tree> value,
+            @NotNull IDetectionContext detectionContext,
+            @NotNull DetectionLocation detectionLocation) {
+        return translateCommon(value, detectionContext, detectionLocation);
+    }
+
+    private @NotNull Optional<INode> translateCommon(
+            @NotNull IValue<Tree> value,
+            @NotNull IDetectionContext detectionContext,
+            @NotNull DetectionLocation detectionLocation) {
+        if (value instanceof KeySize<Tree> keySize) {
             KeyLength keyLength = new KeyLength(keySize.getValue(), detectionLocation);
             return Optional.of(keyLength);
         } else if (value instanceof MacSize<Tree> macSize) {

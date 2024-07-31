@@ -90,7 +90,7 @@ class BcHKDFBytesGeneratorTest extends TestBase {
         INode messageDigestNode1 =
                 keyDerivationFunctionNode1.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode1).isNotNull();
-        assertThat(messageDigestNode1.getChildren()).hasSize(1);
-        assertThat(messageDigestNode1.asString()).isEqualTo(findingId == 0 ? "SHA-256" : "SHA-512");
+        assertThat(messageDigestNode1.getChildren()).isEmpty();
+        assertThat(messageDigestNode1.asString()).isEqualTo(findingId == 0 ? "SHA256" : "SHA512");
     }
 }

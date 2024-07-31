@@ -89,7 +89,7 @@ class BcHandshakeKDFFunctionTest extends TestBase {
         // MessageDigest under KeyDerivationFunction
         INode messageDigestNode = keyDerivationFunctionNode.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode).isNotNull();
-        assertThat(messageDigestNode.getChildren()).hasSize(1);
-        assertThat(messageDigestNode.asString()).isEqualTo("SHA-256");
+        assertThat(messageDigestNode.getChildren()).isEmpty();
+        assertThat(messageDigestNode.asString()).isEqualTo("SHA256");
     }
 }

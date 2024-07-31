@@ -59,7 +59,7 @@ public final class BcBufferedAsymmetricBlockCipher {
                     .withMethodParameter("org.bouncycastle.crypto.CipherParameters")
                     .addDependingDetectionRules(BcCipherParameters.rules())
                     .buildForContext(new CipherContext(CipherContext.Kind.ENCRYPTION_STATUS))
-                    .inBundle(() -> "BcBufferedAsymmetricBlockCipher")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> CONSTRUCTOR =
@@ -72,7 +72,7 @@ public final class BcBufferedAsymmetricBlockCipher {
                     .addDependingDetectionRules(asymmetricBlockCipherRules())
                     .buildForContext(
                             new CipherContext(CipherContext.Kind.ASYMMETRIC_BUFFERED_BLOCK_CIPHER))
-                    .inBundle(() -> "BcBufferedAsymmetricBlockCipher")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(List.of(INIT));
 
     @Unmodifiable

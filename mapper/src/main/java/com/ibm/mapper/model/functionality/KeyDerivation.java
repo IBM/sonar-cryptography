@@ -23,7 +23,7 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class KeyDerivation extends Functionality {
+public final class KeyDerivation extends Functionality {
     public KeyDerivation(@Nonnull DetectionLocation detectionLocation) {
         super(KeyDerivation.class, detectionLocation);
     }

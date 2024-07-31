@@ -23,7 +23,7 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class Digest extends Functionality {
+public final class Digest extends Functionality {
     public Digest(@Nonnull DetectionLocation detectionLocation) {
         super(Digest.class, detectionLocation);
     }

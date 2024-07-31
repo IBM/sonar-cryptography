@@ -44,7 +44,7 @@ public final class BcKCCMBlockCipher {
                     .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                     .addDependingDetectionRules(BcBlockCipher.all())
                     .buildForContext(new CipherContext(CipherContext.Kind.AEAD_BLOCK_CIPHER))
-                    .inBundle(() -> "BcKCCMBlockCipher")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcAEADCipherInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_2 =
@@ -57,7 +57,7 @@ public final class BcKCCMBlockCipher {
                     .addDependingDetectionRules(BcBlockCipher.all())
                     .withMethodParameter("int")
                     .buildForContext(new CipherContext(CipherContext.Kind.AEAD_BLOCK_CIPHER))
-                    .inBundle(() -> "BcKCCMBlockCipher")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcAEADCipherInit.rules());
 
     @Unmodifiable

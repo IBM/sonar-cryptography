@@ -19,7 +19,6 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.functionality.Decapsulate;
@@ -36,9 +35,7 @@ public class JcaCipherOperationModeMapper implements IMapper {
     @Nonnull
     @Override
     public Optional<? extends INode> parse(
-            @Nullable String str,
-            @Nonnull DetectionLocation detectionLocation,
-            @Nonnull Configuration configuration) {
+            @Nullable String str, @Nonnull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }

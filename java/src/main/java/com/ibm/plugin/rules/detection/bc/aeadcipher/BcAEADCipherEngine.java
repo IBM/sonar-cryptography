@@ -40,7 +40,7 @@ public final class BcAEADCipherEngine {
         // nothing
     }
 
-    private static BouncyCastleInfoMap infoMap = new BouncyCastleInfoMap();
+    private static final BouncyCastleInfoMap infoMap = new BouncyCastleInfoMap();
 
     static {
         infoMap.putKey("AsconEngine").putParameterClass("AsconParameters");
@@ -60,9 +60,9 @@ public final class BcAEADCipherEngine {
         List<IDetectionRule<Tree>> constructorsList = new LinkedList<>();
 
         for (Map.Entry<String, BouncyCastleInfoMap.Info> entry : infoMap.entrySet()) {
-            String engine = entry.getKey();
-            String engineName = infoMap.getDisplayName(engine, "Engine");
-            String parameters = entry.getValue().getParameterClass();
+            final String engine = entry.getKey();
+            final String engineName = infoMap.getDisplayName(engine, "Engine");
+            final String parameters = entry.getValue().getParameterClass();
 
             if (parameters == null) {
                 constructorsList.add(
@@ -73,7 +73,7 @@ public final class BcAEADCipherEngine {
                                 .shouldBeDetectedAs(new ValueActionFactory<>(engineName))
                                 .withoutParameters()
                                 .buildForContext(new CipherContext(CipherContext.Kind.AEAD_ENGINE))
-                                .inBundle(() -> "BcAEADCipherEngine")
+                                .inBundle(() -> "Bc")
                                 .withDependingDetectionRules(BcAEADCipherInit.rules()));
             } else {
                 constructorsList.add(
@@ -92,7 +92,7 @@ public final class BcAEADCipherEngine {
                                                 AlgorithmParameter.Kind.ANY))
                                 .asChildOfParameterWithId(-1)
                                 .buildForContext(new CipherContext(CipherContext.Kind.AEAD_ENGINE))
-                                .inBundle(() -> "BcAEADCipherEngine")
+                                .inBundle(() -> "Bc")
                                 .withDependingDetectionRules(BcAEADCipherInit.rules()));
             }
         }

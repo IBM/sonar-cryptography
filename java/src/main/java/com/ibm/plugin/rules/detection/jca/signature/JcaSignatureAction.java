@@ -39,7 +39,7 @@ public final class JcaSignatureAction {
                     .shouldBeDetectedAs(new SignatureActionFactory<>(SignatureAction.Action.SIGN))
                     .withAnyParameters()
                     .buildForContext(new SignatureContext())
-                    .inBundle(() -> "JcaSignatureAction")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> VERIFY =
@@ -50,7 +50,7 @@ public final class JcaSignatureAction {
                     .shouldBeDetectedAs(new SignatureActionFactory<>(SignatureAction.Action.VERIFY))
                     .withAnyParameters()
                     .buildForContext(new SignatureContext())
-                    .inBundle(() -> "JcaSignatureAction")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private JcaSignatureAction() {

@@ -44,7 +44,7 @@ public final class JcaCipherInit {
                     .shouldBeDetectedAs(new OperationModeFactory<>())
                     .withMethodParameter("java.security.cert.Certificate")
                     .buildForContext(new CipherContext(CipherContext.Kind.PKE))
-                    .inBundle(() -> "JcaCipherInit")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> CIPHER_INIT_2 =
@@ -57,7 +57,7 @@ public final class JcaCipherInit {
                     .withMethodParameter("java.security.cert.Certificate")
                     .withMethodParameter("java.security.SecureRandom")
                     .buildForContext(new CipherContext(CipherContext.Kind.PKE))
-                    .inBundle(() -> "JcaCipherInit")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> CIPHER_INIT_3 =
@@ -70,7 +70,7 @@ public final class JcaCipherInit {
                     .withMethodParameter(KEY_TYPE)
                     .addDependingDetectionRules(JcaKeySpec.rules())
                     .buildForContext(new CipherContext())
-                    .inBundle(() -> "JcaCipherInit")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> CIPHER_INIT_4 =
@@ -84,7 +84,7 @@ public final class JcaCipherInit {
                     .addDependingDetectionRules(JcaKeySpec.rules())
                     .withMethodParameter("java.security.AlgorithmParameters")
                     .buildForContext(new CipherContext())
-                    .inBundle(() -> "JcaCipherInit")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> CIPHER_INIT_5 =
@@ -99,7 +99,7 @@ public final class JcaCipherInit {
                     .withMethodParameter("java.security.spec.AlgorithmParameterSpec")
                     .addDependingDetectionRules(JcaAlgorithmParameterSpec.rules())
                     .buildForContext(new CipherContext())
-                    .inBundle(() -> "JcaCipherInit")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> CIPHER_INIT_6 =
@@ -114,7 +114,7 @@ public final class JcaCipherInit {
                     .withMethodParameter("java.security.AlgorithmParameters")
                     .withMethodParameter("java.security.SecureRandom")
                     .buildForContext(new CipherContext())
-                    .inBundle(() -> "JcaCipherInit")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> CIPHER_INIT_7 =
@@ -130,7 +130,7 @@ public final class JcaCipherInit {
                     .addDependingDetectionRules(JcaAlgorithmParameterSpec.rules())
                     .withMethodParameter("java.security.SecureRandom")
                     .buildForContext(new CipherContext())
-                    .inBundle(() -> "JcaCipherInit")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> CIPHER_INIT_8 =
@@ -144,7 +144,7 @@ public final class JcaCipherInit {
                     .addDependingDetectionRules(JcaKeySpec.rules())
                     .withMethodParameter("java.security.SecureRandom")
                     .buildForContext(new CipherContext())
-                    .inBundle(() -> "JcaCipherInit")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private JcaCipherInit() {

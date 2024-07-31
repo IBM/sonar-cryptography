@@ -23,7 +23,7 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class KeyGeneration extends Functionality {
+public final class KeyGeneration extends Functionality {
     public KeyGeneration(@Nonnull DetectionLocation detectionLocation) {
         super(KeyGeneration.class, detectionLocation);
     }

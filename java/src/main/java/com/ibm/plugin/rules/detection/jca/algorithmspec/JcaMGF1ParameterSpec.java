@@ -40,7 +40,7 @@ public final class JcaMGF1ParameterSpec {
                     .withMethodParameter(STRING_TYPE)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .buildForContext(new SignatureContext(SignatureContext.Kind.MGF1))
-                    .inBundle(() -> "JcaMGF1ParameterSpec")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private JcaMGF1ParameterSpec() {

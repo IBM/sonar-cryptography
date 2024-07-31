@@ -43,7 +43,7 @@ public final class BcSM2Signer {
                     .shouldBeDetectedAs(new ValueActionFactory<>("SM2"))
                     .withoutParameters()
                     .buildForContext(new SignatureContext(SignatureContext.Kind.SIGNATURE_NAME))
-                    .inBundle(() -> "bcSM2Signer")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_2 =
@@ -55,7 +55,7 @@ public final class BcSM2Signer {
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
                     .buildForContext(new SignatureContext(SignatureContext.Kind.SIGNATURE_NAME))
-                    .inBundle(() -> "bcSM2Signer")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_3 =
@@ -66,7 +66,7 @@ public final class BcSM2Signer {
                     .shouldBeDetectedAs(new ValueActionFactory<>("SM2"))
                     .withMethodParameter("org.bouncycastle.crypto.signers.DSAEncoding")
                     .buildForContext(new SignatureContext(SignatureContext.Kind.SIGNATURE_NAME))
-                    .inBundle(() -> "bcSM2Signer")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_4 =
@@ -79,7 +79,7 @@ public final class BcSM2Signer {
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
                     .buildForContext(new SignatureContext(SignatureContext.Kind.SIGNATURE_NAME))
-                    .inBundle(() -> "bcSM2Signer")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     @Unmodifiable

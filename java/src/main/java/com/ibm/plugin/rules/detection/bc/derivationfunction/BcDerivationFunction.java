@@ -107,7 +107,7 @@ public final class BcDerivationFunction {
                             .addDependingDetectionRules(BcDigests.rules())
                             .buildForContext(new KeyContext(KeyContext.Kind.KDF))
                             // TODO: .withDependingDetectionRules(DerivationFunctionInit.rules()));
-                            .inBundle(() -> "BcDerivationFunction")
+                            .inBundle(() -> "Bc")
                             .withoutDependingDetectionRules());
         }
 
@@ -126,7 +126,7 @@ public final class BcDerivationFunction {
                             .addDependingDetectionRules(BcMac.rules())
                             .buildForContext(new KeyContext(KeyContext.Kind.KDF))
                             // TODO: .withDependingDetectionRules(DerivationFunctionInit.rules()));
-                            .inBundle(() -> "BcDerivationFunction")
+                            .inBundle(() -> "Bc")
                             .withoutDependingDetectionRules());
         }
 
@@ -148,7 +148,7 @@ public final class BcDerivationFunction {
                         .addDependingDetectionRules(BcDigests.rules())
                         .buildForContext(new KeyContext(KeyContext.Kind.KDF))
                         // TODO: .withDependingDetectionRules(DerivationFunctionInit.rules()));
-                        .inBundle(() -> "BcDerivationFunction")
+                        .inBundle(() -> "Bc")
                         .withoutDependingDetectionRules());
 
         return constructorsList;

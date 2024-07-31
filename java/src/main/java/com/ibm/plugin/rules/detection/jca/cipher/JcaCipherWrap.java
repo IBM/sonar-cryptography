@@ -43,7 +43,7 @@ public final class JcaCipherWrap {
                     .withMethodParameter(KEY_TYPE)
                     .addDependingDetectionRules(JcaKeySpec.rules())
                     .buildForContext(new CipherContext())
-                    .inBundle(() -> "JcaCipherWrap")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private JcaCipherWrap() {

@@ -80,7 +80,7 @@ public final class BcEncapsulatedSecretExtractor {
                             // We want to capture all possible constructors (some have arguments)
                             .withAnyParameters()
                             .buildForContext(new KeyContext(KeyContext.Kind.KEM))
-                            .inBundle(() -> "bcEncapsulatedSecretExtractor")
+                            .inBundle(() -> "Bc")
                             .withoutDependingDetectionRules());
         }
 
@@ -103,7 +103,7 @@ public final class BcEncapsulatedSecretExtractor {
                         .withMethodParameter("org.bouncycastle.crypto.DerivationFunction")
                         .addDependingDetectionRules(BcDerivationFunction.rules())
                         .buildForContext(new KeyContext(KeyContext.Kind.KEM))
-                        .inBundle(() -> "bcEncapsulatedSecretExtractor")
+                        .inBundle(() -> "Bc")
                         .withoutDependingDetectionRules());
 
         constructorsList.add(
@@ -120,7 +120,7 @@ public final class BcEncapsulatedSecretExtractor {
                         .withMethodParameter("org.bouncycastle.crypto.DerivationFunction")
                         .addDependingDetectionRules(BcDerivationFunction.rules())
                         .buildForContext(new KeyContext(KeyContext.Kind.KEM))
-                        .inBundle(() -> "bcEncapsulatedSecretExtractor")
+                        .inBundle(() -> "Bc")
                         .withoutDependingDetectionRules());
 
         constructorsList.add(
@@ -140,7 +140,7 @@ public final class BcEncapsulatedSecretExtractor {
                         .withMethodParameter("boolean")
                         .withMethodParameter("boolean")
                         .buildForContext(new KeyContext(KeyContext.Kind.KEM))
-                        .inBundle(() -> "bcEncapsulatedSecretExtractor")
+                        .inBundle(() -> "Bc")
                         .withoutDependingDetectionRules());
 
         return constructorsList;

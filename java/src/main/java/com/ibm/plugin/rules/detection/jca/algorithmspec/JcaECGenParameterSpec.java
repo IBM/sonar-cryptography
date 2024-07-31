@@ -40,7 +40,7 @@ public final class JcaECGenParameterSpec {
                     .withMethodParameter(STRING_TYPE)
                     .shouldBeDetectedAs(new CurveFactory<>())
                     .buildForContext(new KeyContext(KeyContext.Kind.EC))
-                    .inBundle(() -> "JcaECGenParameterSpec")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private JcaECGenParameterSpec() {

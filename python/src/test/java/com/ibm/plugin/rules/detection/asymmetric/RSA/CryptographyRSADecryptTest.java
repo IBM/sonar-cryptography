@@ -33,11 +33,11 @@ import com.ibm.mapper.model.Key;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.MaskGenerationFunction;
 import com.ibm.mapper.model.MessageDigest;
-import com.ibm.mapper.model.OptimalAsymmetricEncryptionPadding;
 import com.ibm.mapper.model.PrivateKey;
 import com.ibm.mapper.model.PublicKey;
 import com.ibm.mapper.model.functionality.Decrypt;
 import com.ibm.mapper.model.functionality.KeyGeneration;
+import com.ibm.mapper.model.padding.OAEP;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -147,8 +147,7 @@ public class CryptographyRSADecryptTest extends TestBase {
         assertThat(privateKeyKeyGenerationNode.asString()).isEqualTo("KEYGENERATION");
 
         // OptimalAsymmetricEncryptionPadding under Algorithm under PrivateKey
-        INode privateKeyOaepNode =
-                privateKeyAlgorithmNode.getChildren().get(OptimalAsymmetricEncryptionPadding.class);
+        INode privateKeyOaepNode = privateKeyAlgorithmNode.getChildren().get(OAEP.class);
         assertThat(privateKeyOaepNode).isNotNull();
         assertThat(privateKeyOaepNode.asString()).isEqualTo("OAEP");
 
@@ -199,8 +198,7 @@ public class CryptographyRSADecryptTest extends TestBase {
         assertThat(publicKeyKeyGenerationNode.asString()).isEqualTo("KEYGENERATION");
 
         // OptimalAsymmetricEncryptionPadding under Algorithm under PublicKey
-        INode publicKeyOaepNode =
-                publicKeyAlgorithmNode.getChildren().get(OptimalAsymmetricEncryptionPadding.class);
+        INode publicKeyOaepNode = publicKeyAlgorithmNode.getChildren().get(OAEP.class);
         assertThat(publicKeyOaepNode).isNotNull();
         assertThat(publicKeyOaepNode.asString()).isEqualTo("OAEP");
 

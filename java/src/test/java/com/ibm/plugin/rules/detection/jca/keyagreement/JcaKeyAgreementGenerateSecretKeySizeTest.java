@@ -78,7 +78,7 @@ class JcaKeyAgreementGenerateSecretKeySizeTest extends TestBase {
         assertThat(nodes).hasSize(1);
         INode node = nodes.get(0);
         assertThat(node).isNotNull();
-        assertThat(node.asString()).isEqualTo("DiffieHellman");
+        assertThat(node.asString()).isEqualTo("DH");
 
         INode oid = node.getChildren().get(Oid.class);
         assertThat(oid).isNotNull();

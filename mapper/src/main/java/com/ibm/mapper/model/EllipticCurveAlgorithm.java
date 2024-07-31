@@ -19,22 +19,18 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
-public final class EllipticCurveAlgorithm extends Algorithm {
+public class EllipticCurveAlgorithm extends PublicKeyEncryption {
 
-    public EllipticCurveAlgorithm(
-            @Nonnull Algorithm algorithm, @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, EllipticCurveAlgorithm.class);
+    public EllipticCurveAlgorithm(@Nonnull Algorithm algorithm) {
+        super(algorithm);
     }
 
     public EllipticCurveAlgorithm(
-            @Nonnull Algorithm algorithm,
-            @Nonnull EllipticCurve ellipticCurve,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, EllipticCurveAlgorithm.class);
+            @Nonnull Algorithm algorithm, @Nonnull EllipticCurve ellipticCurve) {
+        super(algorithm);
         this.append(ellipticCurve);
     }
 

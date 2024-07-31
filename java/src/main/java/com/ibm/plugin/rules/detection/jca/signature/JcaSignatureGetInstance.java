@@ -41,7 +41,7 @@ public final class JcaSignatureGetInstance {
                     .withMethodParameter(STRING_TYPE)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .buildForContext(new SignatureContext())
-                    .inBundle(() -> "JcaSignatureGetInstance")
+                    .inBundle(() -> "Jca")
                     .withDependingDetectionRules(
                             Stream.concat(
                                             JcaSignatureAction.rules().stream(),
@@ -57,7 +57,7 @@ public final class JcaSignatureGetInstance {
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .withMethodParameter(STRING_TYPE)
                     .buildForContext(new SignatureContext())
-                    .inBundle(() -> "JcaSignatureGetInstance")
+                    .inBundle(() -> "Jca")
                     .withDependingDetectionRules(
                             Stream.concat(
                                             JcaSignatureAction.rules().stream(),
@@ -73,7 +73,7 @@ public final class JcaSignatureGetInstance {
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .withMethodParameter("java.security.Provider")
                     .buildForContext(new SignatureContext())
-                    .inBundle(() -> "JcaSignatureGetInstance")
+                    .inBundle(() -> "Jca")
                     .withDependingDetectionRules(
                             Stream.concat(
                                             JcaSignatureAction.rules().stream(),

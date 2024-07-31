@@ -19,7 +19,6 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -30,40 +29,34 @@ import javax.annotation.Nullable;
 
 public class JcaAlgorithmMapper implements IMapper {
 
-    private static final JcaBaseAlgorithmMapper JCA_BASE_ALGORITHM_MAPPER =
-            new JcaBaseAlgorithmMapper();
-
     /** IMPORTANT: order matters here */
     private static final List<IMapper> jcaSpecificAlgorithmMappers =
             List.of(
                     // algorithms
                     new JcaCipherMapper(),
-                    new JcaEllipticCurveMapper(),
                     new JcaMacMapper(),
                     new JcaMessageDigestMapper(),
                     new JcaMGFMapper(),
                     new JcaPasswordBasedEncryptionMapper(),
                     new JcaPBKDFMapper(),
                     new JcaPRNGMapper(),
+                    new JcaKeyAgreementMapper(),
                     new JcaSignatureMapper());
 
     @Nonnull
     @Override
     public Optional<? extends INode> parse(
-            @Nullable final String str,
-            @Nonnull DetectionLocation detectionLocation,
-            @Nonnull final Configuration configuration) {
+            @Nullable final String str, @Nonnull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }
 
         for (IMapper mapper : jcaSpecificAlgorithmMappers) {
-            Optional<? extends INode> asset = mapper.parse(str, detectionLocation, configuration);
+            Optional<? extends INode> asset = mapper.parse(str, detectionLocation);
             if (asset.isPresent()) {
                 return asset;
             }
         }
-
-        return JCA_BASE_ALGORITHM_MAPPER.parse(str, detectionLocation, configuration);
+        return Optional.empty();
     }
 }

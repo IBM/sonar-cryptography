@@ -99,8 +99,8 @@ class BcNTRUParametersTest extends TestBase {
         // MessageDigest under BlockCipher
         INode messageDigestNode5 = blockCipherNode5.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode5).isNotNull();
-        assertThat(messageDigestNode5.getChildren()).hasSize(1);
-        assertThat(messageDigestNode5.asString()).isEqualTo("SHA-256");
+        assertThat(messageDigestNode5.getChildren()).isEmpty();
+        assertThat(messageDigestNode5.asString()).isEqualTo("SHA256");
 
         // Encrypt under BlockCipher
         INode encryptNode5 = blockCipherNode5.getChildren().get(Encrypt.class);
