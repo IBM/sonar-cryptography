@@ -58,10 +58,10 @@
                     <pluginKey>sonar-crypto-plugin</pluginKey>
                     <pluginName>Sonar Crypto Plugin</pluginName>
                     <pluginClass>com.ibm.plugin.CryptographyPlugin</pluginClass>
-                    <pluginApiMinVersion>${sonar.version}</pluginApiMinVersion>
+                    <pluginApiMinVersion>${sonar.minVersion}</pluginApiMinVersion>
                     <sonarLintSupported>true</sonarLintSupported>
                     <skipDependenciesPackaging>true</skipDependenciesPackaging>
-                    <jreMinVersion>${sonar.jreMinVersion}</jreMinVersion>
+                    <jreMinVersion>17</jreMinVersion>
                 </configuration>
             </plugin>
             <plugin>

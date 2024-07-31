@@ -19,14 +19,13 @@
  */
 package com.ibm.plugin;
 
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Set;
 import org.sonar.api.SonarRuntime;
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.plugins.java.Java;
 import org.sonarsource.analyzer.commons.RuleMetadataLoader;
-
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Set;
 
 public class JavaScannerRuleDefinition implements RulesDefinition {
     public static final String REPOSITORY_KEY = "sonar-java-crypto";
