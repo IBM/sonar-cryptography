@@ -28,9 +28,11 @@ import com.ibm.mapper.model.algorithms.ChaCha20_Poly1305;
 import com.ibm.mapper.model.algorithms.DES;
 import com.ibm.mapper.model.algorithms.GOST28147;
 import com.ibm.mapper.model.algorithms.GOSTR34122015;
+import com.ibm.mapper.model.algorithms.IDEA;
 import com.ibm.mapper.model.algorithms.RC2;
 import com.ibm.mapper.model.algorithms.RC4;
 import com.ibm.mapper.model.algorithms.SEED;
+import com.ibm.mapper.model.algorithms.SM4;
 import com.ibm.mapper.model.algorithms.TripleDES;
 import com.ibm.mapper.model.mode.CBC;
 import com.ibm.mapper.model.mode.CCM;
@@ -61,6 +63,10 @@ public class EncryptionAlgorithmMapper implements IMapper {
                     Optional.of(new AES(128, new GCM(detectionLocation), detectionLocation));
             case "AES 128 CBC" ->
                     Optional.of(new AES(128, new CBC(detectionLocation), detectionLocation));
+            case "AES 256 CCM 8" ->
+                    Optional.of(new AES(256, new CCM(8, detectionLocation), detectionLocation));
+            case "AES 256 CCM" ->
+                    Optional.of(new AES(256, new CCM(detectionLocation), detectionLocation));
             case "AES 256 GCM" ->
                     Optional.of(new AES(256, new GCM(detectionLocation), detectionLocation));
             case "AES 256 CBC" ->
@@ -101,6 +107,9 @@ public class EncryptionAlgorithmMapper implements IMapper {
                     Optional.of(new GOSTR34122015(new CTR(detectionLocation), detectionLocation));
             case "KUZNYECHIK MGM L", "KUZNYECHIK MGM S" ->
                     Optional.of(new GOSTR34122015(new MGM(detectionLocation), detectionLocation));
+            case "IDEA CBC" -> Optional.of(new IDEA(new CBC(detectionLocation), detectionLocation));
+            case "SM4 CCM" -> Optional.of(new SM4(new CCM(detectionLocation), detectionLocation));
+            case "SM4 GCM" -> Optional.of(new SM4(new GCM(detectionLocation), detectionLocation));
             default -> Optional.empty();
         };
     }
