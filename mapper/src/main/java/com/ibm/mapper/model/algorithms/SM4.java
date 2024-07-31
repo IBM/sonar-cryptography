@@ -23,10 +23,11 @@ import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.utils.DetectionLocation;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public class SM4 extends BlockCipher {
+import javax.annotation.Nonnull;
+
+public final class SM4 extends BlockCipher {
     private static final String NAME = "SM4"; // SMS4
 
     public SM4(@NotNull DetectionLocation detectionLocation) {

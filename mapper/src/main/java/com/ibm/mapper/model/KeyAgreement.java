@@ -21,8 +21,13 @@ package com.ibm.mapper.model;
 
 import javax.annotation.Nonnull;
 
-public class KeyAgreement extends Algorithm {
+public class KeyAgreement extends Protocol {
+
+    public KeyAgreement(@Nonnull Protocol protocol) {
+        super(protocol, KeyAgreement.class);
+    }
+
     public KeyAgreement(@Nonnull Algorithm algorithm) {
-        super(algorithm, KeyAgreement.class);
+        super(new Protocol(algorithm.name, algorithm.detectionLocation), KeyAgreement.class);
     }
 }

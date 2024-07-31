@@ -20,17 +20,26 @@
 package com.ibm.mapper.model;
 
 import com.ibm.mapper.utils.DetectionLocation;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public class Protocol implements IAsset {
     @Nonnull protected final Map<Class<? extends INode>, INode> children;
     @Nonnull protected final Class<? extends Protocol> kind;
     @Nonnull protected final DetectionLocation detectionLocation;
     @Nonnull protected final String type;
+
+    public Protocol(
+            @Nonnull Protocol protocol, @Nonnull final Class<? extends Protocol> asKind) {
+        this.type = protocol.type;
+        this.children = protocol.getChildren();
+        this.detectionLocation = protocol.detectionLocation;
+        this.kind = asKind;
+    }
 
     public Protocol(@Nonnull String type, @Nonnull DetectionLocation detectionLocation) {
         this.type = type;
