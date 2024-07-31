@@ -26,6 +26,7 @@ import com.ibm.mapper.mapper.ssl.json.JsonCipherSuites;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.Test;
@@ -46,7 +47,7 @@ public class EncryptionAlgorithmMapperTest {
                         .collect(Collectors.toSet());
 
         for (String enc : encCollection) {
-            if (enc == "NULL") {
+            if (Objects.equals(enc, "NULL")) {
                 continue;
             }
 
