@@ -29,13 +29,11 @@ import com.ibm.mapper.model.algorithms.PSK;
 import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.algorithms.SRP;
 import com.ibm.mapper.utils.DetectionLocation;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
-
 public final class KeyExchangeAlgorithmMapper implements IMapper {
-
 
     @NotNull @Override
     public Optional<? extends KeyAgreement> parse(
@@ -52,7 +50,7 @@ public final class KeyExchangeAlgorithmMapper implements IMapper {
             case "ECCPWD" -> Optional.of(new ECCPWD(detectionLocation));
             case "PSK" -> Optional.of(new PSK(detectionLocation));
             case "KRB5" -> Optional.of(new Kerberos(5, detectionLocation));
-            case "GOSTR341112"
+            case "GOSTR341112" -> Optional.empty();
             default -> Optional.empty();
         };
     }

@@ -23,9 +23,8 @@ import com.ibm.mapper.model.EllipticCurve;
 import com.ibm.mapper.model.KeyAgreement;
 import com.ibm.mapper.model.Protocol;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public final class ECDH extends KeyAgreement {
     private static final String NAME = "ECDH";
