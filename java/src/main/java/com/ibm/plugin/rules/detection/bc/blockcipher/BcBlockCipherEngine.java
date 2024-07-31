@@ -97,7 +97,7 @@ public final class BcBlockCipherEngine {
                             // We want to capture all possible constructors (some have arguments)
                             .withAnyParameters()
                             .buildForContext(context)
-                            .inBundle(() -> "BcBlockCipherEngine")
+                            .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcBlockCipherInit.rules()));
 
             constructorsList.add(
@@ -109,7 +109,7 @@ public final class BcBlockCipherEngine {
                             // We want to capture all possible constructors (some have arguments)
                             .withAnyParameters()
                             .buildForContext(context)
-                            .inBundle(() -> "BcBlockCipherEngine")
+                            .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcBlockCipherInit.rules()));
         }
 

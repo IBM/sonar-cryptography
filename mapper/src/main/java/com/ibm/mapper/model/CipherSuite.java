@@ -19,7 +19,6 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.model.collections.AlgorithmCollection;
 import com.ibm.mapper.model.collections.IdentifierCollection;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -30,11 +29,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 
-public class CipherSuite implements IAsset {
-    @Nonnull protected final Map<Class<? extends INode>, INode> children;
-    @Nonnull protected final DetectionLocation detectionLocation;
-    @Nonnull protected final Class<? extends IAsset> kind;
-    @Nonnull protected String name;
+public final class CipherSuite implements IAsset {
+    @Nonnull private final Map<Class<? extends INode>, INode> children;
+    @Nonnull private final DetectionLocation detectionLocation;
+    @Nonnull private final Class<? extends IAsset> kind;
+    @Nonnull private final String name;
 
     public CipherSuite(@Nonnull String name, @Nonnull DetectionLocation detectionLocation) {
         this.name = name;
@@ -104,11 +103,6 @@ public class CipherSuite implements IAsset {
     @Nonnull
     public Class<? extends IAsset> getKind() {
         return kind;
-    }
-
-    @Override
-    public void apply(@Nonnull Configuration configuration) {
-        this.name = configuration.changeStringValue(this.name);
     }
 
     @Nonnull

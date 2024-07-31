@@ -19,7 +19,6 @@
  */
 package com.ibm.mapper.mapper.ssl;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.mapper.ssl.json.JsonCipherSuite;
 import com.ibm.mapper.mapper.ssl.json.JsonCipherSuites;
@@ -36,9 +35,7 @@ public class CipherSuiteMapper implements IMapper {
 
     @NotNull @Override
     public Optional<? extends INode> parse(
-            @Nullable String str,
-            @NotNull DetectionLocation detectionLocation,
-            @NotNull Configuration configuration) {
+            @Nullable String str, @NotNull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }
@@ -59,8 +56,7 @@ public class CipherSuiteMapper implements IMapper {
                         algoStr -> {
                             final KeyExchangeAlgorithmMapper keyExchangeAlgorithmMapper =
                                     new KeyExchangeAlgorithmMapper();
-                            return keyExchangeAlgorithmMapper.parse(
-                                    algoStr, detectionLocation, configuration);
+                            return keyExchangeAlgorithmMapper.parse(algoStr, detectionLocation);
                         })
                 .ifPresent(cipherSuite::append);
         // encryption algorithm
@@ -70,12 +66,9 @@ public class CipherSuiteMapper implements IMapper {
                         algoStr -> {
                             final EncryptionAlgorithmMapper encryptionAlgorithmMapper =
                                     new EncryptionAlgorithmMapper();
-                            return encryptionAlgorithmMapper.parse(
-                                    algoStr, detectionLocation, configuration);
+                            return encryptionAlgorithmMapper.parse(algoStr, detectionLocation);
                         })
                 .ifPresent(cipherSuite::append);
-
-        cipherSuite.apply(configuration);
         return Optional.of(cipherSuite);
     }
 

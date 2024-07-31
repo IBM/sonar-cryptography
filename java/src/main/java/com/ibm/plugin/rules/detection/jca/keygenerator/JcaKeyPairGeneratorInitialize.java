@@ -40,7 +40,7 @@ public final class JcaKeyPairGeneratorInitialize {
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
                     .buildForContext(new KeyContext(KeyContext.Kind.NONE))
-                    .inBundle(() -> "JcaKeyPairGeneratorInitialize")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> KEY_PAIR_INIT_2 =
@@ -52,7 +52,7 @@ public final class JcaKeyPairGeneratorInitialize {
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
                     .withMethodParameter("java.security.SecureRandom")
                     .buildForContext(new KeyContext(KeyContext.Kind.NONE))
-                    .inBundle(() -> "JcaKeyPairGeneratorInitialize")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> KEY_PAIR_INIT_3 =
@@ -63,7 +63,7 @@ public final class JcaKeyPairGeneratorInitialize {
                     .withMethodParameter("java.security.spec.AlgorithmParameterSpec")
                     .addDependingDetectionRules(JcaAlgorithmParameterSpec.rules())
                     .buildForContext(new KeyContext(KeyContext.Kind.NONE))
-                    .inBundle(() -> "JcaKeyPairGeneratorInitialize")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> KEY_PAIR_INIT_4 =
@@ -75,7 +75,7 @@ public final class JcaKeyPairGeneratorInitialize {
                     .addDependingDetectionRules(JcaAlgorithmParameterSpec.rules())
                     .withMethodParameter("java.security.SecureRandom")
                     .buildForContext(new KeyContext(KeyContext.Kind.NONE))
-                    .inBundle(() -> "JcaKeyPairGeneratorInitialize")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private JcaKeyPairGeneratorInitialize() {

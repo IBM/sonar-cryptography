@@ -43,7 +43,7 @@ public final class BcGCMSIVBlockCipher {
                     .shouldBeDetectedAs(new ValueActionFactory<>("GCM-SIV"))
                     .withoutParameters()
                     .buildForContext(new CipherContext(CipherContext.Kind.AEAD_BLOCK_CIPHER))
-                    .inBundle(() -> "BcGCMSIVBlockCipher")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcAEADCipherInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_2 =
@@ -55,7 +55,7 @@ public final class BcGCMSIVBlockCipher {
                     .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                     .addDependingDetectionRules(BcBlockCipher.all())
                     .buildForContext(new CipherContext(CipherContext.Kind.AEAD_BLOCK_CIPHER))
-                    .inBundle(() -> "BcGCMSIVBlockCipher")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcAEADCipherInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_3 =
@@ -68,7 +68,7 @@ public final class BcGCMSIVBlockCipher {
                     .addDependingDetectionRules(BcBlockCipher.all())
                     .withMethodParameter("org.bouncycastle.crypto.modes.gcm.GCMMultiplier")
                     .buildForContext(new CipherContext(CipherContext.Kind.AEAD_BLOCK_CIPHER))
-                    .inBundle(() -> "BcGCMSIVBlockCipher")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcAEADCipherInit.rules());
 
     @Unmodifiable

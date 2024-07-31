@@ -68,12 +68,11 @@ public final class PythonSignatureContextTranslator {
         switch (detectedAlgorithm.asString()) {
             case "ECDSA":
                 baseAlgorithm = new Algorithm("ECDSA", detectionLocation);
-                resAlgorithm = new Signature(baseAlgorithm, detectionLocation);
+                resAlgorithm = new Signature(baseAlgorithm);
                 return Optional.of(resAlgorithm);
             case "MGF1":
                 return Optional.of(
-                        new MaskGenerationFunction(
-                                new Algorithm("MGF1", detectionLocation), detectionLocation));
+                        new MaskGenerationFunction(new Algorithm("MGF1", detectionLocation)));
             default:
                 break;
         }
@@ -90,7 +89,7 @@ public final class PythonSignatureContextTranslator {
         switch (signatureAction.getAction()) {
             case SIGN:
                 baseAlgorithm = new Algorithm(PythonEnricher.TO_BE_ENRICHED, detectionLocation);
-                resAlgorithm = new Signature(baseAlgorithm, detectionLocation);
+                resAlgorithm = new Signature(baseAlgorithm);
                 resAlgorithm.append(new Sign(detectionLocation));
                 return Optional.of(resAlgorithm);
             case VERIFY:

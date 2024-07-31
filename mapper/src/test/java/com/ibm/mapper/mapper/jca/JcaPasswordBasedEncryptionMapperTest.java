@@ -21,10 +21,10 @@ package com.ibm.mapper.mapper.jca;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.ibm.mapper.configuration.Configuration;
-import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.Mac;
+import com.ibm.mapper.model.Cipher;
+import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.PasswordBasedEncryption;
+import com.ibm.mapper.model.algorithms.AES;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +41,7 @@ class JcaPasswordBasedEncryptionMapperTest {
                 new JcaPasswordBasedEncryptionMapper();
         Optional<PasswordBasedEncryption> pbeOpt =
                 jcaPasswordBasedEncryptionMapper.parse(
-                        "PBEWithHmacSHA256AndAES", testDetectionLocation, Configuration.DEFAULT);
+                        "PBEWithHmacSHA256AndAES", testDetectionLocation);
 
         assertThat(pbeOpt).isPresent();
         PasswordBasedEncryption pbe = pbeOpt.get();
@@ -49,17 +49,14 @@ class JcaPasswordBasedEncryptionMapperTest {
 
         assertThat(pbe.getChildren()).hasSize(2);
         assertThat(pbe.getDigest()).isEmpty();
-        assertThat(pbe.getPseudoRandomFunction()).isPresent();
-        Mac mac = pbe.getPseudoRandomFunction().get();
+        assertThat(pbe.getCipher()).isPresent();
+        assertThat(pbe.getHmac()).isPresent();
 
+        HMAC mac = pbe.getHmac().get();
         assertThat(mac.getName()).isEqualTo("HmacSHA256");
-        assertThat(mac.getChildren()).hasSize(2);
+        assertThat(mac.getChildren()).hasSize(1);
 
-        assertThat(pbe.getEncryptionAlgorithm()).isPresent();
-        Algorithm algorithm = pbe.getEncryptionAlgorithm().get();
-
-        assertThat(algorithm.hasChildren()).isTrue();
-        assertThat(algorithm.getDefaultKeyLength()).isPresent();
-        assertThat(algorithm.getDefaultKeyLength().get().asString()).isEqualTo("128");
+        Cipher cipher = pbe.getCipher().get();
+        assertThat(cipher).isInstanceOf(AES.class);
     }
 }

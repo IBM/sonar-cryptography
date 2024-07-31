@@ -21,7 +21,8 @@ package com.ibm.output.cyclonedx;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.Version;
+import com.ibm.mapper.model.protocol.TLS;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.output.cyclondx.CBOMOutputFile;
 import java.util.Collections;
@@ -40,9 +41,7 @@ class ProtocolTest {
 
         final CBOMOutputFile outputFile = new CBOMOutputFile();
 
-        final TLSProtocol tlsProtocol =
-                new TLSProtocol(new Protocol("TLSv1.3", detectionLocation), detectionLocation);
-        tlsProtocol.append(new Version("1.3", detectionLocation));
+        final TLS tlsProtocol = new TLS(new Version("1.3", detectionLocation));
 
         outputFile.add(List.of(tlsProtocol));
 

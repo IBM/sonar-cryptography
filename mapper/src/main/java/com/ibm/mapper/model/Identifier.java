@@ -19,13 +19,12 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
 public class Identifier extends Property {
 
-    @Nonnull private String value;
+    @Nonnull private final String value;
 
     public Identifier(@Nonnull String value, @Nonnull DetectionLocation detectionLocation) {
         super(Version.class, detectionLocation);
@@ -40,11 +39,6 @@ public class Identifier extends Property {
     @Nonnull
     public String getValue() {
         return value;
-    }
-
-    @Override
-    public void apply(@Nonnull Configuration configuration) {
-        this.value = configuration.changeStringValue(value);
     }
 
     @Nonnull

@@ -49,7 +49,7 @@ public final class BcOCBBlockCipher {
                     .withMethodParameter("org.bouncycastle.crypto.BlockCipher") // main cipher
                     .addDependingDetectionRules(BcBlockCipher.all())
                     .buildForContext(new CipherContext(CipherContext.Kind.AEAD_BLOCK_CIPHER))
-                    .inBundle(() -> "BcOCBBlockCipher")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcAEADCipherInit.rules());
 
     @Unmodifiable

@@ -70,7 +70,7 @@ public final class BcPBEParametersGenerator {
                                             pbeClass.replace("ParametersGenerator", "")))
                             .withoutParameters()
                             .buildForContext(new CipherContext(CipherContext.Kind.PBE))
-                            .inBundle(() -> "bcPBEParametersGenerator")
+                            .inBundle(() -> "Bc")
                             .withoutDependingDetectionRules());
         }
 
@@ -86,7 +86,7 @@ public final class BcPBEParametersGenerator {
                             .withMethodParameter("org.bouncycastle.crypto.Digest")
                             .addDependingDetectionRules(BcDigests.rules())
                             .buildForContext(new CipherContext(CipherContext.Kind.PBE))
-                            .inBundle(() -> "bcPBEParametersGenerator")
+                            .inBundle(() -> "Bc")
                             .withoutDependingDetectionRules());
         }
 

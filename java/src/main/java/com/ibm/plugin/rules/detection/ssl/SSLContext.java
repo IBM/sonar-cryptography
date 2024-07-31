@@ -39,7 +39,7 @@ public final class SSLContext {
                     .withMethodParameter("java.lang.String")
                     .shouldBeDetectedAs(new ProtocolFactory<>())
                     .buildForContext(new ProtocolContext(ProtocolContext.Kind.TLS))
-                    .inBundle(() -> "SSLContext")
+                    .inBundle(() -> "SSL")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> SSLContext_2 =
@@ -51,7 +51,7 @@ public final class SSLContext {
                     .shouldBeDetectedAs(new ProtocolFactory<>())
                     .withMethodParameter("java.lang.String")
                     .buildForContext(new ProtocolContext(ProtocolContext.Kind.TLS))
-                    .inBundle(() -> "SSLContext")
+                    .inBundle(() -> "SSL")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> SSLContext_3 =
@@ -63,7 +63,7 @@ public final class SSLContext {
                     .shouldBeDetectedAs(new ProtocolFactory<>())
                     .withMethodParameter("java.security.Provider")
                     .buildForContext(new ProtocolContext(ProtocolContext.Kind.TLS))
-                    .inBundle(() -> "SSLContext")
+                    .inBundle(() -> "SSL")
                     .withoutDependingDetectionRules();
 
     private SSLContext() {

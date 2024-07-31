@@ -60,7 +60,7 @@ public final class BcOAEPEncoding {
                         .addDependingDetectionRules(
                                 BcAsymCipherEngine.rules(engineDetectionValueContext))
                         .buildForContext(context)
-                        .inBundle(() -> "BcOAEPEncoding")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcAsymCipherInit.rules()));
 
         constructorsList.add(
@@ -75,7 +75,7 @@ public final class BcOAEPEncoding {
                         .withMethodParameter("org.bouncycastle.crypto.Digest")
                         .addDependingDetectionRules(BcDigests.rules())
                         .buildForContext(context)
-                        .inBundle(() -> "BcOAEPEncoding")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcAsymCipherInit.rules()));
 
         constructorsList.add(
@@ -91,7 +91,7 @@ public final class BcOAEPEncoding {
                         .addDependingDetectionRules(BcDigests.rules())
                         .withMethodParameter(BYTE_ARRAY_TYPE)
                         .buildForContext(context)
-                        .inBundle(() -> "BcOAEPEncoding")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcAsymCipherInit.rules()));
 
         constructorsList.add(
@@ -110,7 +110,7 @@ public final class BcOAEPEncoding {
                                 BcDigests.rules(new DigestContext(DigestContext.Kind.MGF1)))
                         .withMethodParameter(BYTE_ARRAY_TYPE)
                         .buildForContext(context)
-                        .inBundle(() -> "BcOAEPEncoding")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcAsymCipherInit.rules()));
 
         return constructorsList;

@@ -41,7 +41,7 @@ public final class BcMacInit {
                     .withMethodParameter("org.bouncycastle.crypto.CipherParameters")
                     .addDependingDetectionRules(BcCipherParameters.rules())
                     .buildForContext(new CipherContext())
-                    .inBundle(() -> "bcMacInit")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     @Unmodifiable

@@ -19,34 +19,49 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.utils.DetectionLocation;
+import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
-public class PasswordBasedEncryption extends Algorithm {
-    public PasswordBasedEncryption(
-            @Nonnull Algorithm algorithm, @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, PasswordBasedEncryption.class);
+public final class PasswordBasedEncryption extends Algorithm {
+
+    // example: PBEWithHmacSHA1AndAES_128
+    public PasswordBasedEncryption(@Nonnull HMAC hmac, @Nonnull Cipher cipher) {
+        super(
+                new Algorithm(
+                        "PBEWith" + hmac.asString() + "And" + cipher.asString(),
+                        hmac.detectionLocation),
+                PasswordBasedEncryption.class);
+        this.append(hmac);
+        this.append(cipher);
     }
 
-    public PasswordBasedEncryption(
-            @Nonnull Algorithm algorithm,
-            @Nonnull MessageDigest digest,
-            @Nonnull Mac pseudoRandomFunction,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, PasswordBasedEncryption.class);
+    // example: PBEWithMD5AndDES
+    public PasswordBasedEncryption(@Nonnull MessageDigest digest, @Nonnull Cipher cipher) {
+        super(
+                new Algorithm(
+                        "PBEWith" + digest.asString() + "And" + cipher.asString(),
+                        digest.detectionLocation),
+                PasswordBasedEncryption.class);
         this.append(digest);
-        this.append(pseudoRandomFunction);
+        this.append(cipher);
     }
 
-    public PasswordBasedEncryption(
-            @Nonnull Algorithm algorithm,
-            @Nonnull MessageDigest digest,
-            @Nonnull Algorithm encryptionAlgorithm,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, PasswordBasedEncryption.class);
-        this.append(digest);
-        this.append(encryptionAlgorithm);
+    // example: PBEWithHmacSHA1
+    public PasswordBasedEncryption(@Nonnull HMAC hmac) {
+        super(
+                new Algorithm("PBEWith" + hmac.asString(), hmac.detectionLocation),
+                PasswordBasedEncryption.class);
+        this.append(hmac);
+    }
+
+    @Nonnull
+    public Optional<HMAC> getHmac() {
+        INode node = this.getChildren().get(HMAC.class);
+        if (node == null) {
+            return Optional.empty();
+        }
+        return Optional.of((HMAC) node);
     }
 
     @Nonnull
@@ -59,20 +74,17 @@ public class PasswordBasedEncryption extends Algorithm {
     }
 
     @Nonnull
-    public Optional<Mac> getPseudoRandomFunction() {
-        INode node = this.getChildren().get(Mac.class);
-        if (node == null) {
-            return Optional.empty();
-        }
-        return Optional.of((Mac) node);
-    }
-
-    @Nonnull
-    public Optional<Algorithm> getEncryptionAlgorithm() {
-        INode node = this.getChildren().get(Algorithm.class);
-        if (node == null) {
-            return Optional.empty();
-        }
-        return Optional.of((Algorithm) node);
+    public Optional<Cipher> getCipher() {
+        return this.getChildren().values().stream()
+                .map(
+                        n -> {
+                            if (n instanceof Cipher cipher) {
+                                return cipher;
+                            } else {
+                                return null;
+                            }
+                        })
+                .filter(Objects::nonNull)
+                .findFirst();
     }
 }

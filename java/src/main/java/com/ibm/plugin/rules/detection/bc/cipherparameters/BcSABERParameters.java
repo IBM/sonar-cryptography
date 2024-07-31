@@ -56,7 +56,7 @@ public final class BcSABERParameters {
                     .withMethodParameter("boolean")
                     .buildForContext(
                             new AlgorithmParameterContext(AlgorithmParameterContext.Kind.SABER))
-                    .inBundle(() -> "BcSABERParameters")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> KEY_CONSTRUCTOR =
@@ -72,7 +72,7 @@ public final class BcSABERParameters {
                     .withMethodParameter("org.bouncycastle.pqc.crypto.saber.SABERParameters")
                     .addDependingDetectionRules(List.of(BASE_CONSTRUCTOR))
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "BcSABERParameters")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> PUBLIC_KEY_CONSTRUCTOR =
@@ -84,7 +84,7 @@ public final class BcSABERParameters {
                     .addDependingDetectionRules(List.of(BASE_CONSTRUCTOR))
                     .withMethodParameter(BYTE_ARRAY_TYPE)
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "BcSABERParameters")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> PRIVATE_KEY_CONSTRUCTOR =
@@ -96,7 +96,7 @@ public final class BcSABERParameters {
                     .addDependingDetectionRules(List.of(BASE_CONSTRUCTOR))
                     .withMethodParameter(BYTE_ARRAY_TYPE)
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "BcSABERParameters")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     @Unmodifiable

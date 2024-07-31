@@ -25,8 +25,8 @@ import com.ibm.engine.model.context.MacContext;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.Cipher;
+import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.plugin.rules.detection.hash.CryptographyHash;
@@ -63,7 +63,7 @@ public final class PythonMacContextTranslator {
         Algorithm algorithm;
         Cipher cipher;
         MessageDigest messageDigest;
-        Mac mac;
+        HMAC mac;
         String detection = detectedAlgorithm.asString();
         switch (kind) {
             case CMAC:
@@ -71,8 +71,8 @@ public final class PythonMacContextTranslator {
                 // Algorithms [only the ones in `CryptographyCipher.blockCiphers` are supported]
                 algorithm = new Algorithm(detection + "-CMAC", detectionLocation);
                 if (CryptographyCipher.blockCiphers.contains(detection)) {
-                    cipher = new BlockCipher(algorithm, null, null, detectionLocation);
-                    mac = new Mac(cipher, detectionLocation);
+                    cipher = new BlockCipher(algorithm, null, null);
+                    mac = new HMAC(cipher);
                     return Optional.of(mac);
                 }
                 break;
@@ -82,8 +82,8 @@ public final class PythonMacContextTranslator {
                 if (CryptographyHash.hashes.contains(detection)) {
                     String hashName = detection.replace('_', '-');
                     algorithm = new Algorithm("HMAC-" + hashName, detectionLocation);
-                    messageDigest = new MessageDigest(algorithm, detectionLocation);
-                    mac = new Mac(messageDigest, detectionLocation);
+                    messageDigest = new MessageDigest(algorithm);
+                    mac = new HMAC(messageDigest);
                     return Optional.of(mac);
                 }
                 break;
@@ -99,11 +99,11 @@ public final class PythonMacContextTranslator {
             @Nonnull MacContext.Kind kind,
             @Nonnull DetectionLocation detectionLocation) {
         Algorithm algorithm;
-        Mac mac;
+        HMAC mac;
         switch (cipherAction.getAction()) {
             case MAC:
                 algorithm = new Algorithm(kind.name(), detectionLocation);
-                mac = new Mac(algorithm, detectionLocation);
+                mac = new HMAC(algorithm);
                 return Optional.of(mac);
             default:
                 break;

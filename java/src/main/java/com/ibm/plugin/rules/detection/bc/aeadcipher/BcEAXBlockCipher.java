@@ -44,7 +44,7 @@ public final class BcEAXBlockCipher {
                     .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                     .addDependingDetectionRules(BcBlockCipher.all())
                     .buildForContext(new CipherContext(CipherContext.Kind.AEAD_BLOCK_CIPHER))
-                    .inBundle(() -> "BcEAXBlockCipher")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcAEADCipherInit.rules());
 
     @Unmodifiable

@@ -30,8 +30,8 @@ import com.ibm.engine.model.context.DigestContext;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
-import com.ibm.mapper.model.OptimalAsymmetricEncryptionPadding;
 import com.ibm.mapper.model.functionality.Encrypt;
+import com.ibm.mapper.model.padding.OAEP;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
 import java.util.List;
@@ -133,7 +133,7 @@ class BcBufferedAsymmetricBlockCipherTest extends TestBase {
 
         // OptimalAsymmetricEncryptionPadding under BlockCipher
         INode optimalAsymmetricEncryptionPaddingNode =
-                blockCipherNode.getChildren().get(OptimalAsymmetricEncryptionPadding.class);
+                blockCipherNode.getChildren().get(OAEP.class);
         assertThat(optimalAsymmetricEncryptionPaddingNode).isNotNull();
         assertThat(optimalAsymmetricEncryptionPaddingNode.getChildren()).hasSize(1);
         assertThat(optimalAsymmetricEncryptionPaddingNode.asString()).isEqualTo("OAEP");

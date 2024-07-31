@@ -89,7 +89,7 @@ class BcMGF1BytesGeneratorTest extends TestBase {
         // MessageDigest under MaskGenerationFunction
         INode messageDigestNode = maskGenerationFunctionNode.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode).isNotNull();
-        assertThat(messageDigestNode.getChildren()).hasSize(1);
-        assertThat(messageDigestNode.asString()).isEqualTo("SHA-256");
+        assertThat(messageDigestNode.getChildren()).isEmpty();
+        assertThat(messageDigestNode.asString()).isEqualTo("SHA256");
     }
 }

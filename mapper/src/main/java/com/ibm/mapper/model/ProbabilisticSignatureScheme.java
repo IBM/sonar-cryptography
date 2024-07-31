@@ -19,21 +19,18 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 
-public class ProbabilisticSignatureScheme extends Property {
+public final class ProbabilisticSignatureScheme extends Property {
 
     public ProbabilisticSignatureScheme(@Nonnull DetectionLocation detectionLocation) {
         super(ProbabilisticSignatureScheme.class, detectionLocation);
     }
 
-    public ProbabilisticSignatureScheme(
-            @Nonnull MaskGenerationFunction maskGenerationFunction,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(ProbabilisticSignatureScheme.class, detectionLocation);
+    public ProbabilisticSignatureScheme(@Nonnull MaskGenerationFunction maskGenerationFunction) {
+        super(ProbabilisticSignatureScheme.class, maskGenerationFunction.detectionLocation);
         this.append(maskGenerationFunction);
     }
 
@@ -43,11 +40,6 @@ public class ProbabilisticSignatureScheme extends Property {
                 ProbabilisticSignatureScheme.class,
                 probabilisticSignatureScheme.detectionLocation,
                 probabilisticSignatureScheme.children);
-    }
-
-    @Override
-    public void apply(@Nonnull Configuration configuration) {
-        // nothing
     }
 
     @Nonnull

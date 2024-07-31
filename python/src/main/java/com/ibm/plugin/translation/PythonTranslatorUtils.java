@@ -23,8 +23,8 @@ import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.EllipticCurve;
 import com.ibm.mapper.model.EllipticCurveAlgorithm;
+import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.KeyLength;
-import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.PrivateKey;
 import com.ibm.mapper.model.PublicKey;
@@ -49,7 +49,7 @@ public final class PythonTranslatorUtils {
         Algorithm baseAlgorithm = new Algorithm(algorithmName, detectionLocation);
         EllipticCurve ellipticCurve = new EllipticCurve(curveName, detectionLocation);
         EllipticCurveAlgorithm resAlgorithm =
-                new EllipticCurveAlgorithm(baseAlgorithm, ellipticCurve, detectionLocation);
+                new EllipticCurveAlgorithm(baseAlgorithm, ellipticCurve);
 
         resAlgorithm.append(new KeyGeneration(detectionLocation));
         privateKey.append(resAlgorithm);
@@ -112,13 +112,9 @@ public final class PythonTranslatorUtils {
             @Nonnull String macString,
             @Nonnull DetectionLocation detectionLocation) {
         StreamCipher cipher =
-                new StreamCipher(
-                        new Algorithm(cipherString, detectionLocation),
-                        null,
-                        null,
-                        detectionLocation);
+                new StreamCipher(new Algorithm(cipherString, detectionLocation), null, null);
 
-        cipher.append(new Mac(new Algorithm(macString, detectionLocation), detectionLocation));
+        cipher.append(new HMAC(new Algorithm(macString, detectionLocation)));
         return cipher;
     }
 
@@ -157,8 +153,7 @@ public final class PythonTranslatorUtils {
                         new Algorithm(algorithmName, detectionLocation),
                         new Mode(modeString, detectionLocation),
                         null,
-                        null,
-                        detectionLocation);
+                        null);
         cipher.append(new KeyLength(keyLength, detectionLocation));
         cipher.append(new KeyGeneration(detectionLocation));
         secretKey.append(cipher);

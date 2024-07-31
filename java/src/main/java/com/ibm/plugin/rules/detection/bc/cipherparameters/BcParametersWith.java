@@ -44,7 +44,7 @@ public final class BcParametersWith {
                     .addDependingDetectionRules(BcCipherParameters.bases())
                     .withMethodParameter(BYTE_ARRAY_TYPE)
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "BcParametersWith")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_2 =
@@ -56,7 +56,7 @@ public final class BcParametersWith {
                     .addDependingDetectionRules(BcCipherParameters.bases())
                     .withMethodParameter(BYTE_ARRAY_TYPE)
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "BcParametersWith")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_3 =
@@ -70,7 +70,7 @@ public final class BcParametersWith {
                     .withMethodParameter("int")
                     .withMethodParameter("int")
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "BcParametersWith")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_4 =
@@ -81,7 +81,7 @@ public final class BcParametersWith {
                     .withMethodParameter("org.bouncycastle.crypto.CipherParameters")
                     .addDependingDetectionRules(BcCipherParameters.bases())
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "BcParametersWith")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_5 =
@@ -93,7 +93,7 @@ public final class BcParametersWith {
                     .addDependingDetectionRules(BcCipherParameters.bases())
                     .withMethodParameter("java.security.SecureRandom")
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "BcParametersWith")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_6 =
@@ -105,7 +105,7 @@ public final class BcParametersWith {
                     .addDependingDetectionRules(BcCipherParameters.bases())
                     .withMethodParameter(BYTE_ARRAY_TYPE)
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "BcParametersWith")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_7 =
@@ -119,7 +119,7 @@ public final class BcParametersWith {
                     .withMethodParameter("int")
                     .withMethodParameter("int")
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "BcParametersWith")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_8 =
@@ -131,7 +131,7 @@ public final class BcParametersWith {
                     .addDependingDetectionRules(BcCipherParameters.bases())
                     .withMethodParameter(BYTE_ARRAY_TYPE)
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "BcParametersWith")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_9 =
@@ -143,7 +143,7 @@ public final class BcParametersWith {
                     .addDependingDetectionRules(BcCipherParameters.bases())
                     .withMethodParameter(BYTE_ARRAY_TYPE)
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "BcParametersWith")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_10 =
@@ -157,7 +157,7 @@ public final class BcParametersWith {
                     .withMethodParameter("int")
                     .withMethodParameter("int")
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "BcParametersWith")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     @Unmodifiable

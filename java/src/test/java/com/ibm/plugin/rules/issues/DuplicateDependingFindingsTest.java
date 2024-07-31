@@ -27,9 +27,9 @@ import com.ibm.engine.model.OperationMode;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.OptimalAsymmetricEncryptionPadding;
 import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.functionality.Encrypt;
+import com.ibm.mapper.model.padding.OAEP;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
 import java.util.List;
@@ -126,7 +126,7 @@ class DuplicateDependingFindingsTest extends TestBase {
 
         // OptimalAsymmetricEncryptionPadding under PublicKeyEncryption
         INode optimalAsymmetricEncryptionPaddingNode =
-                publicKeyEncryptionNode.getChildren().get(OptimalAsymmetricEncryptionPadding.class);
+                publicKeyEncryptionNode.getChildren().get(OAEP.class);
         assertThat(optimalAsymmetricEncryptionPaddingNode).isNotNull();
         assertThat(optimalAsymmetricEncryptionPaddingNode.getChildren()).isEmpty();
         assertThat(optimalAsymmetricEncryptionPaddingNode.asString()).isEqualTo("OAEP");

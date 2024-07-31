@@ -47,7 +47,7 @@ public final class BcISO9796d2Signer {
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
                     .buildForContext(new SignatureContext(SignatureContext.Kind.SIGNATURE_NAME))
-                    .inBundle(() -> "bcISO9796d2Signer")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_2 =
@@ -62,7 +62,7 @@ public final class BcISO9796d2Signer {
                     .addDependingDetectionRules(BcDigests.rules())
                     .withMethodParameter("boolean")
                     .buildForContext(new SignatureContext(SignatureContext.Kind.SIGNATURE_NAME))
-                    .inBundle(() -> "bcISO9796d2Signer")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     @Unmodifiable

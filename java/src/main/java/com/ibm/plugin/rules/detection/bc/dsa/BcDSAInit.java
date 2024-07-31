@@ -45,7 +45,7 @@ public final class BcDSAInit {
                     .withMethodParameter("org.bouncycastle.crypto.CipherParameters")
                     .addDependingDetectionRules(BcCipherParameters.rules())
                     .buildForContext(new SignatureContext(SignatureContext.Kind.SIGNING_STATUS))
-                    .inBundle(() -> "bcDSAInit")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     @Unmodifiable

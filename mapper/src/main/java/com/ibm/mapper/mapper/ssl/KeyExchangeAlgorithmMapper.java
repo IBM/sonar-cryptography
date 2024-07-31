@@ -19,31 +19,39 @@
  */
 package com.ibm.mapper.mapper.ssl;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.IMapper;
-import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyAgreement;
+import com.ibm.mapper.model.algorithms.DH;
+import com.ibm.mapper.model.algorithms.ECCPWD;
+import com.ibm.mapper.model.algorithms.ECDH;
+import com.ibm.mapper.model.algorithms.Kerberos;
+import com.ibm.mapper.model.algorithms.PSK;
+import com.ibm.mapper.model.algorithms.RSA;
+import com.ibm.mapper.model.algorithms.SRP;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Map;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class KeyExchangeAlgorithmMapper implements IMapper {
-
-    private final Map<String, String> nameMap = Map.of("DHE", "diffiehellman");
+public final class KeyExchangeAlgorithmMapper implements IMapper {
 
     @NotNull @Override
-    public Optional<? extends INode> parse(
-            @Nullable String str,
-            @NotNull DetectionLocation detectionLocation,
-            @NotNull Configuration configuration) {
+    public Optional<? extends KeyAgreement> parse(
+            @Nullable String str, @NotNull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }
-        final String name = Optional.ofNullable(nameMap.get(str)).orElse(str);
-        final Algorithm algorithm = new Algorithm(name, detectionLocation);
-        return Optional.of(new KeyAgreement(algorithm, detectionLocation));
+
+        return switch (str) {
+            case "DHE", "DH" -> Optional.of(new DH(detectionLocation)).map(KeyAgreement::new);
+            case "SRP" -> Optional.of(new SRP(detectionLocation));
+            case "RSA" -> Optional.of(new RSA(detectionLocation)).map(KeyAgreement::new);
+            case "ECDH", "ECDHE" -> Optional.of(new ECDH(detectionLocation));
+            case "ECCPWD" -> Optional.of(new ECCPWD(detectionLocation));
+            case "PSK" -> Optional.of(new PSK(detectionLocation));
+            case "KRB5" -> Optional.of(new Kerberos(5, detectionLocation));
+            case "GOSTR341112" -> Optional.empty();
+            default -> Optional.empty();
+        };
     }
 }

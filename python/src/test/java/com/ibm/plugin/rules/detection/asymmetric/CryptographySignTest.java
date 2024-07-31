@@ -45,7 +45,7 @@ import org.sonar.plugins.python.api.symbols.Symbol;
 import org.sonar.plugins.python.api.tree.Tree;
 import org.sonar.python.checks.utils.PythonCheckVerifier;
 
-public class CryptographySignTest extends TestBase {
+class CryptographySignTest extends TestBase {
     @Test
     void test() {
         PythonCheckVerifier.verify(
@@ -85,7 +85,7 @@ public class CryptographySignTest extends TestBase {
         // MessageDigest under Signature
         INode messageDigestNode = signatureNode.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode).isNotNull();
-        assertThat(messageDigestNode.asString()).isEqualTo("SHA512");
+        assertThat(messageDigestNode.asString()).isEqualTo("SHA-512");
 
         // EllipticCurveAlgorithm under Signature
         INode signNode = signatureNode.getChildren().get(Sign.class);

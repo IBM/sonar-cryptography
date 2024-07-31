@@ -29,9 +29,6 @@ import com.ibm.engine.model.context.KeyContext;
 import com.ibm.engine.model.context.PrivateKeyContext;
 import com.ibm.engine.model.context.PublicKeyContext;
 import com.ibm.engine.model.context.SecretKeyContext;
-import com.ibm.mapper.AbstractContextTranslator;
-import com.ibm.mapper.IContextTranslationWithKind;
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.model.EllipticCurve;
 import com.ibm.mapper.model.EllipticCurveAlgorithm;
@@ -53,36 +50,24 @@ import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
 
-public final class JavaKeyContextTranslator extends AbstractContextTranslator
-        implements IContextTranslationWithKind<Tree, KeyContext.Kind> {
+public final class JavaKeyContextTranslator extends JavaAbstractLibraryTranslator {
 
-    public JavaKeyContextTranslator(@NotNull Configuration configuration) {
-        super(configuration);
-    }
-
-    @SuppressWarnings("java:S1172")
-    @NotNull @Override
-    public Optional<INode> translate(
+    @Override
+    protected @NotNull Optional<INode> translateJCA(
             @NotNull IValue<Tree> value,
-            @NotNull KeyContext.Kind kind,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
         if (value instanceof Algorithm<Tree> algorithm) {
             JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
             return jcaAlgorithmMapper
-                    .parse(algorithm.asString(), detectionLocation, configuration)
+                    .parse(algorithm.asString(), detectionLocation)
                     .map(iNode -> (com.ibm.mapper.model.Algorithm) iNode)
                     .map(
                             algorithmNode ->
                                     switch (algorithmNode.asString().trim().toLowerCase()) {
-                                        case "rsa" ->
-                                                new PublicKeyEncryption(
-                                                        algorithmNode,
-                                                        algorithmNode.getDetectionContext());
-                                        case "diffiehellman" ->
-                                                new KeyAgreement(
-                                                        algorithmNode,
-                                                        algorithmNode.getDetectionContext());
+                                        case "rsa" -> new PublicKeyEncryption(algorithmNode);
+                                        case "diffiehellman", "dh" ->
+                                                new KeyAgreement(algorithmNode);
                                         default -> algorithmNode;
                                     })
                     .map(
@@ -91,42 +76,47 @@ public final class JavaKeyContextTranslator extends AbstractContextTranslator
                                 return algorithmNode;
                             })
                     .map(
-                            algorithmNode -> {
-                                final Key key =
-                                        new Key(
-                                                algorithmNode.asString(),
-                                                algorithmNode,
-                                                detectionLocation);
+                            algo -> {
+                                final Key key = new Key(algo);
                                 if (detectionContext.is(PrivateKeyContext.class)) {
-                                    return new PrivateKey(key, key.getDetectionContext());
+                                    return new PrivateKey(key);
                                 } else if (detectionContext.is(PublicKeyContext.class)) {
-                                    return new PublicKey(key, key.getDetectionContext());
+                                    return new PublicKey(key);
                                 } else if (detectionContext.is(SecretKeyContext.class)) {
-                                    return new SecretKey(key, key.getDetectionContext());
+                                    return new SecretKey(key);
                                 } else {
-                                    return switch (algorithmNode.asString().trim().toLowerCase()) {
-                                        case "rsa" -> new PublicKey(key, key.getDetectionContext());
-                                        default -> algorithmNode;
+                                    return switch (algo.asString().trim().toLowerCase()) {
+                                        case "rsa" -> new PublicKey(key);
+                                        default -> algo;
                                     };
                                 }
                             });
         } else if (value instanceof KeySize<Tree> keySize) {
-            KeyLength keyLength = new KeyLength(keySize.getValue(), detectionLocation);
+            final KeyLength keyLength = new KeyLength(keySize.getValue(), detectionLocation);
             return Optional.of(keyLength);
         } else if (value instanceof Curve<Tree> curve) {
-            com.ibm.mapper.model.Algorithm algorithm =
+            final com.ibm.mapper.model.Algorithm algorithm =
                     new com.ibm.mapper.model.Algorithm("EC", detectionLocation);
             return Stream.of(algorithm)
-                    .map(algo -> new EllipticCurveAlgorithm(algo, detectionLocation))
-                    .map(
+                    .map(EllipticCurveAlgorithm::new)
+                    .peek(
                             algo -> {
                                 algo.append(new KeyGeneration(detectionLocation));
                                 algo.append(new EllipticCurve(curve.asString(), detectionLocation));
-                                return algo;
                             })
                     .findFirst()
                     .map(a -> a);
-        } else if (value instanceof ValueAction<Tree> valueAction) {
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    protected @NotNull Optional<INode> translateBC(
+            @NotNull IValue<Tree> value,
+            @NotNull IDetectionContext detectionContext,
+            @NotNull DetectionLocation detectionLocation) {
+        if (value instanceof ValueAction<Tree> valueAction) {
+            final KeyContext.Kind kind = ((SecretKeyContext) detectionContext).kind();
             com.ibm.mapper.model.Algorithm algorithm;
             switch (kind) {
                 case KDF:
@@ -134,15 +124,14 @@ public final class JavaKeyContextTranslator extends AbstractContextTranslator
                             new com.ibm.mapper.model.Algorithm(
                                     valueAction.asString(), detectionLocation);
                     if (valueAction.asString().equals("MGF1")) {
-                        return Optional.of(
-                                new MaskGenerationFunction(algorithm, detectionLocation));
+                        return Optional.of(new MaskGenerationFunction(algorithm));
                     }
-                    return Optional.of(new KeyDerivationFunction(algorithm, detectionLocation));
+                    return Optional.of(new KeyDerivationFunction(algorithm));
                 case KEM:
                     algorithm =
                             new com.ibm.mapper.model.Algorithm(
                                     valueAction.asString(), detectionLocation);
-                    return Optional.of(new KeyEncapsulationMechanism(algorithm, detectionLocation));
+                    return Optional.of(new KeyEncapsulationMechanism(algorithm));
                 default:
                     break;
             }

@@ -63,7 +63,7 @@ public final class BcNTRUEncryptionParameters {
                     .addDependingDetectionRules(
                             BcDigests.rules(new DigestContext(DigestContext.Kind.NTRU)))
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "BcNTRUEncryptionParametersBASE_CONSTRUCTOR")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     /*
@@ -94,7 +94,7 @@ public final class BcNTRUEncryptionParameters {
                     .addDependingDetectionRules(
                             BcDigests.rules(new DigestContext(DigestContext.Kind.NTRU)))
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "BcNTRUEncryptionParametersBASE_CONSTRUCTOR")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final List<IDetectionRule<Tree>> BASE_CONSTRUCTORS =
@@ -115,7 +115,7 @@ public final class BcNTRUEncryptionParameters {
                             "org.bouncycastle.pqc.legacy.crypto.ntru.NTRUEncryptionParameters")
                     .addDependingDetectionRules(BASE_CONSTRUCTORS)
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "BcNTRUEncryptionParametersKEY_CONSTRUCTOR")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> PUBLIC_KEY_CONSTRUCTOR_1 =
@@ -129,7 +129,7 @@ public final class BcNTRUEncryptionParameters {
                             "org.bouncycastle.pqc.legacy.crypto.ntru.NTRUEncryptionParameters")
                     .addDependingDetectionRules(BASE_CONSTRUCTORS)
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "BcNTRUEncryptionParametersKEY_CONSTRUCTOR")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> PUBLIC_KEY_CONSTRUCTOR_2 =
@@ -143,7 +143,7 @@ public final class BcNTRUEncryptionParameters {
                             "org.bouncycastle.pqc.legacy.crypto.ntru.NTRUEncryptionParameters")
                     .addDependingDetectionRules(BASE_CONSTRUCTORS)
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "BcNTRUEncryptionParametersKEY_CONSTRUCTOR")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> PUBLIC_KEY_CONSTRUCTOR_3 =
@@ -158,7 +158,7 @@ public final class BcNTRUEncryptionParameters {
                             "org.bouncycastle.pqc.legacy.crypto.ntru.NTRUEncryptionParameters")
                     .addDependingDetectionRules(BASE_CONSTRUCTORS)
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "BcNTRUEncryptionParametersKEY_CONSTRUCTOR")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> PRIVATE_KEY_CONSTRUCTOR_1 =
@@ -172,7 +172,7 @@ public final class BcNTRUEncryptionParameters {
                             "org.bouncycastle.pqc.legacy.crypto.ntru.NTRUEncryptionParameters")
                     .addDependingDetectionRules(BASE_CONSTRUCTORS)
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "BcNTRUEncryptionParametersKEY_CONSTRUCTOR")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> PRIVATE_KEY_CONSTRUCTOR_2 =
@@ -186,7 +186,7 @@ public final class BcNTRUEncryptionParameters {
                             "org.bouncycastle.pqc.legacy.crypto.ntru.NTRUEncryptionParameters")
                     .addDependingDetectionRules(BASE_CONSTRUCTORS)
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "BcNTRUEncryptionParametersKEY_CONSTRUCTOR")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> PRIVATE_KEY_CONSTRUCTOR_3 =
@@ -205,7 +205,7 @@ public final class BcNTRUEncryptionParameters {
                             "org.bouncycastle.pqc.legacy.crypto.ntru.NTRUEncryptionParameters")
                     .addDependingDetectionRules(BASE_CONSTRUCTORS)
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "BcNTRUEncryptionParametersKEY_CONSTRUCTOR")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     @Unmodifiable

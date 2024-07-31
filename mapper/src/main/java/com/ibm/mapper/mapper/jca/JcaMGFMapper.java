@@ -19,47 +19,27 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.IMapper;
-import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.MaskGenerationFunction;
+import com.ibm.mapper.model.algorithms.MGF1;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class JcaMGFMapper implements IMapper {
 
-    private static final List<String> validValues = List.of("MGF1");
-
     @Nonnull
     @Override
     public Optional<MaskGenerationFunction> parse(
-            @Nullable String str,
-            @Nonnull DetectionLocation detectionLocation,
-            @Nonnull Configuration configuration) {
+            @Nullable String str, @Nonnull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }
 
-        if (!reflectValidValues(str)) {
-            return Optional.empty();
-        }
-
-        JcaBaseAlgorithmMapper jcaBaseAlgorithmMapper = new JcaBaseAlgorithmMapper();
-        Optional<Algorithm> algorithmOptional =
-                jcaBaseAlgorithmMapper.parse(str, detectionLocation, configuration);
-        if (algorithmOptional.isEmpty()) {
-            return Optional.empty();
-        }
-
-        final MaskGenerationFunction mgf =
-                new MaskGenerationFunction(algorithmOptional.get(), detectionLocation);
-        return Optional.of(mgf);
-    }
-
-    private boolean reflectValidValues(String str) {
-        return validValues.stream().anyMatch(str::equalsIgnoreCase);
+        return switch (str.toUpperCase().trim()) {
+            case "MGF1" -> Optional.of(new MGF1(detectionLocation));
+            default -> Optional.empty();
+        };
     }
 }

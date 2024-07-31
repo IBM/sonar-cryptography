@@ -48,7 +48,7 @@ public final class BcDSADigestSigner {
                     .addDependingDetectionRules(BcDigests.rules())
                     .buildForContext(
                             new SignatureContext(SignatureContext.Kind.ALGORITHM_AND_HASH_WRAPPER))
-                    .inBundle(() -> "bcDSADigestSigner")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_2 =
@@ -64,7 +64,7 @@ public final class BcDSADigestSigner {
                     .withMethodParameter("org.bouncycastle.crypto.signers.DSAEncoding")
                     .buildForContext(
                             new SignatureContext(SignatureContext.Kind.ALGORITHM_AND_HASH_WRAPPER))
-                    .inBundle(() -> "bcDSADigestSigner")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     @Unmodifiable

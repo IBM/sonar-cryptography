@@ -19,45 +19,26 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-public final class MessageDigest extends Algorithm {
-    public MessageDigest(
-            @Nonnull Algorithm algorithm, @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, MessageDigest.class);
+public class MessageDigest extends Algorithm {
+    public MessageDigest(@Nonnull Algorithm algorithm) {
+        super(algorithm, MessageDigest.class);
     }
 
-    public MessageDigest(
-            @Nonnull Algorithm algorithm,
-            @Nonnull DigestSize digestSize,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, MessageDigest.class);
+    public MessageDigest(@Nonnull Algorithm algorithm, @Nonnull DigestSize digestSize) {
+        super(algorithm, MessageDigest.class);
         this.append(digestSize);
     }
 
     public MessageDigest(
             @Nonnull Algorithm algorithm,
-            @Nonnull BlockSize blockSize,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, MessageDigest.class);
+            @Nonnull DigestSize digestSize,
+            @Nonnull BlockSize blockSize) {
+        super(algorithm, MessageDigest.class);
+        this.append(digestSize);
         this.append(blockSize);
-    }
-
-    public MessageDigest(
-            @Nonnull Algorithm algorithm,
-            @Nullable DigestSize digestSize,
-            @Nullable BlockSize blockSize,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, MessageDigest.class);
-        if (digestSize != null) {
-            this.append(digestSize);
-        }
-        if (blockSize != null) {
-            this.append(blockSize);
-        }
     }
 
     @Nonnull

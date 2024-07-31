@@ -43,7 +43,7 @@ public final class JcaECParameterSpec {
                     .withMethodParameter(BIGINTEGER_TYPE)
                     .shouldBeDetectedAs(new AlgorithmParameterFactory<>(AlgorithmParameter.Kind.P))
                     .buildForContext(new PrivateKeyContext(KeyContext.Kind.EC))
-                    .inBundle(() -> "JcaECParameterSpecP")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> EC_FIELD_F2m_1 =
@@ -54,7 +54,7 @@ public final class JcaECParameterSpec {
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new AlgorithmParameterFactory<>(AlgorithmParameter.Kind.M))
                     .buildForContext(new PrivateKeyContext(KeyContext.Kind.EC))
-                    .inBundle(() -> "JcaECParameterSpec2m")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
     private static final IDetectionRule<Tree> EC_FIELD_F2m_2 =
             new DetectionRuleBuilder<Tree>()
@@ -65,7 +65,7 @@ public final class JcaECParameterSpec {
                     .shouldBeDetectedAs(new AlgorithmParameterFactory<>(AlgorithmParameter.Kind.M))
                     .withMethodParameter(BIGINTEGER_TYPE)
                     .buildForContext(new PrivateKeyContext(KeyContext.Kind.EC))
-                    .inBundle(() -> "JcaECParameterSpec2m")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> EC_FIELD_F2m_3 =
@@ -77,7 +77,7 @@ public final class JcaECParameterSpec {
                     .shouldBeDetectedAs(new AlgorithmParameterFactory<>(AlgorithmParameter.Kind.M))
                     .withMethodParameter("int[]")
                     .buildForContext(new PrivateKeyContext(KeyContext.Kind.EC))
-                    .inBundle(() -> "JcaECParameterSpec2m")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> EC_PARAMETER_SPEC =
@@ -109,7 +109,7 @@ public final class JcaECParameterSpec {
                                                             AlgorithmParameter.Kind.B))
                                             .buildForContext(
                                                     new PrivateKeyContext(KeyContext.Kind.EC))
-                                            .inBundle(() -> "JcaECParameterSpecAB")
+                                            .inBundle(() -> "Jca")
                                             .withoutDependingDetectionRules(),
                                     new DetectionRuleBuilder<Tree>()
                                             .createDetectionRule()
@@ -133,14 +133,14 @@ public final class JcaECParameterSpec {
                                             .withMethodParameter(BYTE_ARRAY_TYPE)
                                             .buildForContext(
                                                     new PrivateKeyContext(KeyContext.Kind.EC))
-                                            .inBundle(() -> "JcaECParameterSpecAB")
+                                            .inBundle(() -> "Jca")
                                             .withoutDependingDetectionRules()))
                     .withMethodParameter("java.security.spec.ECPoint")
                     .withMethodParameter(BIGINTEGER_TYPE)
                     .shouldBeDetectedAs(new AlgorithmParameterFactory<>(AlgorithmParameter.Kind.N))
                     .withMethodParameter("int")
                     .buildForContext(new PrivateKeyContext(KeyContext.Kind.EC))
-                    .inBundle(() -> "JcaECParameterSpec")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private JcaECParameterSpec() {

@@ -57,7 +57,7 @@ class BcSM2EngineTest extends TestBase {
             int findingId,
             @NotNull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
             @NotNull List<INode> nodes) {
-        /** This first finding comes from JCA and is not relevant for this test */
+        // This first finding comes from JCA and is covered in another test
         if (findingId == 0) {
             return;
         }
@@ -65,7 +65,6 @@ class BcSM2EngineTest extends TestBase {
         /*
          * Detection Store
          */
-
         assertThat(detectionStore.getDetectionValues()).hasSize(1);
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);

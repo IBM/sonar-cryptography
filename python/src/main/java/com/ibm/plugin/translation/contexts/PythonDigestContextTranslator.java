@@ -63,9 +63,7 @@ public final class PythonDigestContextTranslator {
                                         '_',
                                         '-'); // Python uses "_" (SHA3_384) but the standard way
                 // is with "-" (SHA3-384)
-                return Optional.of(
-                        new MessageDigest(
-                                new Algorithm(hashName, detectionLocation), detectionLocation));
+                return Optional.of(new MessageDigest(new Algorithm(hashName, detectionLocation)));
             default:
                 break;
         }

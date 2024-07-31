@@ -20,7 +20,10 @@
 package com.ibm.enricher.algorithm;
 
 import com.ibm.enricher.utils.Utils;
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.Oid;
+import com.ibm.mapper.model.Signature;
 import java.util.Map;
 import javax.annotation.Nonnull;
 
@@ -41,22 +44,22 @@ public class DSASignatureEnricher implements ISignatureEnricher {
                 final Oid oid = new Oid("1.3.14.3.2.27", messageDigest.getDetectionContext());
                 signature.append(oid);
             }
-            case "SHA-224" -> {
+            case "SHA224" -> {
                 final Oid oid =
                         new Oid("2.16.840.1.101.3.4.3.1", messageDigest.getDetectionContext());
                 signature.append(oid);
             }
-            case "SHA-256" -> {
+            case "SHA256" -> {
                 final Oid oid =
                         new Oid("2.16.840.1.101.3.4.3.2", messageDigest.getDetectionContext());
                 signature.append(oid);
             }
-            case "SHA-384" -> {
+            case "SHA384" -> {
                 final Oid oid =
                         new Oid("2.16.840.1.101.3.4.3.3", messageDigest.getDetectionContext());
                 signature.append(oid);
             }
-            case "SHA-512" -> {
+            case "SHA512" -> {
                 final Oid oid =
                         new Oid("2.16.840.1.101.3.4.3.4", messageDigest.getDetectionContext());
                 signature.append(oid);

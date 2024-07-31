@@ -55,7 +55,7 @@ public final class BcISO9796d1Encoding {
                         .addDependingDetectionRules(
                                 BcAsymCipherEngine.rules(engineDetectionValueContext))
                         .buildForContext(context)
-                        .inBundle(() -> "BcISO9796d1Encoding")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcAsymCipherInit.rules()));
 
         return constructorsList;

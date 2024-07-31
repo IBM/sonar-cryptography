@@ -43,7 +43,7 @@ public final class JcaCipherGetInstance {
                     .withMethodParameter(STRING_TYPE)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .buildForContext(new CipherContext())
-                    .inBundle(() -> "JcaCipherGetInstance")
+                    .inBundle(() -> "Jca")
                     .withDependingDetectionRules(
                             Stream.concat(
                                             JcaCipherInit.rules().stream(),
@@ -59,7 +59,7 @@ public final class JcaCipherGetInstance {
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .withMethodParameter(STRING_TYPE)
                     .buildForContext(new CipherContext())
-                    .inBundle(() -> "JcaCipherGetInstance")
+                    .inBundle(() -> "Jca")
                     .withDependingDetectionRules(
                             Stream.concat(
                                             JcaCipherInit.rules().stream(),
@@ -76,7 +76,7 @@ public final class JcaCipherGetInstance {
                     .withMethodParameter(STRING_TYPE)
                     .withMethodParameter("java.security.Provider")
                     .buildForContext(new CipherContext())
-                    .inBundle(() -> "JcaCipherGetInstance")
+                    .inBundle(() -> "Jca")
                     .withDependingDetectionRules(
                             Stream.concat(
                                             JcaCipherInit.rules().stream(),

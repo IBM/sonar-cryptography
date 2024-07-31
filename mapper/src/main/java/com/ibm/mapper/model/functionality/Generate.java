@@ -23,7 +23,7 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class Generate extends Functionality {
+public final class Generate extends Functionality {
     public Generate(@Nonnull DetectionLocation detectionLocation) {
         super(Generate.class, detectionLocation);
     }

@@ -19,12 +19,12 @@
  */
 package com.ibm.plugin.translation.reorganizer.rules;
 
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.AuthenticatedEncryption;
+import com.ibm.mapper.model.HMAC;
+import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.mapper.reorganizer.builder.ReorganizerRuleBuilder;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -34,6 +34,7 @@ public final class AeadBlockCipherReorganizer {
         // private
     }
 
+    /*
     @Nonnull
     private static final IReorganizerRule MERGE_AE_AND_BLOCK_CIPHER =
             new ReorganizerRuleBuilder()
@@ -54,12 +55,7 @@ public final class AeadBlockCipherReorganizer {
                                                         .deepCopy();
 
                                 INode newAuthenticatedEncryption =
-                                        new AuthenticatedEncryption(
-                                                blockCipher,
-                                                null,
-                                                null,
-                                                null,
-                                                ((IAsset) node).getDetectionContext());
+                                        new AuthenticatedEncryption(blockCipher, null, null, null);
 
                                 for (Map.Entry<Class<? extends INode>, INode> childKeyValue :
                                         node.getChildren().entrySet()) {
@@ -86,6 +82,8 @@ public final class AeadBlockCipherReorganizer {
                                 }
                             });
 
+     */
+
     @Nonnull
     private static final IReorganizerRule MOVE_TAG_LENGTH_UNDER_MAC =
             new ReorganizerRuleBuilder()
@@ -95,7 +93,7 @@ public final class AeadBlockCipherReorganizer {
                             List.of(
                                     new ReorganizerRuleBuilder()
                                             .createReorganizerRule()
-                                            .forNodeKind(Mac.class)
+                                            .forNodeKind(HMAC.class)
                                             .noAction(),
                                     new ReorganizerRuleBuilder()
                                             .createReorganizerRule()
@@ -105,7 +103,7 @@ public final class AeadBlockCipherReorganizer {
                             (node, parent, roots) -> {
                                 TagLength tagLength =
                                         (TagLength) node.getChildren().get(TagLength.class);
-                                Mac mac = (Mac) node.getChildren().get(Mac.class);
+                                HMAC mac = (HMAC) node.getChildren().get(HMAC.class);
 
                                 mac.append(tagLength);
                                 node.removeChildOfType(TagLength.class);
@@ -115,6 +113,6 @@ public final class AeadBlockCipherReorganizer {
     @Unmodifiable
     @Nonnull
     public static List<IReorganizerRule> rules() {
-        return List.of(MERGE_AE_AND_BLOCK_CIPHER, MOVE_TAG_LENGTH_UNDER_MAC);
+        return List.of(MOVE_TAG_LENGTH_UNDER_MAC); // MERGE_AE_AND_BLOCK_CIPHER
     }
 }

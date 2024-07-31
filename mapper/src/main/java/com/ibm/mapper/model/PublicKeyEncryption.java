@@ -19,12 +19,10 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
 public class PublicKeyEncryption extends Algorithm {
-    public PublicKeyEncryption(
-            @Nonnull Algorithm algorithm, @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, PublicKeyEncryption.class);
+    public PublicKeyEncryption(@Nonnull Algorithm algorithm) {
+        super(algorithm, PublicKeyEncryption.class);
     }
 }

@@ -39,7 +39,7 @@ public final class JcaSecretKeyFactoryTranslateKey {
                     .withMethodParameter("javax.crypto.SecretKey")
                     .addDependingDetectionRules(JcaSecretKeySpec.rules())
                     .buildForContext(new SecretKeyContext(KeyContext.Kind.NONE))
-                    .inBundle(() -> "JcaSecretKeyFactoryTranslateKey")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private JcaSecretKeyFactoryTranslateKey() {

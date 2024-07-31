@@ -48,7 +48,7 @@ public final class BcGMSSParameters {
                     .asChildOfParameterWithId(-1)
                     .buildForContext(
                             new AlgorithmParameterContext(AlgorithmParameterContext.Kind.GMSS))
-                    .inBundle(() -> "BcGMSSParameters")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> KEY_CONSTRUCTOR =
@@ -61,7 +61,7 @@ public final class BcGMSSParameters {
                     .addDependingDetectionRules(List.of(BASE_CONSTRUCTOR))
                     .buildForContext(
                             new AlgorithmParameterContext(AlgorithmParameterContext.Kind.GMSS))
-                    .inBundle(() -> "BcGMSSParameters")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> PUBLIC_KEY_CONSTRUCTOR =
@@ -75,7 +75,7 @@ public final class BcGMSSParameters {
                     .addDependingDetectionRules(List.of(BASE_CONSTRUCTOR))
                     .buildForContext(
                             new AlgorithmParameterContext(AlgorithmParameterContext.Kind.GMSS))
-                    .inBundle(() -> "BcGMSSParameters")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> BCGMSS_PUBLIC_KEY_CONSTRUCTOR_1 =
@@ -88,7 +88,7 @@ public final class BcGMSSParameters {
                     .addDependingDetectionRules(List.of(BASE_CONSTRUCTOR))
                     .buildForContext(
                             new AlgorithmParameterContext(AlgorithmParameterContext.Kind.GMSS))
-                    .inBundle(() -> "BcGMSSParameters")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> BCGMSS_PUBLIC_KEY_CONSTRUCTOR_2 =
@@ -101,7 +101,7 @@ public final class BcGMSSParameters {
                     .addDependingDetectionRules(List.of(PUBLIC_KEY_CONSTRUCTOR))
                     .buildForContext(
                             new AlgorithmParameterContext(AlgorithmParameterContext.Kind.GMSS))
-                    .inBundle(() -> "BcGMSSParameters")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     // TODO: add a test case for this constructor
@@ -129,7 +129,7 @@ public final class BcGMSSParameters {
                             "org.bouncycastle.pqc.legacy.crypto.gmss.GMSSDigestProvider")
                     .buildForContext(
                             new AlgorithmParameterContext(AlgorithmParameterContext.Kind.GMSS))
-                    .inBundle(() -> "BcGMSSParameters")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     // TODO: add a test case for this constructor
@@ -164,7 +164,7 @@ public final class BcGMSSParameters {
                             "org.bouncycastle.pqc.legacy.crypto.gmss.GMSSDigestProvider")
                     .buildForContext(
                             new AlgorithmParameterContext(AlgorithmParameterContext.Kind.GMSS))
-                    .inBundle(() -> "BcGMSSParameters")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     @Unmodifiable

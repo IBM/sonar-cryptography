@@ -19,35 +19,32 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.IMapper;
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.AuthenticatedEncryption;
+import com.ibm.mapper.model.Cipher;
+import com.ibm.mapper.model.Mode;
+import com.ibm.mapper.model.Padding;
+import com.ibm.mapper.model.PasswordBasedEncryption;
+import com.ibm.mapper.model.algorithms.AES;
+import com.ibm.mapper.model.algorithms.AESWrap;
+import com.ibm.mapper.model.algorithms.Blowfish;
+import com.ibm.mapper.model.algorithms.ChaCha20;
+import com.ibm.mapper.model.algorithms.DES;
+import com.ibm.mapper.model.algorithms.DESedeWrap;
+import com.ibm.mapper.model.algorithms.Poly1305;
+import com.ibm.mapper.model.algorithms.RC2;
+import com.ibm.mapper.model.algorithms.RC4;
+import com.ibm.mapper.model.algorithms.RSA;
+import com.ibm.mapper.model.algorithms.TripleDES;
+import com.ibm.mapper.model.mode.CCM;
+import com.ibm.mapper.model.mode.GCM;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class JcaCipherMapper implements IMapper {
-    private static final List<String> blockCiphers =
-            List.of(
-                    "AES",
-                    "AES_128",
-                    "AES_192",
-                    "AES_256",
-                    "AESWrap",
-                    "AESWrap_128",
-                    "AESWrap_192",
-                    "AESWrap_256",
-                    "Blowfish",
-                    "DES",
-                    "DESede",
-                    "DESedeWrap",
-                    "RC2",
-                    "RC5");
-
-    private static final List<String> streamCiphers =
-            List.of("ARCFOUR", "ChaCha20", "ECIES", "RC4");
 
     public JcaCipherMapper() {
         // nothing
@@ -55,18 +52,15 @@ public class JcaCipherMapper implements IMapper {
 
     @Nonnull
     @Override
-    public Optional<Algorithm> parse(
-            @Nullable final String str,
-            @Nonnull DetectionLocation detectionLocation,
-            @Nonnull final Configuration configuration) {
+    public Optional<? extends Algorithm> parse(
+            @Nullable final String str, @Nonnull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }
 
         String algorithmStr;
         Optional<Mode> modeOptional = Optional.empty();
-        Optional<Padding> paddingOptional = Optional.empty();
-
+        Optional<? extends Padding> paddingOptional = Optional.empty();
         if (str.contains("/")) {
             int slashIndex = str.indexOf("/");
             algorithmStr = str.substring(0, slashIndex);
@@ -75,22 +69,13 @@ public class JcaCipherMapper implements IMapper {
             if (rest.contains("/")) {
                 slashIndex = rest.indexOf("/");
                 // mode
-                String modeStr = rest.substring(0, slashIndex);
-                JcaModeMapper jcaModeMapper = new JcaModeMapper();
-                modeOptional = jcaModeMapper.parse(modeStr, detectionLocation, configuration);
+                final String modeStr = rest.substring(0, slashIndex);
+                final JcaModeMapper jcaModeMapper = new JcaModeMapper();
+                modeOptional = jcaModeMapper.parse(modeStr, detectionLocation);
                 // padding
                 String paddingStr = rest.substring(slashIndex + 1);
-                JcaOAEPPaddingMapper jcaOAEPPaddingMapper = new JcaOAEPPaddingMapper();
-                Optional<OptimalAsymmetricEncryptionPadding> oaepPaddingOptional =
-                        jcaOAEPPaddingMapper.parse(str, detectionLocation, configuration);
-                if (oaepPaddingOptional.isPresent()) {
-                    paddingOptional = JcaBasePaddingMapper.generalizePadding(oaepPaddingOptional);
-                } else {
-                    JcaBasePaddingMapper jcaBasePaddingMapper = new JcaBasePaddingMapper();
-                    paddingOptional =
-                            jcaBasePaddingMapper.parse(
-                                    paddingStr, detectionLocation, configuration);
-                }
+                final JcaPaddingMapper jcaPaddingMapper = new JcaPaddingMapper();
+                paddingOptional = jcaPaddingMapper.parse(paddingStr, detectionLocation);
             }
         } else {
             algorithmStr = str;
@@ -99,78 +84,62 @@ public class JcaCipherMapper implements IMapper {
         // check if it is pbe
         JcaPasswordBasedEncryptionMapper pbeMapper = new JcaPasswordBasedEncryptionMapper();
         Optional<PasswordBasedEncryption> pbeOptional =
-                pbeMapper.parse(algorithmStr, detectionLocation, configuration);
+                pbeMapper.parse(algorithmStr, detectionLocation);
         if (pbeOptional.isPresent()) {
-            return JcaBaseAlgorithmMapper.generalizeAlgorithm(pbeOptional);
+            // pbe
+            return pbeOptional;
         }
 
-        // check if algorithm is a cipher
-        if (!reflectValidValues(algorithmStr)) {
+        Optional<? extends Algorithm> possibleCipher = map(algorithmStr, detectionLocation);
+        if (possibleCipher.isEmpty()) {
             return Optional.empty();
         }
+        final Algorithm algorithm = possibleCipher.get();
 
-        JcaBaseAlgorithmMapper algorithmMapper = new JcaBaseAlgorithmMapper();
-        Optional<Algorithm> algorithm =
-                algorithmMapper.parse(algorithmStr, detectionLocation, configuration);
-        if (algorithm.isEmpty()) {
-            return Optional.empty();
-        }
-
+        // todo: move to enricher
         // Authenticated Encryption check
-        if (modeOptional.isPresent()) {
-            Mode mode = modeOptional.get();
-            if (mode.getName().toLowerCase().contains("gcm")
-                    || mode.getName().toLowerCase().contains("ccm")) {
-                return Optional.of(
-                        new AuthenticatedEncryption(
-                                algorithm.get(),
-                                mode,
-                                paddingOptional.orElse(null),
-                                null,
-                                detectionLocation));
+        if (modeOptional.isPresent() && algorithm instanceof Cipher cipher) {
+            final Mode mode = modeOptional.get();
+            if (mode instanceof GCM || mode instanceof CCM) {
+                return paddingOptional
+                        .map(padding -> new AuthenticatedEncryption(cipher, mode, padding))
+                        .or(() -> Optional.of(new AuthenticatedEncryption(cipher, mode)));
             }
         }
 
-        if (algorithmStr.contains("RSA") && (modeOptional.isEmpty() || paddingOptional.isEmpty())) {
-            // not a cipher
-            return Optional.empty();
-        }
-
-        if (isBlockCipher(algorithmStr)) {
-            BlockCipher cipher =
-                    new BlockCipher(
-                            algorithm.get(),
-                            modeOptional.orElse(null),
-                            paddingOptional.orElse(null),
-                            detectionLocation);
-            return Optional.of(cipher);
-        } else if (isStreamCipher(algorithmStr)) {
-            StreamCipher cipher =
-                    new StreamCipher(
-                            algorithm.get(),
-                            modeOptional.orElse(null),
-                            paddingOptional.orElse(null),
-                            detectionLocation);
-            return Optional.of(cipher);
-        } else if (algorithmStr.equalsIgnoreCase("RSA")) {
-            final Algorithm rsa = algorithm.get();
-            modeOptional.ifPresent(rsa::append);
-            paddingOptional.ifPresent(rsa::append);
-            return algorithm;
-        }
-
-        return Optional.empty();
+        modeOptional.ifPresent(algorithm::append);
+        paddingOptional.ifPresent(algorithm::append);
+        return Optional.of(algorithm);
     }
 
-    private boolean reflectValidValues(@Nonnull final String str) {
-        return isBlockCipher(str) || isStreamCipher(str) || str.equalsIgnoreCase("RSA");
-    }
+    @Nonnull
+    private Optional<? extends Algorithm> map(
+            @Nonnull String cipherAlgorithm, @Nonnull DetectionLocation detectionLocation) {
+        return switch (cipherAlgorithm.toUpperCase().trim()) {
+            case "AES" -> Optional.of(new AES(detectionLocation));
+            case "AES_128" -> Optional.of(new AES(128, detectionLocation));
+            case "AES_192" -> Optional.of(new AES(192, detectionLocation));
+            case "AES_256" -> Optional.of(new AES(256, detectionLocation));
 
-    private boolean isBlockCipher(@Nonnull final String str) {
-        return blockCiphers.stream().anyMatch(str::equalsIgnoreCase);
-    }
+            case "AESWRAP" -> Optional.of(new AESWrap(detectionLocation));
+            case "AESWRAP_128" -> Optional.of(new AESWrap(128, detectionLocation));
+            case "AESWRAP_192" -> Optional.of(new AESWrap(192, detectionLocation));
+            case "AESWRAP_256" -> Optional.of(new AESWrap(256, detectionLocation));
 
-    private boolean isStreamCipher(@Nonnull final String str) {
-        return streamCiphers.stream().anyMatch(str::equalsIgnoreCase);
+            case "RC4", "ARCFOUR", "ARC4" -> Optional.of(new RC4(detectionLocation));
+            case "RC2", "ARC2" -> Optional.of(new RC2(detectionLocation));
+            case "BLOWFISH" -> Optional.of(new Blowfish(detectionLocation));
+            case "DES" -> Optional.of(new DES(detectionLocation));
+            case "DESEDE" -> Optional.of(new TripleDES(detectionLocation));
+            case "DESEDEWRAP", "TRIPLEDESWRAP" -> Optional.of(new DESedeWrap(detectionLocation));
+            case "CHACHA20" -> Optional.of(new ChaCha20(detectionLocation));
+            case "CHACHA20-POLY1305" -> {
+                final ChaCha20 chaCha20 = new ChaCha20(detectionLocation);
+                chaCha20.append(new Poly1305(detectionLocation));
+                yield Optional.of(chaCha20);
+            }
+            case "RSA" -> Optional.of(new RSA(detectionLocation));
+            default -> Optional.empty();
+        };
     }
 }

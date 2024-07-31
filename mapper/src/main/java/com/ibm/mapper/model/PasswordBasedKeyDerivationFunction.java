@@ -19,37 +19,14 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
 /** PBKDF */
 public class PasswordBasedKeyDerivationFunction extends KeyDerivationFunction {
 
-    public PasswordBasedKeyDerivationFunction(
-            @Nonnull Algorithm algorithm, @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, PasswordBasedKeyDerivationFunction.class);
-    }
-
-    public PasswordBasedKeyDerivationFunction(
-            @Nonnull Algorithm algorithm,
-            @Nonnull SaltLength saltLength,
-            @Nonnull NumberOfIterations iterations,
-            @Nonnull KeyLength keyLength,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, PasswordBasedKeyDerivationFunction.class);
-        this.append(saltLength);
-        this.append(iterations);
-        this.append(keyLength);
-    }
-
-    @Nonnull
-    public Optional<SaltLength> getSalt() {
-        INode node = this.getChildren().get(SaltLength.class);
-        if (node == null) {
-            return Optional.empty();
-        }
-        return Optional.of((SaltLength) node);
+    public PasswordBasedKeyDerivationFunction(@Nonnull Algorithm algorithm) {
+        super(algorithm, PasswordBasedKeyDerivationFunction.class);
     }
 
     @Nonnull

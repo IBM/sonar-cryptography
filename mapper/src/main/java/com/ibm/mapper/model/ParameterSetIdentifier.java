@@ -19,13 +19,12 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 
-public class ParameterSetIdentifier extends Property {
-    @Nonnull private String value;
+public final class ParameterSetIdentifier extends Property {
+    @Nonnull private final String value;
 
     public ParameterSetIdentifier(
             @Nonnull String value, @Nonnull DetectionLocation detectionLocation) {
@@ -44,11 +43,6 @@ public class ParameterSetIdentifier extends Property {
     @Nonnull
     public String getValue() {
         return value;
-    }
-
-    @Override
-    public void apply(@Nonnull Configuration configuration) {
-        this.value = configuration.changeStringValue(value);
     }
 
     @Nonnull

@@ -73,7 +73,7 @@ public final class BcWrapperEngine {
                             // We want to capture all possible constructors (some have arguments)
                             .withAnyParameters()
                             .buildForContext(new CipherContext(CipherContext.Kind.WRAP_ENGINE))
-                            .inBundle(() -> "bcWrapperEngine")
+                            .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcWrapperInit.rules()));
         }
 
@@ -93,7 +93,7 @@ public final class BcWrapperEngine {
                         .shouldBeDetectedAs(new BlockSizeFactory<>(Size.UnitType.BIT))
                         .asChildOfParameterWithId(-1)
                         .buildForContext(new CipherContext(CipherContext.Kind.WRAP_ENGINE))
-                        .inBundle(() -> "bcWrapperEngine")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcWrapperInit.rules()));
 
         /*
@@ -111,7 +111,7 @@ public final class BcWrapperEngine {
                         .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                         .addDependingDetectionRules(BcBlockCipherEngine.rules())
                         .buildForContext(new CipherContext(CipherContext.Kind.WRAP_RFC))
-                        .inBundle(() -> "bcWrapperEngine")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcWrapperInit.rules()));
 
         constructorsList.add(
@@ -123,7 +123,7 @@ public final class BcWrapperEngine {
                         .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                         .addDependingDetectionRules(BcBlockCipherEngine.rules())
                         .buildForContext(new CipherContext(CipherContext.Kind.WRAP_RFC))
-                        .inBundle(() -> "bcWrapperEngine")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcWrapperInit.rules()));
 
         constructorsList.add(
@@ -136,7 +136,7 @@ public final class BcWrapperEngine {
                         .addDependingDetectionRules(BcBlockCipherEngine.rules())
                         .withMethodParameter("boolean")
                         .buildForContext(new CipherContext(CipherContext.Kind.WRAP_RFC))
-                        .inBundle(() -> "bcWrapperEngine")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcWrapperInit.rules()));
 
         return constructorsList;

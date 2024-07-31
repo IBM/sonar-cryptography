@@ -41,7 +41,7 @@ public final class JcaDHGenParameterSpec {
                     .withMethodParameter("int")
                     .buildForContext(
                             new AlgorithmParameterContext(AlgorithmParameterContext.Kind.DH))
-                    .inBundle(() -> "JcaDHGenParameterSpec")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private JcaDHGenParameterSpec() {

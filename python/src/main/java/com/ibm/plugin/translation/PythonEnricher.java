@@ -182,8 +182,7 @@ public class PythonEnricher implements IEnricher {
             EllipticCurveAlgorithm algorithmChildOfSignature =
                     new EllipticCurveAlgorithm(
                             new Algorithm(
-                                    algorithmChild.getName(), privateKey.getDetectionContext()),
-                            privateKey.getDetectionContext());
+                                    algorithmChild.getName(), privateKey.getDetectionContext()));
             INode elliptiCurveChild = algorithmChild.getChildren().get(EllipticCurve.class);
             if (elliptiCurveChild != null) {
                 // Add the EllipticCurve if it exists
@@ -245,9 +244,7 @@ public class PythonEnricher implements IEnricher {
 
             // Create the new Signature node with the updated name, and add all of its children
             Signature signatureWithName =
-                    new Signature(
-                            new Algorithm(signatureName, signature.getDetectionContext()),
-                            signature.getDetectionContext());
+                    new Signature(new Algorithm(signatureName, signature.getDetectionContext()));
             signature.getChildren().forEach((k, v) -> signatureWithName.append(v));
             privateKey.append(signatureWithName);
         }

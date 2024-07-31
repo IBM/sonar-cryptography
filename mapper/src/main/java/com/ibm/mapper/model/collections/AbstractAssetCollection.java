@@ -19,9 +19,12 @@
  */
 package com.ibm.mapper.model.collections;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.model.INode;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -42,13 +45,6 @@ public abstract class AbstractAssetCollection<K extends INode> implements IAsset
     @Override
     public List<K> getCollection() {
         return Collections.unmodifiableList(collection);
-    }
-
-    @Override
-    public void apply(@NotNull Configuration configuration) {
-        for (K c : collection) {
-            c.apply(configuration);
-        }
     }
 
     @Override

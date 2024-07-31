@@ -19,14 +19,12 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
+import com.ibm.mapper.model.algorithms.PBKDF2;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,9 +34,7 @@ public class JcaPBKDFMapper implements IMapper {
     @Nonnull
     @Override
     public Optional<PasswordBasedKeyDerivationFunction> parse(
-            @Nullable String str,
-            @Nonnull DetectionLocation detectionLocation,
-            @Nonnull Configuration configuration) {
+            @Nullable String str, @Nonnull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }
@@ -48,23 +44,15 @@ public class JcaPBKDFMapper implements IMapper {
             return Optional.empty();
         }
 
-        Map<Class<? extends INode>, INode> assets = new HashMap<>();
         int algoStartIndex = generalizedStr.indexOf("pbkdf2with") + 10;
         String prf = str.substring(algoStartIndex);
-        JcaMacMapper jcaMacMapper = new JcaMacMapper();
-        Optional<Algorithm> macOptional = jcaMacMapper.parse(prf, detectionLocation, configuration);
-        macOptional.ifPresent(mac -> assets.put(mac.getKind(), mac));
 
-        JcaBaseAlgorithmMapper jcaBaseAlgorithmMapper = new JcaBaseAlgorithmMapper();
-        Optional<Algorithm> algorithmOptional =
-                jcaBaseAlgorithmMapper.parseAndAddChildren(
-                        str, detectionLocation, configuration, assets);
-        if (algorithmOptional.isEmpty()) {
-            return Optional.empty();
+        final JcaMacMapper jcaMacMapper = new JcaMacMapper();
+        final Optional<? extends Algorithm> macOptional =
+                jcaMacMapper.parse(prf, detectionLocation);
+        if (macOptional.isPresent() && macOptional.get() instanceof HMAC hmac) {
+            return macOptional.map(mac -> new PBKDF2(hmac, detectionLocation));
         }
-
-        PasswordBasedKeyDerivationFunction pbkdf =
-                new PasswordBasedKeyDerivationFunction(algorithmOptional.get(), detectionLocation);
-        return Optional.of(pbkdf);
+        return Optional.empty();
     }
 }

@@ -129,7 +129,7 @@ public final class BcDigests {
                             // We want to capture all possible constructors (some have arguments)
                             .withAnyParameters()
                             .buildForContext(context)
-                            .inBundle(() -> "BcDigests")
+                            .inBundle(() -> "Bc")
                             .withoutDependingDetectionRules());
         }
 
@@ -151,7 +151,7 @@ public final class BcDigests {
                         .withMethodParameter("org.bouncycastle.crypto.Digest")
                         .addDependingDetectionRules(regularConstructors(detectionValueContext))
                         .buildForContext(context)
-                        .inBundle(() -> "BcDigests")
+                        .inBundle(() -> "Bc")
                         .withoutDependingDetectionRules());
 
         constructorsList.add(
@@ -165,7 +165,7 @@ public final class BcDigests {
                         .withMethodParameter("int")
                         .shouldBeDetectedAs(new DigestSizeFactory<>(Size.UnitType.BYTE))
                         .buildForContext(context)
-                        .inBundle(() -> "BcDigests")
+                        .inBundle(() -> "Bc")
                         .withoutDependingDetectionRules());
 
         return constructorsList;

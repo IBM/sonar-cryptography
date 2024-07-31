@@ -46,7 +46,7 @@ public final class JcaKeyAgreementGenerateSecret {
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BYTE))
                     .withMethodParameter("int")
                     .buildForContext(new SecretKeyContext(KeyContext.Kind.NONE))
-                    .inBundle(() -> "JcaKeyAgreementGenerateSecret")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> GENERATE_SECRET_2 =
@@ -57,7 +57,7 @@ public final class JcaKeyAgreementGenerateSecret {
                     .withMethodParameter(STRING_TYPE)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .buildForContext(new SecretKeyContext(KeyContext.Kind.NONE))
-                    .inBundle(() -> "JcaKeyAgreementGenerateSecret")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private JcaKeyAgreementGenerateSecret() {

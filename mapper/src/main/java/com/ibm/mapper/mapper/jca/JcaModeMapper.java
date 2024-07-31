@@ -19,20 +19,25 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.Mode;
+import com.ibm.mapper.model.mode.CBC;
+import com.ibm.mapper.model.mode.CCM;
+import com.ibm.mapper.model.mode.CFB;
+import com.ibm.mapper.model.mode.CTR;
+import com.ibm.mapper.model.mode.CTS;
+import com.ibm.mapper.model.mode.ECB;
+import com.ibm.mapper.model.mode.GCM;
+import com.ibm.mapper.model.mode.OFB;
+import com.ibm.mapper.model.mode.PCBC;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.mapper.utils.Utils;
-import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class JcaModeMapper implements IMapper {
-    private static final List<String> validValues =
-            List.of("NONE", "CBC", "CCM", "CFB", "CTR", "CTS", "ECB", "GCM", "OFB", "PCBC");
 
     public JcaModeMapper() {
         // nothing
@@ -41,37 +46,37 @@ public class JcaModeMapper implements IMapper {
     @Nonnull
     @Override
     public Optional<Mode> parse(
-            @Nullable final String str,
-            @Nonnull final DetectionLocation detectionLocation,
-            @Nonnull final Configuration configuration) {
+            @Nullable final String str, @Nonnull final DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }
         // get explicit block size
         Optional<BlockSize> optionalBlockSize =
                 Utils.extractNumberFormString(str)
-                        .map(blockSizeStr -> new BlockSize(blockSizeStr, detectionLocation))
-                        .map(
-                                blockSize -> {
-                                    blockSize.apply(configuration);
-                                    return blockSize;
-                                });
+                        .map(blockSizeStr -> new BlockSize(blockSizeStr, detectionLocation));
         // remove numeric values
         String modeString = str.replaceAll("\\d", "");
-
-        if (!reflectValidValues(modeString)) {
-            return Optional.empty();
-        }
-
-        Mode mode =
-                optionalBlockSize
-                        .map(blockSize -> new Mode(modeString, blockSize, detectionLocation))
-                        .orElseGet(() -> new Mode(modeString, detectionLocation));
-        mode.apply(configuration);
-        return Optional.of(mode);
+        return map(modeString, detectionLocation)
+                .map(
+                        mode -> {
+                            optionalBlockSize.ifPresent(mode::append);
+                            return mode;
+                        });
     }
 
-    private boolean reflectValidValues(@Nonnull String str) {
-        return validValues.stream().anyMatch(str::equalsIgnoreCase);
+    @Nonnull
+    private Optional<Mode> map(@Nonnull String mode, @Nonnull DetectionLocation detectionLocation) {
+        return switch (mode.toUpperCase().trim()) {
+            case "ECB" -> Optional.of(new ECB(detectionLocation));
+            case "CBC" -> Optional.of(new CBC(detectionLocation));
+            case "PCBC" -> Optional.of(new PCBC(detectionLocation));
+            case "CFB" -> Optional.of(new CFB(detectionLocation));
+            case "OFB" -> Optional.of(new OFB(detectionLocation));
+            case "CTR" -> Optional.of(new CTR(detectionLocation));
+            case "CTS" -> Optional.of(new CTS(detectionLocation));
+            case "GCM" -> Optional.of(new GCM(detectionLocation));
+            case "CCM" -> Optional.of(new CCM(detectionLocation));
+            default -> Optional.empty();
+        };
     }
 }

@@ -145,7 +145,7 @@ class BcISO9796d2SignerTest extends TestBase {
         // MessageDigest under Signature
         INode messageDigestNode = signatureNode.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode).isNotNull();
-        assertThat(messageDigestNode.getChildren()).hasSize(1);
-        assertThat(messageDigestNode.asString()).isEqualTo("SHA-256");
+        assertThat(messageDigestNode.getChildren()).isEmpty();
+        assertThat(messageDigestNode.asString()).isEqualTo("SHA256");
     }
 }

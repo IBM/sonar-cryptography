@@ -23,7 +23,7 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class Tag extends Functionality {
+public final class Tag extends Functionality {
     public Tag(@Nonnull DetectionLocation detectionLocation) {
         super(Tag.class, detectionLocation);
     }

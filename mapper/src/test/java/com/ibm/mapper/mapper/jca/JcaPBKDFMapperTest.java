@@ -21,8 +21,12 @@ package com.ibm.mapper.mapper.jca;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.ibm.mapper.configuration.Configuration;
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.HMAC;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
+import com.ibm.mapper.model.algorithms.PBKDF2;
+import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.List;
 import java.util.Map;
@@ -38,31 +42,31 @@ class JcaPBKDFMapperTest {
 
         JcaPBKDFMapper jcaPBKDFMapper = new JcaPBKDFMapper();
         Optional<PasswordBasedKeyDerivationFunction> pbkdfOptional =
-                jcaPBKDFMapper.parse(
-                        "PBKDF2WithHmacSHA256", testDetectionLocation, Configuration.DEFAULT);
+                jcaPBKDFMapper.parse("PBKDF2WithHmacSHA256", testDetectionLocation);
 
         assertThat(pbkdfOptional).isPresent();
-        assertThat(pbkdfOptional.get().getName()).isEqualTo("PBKDF2WithHmacSHA256");
+        assertThat(pbkdfOptional.get()).isInstanceOf(PBKDF2.class);
+        assertThat(pbkdfOptional.get().is(PasswordBasedKeyDerivationFunction.class)).isTrue();
+        assertThat(pbkdfOptional.get().getName()).isEqualTo("PBKDF2");
         assertThat(pbkdfOptional.get().getIterations()).isEmpty();
         assertThat(pbkdfOptional.get().getSalt()).isEmpty();
-        assertThat(pbkdfOptional.get().getDefaultKeyLength()).isEmpty();
         assertThat(pbkdfOptional.get().hasChildren()).isTrue();
 
         Map<Class<? extends INode>, INode> children = pbkdfOptional.get().getChildren();
         assertThat(children).hasSize(1);
-        INode child = children.get(Mac.class);
-        assertThat(child.is(Mac.class)).isTrue();
+        INode child = children.get(HMAC.class);
+        assertThat(child.is(HMAC.class)).isTrue();
 
-        Mac mac = (Mac) child;
+        HMAC mac = (HMAC) child;
         assertThat(mac.getName()).isEqualTo("HmacSHA256");
         assertThat(mac.hasChildren()).isTrue();
         children = mac.getChildren();
-        assertThat(children).hasSize(2);
+        assertThat(children).hasSize(1);
         child = children.get(MessageDigest.class);
         assertThat(child.is(MessageDigest.class)).isTrue();
 
         MessageDigest messageDigest = (MessageDigest) child;
-        assertThat(messageDigest.getName()).isEqualTo("SHA-256");
+        assertThat(messageDigest).isInstanceOf(SHA2.class);
         assertThat(messageDigest.getDigestSize()).isPresent();
         assertThat(messageDigest.getDigestSize().get().getValue()).isEqualTo(256);
     }

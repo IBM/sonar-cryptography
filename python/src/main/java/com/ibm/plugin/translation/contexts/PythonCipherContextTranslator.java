@@ -31,7 +31,6 @@ import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MaskGenerationFunction;
 import com.ibm.mapper.model.Mode;
-import com.ibm.mapper.model.OptimalAsymmetricEncryptionPadding;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.SecretKey;
 import com.ibm.mapper.model.StreamCipher;
@@ -39,6 +38,7 @@ import com.ibm.mapper.model.functionality.Decrypt;
 import com.ibm.mapper.model.functionality.Encapsulate;
 import com.ibm.mapper.model.functionality.Encrypt;
 import com.ibm.mapper.model.functionality.KeyGeneration;
+import com.ibm.mapper.model.padding.OAEP;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.plugin.rules.detection.symmetric.CryptographyCipher;
 import com.ibm.plugin.translation.PythonTranslatorUtils;
@@ -84,8 +84,7 @@ public final class PythonCipherContextTranslator {
         switch (detection) {
             case "MGF1":
                 return Optional.of(
-                        new MaskGenerationFunction(
-                                new Algorithm(detection, detectionLocation), detectionLocation));
+                        new MaskGenerationFunction(new Algorithm(detection, detectionLocation)));
             default:
                 switch (kind) {
                     case NONE:
@@ -95,10 +94,10 @@ public final class PythonCipherContextTranslator {
                         // `CryptographyCipher.streamCiphers` are supported]
                         algorithm = new Algorithm(detection, detectionLocation);
                         if (CryptographyCipher.blockCiphers.contains(detection)) {
-                            cipher = new BlockCipher(algorithm, null, null, detectionLocation);
+                            cipher = new BlockCipher(algorithm, null, null);
                             return Optional.of(cipher);
                         } else if (CryptographyCipher.streamCiphers.contains(detection)) {
-                            cipher = new StreamCipher(algorithm, null, null, detectionLocation);
+                            cipher = new StreamCipher(algorithm, null, null);
                             return Optional.of(cipher);
                         }
 
@@ -163,9 +162,7 @@ public final class PythonCipherContextTranslator {
                         if (kind.name().startsWith("AES")) {
                             // Cases "AESGCM", "AESGCMIV", "AESOCB3", "AESSIV", "AESCCM"
                             algorithm = new Algorithm("AES", detectionLocation);
-                            cipher =
-                                    new AuthenticatedEncryption(
-                                            algorithm, null, null, null, detectionLocation);
+                            cipher = new AuthenticatedEncryption(algorithm, null, null, null);
                             cipher.append(new Decrypt(detectionLocation));
                             return Optional.of(cipher);
                         }
@@ -179,9 +176,7 @@ public final class PythonCipherContextTranslator {
                         algorithm.append(new Encrypt(detectionLocation));
                         return Optional.of(algorithm);
                     case RSA:
-                        cipher =
-                                new Cipher(
-                                        new Algorithm("RSA", detectionLocation), detectionLocation);
+                        cipher = new Cipher(new Algorithm("RSA", detectionLocation));
                         cipher.append(new Encrypt(detectionLocation));
                         return Optional.of(cipher);
                     case CHACHA20POLY1305:
@@ -196,9 +191,7 @@ public final class PythonCipherContextTranslator {
                         if (kind.name().startsWith("AES")) {
                             // Cases "AESGCM", "AESGCMIV", "AESOCB3", "AESSIV", "AESCCM"
                             algorithm = new Algorithm("AES", detectionLocation);
-                            cipher =
-                                    new AuthenticatedEncryption(
-                                            algorithm, null, null, null, detectionLocation);
+                            cipher = new AuthenticatedEncryption(algorithm, null, null, null);
                             cipher.append(new Encrypt(detectionLocation));
                             return Optional.of(cipher);
                         }
@@ -208,8 +201,7 @@ public final class PythonCipherContextTranslator {
             case PADDING:
                 if (kind == CipherContext.Kind.OAEP) {
                     padding = new Padding("OAEP", detectionLocation, new HashMap<>());
-                    return Optional.of(
-                            new OptimalAsymmetricEncryptionPadding(padding, detectionLocation));
+                    return Optional.of(new OAEP(padding));
                 }
                 break;
             case WRAP:
@@ -221,10 +213,7 @@ public final class PythonCipherContextTranslator {
                 encapsulate.append(secretKey);
                 BlockCipher blockCipher =
                         new BlockCipher(
-                                new Algorithm(algorithmName, detectionLocation),
-                                null,
-                                null,
-                                detectionLocation);
+                                new Algorithm(algorithmName, detectionLocation), null, null);
                 secretKey.append(blockCipher);
                 blockCipher.append(new KeyGeneration(detectionLocation));
                 return Optional.of(encapsulate);

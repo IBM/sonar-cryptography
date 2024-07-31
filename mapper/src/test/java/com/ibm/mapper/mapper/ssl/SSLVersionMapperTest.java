@@ -21,7 +21,6 @@ package com.ibm.mapper.mapper.ssl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Version;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -37,8 +36,7 @@ public class SSLVersionMapperTest {
                 new DetectionLocation("testfile", 1, 1, List.of("test"));
 
         final SSLVersionMapper mapper = new SSLVersionMapper();
-        final Optional<? extends INode> version =
-                mapper.parse("TLSv1.2", testDetectionLocation, Configuration.DEFAULT);
+        final Optional<? extends INode> version = mapper.parse("TLSv1.2", testDetectionLocation);
 
         assertThat(version).isPresent();
         assertThat(version.get().is(Version.class)).isTrue();
@@ -51,8 +49,7 @@ public class SSLVersionMapperTest {
                 new DetectionLocation("testfile", 1, 1, List.of("test"));
 
         final SSLVersionMapper mapper = new SSLVersionMapper();
-        final Optional<? extends INode> version =
-                mapper.parse("TLSv1", testDetectionLocation, Configuration.DEFAULT);
+        final Optional<? extends INode> version = mapper.parse("TLSv1", testDetectionLocation);
 
         assertThat(version).isPresent();
         assertThat(version.get().is(Version.class)).isTrue();
@@ -65,8 +62,7 @@ public class SSLVersionMapperTest {
                 new DetectionLocation("testfile", 1, 1, List.of("test"));
 
         final SSLVersionMapper mapper = new SSLVersionMapper();
-        final Optional<? extends INode> version =
-                mapper.parse("tlsv1.3", testDetectionLocation, Configuration.DEFAULT);
+        final Optional<? extends INode> version = mapper.parse("tlsv1.3", testDetectionLocation);
 
         assertThat(version).isPresent();
         assertThat(version.get().is(Version.class)).isTrue();

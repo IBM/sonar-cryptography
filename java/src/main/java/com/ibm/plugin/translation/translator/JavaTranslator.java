@@ -34,6 +34,7 @@ import com.ibm.engine.model.context.ProtocolContext;
 import com.ibm.engine.model.context.PublicKeyContext;
 import com.ibm.engine.model.context.SecretKeyContext;
 import com.ibm.engine.model.context.SignatureContext;
+import com.ibm.engine.rule.IBundle;
 import com.ibm.mapper.ITranslator;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -72,7 +73,6 @@ public final class JavaTranslator
         extends ITranslator<JavaCheck, Tree, Symbol, JavaFileScannerContext> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JavaTranslator.class);
-    @Nonnull private final JavaMapperConfig javaMapperConfig = new JavaMapperConfig();
 
     public JavaTranslator() {
         // nothing
@@ -113,6 +113,7 @@ public final class JavaTranslator
                         .map(
                                 ivalue ->
                                         translate(
+                                                rootDetectionStore.getDetectionRule().bundle(),
                                                 ivalue,
                                                 rootDetectionStore.getDetectionValueContext(),
                                                 filePath))
@@ -160,6 +161,7 @@ public final class JavaTranslator
                         .map(
                                 ivalue ->
                                         translate(
+                                                detectionStore.getDetectionRule().bundle(),
                                                 ivalue,
                                                 detectionStore.getDetectionValueContext(),
                                                 filePath))
@@ -219,6 +221,7 @@ public final class JavaTranslator
 
     @Nonnull
     public Optional<INode> translate(
+            @Nonnull final IBundle bundleIdentifier,
             @Nonnull final IValue<Tree> value,
             @Nonnull final IDetectionContext detectionValueContext,
             @Nonnull final String filePath) {
@@ -230,85 +233,73 @@ public final class JavaTranslator
 
         // cipher context
         if (detectionValueContext.is(CipherContext.class)) {
-            CipherContext.Kind kind = ((CipherContext) detectionValueContext).kind();
             JavaCipherContextTranslator javaCipherContextTranslation =
-                    new JavaCipherContextTranslator(javaMapperConfig);
+                    new JavaCipherContextTranslator();
             return javaCipherContextTranslation.translate(
-                    value, kind, detectionValueContext, detectionLocation);
+                    bundleIdentifier, value, detectionValueContext, detectionLocation);
 
             // secret key context
         } else if (detectionValueContext.is(SecretKeyContext.class)) {
-            KeyContext.Kind kind = ((SecretKeyContext) detectionValueContext).kind();
             JavaSecretKeyContextTranslator javaSecretKeyContextTranslation =
-                    new JavaSecretKeyContextTranslator(javaMapperConfig);
+                    new JavaSecretKeyContextTranslator();
             return javaSecretKeyContextTranslation.translate(
-                    value, kind, detectionValueContext, detectionLocation);
+                    bundleIdentifier, value, detectionValueContext, detectionLocation);
 
             // private- / public- / secret- / key context
         } else if (detectionValueContext.is(KeyContext.class)
                 || detectionValueContext.is(PublicKeyContext.class)
                 || detectionValueContext.is(PrivateKeyContext.class)
                 || detectionValueContext.is(SecretKeyContext.class)) {
-            KeyContext.Kind kind = ((KeyContext) detectionValueContext).kind();
-            JavaKeyContextTranslator javaKeyContextTranslation =
-                    new JavaKeyContextTranslator(javaMapperConfig);
+            JavaKeyContextTranslator javaKeyContextTranslation = new JavaKeyContextTranslator();
             return javaKeyContextTranslation.translate(
-                    value, kind, detectionValueContext, detectionLocation);
+                    bundleIdentifier, value, detectionValueContext, detectionLocation);
 
             // key agreement context
         } else if (detectionValueContext.is(KeyAgreementContext.class)) {
             final JavaKeyAgreementContextTranslator javaKeyAgreementContextTranslator =
-                    new JavaKeyAgreementContextTranslator(javaMapperConfig);
+                    new JavaKeyAgreementContextTranslator();
             return javaKeyAgreementContextTranslator.translate(
-                    value, detectionValueContext, detectionLocation);
+                    bundleIdentifier, value, detectionValueContext, detectionLocation);
 
             // PRNG context
         } else if (detectionValueContext.is(PRNGContext.class)) {
-            JavaPRNGContextTranslator javaPRNGContextTranslation =
-                    new JavaPRNGContextTranslator(javaMapperConfig);
+            JavaPRNGContextTranslator javaPRNGContextTranslation = new JavaPRNGContextTranslator();
             return javaPRNGContextTranslation.translate(
-                    value, detectionValueContext, detectionLocation);
+                    bundleIdentifier, value, detectionValueContext, detectionLocation);
 
             // digest context
         } else if (detectionValueContext.is(DigestContext.class)) {
-            DigestContext.Kind kind = ((DigestContext) detectionValueContext).kind();
             JavaDigestContextTranslator javaDigestContextTranslation =
-                    new JavaDigestContextTranslator(javaMapperConfig);
+                    new JavaDigestContextTranslator();
             return javaDigestContextTranslation.translate(
-                    value, kind, detectionValueContext, detectionLocation);
+                    bundleIdentifier, value, detectionValueContext, detectionLocation);
 
             // signature context
         } else if (detectionValueContext.is(SignatureContext.class)) {
-            SignatureContext.Kind kind = ((SignatureContext) detectionValueContext).kind();
             JavaSignatureContextTranslator javaSignatureContextTranslation =
-                    new JavaSignatureContextTranslator(javaMapperConfig);
+                    new JavaSignatureContextTranslator();
             return javaSignatureContextTranslation.translate(
-                    value, kind, detectionValueContext, detectionLocation);
+                    bundleIdentifier, value, detectionValueContext, detectionLocation);
 
             // mac context
         } else if (detectionValueContext.is(MacContext.class)) {
-            MacContext.Kind kind = ((MacContext) detectionValueContext).kind();
-            JavaMacContextTranslator javaMacContextTranslation =
-                    new JavaMacContextTranslator(javaMapperConfig);
+            JavaMacContextTranslator javaMacContextTranslation = new JavaMacContextTranslator();
             return javaMacContextTranslation.translate(
-                    value, kind, detectionValueContext, detectionLocation);
+                    bundleIdentifier, value, detectionValueContext, detectionLocation);
 
             // algorithm parameter context
         } else if (detectionValueContext.is(AlgorithmParameterContext.class)) {
-            AlgorithmParameterContext.Kind kind =
-                    ((AlgorithmParameterContext) detectionValueContext).kind();
             JavaAlgorithmParameterContextTranslator javaAlgorithmParameterContextTranslation =
-                    new JavaAlgorithmParameterContextTranslator(javaMapperConfig);
+                    new JavaAlgorithmParameterContextTranslator();
             return javaAlgorithmParameterContextTranslation.translate(
-                    value, kind, detectionValueContext, detectionLocation);
+                    bundleIdentifier, value, detectionValueContext, detectionLocation);
 
             // protocol
         } else if (detectionValueContext.is(ProtocolContext.class)) {
-            final ProtocolContext.Kind kind = ((ProtocolContext) detectionValueContext).kind();
             final JavaProtocolContextTranslator javaProtocolContextTranslator =
-                    new JavaProtocolContextTranslator(javaMapperConfig);
+                    new JavaProtocolContextTranslator();
             return javaProtocolContextTranslator.translate(
-                    value, kind, detectionValueContext, detectionLocation);
+                    bundleIdentifier, value, detectionValueContext, detectionLocation);
         }
         return Optional.empty();
     }

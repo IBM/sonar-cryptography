@@ -79,7 +79,7 @@ public final class BcEncapsulatedSecretGenerator {
                             .shouldBeDetectedAs(new ValueActionFactory<>(generatorName))
                             .withMethodParameter("java.security.SecureRandom")
                             .buildForContext(new KeyContext(KeyContext.Kind.KEM))
-                            .inBundle(() -> "bcEncapsulatedSecretGenerator")
+                            .inBundle(() -> "Bc")
                             .withoutDependingDetectionRules());
         }
 
@@ -102,7 +102,7 @@ public final class BcEncapsulatedSecretGenerator {
                         .addDependingDetectionRules(BcDerivationFunction.rules())
                         .withMethodParameter("java.security.SecureRandom")
                         .buildForContext(new KeyContext(KeyContext.Kind.KEM))
-                        .inBundle(() -> "bcEncapsulatedSecretGenerator")
+                        .inBundle(() -> "Bc")
                         .withoutDependingDetectionRules());
 
         constructorsList.add(
@@ -118,7 +118,7 @@ public final class BcEncapsulatedSecretGenerator {
                         .addDependingDetectionRules(BcDerivationFunction.rules())
                         .withMethodParameter("java.security.SecureRandom")
                         .buildForContext(new KeyContext(KeyContext.Kind.KEM))
-                        .inBundle(() -> "bcEncapsulatedSecretGenerator")
+                        .inBundle(() -> "Bc")
                         .withoutDependingDetectionRules());
 
         constructorsList.add(
@@ -137,7 +137,7 @@ public final class BcEncapsulatedSecretGenerator {
                         .withMethodParameter("boolean")
                         .withMethodParameter("boolean")
                         .buildForContext(new KeyContext(KeyContext.Kind.KEM))
-                        .inBundle(() -> "bcEncapsulatedSecretGenerator")
+                        .inBundle(() -> "Bc")
                         .withoutDependingDetectionRules());
 
         return constructorsList;

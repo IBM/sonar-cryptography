@@ -44,7 +44,7 @@ public final class JcaDSAPrivateKeySpec {
                     .withMethodParameter(BIGINTEGER_TYPE)
                     .withMethodParameter(BIGINTEGER_TYPE)
                     .buildForContext(new KeyContext(KeyContext.Kind.DSA))
-                    .inBundle(() -> "JcaDSAPrivateKeySpec")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private JcaDSAPrivateKeySpec() {

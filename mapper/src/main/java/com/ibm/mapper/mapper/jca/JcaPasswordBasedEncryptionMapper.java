@@ -19,15 +19,13 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Cipher;
+import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PasswordBasedEncryption;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,9 +39,7 @@ public class JcaPasswordBasedEncryptionMapper implements IMapper {
     @Nonnull
     @Override
     public Optional<PasswordBasedEncryption> parse(
-            @Nullable final String str,
-            @Nonnull DetectionLocation detectionLocation,
-            @Nonnull final Configuration configuration) {
+            @Nullable final String str, @Nonnull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }
@@ -53,47 +49,46 @@ public class JcaPasswordBasedEncryptionMapper implements IMapper {
             return Optional.empty();
         }
 
-        String prfOrDigestStr;
-        String encryptionStr = null;
+        String hmacOrDigestStr;
+        String cipherStr = null;
         int algoStartIndex = generalizedStr.indexOf("pbewith") + 7;
         if (generalizedStr.contains("and")) {
             int encIndex = generalizedStr.indexOf("and") + 3;
-            encryptionStr = str.substring(encIndex);
-            prfOrDigestStr = str.substring(algoStartIndex, generalizedStr.indexOf("and"));
+            cipherStr = str.substring(encIndex);
+            hmacOrDigestStr = str.substring(algoStartIndex, generalizedStr.indexOf("and"));
         } else {
-            prfOrDigestStr = str.substring(algoStartIndex);
+            hmacOrDigestStr = str.substring(algoStartIndex);
         }
 
-        JcaBaseAlgorithmMapper jcaBaseAlgorithmMapper = new JcaBaseAlgorithmMapper();
-        Map<Class<? extends INode>, INode> assets = new HashMap<>();
-        // pseudo random function
-        JcaMacMapper macMapper = new JcaMacMapper();
-        Optional<Algorithm> macOptional =
-                macMapper.parse(prfOrDigestStr, detectionLocation, configuration);
-        macOptional.ifPresent(mac -> assets.put(mac.getKind(), mac));
+        // cipher
+        Optional<? extends Algorithm> cipherOptional = Optional.empty();
+        if (cipherStr != null) {
+            JcaCipherMapper cipherMapper = new JcaCipherMapper();
+            cipherOptional = cipherMapper.parse(cipherStr, detectionLocation);
+        }
 
+        // hmac
+        JcaMacMapper macMapper = new JcaMacMapper();
+        Optional<? extends Algorithm> macOptional =
+                macMapper.parse(hmacOrDigestStr, detectionLocation);
+        if (macOptional.isPresent() && macOptional.get() instanceof HMAC hmac) {
+            if (cipherOptional.isPresent() && cipherOptional.get() instanceof Cipher cipher) {
+                return Optional.of(new PasswordBasedEncryption(hmac, cipher));
+            } else {
+                return Optional.of(new PasswordBasedEncryption(hmac));
+            }
+        }
+
+        // digest
         JcaMessageDigestMapper messageDigestMapper = new JcaMessageDigestMapper();
         Optional<MessageDigest> messageDigestOptional =
-                messageDigestMapper.parse(prfOrDigestStr, detectionLocation, configuration);
-        messageDigestOptional.ifPresent(digest -> assets.put(digest.getKind(), digest));
-
-        // encryption
-        if (encryptionStr != null) {
-            Optional<Algorithm> encryptionOptional =
-                    jcaBaseAlgorithmMapper.parse(encryptionStr, detectionLocation, configuration);
-            encryptionOptional.ifPresent(
-                    encryption -> assets.put(encryption.getKind(), encryption));
+                messageDigestMapper.parse(hmacOrDigestStr, detectionLocation);
+        if (messageDigestOptional.isPresent()
+                && cipherOptional.isPresent()
+                && cipherOptional.get() instanceof Cipher cipher) {
+            return Optional.of(new PasswordBasedEncryption(messageDigestOptional.get(), cipher));
         }
 
-        Optional<Algorithm> algorithmOptional =
-                jcaBaseAlgorithmMapper.parseAndAddChildren(
-                        str, detectionLocation, configuration, assets);
-        if (algorithmOptional.isEmpty()) {
-            return Optional.empty();
-        }
-
-        PasswordBasedEncryption pbe =
-                new PasswordBasedEncryption(algorithmOptional.get(), detectionLocation);
-        return Optional.of(pbe);
+        return Optional.empty();
     }
 }

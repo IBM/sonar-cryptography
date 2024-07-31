@@ -19,55 +19,62 @@
  */
 package com.ibm.plugin.translation.translator.contexts;
 
+import com.ibm.engine.model.CipherSuite;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.model.context.ProtocolContext;
-import com.ibm.mapper.AbstractContextTranslator;
+import com.ibm.engine.rule.IBundle;
 import com.ibm.mapper.IContextTranslationWithKind;
-import com.ibm.mapper.configuration.Configuration;
 import com.ibm.mapper.mapper.ssl.SSLVersionMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Protocol;
-import com.ibm.mapper.model.TLSProtocol;
+import com.ibm.mapper.model.protocol.TLS;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
 
-public class JavaProtocolContextTranslator extends AbstractContextTranslator
-        implements IContextTranslationWithKind<Tree, ProtocolContext.Kind> {
-
-    public JavaProtocolContextTranslator(@NotNull Configuration configuration) {
-        super(configuration);
-    }
+public class JavaProtocolContextTranslator implements IContextTranslationWithKind<Tree> {
 
     @NotNull @Override
     public Optional<INode> translate(
+            @NotNull IBundle bundleIdentifier,
             @NotNull IValue<Tree> value,
-            @NotNull ProtocolContext.Kind kind,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
+        if (!bundleIdentifier.getIdentifier().equals("SSL")) {
+            return Optional.empty();
+        }
+
+        final ProtocolContext.Kind kind = ((ProtocolContext) detectionContext).kind();
         if (value instanceof com.ibm.engine.model.Protocol<Tree> protocol) {
             return switch (kind) {
                 case TLS ->
                         Optional.of(protocol)
-                                .map(p -> new Protocol(p.asString(), detectionLocation))
-                                .map(p -> new TLSProtocol(p, detectionLocation))
                                 .map(
                                         p -> {
                                             final SSLVersionMapper sslVersionMapper =
                                                     new SSLVersionMapper();
-                                            sslVersionMapper
-                                                    .parse(
-                                                            p.asString(),
-                                                            detectionLocation,
-                                                            configuration)
-                                                    .ifPresent(p::append);
-                                            return p;
+                                            return sslVersionMapper
+                                                    .parse(p.asString(), detectionLocation)
+                                                    .map(TLS::new)
+                                                    .orElse(new TLS(detectionLocation));
                                         });
                 default ->
                         Optional.of(protocol)
                                 .map(p -> new Protocol(p.asString(), detectionLocation));
+            };
+        } else if (value instanceof CipherSuite<Tree> cipherSuite) {
+            return switch (kind) {
+                    /* case TLS -> {
+                        return
+                    }*/
+                default ->
+                        Optional.of(cipherSuite)
+                                .map(
+                                        suite ->
+                                                new com.ibm.mapper.model.CipherSuite(
+                                                        suite.asString(), detectionLocation));
             };
         }
 

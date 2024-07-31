@@ -19,15 +19,14 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class PrivateKey extends Key {
-    public PrivateKey(@Nonnull String name, @Nonnull DetectionLocation detectionLocation) {
-        super(name, detectionLocation, PrivateKey.class);
+public final class PrivateKey extends Key {
+    public PrivateKey(@Nonnull Algorithm algorithm) {
+        super(algorithm, PrivateKey.class);
     }
 
-    public PrivateKey(@Nonnull Key key, @Nonnull DetectionLocation detectionLocation) {
-        super(key, detectionLocation, PrivateKey.class);
+    public PrivateKey(@Nonnull Key key) {
+        super(key, key.detectionLocation, PrivateKey.class);
     }
 }

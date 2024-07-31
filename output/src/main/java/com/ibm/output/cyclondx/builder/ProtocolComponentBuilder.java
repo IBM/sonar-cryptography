@@ -19,8 +19,11 @@
  */
 package com.ibm.output.cyclondx.builder;
 
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.CipherSuite;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Protocol;
 import com.ibm.mapper.model.collections.CipherSuiteCollection;
+import com.ibm.mapper.model.protocol.TLS;
 import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nonnull;
@@ -76,7 +79,7 @@ public class ProtocolComponentBuilder implements IProtocolComponentBuilder {
             return new ProtocolComponentBuilder(component, cryptoProperties, protocolProperties);
         }
 
-        if (type instanceof TLSProtocol) {
+        if (type instanceof TLS) {
             protocolProperties.setType(ProtocolType.TLS);
         } else {
             protocolProperties.setType(ProtocolType.OTHER);

@@ -22,6 +22,7 @@ package com.ibm.mapper;
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.context.IDetectionContext;
+import com.ibm.engine.rule.IBundle;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.List;
@@ -39,6 +40,7 @@ public abstract class ITranslator<R, T, S, P> {
 
     @Nonnull
     protected abstract Optional<INode> translate(
+            @Nonnull final IBundle bundleIdentifier,
             @Nonnull IValue<T> value,
             @Nonnull IDetectionContext detectionValueContext,
             @Nonnull final String filePath);

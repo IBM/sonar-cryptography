@@ -21,6 +21,7 @@ package com.ibm.mapper.mapper.ssl.json;
 
 import java.util.Map;
 
+@SuppressWarnings("java:S1192")
 public final class JsonCipherSuites {
 
     private JsonCipherSuites() {

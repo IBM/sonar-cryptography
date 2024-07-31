@@ -85,14 +85,14 @@ public final class PythonKeyContextTranslator {
                 if (CryptographyHash.hashes.contains(detection)) {
                     String hashName = detection.replace('_', '-');
                     algorithm = new Algorithm(hashName, detectionLocation);
-                    messageDigest = new MessageDigest(algorithm, detectionLocation);
+                    messageDigest = new MessageDigest(algorithm);
                     return Optional.of(messageDigest);
                 }
                 break;
             case KBKDFCMAC:
                 if (CryptographyCipher.blockCiphers.contains(detection)) {
                     algorithm = new Algorithm(detection, detectionLocation);
-                    cipher = new BlockCipher(algorithm, null, null, detectionLocation);
+                    cipher = new BlockCipher(algorithm, null, null);
                     return Optional.of(cipher);
                 }
                 break;
@@ -134,11 +134,10 @@ public final class PythonKeyContextTranslator {
             case PBKDF2HMAC, SCRYPT:
                 return Optional.of(
                         new PasswordBasedKeyDerivationFunction(
-                                new Algorithm(kind.name(), detectionLocation), detectionLocation));
+                                new Algorithm(kind.name(), detectionLocation)));
             case ConcatKDFHash, ConcatKDFHMAC, HKDF, HKDFExpand, KBKDFHMAC, KBKDFCMAC, X963KDF:
                 return Optional.of(
-                        new KeyDerivationFunction(
-                                new Algorithm(kind.name(), detectionLocation), detectionLocation));
+                        new KeyDerivationFunction(new Algorithm(kind.name(), detectionLocation)));
             default:
                 break;
         }

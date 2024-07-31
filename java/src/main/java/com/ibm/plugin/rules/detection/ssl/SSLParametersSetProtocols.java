@@ -38,7 +38,7 @@ public final class SSLParametersSetProtocols {
                     .withMethodParameter("java.lang.String[]")
                     .shouldBeDetectedAs(new ProtocolFactory<>())
                     .buildForContext(new ProtocolContext(ProtocolContext.Kind.TLS))
-                    .inBundle(() -> "SSLParametersSetProtocols")
+                    .inBundle(() -> "SSL")
                     .withoutDependingDetectionRules();
 
     private SSLParametersSetProtocols() {

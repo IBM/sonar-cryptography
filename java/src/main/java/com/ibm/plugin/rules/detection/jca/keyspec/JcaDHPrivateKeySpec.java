@@ -42,7 +42,7 @@ public final class JcaDHPrivateKeySpec {
                     .shouldBeDetectedAs(new KeySizeFactory<>())
                     .withMethodParameter(BIGINTEGER_TYPE)
                     .buildForContext(new KeyContext(KeyContext.Kind.DH))
-                    .inBundle(() -> "JcaDHPrivateKeySpec")
+                    .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
     private JcaDHPrivateKeySpec() {

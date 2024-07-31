@@ -52,7 +52,7 @@ public final class BcCramerShoupParameters {
                     .addDependingDetectionRules(
                             BcDigests.rules(new DigestContext(DigestContext.Kind.CRAMER_SHOUP)))
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "BcCramerShoupParameters")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> PRIVATE_KEY_CONSTRUCTOR =
@@ -69,7 +69,7 @@ public final class BcCramerShoupParameters {
                     .withMethodParameter(BIGINTEGER_TYPE)
                     .withMethodParameter(BIGINTEGER_TYPE)
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "BcCramerShoupParameters")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> PUBLIC_KEY_CONSTRUCTOR =
@@ -83,7 +83,7 @@ public final class BcCramerShoupParameters {
                     .withMethodParameter(BIGINTEGER_TYPE)
                     .withMethodParameter(BIGINTEGER_TYPE)
                     .buildForContext(new AlgorithmParameterContext())
-                    .inBundle(() -> "BcCramerShoupParameters")
+                    .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
     @Unmodifiable

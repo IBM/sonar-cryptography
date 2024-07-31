@@ -105,7 +105,7 @@ class BcCramerShoupParametersTest extends TestBase {
         // MessageDigest under BlockCipher
         INode messageDigestNode2 = blockCipherNode2.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode2).isNotNull();
-        assertThat(messageDigestNode2.getChildren()).hasSize(1);
-        assertThat(messageDigestNode2.asString()).isEqualTo("SHA-256");
+        assertThat(messageDigestNode2.getChildren()).isEmpty();
+        assertThat(messageDigestNode2.asString()).isEqualTo("SHA256");
     }
 }

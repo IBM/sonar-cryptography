@@ -74,7 +74,7 @@ public final class BcBufferedBlockCipher {
                             .addDependingDetectionRules(BcBlockCipher.all())
                             .buildForContext(
                                     new CipherContext(CipherContext.Kind.BUFFERED_BLOCK_CIPHER))
-                            .inBundle(() -> "BcBufferedBlockCipher")
+                            .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcBufferedBlockCipherInit.rules()));
         }
         return constructorsList;
@@ -95,7 +95,7 @@ public final class BcBufferedBlockCipher {
                         .addDependingDetectionRules(BcBlockCipher.all())
                         .buildForContext(
                                 new CipherContext(CipherContext.Kind.BUFFERED_BLOCK_CIPHER))
-                        .inBundle(() -> "BcBufferedBlockCipher")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcBufferedBlockCipherInit.rules()));
 
         constructorsList.add(
@@ -111,7 +111,7 @@ public final class BcBufferedBlockCipher {
                         .addDependingDetectionRules(BcBlockCipherPadding.rules())
                         .buildForContext(
                                 new CipherContext(CipherContext.Kind.BUFFERED_BLOCK_CIPHER))
-                        .inBundle(() -> "BcBufferedBlockCipher")
+                        .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcBufferedBlockCipherInit.rules()));
 
         return constructorsList;

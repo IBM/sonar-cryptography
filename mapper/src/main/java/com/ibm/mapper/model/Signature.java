@@ -19,50 +19,13 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
-public final class Signature extends Algorithm {
+public class Signature extends Algorithm {
 
-    public Signature(@Nonnull Algorithm algorithm, @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, Signature.class);
-    }
-
-    public Signature(
-            @Nonnull Algorithm algorithm,
-            @Nonnull MessageDigest digest,
-            @Nonnull Algorithm signatureAlgorithm,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, Signature.class);
-        this.append(digest);
-        this.append(signatureAlgorithm);
-    }
-
-    public Signature(
-            @Nonnull Algorithm algorithm,
-            @Nonnull MessageDigest digest,
-            @Nonnull Algorithm signatureAlgorithm,
-            @Nonnull MaskGenerationFunction maskGenerationFunction,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, Signature.class);
-        this.append(digest);
-        this.append(signatureAlgorithm);
-        this.append(maskGenerationFunction);
-    }
-
-    public Signature(
-            @Nonnull Algorithm algorithm,
-            @Nonnull MessageDigest digest,
-            @Nonnull Algorithm signatureAlgorithm,
-            @Nonnull MaskGenerationFunction maskGenerationFunction,
-            @Nonnull OutputFormat outputFormat,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(algorithm, detectionLocation, Signature.class);
-        this.append(digest);
-        this.append(signatureAlgorithm);
-        this.append(maskGenerationFunction);
-        this.append(outputFormat);
+    public Signature(@Nonnull Algorithm algorithm) {
+        super(algorithm, Signature.class);
     }
 
     @Nonnull
@@ -81,24 +44,6 @@ public final class Signature extends Algorithm {
             return Optional.empty();
         }
         return Optional.of((MessageDigest) node);
-    }
-
-    @Nonnull
-    public Optional<Algorithm> getSignatureAlgorithm() {
-        INode node = this.getChildren().get(Algorithm.class);
-        if (node == null) {
-            return Optional.empty();
-        }
-        return Optional.of((Algorithm) node);
-    }
-
-    @Nonnull
-    public Optional<MaskGenerationFunction> getMGF() {
-        INode node = this.getChildren().get(MaskGenerationFunction.class);
-        if (node == null) {
-            return Optional.empty();
-        }
-        return Optional.of((MaskGenerationFunction) node);
     }
 
     public boolean isProbabilisticSignatureScheme() {

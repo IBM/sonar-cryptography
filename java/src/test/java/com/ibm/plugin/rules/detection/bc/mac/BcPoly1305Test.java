@@ -27,8 +27,8 @@ import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.MacContext;
 import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
@@ -94,7 +94,7 @@ class BcPoly1305Test extends TestBase {
 
         // Mac
         INode macNode = nodes.get(0);
-        assertThat(macNode.getKind()).isEqualTo(Mac.class);
+        assertThat(macNode.getKind()).isEqualTo(HMAC.class);
         assertThat(macNode.getChildren()).hasSize(findingId == 1 ? 3 : 2);
         assertThat(macNode.asString()).isEqualTo("Poly1305");
 

@@ -44,7 +44,7 @@ public final class BcGCMBlockCipher {
                     .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                     .addDependingDetectionRules(BcBlockCipher.all())
                     .buildForContext(new CipherContext(CipherContext.Kind.AEAD_BLOCK_CIPHER))
-                    .inBundle(() -> "BcGCMBlockCipher")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcAEADCipherInit.rules());
 
     private static final IDetectionRule<Tree> NEW_INSTANCE_2 =
@@ -57,7 +57,7 @@ public final class BcGCMBlockCipher {
                     .addDependingDetectionRules(BcBlockCipher.all())
                     .withMethodParameter("org.bouncycastle.crypto.modes.gcm.GCMMultiplier")
                     .buildForContext(new CipherContext(CipherContext.Kind.AEAD_BLOCK_CIPHER))
-                    .inBundle(() -> "BcGCMBlockCipher")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcAEADCipherInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_1 =
@@ -69,7 +69,7 @@ public final class BcGCMBlockCipher {
                     .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                     .addDependingDetectionRules(BcBlockCipher.all())
                     .buildForContext(new CipherContext(CipherContext.Kind.AEAD_BLOCK_CIPHER))
-                    .inBundle(() -> "BcGCMBlockCipher")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcAEADCipherInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_2 =
@@ -82,7 +82,7 @@ public final class BcGCMBlockCipher {
                     .addDependingDetectionRules(BcBlockCipher.all())
                     .withMethodParameter("org.bouncycastle.crypto.modes.gcm.GCMMultiplier")
                     .buildForContext(new CipherContext(CipherContext.Kind.AEAD_BLOCK_CIPHER))
-                    .inBundle(() -> "BcGCMBlockCipher")
+                    .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcAEADCipherInit.rules());
 
     @Unmodifiable
