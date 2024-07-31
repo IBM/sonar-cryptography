@@ -21,10 +21,11 @@ package com.ibm.plugin;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sonar.api.Plugin;
 import org.sonar.api.SonarProduct;
 import org.sonar.api.SonarRuntime;
 
-public class CryptographyPlugin implements org.sonar.api.Plugin {
+public class CryptographyPlugin implements Plugin {
 
     @SuppressWarnings({"java:S1874"})
     private static final Logger LOGGER = LoggerFactory.getLogger(CryptographyPlugin.class);

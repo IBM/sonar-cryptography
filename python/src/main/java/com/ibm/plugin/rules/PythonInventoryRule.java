@@ -23,6 +23,8 @@ import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.plugin.rules.detection.PythonBaseDetectionRule;
 import com.ibm.plugin.rules.detection.PythonDetectionRules;
+import java.util.List;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.jetbrains.annotations.VisibleForTesting;
@@ -31,9 +33,6 @@ import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
 import org.sonar.plugins.python.api.tree.Tree;
-
-import javax.annotation.Nonnull;
-import java.util.List;
 
 @Rule(key = "Inventory")
 public class PythonInventoryRule extends PythonBaseDetectionRule {
