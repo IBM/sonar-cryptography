@@ -21,11 +21,13 @@ package com.ibm.mapper.mapper.jca;
 
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.List;
-import java.util.Optional;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Optional;
 
 public class JcaAlgorithmMapper implements IMapper {
 
@@ -57,6 +59,7 @@ public class JcaAlgorithmMapper implements IMapper {
                 return asset;
             }
         }
-        return Optional.empty();
+
+        return Optional.of(new Unknown(str, detectionLocation));
     }
 }
