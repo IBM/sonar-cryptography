@@ -19,15 +19,20 @@
  */
 package com.ibm.mapper.model.algorithms;
 
-import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
-public class DSA extends Signature {
-    private static final String NAME = "DSA";
+/**
+ * The National Institute of Standards and Technology (NIST) proposed DSA for use in their Digital
+ * Signature Standard (DSS) in 1991, and adopted it as FIPS 186 in 1994. Five revisions to the
+ * initial specification have been released. The newest specification is: FIPS 186-5 from February
+ * 2023.
+ *
+ * <p>For now, DSS points to DSA!
+ */
+public final class DSS extends DSA {
 
-    public DSA(@NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
+    public DSS(@NotNull DetectionLocation detectionLocation) {
+        super(detectionLocation);
     }
 }

@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class CipherSuiteMapper implements IMapper {
+public final class CipherSuiteMapper implements IMapper {
 
     @NotNull @Override
     public Optional<? extends INode> parse(

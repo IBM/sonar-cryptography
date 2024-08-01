@@ -93,7 +93,7 @@ public final class PythonSignatureContextTranslator {
                 resAlgorithm.append(new Sign(detectionLocation));
                 return Optional.of(resAlgorithm);
             case VERIFY:
-                // TODO: Handle this case
+            // TODO: Handle this case
             case PADDING:
                 switch (kind) {
                     case PSS:

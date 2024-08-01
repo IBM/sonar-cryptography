@@ -24,6 +24,7 @@ import com.ibm.mapper.model.KeyAgreement;
 import com.ibm.mapper.model.algorithms.DH;
 import com.ibm.mapper.model.algorithms.ECCPWD;
 import com.ibm.mapper.model.algorithms.ECDH;
+import com.ibm.mapper.model.algorithms.GOSTR341112;
 import com.ibm.mapper.model.algorithms.Kerberos;
 import com.ibm.mapper.model.algorithms.PSK;
 import com.ibm.mapper.model.algorithms.RSA;
@@ -36,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
 public final class KeyExchangeAlgorithmMapper implements IMapper {
 
     @NotNull @Override
-    public Optional<? extends KeyAgreement> parse(
+    public Optional<KeyAgreement> parse(
             @Nullable String str, @NotNull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
@@ -50,7 +51,10 @@ public final class KeyExchangeAlgorithmMapper implements IMapper {
             case "ECCPWD" -> Optional.of(new ECCPWD(detectionLocation));
             case "PSK" -> Optional.of(new PSK(detectionLocation));
             case "KRB5" -> Optional.of(new Kerberos(5, detectionLocation));
-            case "GOSTR341112" -> Optional.empty();
+            case "GOSTR341112" ->
+                    Optional.of(new GOSTR341112(detectionLocation)).map(KeyAgreement::new);
+            case "GOSTR341112 256" ->
+                    Optional.of(new GOSTR341112(256, detectionLocation)).map(KeyAgreement::new);
             default -> Optional.empty();
         };
     }

@@ -66,9 +66,9 @@ public class JavaProtocolContextTranslator implements IContextTranslationWithKin
             };
         } else if (value instanceof CipherSuite<Tree> cipherSuite) {
             return switch (kind) {
-                    /* case TLS -> {
-                        return
-                    }*/
+                /* case TLS -> {
+                    return
+                }*/
                 default ->
                         Optional.of(cipherSuite)
                                 .map(

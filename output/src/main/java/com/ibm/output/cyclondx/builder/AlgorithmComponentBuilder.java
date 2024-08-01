@@ -208,9 +208,9 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
                     switch (paddingStr) {
                         case "no" -> org.cyclonedx.model.component.crypto.enums.Padding.RAW;
                         case "pkcs1" -> org.cyclonedx.model.component.crypto.enums.Padding.PKCS1V15;
-                            // ISO10126Padding
-                            // PKCS5Padding
-                            // SSL3Padding
+                        // ISO10126Padding
+                        // PKCS5Padding
+                        // SSL3Padding
                         case "pkcs5" -> org.cyclonedx.model.component.crypto.enums.Padding.PKCS5;
                         case "pkcs7" -> org.cyclonedx.model.component.crypto.enums.Padding.PKCS7;
                         default -> org.cyclonedx.model.component.crypto.enums.Padding.OTHER;

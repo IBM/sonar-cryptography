@@ -20,14 +20,16 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.Signature;
+import com.ibm.mapper.model.DigestSize;
+import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
-public class DSA extends Signature {
-    private static final String NAME = "DSA";
+public final class SM3 extends MessageDigest {
+    private static final String NAME = "SM3";
 
-    public DSA(@NotNull DetectionLocation detectionLocation) {
+    public SM3(@Nonnull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
+        this.append(new DigestSize(256, detectionLocation));
     }
 }

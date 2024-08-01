@@ -20,7 +20,6 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.curves.Curve448;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -32,6 +31,6 @@ public final class Ed448 extends Signature {
     public Ed448(@NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
         this.append(new Curve448(detectionLocation));
-        this.append(new SHAKE(new DigestSize(256, detectionLocation), detectionLocation));
+        this.append(new SHAKE(256, detectionLocation));
     }
 }

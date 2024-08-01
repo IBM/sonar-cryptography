@@ -45,7 +45,7 @@ import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class EncryptionAlgorithmMapper implements IMapper {
+public final class EncryptionAlgorithmMapper implements IMapper {
 
     @NotNull @Override
     public Optional<Cipher> parse(
