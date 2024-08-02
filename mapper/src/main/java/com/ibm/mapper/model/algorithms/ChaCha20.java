@@ -21,6 +21,7 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.DigestSize;
+import com.ibm.mapper.model.ICipher;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -46,5 +47,9 @@ public final class ChaCha20 extends StreamCipher {
         super(new Algorithm(NAME, detectionLocation));
         this.append(digestSize);
         this.append(padding);
+    }
+
+    public ChaCha20(@Nonnull final Class<? extends ICipher> asKind, @NotNull ChaCha20 chaCha20) {
+        super(chaCha20, asKind);
     }
 }

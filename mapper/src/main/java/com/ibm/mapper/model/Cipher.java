@@ -22,16 +22,16 @@ package com.ibm.mapper.model;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
-public class Cipher extends Algorithm {
+public class Cipher extends Algorithm implements ICipher, AuthenticatedEncryption {
 
-    protected Cipher(@Nonnull Algorithm algorithm, @Nonnull final Class<? extends Cipher> asKind) {
+    protected Cipher(@Nonnull Algorithm algorithm, @Nonnull final Class<? extends ICipher> asKind) {
         super(algorithm, asKind);
     }
 
     protected Cipher(
             @Nonnull Algorithm algorithm,
             @Nonnull Mode mode,
-            @Nonnull final Class<? extends Cipher> asKind) {
+            @Nonnull final Class<? extends ICipher> asKind) {
         super(algorithm, asKind);
         this.append(mode);
     }
@@ -44,7 +44,7 @@ public class Cipher extends Algorithm {
             @Nonnull Algorithm algorithm,
             @Nonnull Mode mode,
             @Nonnull Padding padding,
-            @Nonnull final Class<? extends Cipher> asKind) {
+            @Nonnull final Class<? extends ICipher> asKind) {
         super(algorithm, asKind);
         this.append(mode);
         this.append(padding);

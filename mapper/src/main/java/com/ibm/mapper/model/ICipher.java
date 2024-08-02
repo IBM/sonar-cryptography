@@ -17,17 +17,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.enricher.algorithm;
+package com.ibm.mapper.model;
 
-import com.ibm.enricher.ITypeEnricher;
-import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Signature;
-import java.util.Map;
-import javax.annotation.Nonnull;
-
-public interface ISignatureEnricher extends ITypeEnricher<Signature> {
-    @Override
-    void enrich(
-            @Nonnull Signature signature,
-            @Nonnull Map<Class<? extends INode>, INode> dependingNodes);
-}
+public interface ICipher extends IAlgorithm {}

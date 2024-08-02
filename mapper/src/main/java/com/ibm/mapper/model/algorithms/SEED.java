@@ -22,6 +22,7 @@ package com.ibm.mapper.model.algorithms;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.DigestSize;
+import com.ibm.mapper.model.ICipher;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -69,5 +70,9 @@ public final class SEED extends BlockCipher {
         this.append(new DigestSize(digestSize, detectionLocation));
         this.append(mode);
         this.append(padding);
+    }
+
+    public SEED(@Nonnull final Class<? extends ICipher> asKind, @NotNull SEED seed) {
+        super(seed, asKind);
     }
 }

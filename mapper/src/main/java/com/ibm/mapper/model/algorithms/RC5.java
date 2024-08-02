@@ -22,6 +22,7 @@ package com.ibm.mapper.model.algorithms;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.DigestSize;
+import com.ibm.mapper.model.ICipher;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -58,5 +59,9 @@ public final class RC5 extends BlockCipher {
         this.append(digestSize);
         this.append(mode);
         this.append(padding);
+    }
+
+    public RC5(@Nonnull final Class<? extends ICipher> asKind, @NotNull RC5 rc5) {
+        super(rc5, asKind);
     }
 }

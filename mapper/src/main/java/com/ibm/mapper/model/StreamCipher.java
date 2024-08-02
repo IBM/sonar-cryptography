@@ -35,4 +35,9 @@ public class StreamCipher extends Cipher {
             @Nonnull Algorithm algorithm, @Nonnull Mode mode, @Nonnull Padding padding) {
         super(algorithm, mode, padding, StreamCipher.class);
     }
+
+    protected StreamCipher(
+            @Nonnull Algorithm algorithm, @Nonnull final Class<? extends ICipher> asKind) {
+        super(algorithm, asKind);
+    }
 }

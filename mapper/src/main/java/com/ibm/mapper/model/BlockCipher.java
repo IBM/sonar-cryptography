@@ -34,4 +34,9 @@ public class BlockCipher extends Cipher {
     public BlockCipher(@Nonnull Algorithm algorithm, @Nonnull Mode mode, @Nonnull Padding padding) {
         super(algorithm, mode, padding, BlockCipher.class);
     }
+
+    protected BlockCipher(
+            @Nonnull Algorithm algorithm, @Nonnull final Class<? extends ICipher> asKind) {
+        super(algorithm, asKind);
+    }
 }

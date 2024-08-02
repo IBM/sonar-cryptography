@@ -21,6 +21,7 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.DigestSize;
+import com.ibm.mapper.model.ICipher;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.StreamCipher;
@@ -55,5 +56,9 @@ public final class RC4 extends StreamCipher {
         this.append(new DigestSize(digestSize, detectionLocation));
         this.append(mode);
         this.append(padding);
+    }
+
+    public RC4(@Nonnull final Class<? extends ICipher> asKind, @NotNull RC4 rc4) {
+        super(rc4, asKind);
     }
 }

@@ -21,6 +21,7 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.ICipher;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
@@ -37,5 +38,9 @@ public final class IDEA extends BlockCipher {
     public IDEA(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
         this.append(mode);
+    }
+
+    public IDEA(@Nonnull final Class<? extends ICipher> asKind, @NotNull IDEA idea) {
+        super(idea, asKind);
     }
 }

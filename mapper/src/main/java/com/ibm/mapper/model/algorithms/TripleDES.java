@@ -22,6 +22,7 @@ package com.ibm.mapper.model.algorithms;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.DigestSize;
+import com.ibm.mapper.model.ICipher;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -71,5 +72,9 @@ public final class TripleDES extends BlockCipher {
         super(new Algorithm(NAME, detectionLocation));
         this.append(mode);
         this.append(padding);
+    }
+
+    public TripleDES(@Nonnull final Class<? extends ICipher> asKind, @NotNull TripleDES tripleDES) {
+        super(tripleDES, asKind);
     }
 }

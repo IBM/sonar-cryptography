@@ -19,23 +19,4 @@
  */
 package com.ibm.mapper.model;
 
-import javax.annotation.Nonnull;
-
-public class AuthenticatedEncryption extends Cipher {
-
-    public AuthenticatedEncryption(@Nonnull Cipher cipher) {
-        super(cipher, AuthenticatedEncryption.class);
-    }
-
-    public AuthenticatedEncryption(@Nonnull Cipher cipher, @Nonnull Mode mode) {
-        super(cipher, AuthenticatedEncryption.class);
-        this.append(mode);
-    }
-
-    public AuthenticatedEncryption(
-            @Nonnull Cipher cipher, @Nonnull Mode mode, @Nonnull Padding padding) {
-        super(cipher, AuthenticatedEncryption.class);
-        this.append(mode);
-        this.append(padding);
-    }
-}
+public interface AuthenticatedEncryption extends ICipher {}

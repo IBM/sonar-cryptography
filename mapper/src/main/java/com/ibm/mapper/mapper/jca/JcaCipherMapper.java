@@ -21,8 +21,6 @@ package com.ibm.mapper.mapper.jca;
 
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.AuthenticatedEncryption;
-import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.PasswordBasedEncryption;
@@ -37,8 +35,6 @@ import com.ibm.mapper.model.algorithms.RC2;
 import com.ibm.mapper.model.algorithms.RC4;
 import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.algorithms.TripleDES;
-import com.ibm.mapper.model.mode.CCM;
-import com.ibm.mapper.model.mode.GCM;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -95,17 +91,6 @@ public class JcaCipherMapper implements IMapper {
             return Optional.empty();
         }
         final Algorithm algorithm = possibleCipher.get();
-
-        // todo: move to enricher
-        // Authenticated Encryption check
-        if (modeOptional.isPresent() && algorithm instanceof Cipher cipher) {
-            final Mode mode = modeOptional.get();
-            if (mode instanceof GCM || mode instanceof CCM) {
-                return paddingOptional
-                        .map(padding -> new AuthenticatedEncryption(cipher, mode, padding))
-                        .or(() -> Optional.of(new AuthenticatedEncryption(cipher, mode)));
-            }
-        }
 
         modeOptional.ifPresent(algorithm::append);
         paddingOptional.ifPresent(algorithm::append);

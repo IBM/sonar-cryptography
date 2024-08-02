@@ -19,21 +19,25 @@
  */
 package com.ibm.enricher.algorithm;
 
-import com.ibm.mapper.model.Algorithm;
+import com.ibm.enricher.IEnricher;
+import com.ibm.mapper.model.AuthenticatedEncryption;
+import com.ibm.mapper.model.BlockSize;
+import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.algorithms.AES;
+import com.ibm.mapper.model.mode.CCM;
+import com.ibm.mapper.model.mode.GCM;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
 
-public class AESEnricher implements IAlgorithmEnricher {
+public class AESEnricher implements IEnricher {
     private static final String BASE_OID = "2.16.840.1.101.3.4.1";
 
-    // https://oidref.com/2.16.840.1.101.3.4.1
     private static final Map<String, Integer> MODE_OID_MAP =
             Map.of(
                     "ecb", 1,
@@ -51,39 +55,33 @@ public class AESEnricher implements IAlgorithmEnricher {
                     256, 4);
 
     @Override
-    public void enrich(
-            @Nonnull final Algorithm algorithm,
-            @Nonnull final Map<Class<? extends INode>, INode> dependingNodes) {
-        if (algorithm instanceof AES aes) {
-            final KeyLength keyLength = (KeyLength) dependingNodes.get(KeyLength.class);
-            final Mode mode = (Mode) dependingNodes.get(Mode.class);
-            doEnrichment(aes, keyLength, mode);
+    public void enrich(@NotNull INode node) {
+        if (node instanceof AES aes) {
+            enrich(aes);
         }
     }
 
-    private void doEnrichment(
-            @Nonnull AES aes, @Nullable KeyLength keyLength, @Nullable Mode mode) {
-        final Map<Class<? extends INode>, INode> children = algorithm.getChildren();
-
-        if (mode == null) {
-            mode = (Mode) children.get(Mode.class);
+    private void enrich(@NotNull AES aes) {
+        @Nullable final DigestSize digestSize = aes.getDigestSize().orElse(null);
+        @Nullable final Mode mode = aes.getMode().orElse(null);
+        // add oid
+        final Oid oid = new Oid(buildOid(digestSize, mode), aes.getDetectionContext());
+        aes.append(oid);
+        // block size
+        aes.append(new BlockSize(128, aes.getDetectionContext()));
+        // authenticated encryption
+        if (mode instanceof GCM || mode instanceof CCM) {
+            final AES aeAES = new AES(AuthenticatedEncryption.class, aes);
         }
-
-        if (keyLength == null) {
-            keyLength = (KeyLength) children.get(KeyLength.class);
-        }
-
-        final Oid oid = new Oid(buildOid(keyLength, mode), algorithm.getDetectionContext());
-        algorithm.append(oid);
     }
 
     @Nonnull
-    private String buildOid(@Nullable KeyLength keyLength, @Nullable Mode mode) {
+    private String buildOid(@Nullable DigestSize digestSize, @Nullable Mode mode) {
         StringBuilder builder = new StringBuilder(BASE_OID);
-        if (keyLength == null) {
+        if (digestSize == null) {
             return BASE_OID;
         }
-        Integer keySizeOidNumber = KEYSIZE_OID_MAP.get(keyLength.getValue());
+        Integer keySizeOidNumber = KEYSIZE_OID_MAP.get(digestSize.getValue());
         if (keySizeOidNumber != null) {
             builder.append(".").append(keySizeOidNumber);
         }
