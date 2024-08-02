@@ -20,10 +20,26 @@
 package com.ibm.enricher;
 
 import com.ibm.mapper.model.INode;
-import java.util.Map;
+import com.ibm.mapper.utils.Utils;
+import java.util.List;
 import javax.annotation.Nonnull;
+import org.junit.jupiter.api.BeforeEach;
+import org.slf4j.event.Level;
+import org.sonar.api.testfixtures.log.LogTesterJUnit5;
 
-public interface ITypeEnricher<T extends INode> {
+public abstract class TestBase {
 
-    void enrich(@Nonnull T node, @Nonnull Map<Class<? extends INode>, INode> dependingNodes);
+    @BeforeEach
+    public void debug() {
+        LogTesterJUnit5 logTesterJUnit5 = new LogTesterJUnit5();
+        logTesterJUnit5.setLevel(Level.DEBUG);
+    }
+
+    protected void logBefore(@Nonnull INode node) {
+        Utils.printNodeTree("before", List.of(node));
+    }
+
+    protected void logAfter(@Nonnull INode node) {
+        Utils.printNodeTree("after", List.of(node));
+    }
 }

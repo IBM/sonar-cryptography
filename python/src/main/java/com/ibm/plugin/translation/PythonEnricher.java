@@ -54,7 +54,7 @@ public class PythonEnricher implements IEnricher {
     public static final List<Class<? extends INode>> rootLevelKinds =
             List.of(PrivateKey.class, PublicKey.class);
 
-    @Override
+    @NotNull @Override
     public void enrich(@NotNull INode node) {
         enrichPrivateKeyWithAlgorithm(node);
 

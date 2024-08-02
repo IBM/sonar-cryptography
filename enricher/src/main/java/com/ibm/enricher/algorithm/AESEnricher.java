@@ -29,11 +29,10 @@ import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.algorithms.AES;
 import com.ibm.mapper.model.mode.CCM;
 import com.ibm.mapper.model.mode.GCM;
-import org.jetbrains.annotations.NotNull;
-
+import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
 public class AESEnricher implements IEnricher {
     private static final String BASE_OID = "2.16.840.1.101.3.4.1";
@@ -54,14 +53,16 @@ public class AESEnricher implements IEnricher {
                     192, 2,
                     256, 4);
 
-    @Override
-    public void enrich(@NotNull INode node) {
+    @NotNull @Override
+    public INode enrich(@NotNull INode node) {
         if (node instanceof AES aes) {
-            enrich(aes);
+            return enrich(aes);
         }
+        return node;
     }
 
-    private void enrich(@NotNull AES aes) {
+    @Nonnull
+    private INode enrich(@NotNull AES aes) {
         @Nullable final DigestSize digestSize = aes.getDigestSize().orElse(null);
         @Nullable final Mode mode = aes.getMode().orElse(null);
         // add oid
@@ -71,8 +72,9 @@ public class AESEnricher implements IEnricher {
         aes.append(new BlockSize(128, aes.getDetectionContext()));
         // authenticated encryption
         if (mode instanceof GCM || mode instanceof CCM) {
-            final AES aeAES = new AES(AuthenticatedEncryption.class, aes);
+            return new AES(AuthenticatedEncryption.class, aes);
         }
+        return aes;
     }
 
     @Nonnull

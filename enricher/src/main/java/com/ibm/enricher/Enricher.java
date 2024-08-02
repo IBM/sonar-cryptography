@@ -19,11 +19,10 @@
  */
 package com.ibm.enricher;
 
-import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.INode;
-
-import javax.annotation.Nonnull;
 import java.util.List;
+import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This enricher instance operates on a language-agnostic level, meaning it will enrich the given
@@ -54,8 +53,8 @@ public class Enricher implements IEnricher {
      *
      * @param node The node to enrich
      */
-    @Override
-    public void enrich(@Nonnull INode node) {
-        if (node instanceof Algorithm algorithm) {}
+    @NotNull @Override
+    public INode enrich(@Nonnull INode node) {
+        return node;
     }
 }

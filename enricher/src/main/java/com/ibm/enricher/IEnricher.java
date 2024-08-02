@@ -23,5 +23,6 @@ import com.ibm.mapper.model.INode;
 import javax.annotation.Nonnull;
 
 public interface IEnricher {
-    void enrich(@Nonnull INode node);
+    @Nonnull
+    INode enrich(@Nonnull INode node);
 }
