@@ -29,11 +29,12 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
 
-public class JavaKeyAgreementContextTranslator extends JavaAbstractLibraryTranslator {
+import java.util.Optional;
+
+public final class JavaKeyAgreementContextTranslator extends JavaAbstractLibraryTranslator {
 
     @Override
     protected @NotNull Optional<INode> translateJCA(
@@ -44,8 +45,7 @@ public class JavaKeyAgreementContextTranslator extends JavaAbstractLibraryTransl
             final JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
             return jcaAlgorithmMapper
                     .parse(algorithm.asString(), detectionLocation)
-                    .map(iNode -> (com.ibm.mapper.model.Algorithm) iNode)
-                    .map(KeyAgreement::new);
+                    .map(iNode -> (com.ibm.mapper.model.Algorithm) iNode);
         } else if (value instanceof KeySize<Tree> keySize) {
             KeyLength keyLength = new KeyLength(keySize.getValue(), detectionLocation);
             return Optional.of(keyLength);
