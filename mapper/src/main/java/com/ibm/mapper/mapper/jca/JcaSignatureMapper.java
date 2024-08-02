@@ -31,9 +31,10 @@ import com.ibm.mapper.model.algorithms.EdDSA;
 import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.algorithms.RSAssaPSS;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class JcaSignatureMapper implements IMapper {
 
@@ -89,7 +90,7 @@ public class JcaSignatureMapper implements IMapper {
             case "RSASSA-PSS" -> Optional.of(new RSAssaPSS(detectionLocation));
             case "ECDSA" -> Optional.of(new ECDSA(detectionLocation));
             case "DSA" -> Optional.of(new DSA(detectionLocation));
-            case "RSA" -> Optional.of(new RSA(detectionLocation));
+            case "RSA" -> Optional.of(new RSA(Signature.class, detectionLocation));
             default -> Optional.empty();
         };
     }
