@@ -19,11 +19,17 @@
  */
 package com.ibm.mapper.model;
 
+import com.ibm.mapper.ITranslator;
+import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
 public final class PasswordBasedEncryption extends Algorithm {
+
+    public PasswordBasedEncryption(@Nonnull DetectionLocation detectionLocation) {
+        super(new Algorithm(ITranslator.UNKNOWN, detectionLocation), PasswordBasedEncryption.class);
+    }
 
     // example: PBEWithHmacSHA1AndAES_128
     public PasswordBasedEncryption(@Nonnull HMAC hmac, @Nonnull Cipher cipher) {

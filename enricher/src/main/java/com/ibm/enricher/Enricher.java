@@ -22,9 +22,10 @@ package com.ibm.enricher;
 import com.ibm.enricher.algorithm.AlgorithmEnricher;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.INode;
+
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 /**
  * This enricher instance operates on a language-agnostic level, meaning it will enrich the given

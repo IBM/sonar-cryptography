@@ -23,7 +23,8 @@ import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.AlgorithmParameter;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.Size;
-import com.ibm.engine.model.context.*;
+import com.ibm.engine.model.context.IDetectionContext;
+import com.ibm.engine.model.context.ISupportKind;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,6 +33,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@SuppressWarnings("java:S3457")
 public class DetectionStoreLogger<R, T, S, P> {
     private static final Logger LOGGER = LoggerFactory.getLogger(DetectionStoreLogger.class);
 

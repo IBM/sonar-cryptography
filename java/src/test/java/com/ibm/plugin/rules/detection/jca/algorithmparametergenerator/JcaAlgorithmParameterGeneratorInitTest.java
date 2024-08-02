@@ -19,8 +19,6 @@
  */
 package com.ibm.plugin.rules.detection.jca.algorithmparametergenerator;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
@@ -28,8 +26,9 @@ import com.ibm.engine.model.KeySize;
 import com.ibm.engine.model.context.AlgorithmParameterContext;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.PublicKeyEncryption;
+import com.ibm.mapper.model.algorithms.DH;
 import com.ibm.plugin.TestBase;
-import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.sonar.java.checks.verifier.CheckVerifier;
@@ -37,6 +36,10 @@ import org.sonar.plugins.java.api.JavaCheck;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class JcaAlgorithmParameterGeneratorInitTest extends TestBase {
 
@@ -78,7 +81,8 @@ class JcaAlgorithmParameterGeneratorInitTest extends TestBase {
          */
         assertThat(nodes).hasSize(1);
         INode node = nodes.get(0);
-        assertThat(node).isInstanceOf(com.ibm.mapper.model.Algorithm.class);
+        assertThat(node).isInstanceOf(PublicKeyEncryption.class);
+        assertThat(node).isInstanceOf(DH.class);
         assertThat(node.asString()).isEqualTo("DH");
 
         INode defaultKeyLength = node.getChildren().get(KeyLength.class);

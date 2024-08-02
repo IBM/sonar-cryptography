@@ -19,10 +19,16 @@
  */
 package com.ibm.enricher.algorithm;
 
-import com.ibm.mapper.model.*;
-import java.util.Map;
+import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.Mode;
+import com.ibm.mapper.model.Oid;
+import com.ibm.mapper.model.algorithms.AES;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Map;
 
 public class AESEnricher implements IAlgorithmEnricher {
     private static final String BASE_OID = "2.16.840.1.101.3.4.1";
@@ -48,13 +54,15 @@ public class AESEnricher implements IAlgorithmEnricher {
     public void enrich(
             @Nonnull final Algorithm algorithm,
             @Nonnull final Map<Class<? extends INode>, INode> dependingNodes) {
-        final KeyLength keyLength = (KeyLength) dependingNodes.get(KeyLength.class);
-        final Mode mode = (Mode) dependingNodes.get(Mode.class);
-        doEnrichment(algorithm, keyLength, mode);
+        if (algorithm instanceof AES aes) {
+            final KeyLength keyLength = (KeyLength) dependingNodes.get(KeyLength.class);
+            final Mode mode = (Mode) dependingNodes.get(Mode.class);
+            doEnrichment(aes, keyLength, mode);
+        }
     }
 
     private void doEnrichment(
-            @Nonnull Algorithm algorithm, @Nullable KeyLength keyLength, @Nullable Mode mode) {
+            @Nonnull AES aes, @Nullable KeyLength keyLength, @Nullable Mode mode) {
         final Map<Class<? extends INode>, INode> children = algorithm.getChildren();
 
         if (mode == null) {

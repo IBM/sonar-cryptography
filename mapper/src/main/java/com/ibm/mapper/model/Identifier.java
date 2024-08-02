@@ -27,7 +27,7 @@ public class Identifier extends Property {
     @Nonnull private final String value;
 
     public Identifier(@Nonnull String value, @Nonnull DetectionLocation detectionLocation) {
-        super(Version.class, detectionLocation);
+        super(Identifier.class, detectionLocation);
         this.value = value;
     }
 
