@@ -20,9 +20,7 @@
 package com.ibm.mapper.mapper.ssl;
 
 import com.ibm.mapper.mapper.IMapper;
-import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Protocol;
-import com.ibm.mapper.model.Signature;
+import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.algorithms.DSS;
 import com.ibm.mapper.model.algorithms.ECCPWD;
 import com.ibm.mapper.model.algorithms.ECDSA;
@@ -33,28 +31,26 @@ import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.algorithms.SHA;
 import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.utils.DetectionLocation;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
 
 // authentication mechanism during the handshake.
 public final class AuthenticationAlgorithmMapper implements IMapper {
 
     @NotNull @Override
-    public Optional<? extends INode> parse(
+    public Optional<? extends Algorithm> parse(
             @Nullable String str, @NotNull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }
 
         return switch (str) {
-            case "RSA" -> Optional.of(new RSA(detectionLocation)).map(Signature::new);
+            case "RSA" -> Optional.of(new RSA(detectionLocation));
             case "DSS" -> Optional.of(new DSS(detectionLocation));
-            case "PSK" -> Optional.of(new PSK(detectionLocation)).map(k -> (Protocol) k);
+            case "PSK" -> Optional.of(new PSK(detectionLocation));
             case "SHA RSA" ->
                     Optional.of(new RSA(detectionLocation))
-                            .map(Signature::new)
                             .map(
                                     signature -> {
                                         signature.append(new SHA(detectionLocation));
@@ -62,7 +58,6 @@ public final class AuthenticationAlgorithmMapper implements IMapper {
                                     });
             case "SHA DSS" ->
                     Optional.of(new DSS(detectionLocation))
-                            .map(Signature::new)
                             .map(
                                     signature -> {
                                         signature.append(new SHA(detectionLocation));
@@ -72,8 +67,8 @@ public final class AuthenticationAlgorithmMapper implements IMapper {
             case "SHA256" -> Optional.of(new SHA2(256, detectionLocation));
             case "SHA384" -> Optional.of(new SHA2(384, detectionLocation));
             case "GOSTR341012" -> Optional.of(new GOSTR341012(detectionLocation));
-            case "ECCPWD" -> Optional.of(new ECCPWD(detectionLocation)).map(k -> (Protocol) k);
-            case "KRB5" -> Optional.of(new Kerberos(5, detectionLocation)).map(k -> (Protocol) k);
+            case "ECCPWD" -> Optional.of(new ECCPWD(detectionLocation));
+            case "KRB5" -> Optional.of(new Kerberos(5, detectionLocation));
             case "ECDSA" -> Optional.of(new ECDSA(detectionLocation));
             case "anon", "ANON" -> Optional.empty(); // Anonymous (anon)
             default -> Optional.empty();

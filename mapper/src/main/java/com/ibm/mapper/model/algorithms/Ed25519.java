@@ -25,11 +25,11 @@ import com.ibm.mapper.model.curves.Curve25519;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
-public final class Ed25519 extends Signature {
+public final class Ed25519 extends Algorithm implements Signature {
     private static final String NAME = "Ed25519";
 
     public Ed25519(@NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
+        super(new Algorithm(NAME, detectionLocation), Signature.class);
         this.append(new Curve25519(detectionLocation));
         this.append(new SHA2(512, detectionLocation));
     }

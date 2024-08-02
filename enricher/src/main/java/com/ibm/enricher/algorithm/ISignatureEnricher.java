@@ -21,7 +21,6 @@ package com.ibm.enricher.algorithm;
 
 import com.ibm.enricher.ITypeEnricher;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Signature;
 import java.util.Map;
 import javax.annotation.Nonnull;
 

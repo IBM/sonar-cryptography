@@ -17,16 +17,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms;
+package com.ibm.mapper.model;
 
-import com.ibm.mapper.model.AuthenticatedEncryption;
-import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public final class ChaCha20_Poly1305 extends AuthenticatedEncryption {
+public interface IAlgorithm extends IAsset {
 
-    public ChaCha20_Poly1305(@Nonnull DetectionLocation detectionLocation) {
-        super(new ChaCha20(detectionLocation));
-        this.append(new Poly1305(detectionLocation));
-    }
+    @Nonnull
+    String getName();
 }

@@ -25,7 +25,6 @@ import com.ibm.mapper.model.IAsset;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PublicKeyEncryption;
-import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.mapper.reorganizer.builder.ReorganizerRuleBuilder;
 import com.ibm.mapper.utils.DetectionLocation;

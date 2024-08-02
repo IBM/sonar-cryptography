@@ -26,7 +26,6 @@ import com.ibm.engine.model.KeySize;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.KeyAgreement;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;

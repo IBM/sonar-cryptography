@@ -1,12 +1,30 @@
+/*
+ * SonarQube Cryptography Plugin
+ * Copyright (C) 2024 IBM
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to you under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.ibm.mapper.model;
 
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public final class Unknown implements INode {
     @Nonnull private final Map<Class<? extends INode>, INode> children;
@@ -50,8 +68,7 @@ public final class Unknown implements INode {
         return !this.children.isEmpty();
     }
 
-    @NotNull
-    @Override
+    @NotNull @Override
     public Map<Class<? extends INode>, INode> getChildren() {
         return this.children;
     }
@@ -61,20 +78,17 @@ public final class Unknown implements INode {
         return type.equals(Unknown.class);
     }
 
-    @NotNull
-    @Override
+    @NotNull @Override
     public Class<? extends INode> getKind() {
         return Unknown.class;
     }
 
-    @NotNull
-    @Override
+    @NotNull @Override
     public String asString() {
         return name;
     }
 
-    @NotNull
-    @Override
+    @NotNull @Override
     public Optional<INode> hasChildOfType(@NotNull Class<? extends INode> nodeType) {
         return Optional.ofNullable(children.get(nodeType));
     }
@@ -84,8 +98,7 @@ public final class Unknown implements INode {
         this.children.remove(nodeType);
     }
 
-    @NotNull
-    @Override
+    @NotNull @Override
     public INode deepCopy() {
         Unknown copy = new Unknown(this);
         for (INode child : this.children.values()) {

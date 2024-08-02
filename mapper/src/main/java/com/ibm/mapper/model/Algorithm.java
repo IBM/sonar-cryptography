@@ -27,14 +27,14 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public class Algorithm implements IAsset {
+public class Algorithm implements IAlgorithm {
     @Nonnull protected final Map<Class<? extends INode>, INode> children;
-    @Nonnull protected final Class<? extends Algorithm> kind;
+    @Nonnull protected final Class<? extends IAlgorithm> kind;
     @Nonnull protected final DetectionLocation detectionLocation;
     @Nonnull protected final String name;
 
     public Algorithm(
-            @Nonnull Algorithm algorithm, @Nonnull final Class<? extends Algorithm> asKind) {
+            @Nonnull Algorithm algorithm, @Nonnull final Class<? extends IAlgorithm> asKind) {
         this.name = algorithm.getName();
         this.children = algorithm.getChildren();
         this.detectionLocation = algorithm.detectionLocation;
@@ -70,12 +70,12 @@ public class Algorithm implements IAsset {
     }
 
     @Nonnull
-    public String getName() {
+    public @NotNull String getName() {
         return name;
     }
 
     @Nonnull
-    public Class<? extends Algorithm> getKind() {
+    public Class<? extends IAlgorithm> getKind() {
         return kind;
     }
 

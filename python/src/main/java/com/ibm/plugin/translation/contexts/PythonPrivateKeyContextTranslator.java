@@ -27,7 +27,6 @@ import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PrivateKey;
-import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.plugin.translation.PythonTranslatorUtils;

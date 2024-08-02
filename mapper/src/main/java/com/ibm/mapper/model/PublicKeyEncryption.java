@@ -19,10 +19,4 @@
  */
 package com.ibm.mapper.model;
 
-import javax.annotation.Nonnull;
-
-public class PublicKeyEncryption extends Algorithm {
-    public PublicKeyEncryption(@Nonnull Algorithm algorithm) {
-        super(algorithm, PublicKeyEncryption.class);
-    }
-}
+public interface PublicKeyEncryption extends IAlgorithm {}

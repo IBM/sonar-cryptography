@@ -20,21 +20,30 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.IAlgorithm;
+import com.ibm.mapper.model.KeyAgreement;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.PublicKeyEncryption;
+import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class RSA extends PublicKeyEncryption {
+public final class RSA extends Algorithm implements KeyAgreement, Signature, PublicKeyEncryption {
     private static final String NAME = "RSA";
 
     public RSA(@NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
+        super(new Algorithm(NAME, detectionLocation), PublicKeyEncryption.class);
     }
 
     public RSA(@Nonnull KeyLength keyLength, @Nonnull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
+        super(new Algorithm(NAME, detectionLocation), PublicKeyEncryption.class);
         this.append(keyLength);
+    }
+
+    public RSA(
+            @Nonnull final Class<? extends IAlgorithm> asKind,
+            @NotNull DetectionLocation detectionLocation) {
+        super(new Algorithm(NAME, detectionLocation), asKind);
     }
 }

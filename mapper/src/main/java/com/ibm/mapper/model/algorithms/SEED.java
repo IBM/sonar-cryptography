@@ -28,7 +28,7 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public class SEED extends BlockCipher {
+public final class SEED extends BlockCipher {
     private static final String NAME = "SEED";
 
     public SEED(@NotNull DetectionLocation detectionLocation) {

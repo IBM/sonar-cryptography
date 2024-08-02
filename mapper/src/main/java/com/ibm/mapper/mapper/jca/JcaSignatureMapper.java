@@ -89,7 +89,7 @@ public class JcaSignatureMapper implements IMapper {
             case "RSASSA-PSS" -> Optional.of(new RSAssaPSS(detectionLocation));
             case "ECDSA" -> Optional.of(new ECDSA(detectionLocation));
             case "DSA" -> Optional.of(new DSA(detectionLocation));
-            case "RSA" -> Optional.of(new RSA(detectionLocation)).map(Signature::new);
+            case "RSA" -> Optional.of(new RSA(detectionLocation));
             default -> Optional.empty();
         };
     }

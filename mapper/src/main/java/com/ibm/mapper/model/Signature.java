@@ -22,14 +22,10 @@ package com.ibm.mapper.model;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
-public class Signature extends Algorithm {
-
-    public Signature(@Nonnull Algorithm algorithm) {
-        super(algorithm, Signature.class);
-    }
+public interface Signature extends IAlgorithm {
 
     @Nonnull
-    public Optional<OutputFormat> getFormat() {
+    default Optional<OutputFormat> getFormat() {
         INode node = this.getChildren().get(OutputFormat.class);
         if (node == null) {
             return Optional.empty();
@@ -38,7 +34,7 @@ public class Signature extends Algorithm {
     }
 
     @Nonnull
-    public Optional<MessageDigest> getDigest() {
+    default Optional<MessageDigest> getDigest() {
         INode node = this.getChildren().get(MessageDigest.class);
         if (node == null) {
             return Optional.empty();
@@ -46,7 +42,7 @@ public class Signature extends Algorithm {
         return Optional.of((MessageDigest) node);
     }
 
-    public boolean isProbabilisticSignatureScheme() {
+    default boolean isProbabilisticSignatureScheme() {
         return this.getChildren().containsKey(ProbabilisticSignatureScheme.class);
     }
 }

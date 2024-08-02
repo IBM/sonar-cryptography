@@ -20,6 +20,7 @@
 package com.ibm.mapper.mapper.ssl;
 
 import com.ibm.mapper.mapper.IMapper;
+import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.KeyAgreement;
 import com.ibm.mapper.model.algorithms.DH;
 import com.ibm.mapper.model.algorithms.ECCPWD;
@@ -37,24 +38,22 @@ import org.jetbrains.annotations.Nullable;
 public final class KeyExchangeAlgorithmMapper implements IMapper {
 
     @NotNull @Override
-    public Optional<KeyAgreement> parse(
+    public Optional<? extends Algorithm> parse(
             @Nullable String str, @NotNull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }
 
         return switch (str) {
-            case "DHE", "DH" -> Optional.of(new DH(detectionLocation)).map(KeyAgreement::new);
+            case "DHE", "DH" -> Optional.of(new DH(KeyAgreement.class, detectionLocation));
             case "SRP" -> Optional.of(new SRP(detectionLocation));
-            case "RSA" -> Optional.of(new RSA(detectionLocation)).map(KeyAgreement::new);
+            case "RSA" -> Optional.of(new RSA(KeyAgreement.class, detectionLocation));
             case "ECDH", "ECDHE" -> Optional.of(new ECDH(detectionLocation));
             case "ECCPWD" -> Optional.of(new ECCPWD(detectionLocation));
             case "PSK" -> Optional.of(new PSK(detectionLocation));
             case "KRB5" -> Optional.of(new Kerberos(5, detectionLocation));
-            case "GOSTR341112" ->
-                    Optional.of(new GOSTR341112(detectionLocation)).map(KeyAgreement::new);
-            case "GOSTR341112 256" ->
-                    Optional.of(new GOSTR341112(256, detectionLocation)).map(KeyAgreement::new);
+            case "GOSTR341112" -> Optional.of(new GOSTR341112(detectionLocation));
+            case "GOSTR341112 256" -> Optional.of(new GOSTR341112(256, detectionLocation));
             default -> Optional.empty();
         };
     }

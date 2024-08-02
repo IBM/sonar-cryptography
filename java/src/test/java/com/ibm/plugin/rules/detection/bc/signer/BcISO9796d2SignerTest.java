@@ -32,7 +32,6 @@ import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Padding;
-import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;

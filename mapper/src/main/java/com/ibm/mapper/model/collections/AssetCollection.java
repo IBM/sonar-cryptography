@@ -19,26 +19,25 @@
  */
 package com.ibm.mapper.model.collections;
 
-import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.INode;
-import java.util.*;
+import java.util.List;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class AlgorithmCollection extends AbstractAssetCollection<Algorithm> {
+public class AssetCollection extends AbstractAssetCollection<INode> {
 
-    public AlgorithmCollection(@NotNull List<Algorithm> collection) {
-        super(collection, AlgorithmCollection.class);
+    public AssetCollection(@NotNull List<INode> collection) {
+        super(collection, AssetCollection.class);
     }
 
-    private AlgorithmCollection(@Nonnull AlgorithmCollection algorithmCollection) {
-        super(algorithmCollection.collection, algorithmCollection.kind);
+    private AssetCollection(@Nonnull AssetCollection assetCollection) {
+        super(assetCollection.collection, assetCollection.kind);
     }
 
     @Nonnull
     @Override
     public INode deepCopy() {
-        AlgorithmCollection copy = new AlgorithmCollection(this);
+        AssetCollection copy = new AssetCollection(this);
         for (INode child : this.children.values()) {
             copy.children.put(child.getKind(), child.deepCopy());
         }

@@ -25,7 +25,6 @@ import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Oid;
-import com.ibm.mapper.model.Signature;
 import java.util.Map;
 import javax.annotation.Nonnull;
 
