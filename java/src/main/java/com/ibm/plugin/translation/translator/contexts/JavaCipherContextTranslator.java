@@ -35,6 +35,7 @@ import com.ibm.mapper.mapper.jca.JcaCipherOperationModeMapper;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.functionality.Encapsulate;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
@@ -63,7 +64,7 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                 default -> Optional.empty();
             };
         }
-        return Optional.empty();
+        return Optional.of(new Unknown(value.asString(), detectionLocation));
     }
 
     @Override

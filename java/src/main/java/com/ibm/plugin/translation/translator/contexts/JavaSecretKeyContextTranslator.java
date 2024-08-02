@@ -31,6 +31,7 @@ import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.PasswordLength;
 import com.ibm.mapper.model.SaltLength;
 import com.ibm.mapper.model.SecretKey;
+import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
@@ -63,7 +64,7 @@ public final class JavaSecretKeyContextTranslator extends JavaAbstractLibraryTra
         } else if (value instanceof SaltSize<Tree> saltSize) {
             return Optional.of(new SaltLength(saltSize.getValue(), detectionLocation));
         }
-        return Optional.empty();
+        return Optional.of(new Unknown(value.asString(), detectionLocation));
     }
 
     @Override
@@ -71,6 +72,6 @@ public final class JavaSecretKeyContextTranslator extends JavaAbstractLibraryTra
             @NotNull IValue<Tree> value,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
-        return Optional.empty();
+        return Optional.of(new Unknown(value.asString(), detectionLocation));
     }
 }

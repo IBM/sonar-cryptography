@@ -20,19 +20,11 @@
 package com.ibm.plugin.translation.translator.contexts;
 
 import com.ibm.engine.model.IValue;
-import com.ibm.engine.model.OperationMode;
 import com.ibm.engine.model.SignatureAction;
-import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.IDetectionContext;
-import com.ibm.engine.model.context.SignatureContext;
-import com.ibm.mapper.ITranslator;
-import com.ibm.mapper.mapper.bc.BcOperationModeSigningMapper;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
-import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.EllipticCurve;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.ProbabilisticSignatureScheme;
-import com.ibm.mapper.model.PublicKeyEncryption;
+import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.model.functionality.Verify;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -57,7 +49,7 @@ public final class JavaSignatureContextTranslator extends JavaAbstractLibraryTra
                 case PADDING -> Optional.empty();
             };
         }
-        return Optional.empty();
+        return Optional.of(new Unknown(value.asString(), detectionLocation));
     }
 
     @Override
@@ -65,11 +57,11 @@ public final class JavaSignatureContextTranslator extends JavaAbstractLibraryTra
             @NotNull IValue<Tree> value,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
-        final SignatureContext.Kind kind = ((SignatureContext) detectionContext).kind();
+        /*final SignatureContext.Kind kind = ((SignatureContext) detectionContext).kind();
         if (value instanceof ValueAction<Tree> valueAction) {
             Algorithm algorithm;
             Signature signature;
-            EllipticCurveAlgorithm eca;
+            ECAlgorithm eca;
             ProbabilisticSignatureScheme pss;
             switch (kind) {
                 case EdDSA:
@@ -129,7 +121,7 @@ public final class JavaSignatureContextTranslator extends JavaAbstractLibraryTra
                 default:
                     break;
             }
-        }
-        return Optional.empty();
+        }*/
+        return Optional.of(new Unknown(value.asString(), detectionLocation));
     }
 }

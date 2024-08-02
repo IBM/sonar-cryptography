@@ -17,17 +17,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.enricher.algorithm;
+package com.ibm.mapper.model;
 
-import com.ibm.enricher.ITypeEnricher;
-import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Signature;
-import java.util.Map;
+import com.ibm.mapper.utils.DetectionLocation;
+import java.util.Optional;
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
-public interface ISignatureEnricher extends ITypeEnricher<Signature> {
-    @Override
-    void enrich(
-            @Nonnull Signature signature,
-            @Nonnull Map<Class<? extends INode>, INode> dependingNodes);
+public class ECAlgorithm extends Algorithm {
+    private static final String NAME = "EC";
+
+    public ECAlgorithm(@NotNull DetectionLocation detectionLocation) {
+        super(NAME, detectionLocation);
+    }
+
+    public ECAlgorithm(@Nonnull EllipticCurve ellipticCurve) {
+        super(NAME + "-" + ellipticCurve.asString(), ellipticCurve.detectionLocation);
+        this.append(ellipticCurve);
+    }
+
+    @Nonnull
+    public Optional<EllipticCurve> getCurve() {
+        INode node = this.getChildren().get(EllipticCurve.class);
+        if (node == null) {
+            return Optional.empty();
+        }
+        return Optional.of((EllipticCurve) node);
+    }
 }

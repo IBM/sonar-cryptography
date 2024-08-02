@@ -19,19 +19,8 @@
  */
 package com.ibm.plugin.translation.reorganizer.rules;
 
-import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.BlockCipher;
-import com.ibm.mapper.model.IAsset;
-import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.MessageDigest;
-import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
-import com.ibm.mapper.reorganizer.builder.ReorganizerRuleBuilder;
-import com.ibm.mapper.utils.DetectionLocation;
-import com.ibm.plugin.translation.reorganizer.UsualPerformActions;
-import com.ibm.plugin.translation.translator.JavaTranslator;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -41,7 +30,7 @@ public final class SignerReorganizer {
         // private
     }
 
-    private static final IReorganizerRule RENAME_SIGNATURE_PSS =
+    /*private static final IReorganizerRule RENAME_SIGNATURE_PSS =
             new ReorganizerRuleBuilder()
                     .createReorganizerRule()
                     .forNodeKind(Signature.class)
@@ -120,11 +109,9 @@ public final class SignerReorganizer {
                     .forNodeValue(JavaTranslator.UNKNOWN)
                     .withDetectionCondition(
                             (node, parent, roots) -> {
-                                /*
-                                 * The Signature node must have a MessageDigest child, and a child
-                                 * which is one of the algorithm classes below and which has a name.
-                                 * We can then name the Signature "DIGESTNAMEwithALGONAME"
-                                 */
+                                 // The Signature node must have a MessageDigest child, and a child
+                                 // which is one of the algorithm classes below and which has a name.
+                                 // We can then name the Signature "DIGESTNAMEwithALGONAME"
                                 if (!node.hasChildOfType(MessageDigest.class).isPresent()) {
                                     return false;
                                 }
@@ -160,7 +147,7 @@ public final class SignerReorganizer {
                                             }
                                         }
                                         if (algoChild == null) {
-                                            /* This case should never happen (given the detection condition) */
+                                            // This case should never happen (given the detection condition)
                                             return node;
                                         }
 
@@ -176,9 +163,11 @@ public final class SignerReorganizer {
                                                 new Algorithm(newSignatureName, detectionLocation));
                                     }));
 
+     */
+
     @Unmodifiable
     @Nonnull
     public static List<IReorganizerRule> rules() {
-        return List.of(RENAME_SIGNATURE, RENAME_SIGNATURE_PSS, RENAME_SIGNATURE_RSA);
+        return List.of(); // RENAME_SIGNATURE, RENAME_SIGNATURE_PSS, RENAME_SIGNATURE_RSA
     }
 }
