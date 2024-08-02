@@ -28,8 +28,8 @@ import javax.annotation.Nonnull;
 public final class SHAKE extends MessageDigest {
     private static final String NAME = "SHAKE";
 
-    public SHAKE(@Nonnull DigestSize digestSize, @Nonnull DetectionLocation detectionLocation) {
+    public SHAKE(int digestSize, @Nonnull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
-        this.append(digestSize);
+        this.append(new DigestSize(digestSize, detectionLocation));
     }
 }

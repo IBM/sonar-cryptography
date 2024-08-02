@@ -24,10 +24,10 @@ import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
-public final class DSA extends Signature {
+public class DSA extends Algorithm implements Signature {
     private static final String NAME = "DSA";
 
     public DSA(@NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
+        super(new Algorithm(NAME, detectionLocation), Signature.class);
     }
 }

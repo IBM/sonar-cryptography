@@ -17,31 +17,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.collections;
+package com.ibm.mapper.model.algorithms;
 
-import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.INode;
-import java.util.*;
-import javax.annotation.Nonnull;
+import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
-public final class AlgorithmCollection extends AbstractAssetCollection<Algorithm> {
+/**
+ * The National Institute of Standards and Technology (NIST) proposed DSA for use in their Digital
+ * Signature Standard (DSS) in 1991, and adopted it as FIPS 186 in 1994. Five revisions to the
+ * initial specification have been released. The newest specification is: FIPS 186-5 from February
+ * 2023.
+ *
+ * <p>For now, DSS points to DSA!
+ */
+public final class DSS extends DSA {
 
-    public AlgorithmCollection(@NotNull List<Algorithm> collection) {
-        super(collection, AlgorithmCollection.class);
-    }
-
-    private AlgorithmCollection(@Nonnull AlgorithmCollection algorithmCollection) {
-        super(algorithmCollection.collection, algorithmCollection.kind);
-    }
-
-    @Nonnull
-    @Override
-    public INode deepCopy() {
-        AlgorithmCollection copy = new AlgorithmCollection(this);
-        for (INode child : this.children.values()) {
-            copy.children.put(child.getKind(), child.deepCopy());
-        }
-        return copy;
+    public DSS(@NotNull DetectionLocation detectionLocation) {
+        super(detectionLocation);
     }
 }

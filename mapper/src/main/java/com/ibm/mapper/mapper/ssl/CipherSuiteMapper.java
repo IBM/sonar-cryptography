@@ -24,14 +24,21 @@ import com.ibm.mapper.mapper.ssl.json.JsonCipherSuite;
 import com.ibm.mapper.mapper.ssl.json.JsonCipherSuites;
 import com.ibm.mapper.model.CipherSuite;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Identifier;
+import com.ibm.mapper.model.Unknown;
+import com.ibm.mapper.model.collections.AssetCollection;
+import com.ibm.mapper.model.collections.IdentifierCollection;
 import com.ibm.mapper.utils.DetectionLocation;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class CipherSuiteMapper implements IMapper {
+public final class CipherSuiteMapper implements IMapper {
 
     @NotNull @Override
     public Optional<? extends INode> parse(
@@ -43,12 +50,11 @@ public class CipherSuiteMapper implements IMapper {
         Optional<JsonCipherSuite> possibleJsonCipherSuite = findCipherSuite(str);
         if (possibleJsonCipherSuite.isEmpty()) {
             // return a 'simple' cipher object
-            return Optional.empty();
+            return Optional.of(new Unknown(str, detectionLocation));
         }
         final JsonCipherSuite jsonCipherSuite = possibleJsonCipherSuite.get();
 
-        final CipherSuite cipherSuite =
-                new CipherSuite(jsonCipherSuite.getIanaName(), detectionLocation);
+        List<INode> assets = new ArrayList<>();
         // key agreement
         jsonCipherSuite
                 .getKexAlgorithm()
@@ -58,7 +64,17 @@ public class CipherSuiteMapper implements IMapper {
                                     new KeyExchangeAlgorithmMapper();
                             return keyExchangeAlgorithmMapper.parse(algoStr, detectionLocation);
                         })
-                .ifPresent(cipherSuite::append);
+                .ifPresent(assets::add);
+        // authentication agreement
+        jsonCipherSuite
+                .getAuthAlgorithm()
+                .flatMap(
+                        algoStr -> {
+                            final AuthenticationAlgorithmMapper authenticationAlgorithmMapper =
+                                    new AuthenticationAlgorithmMapper();
+                            return authenticationAlgorithmMapper.parse(algoStr, detectionLocation);
+                        })
+                .ifPresent(assets::add);
         // encryption algorithm
         jsonCipherSuite
                 .getEncAlgorithm()
@@ -68,7 +84,36 @@ public class CipherSuiteMapper implements IMapper {
                                     new EncryptionAlgorithmMapper();
                             return encryptionAlgorithmMapper.parse(algoStr, detectionLocation);
                         })
+                .ifPresent(assets::add);
+        // hash algorithm
+        jsonCipherSuite
+                .getHashAlgorithm()
+                .flatMap(
+                        algoStr -> {
+                            final HashAlgorithmMapper hashAlgorithmMapper =
+                                    new HashAlgorithmMapper();
+                            return hashAlgorithmMapper.parse(algoStr, detectionLocation);
+                        })
+                .ifPresent(assets::add);
+
+        final CipherSuite cipherSuite =
+                new CipherSuite(
+                        jsonCipherSuite.getIanaName(),
+                        new AssetCollection(assets),
+                        detectionLocation);
+        jsonCipherSuite
+                .getIdentifiers()
+                .flatMap(
+                        ids -> {
+                            final List<Identifier> identifiers =
+                                    Arrays.stream(ids)
+                                            .map(idStr -> new Identifier(idStr, detectionLocation))
+                                            .toList();
+                            return Optional.of(identifiers.stream());
+                        })
+                .map(identifierStream -> new IdentifierCollection(identifierStream.toList()))
                 .ifPresent(cipherSuite::append);
+
         return Optional.of(cipherSuite);
     }
 

@@ -24,7 +24,6 @@ import com.ibm.engine.model.KeyAction;
 import com.ibm.engine.model.context.KeyContext;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.EllipticCurve;
-import com.ibm.mapper.model.EllipticCurveAlgorithm;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.PublicKey;
 import com.ibm.mapper.model.functionality.KeyGeneration;

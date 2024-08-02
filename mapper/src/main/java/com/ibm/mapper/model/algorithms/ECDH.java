@@ -19,23 +19,23 @@
  */
 package com.ibm.mapper.model.algorithms;
 
+import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.EllipticCurve;
 import com.ibm.mapper.model.KeyAgreement;
-import com.ibm.mapper.model.Protocol;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class ECDH extends KeyAgreement {
+public final class ECDH extends Algorithm implements KeyAgreement {
     private static final String NAME = "ECDH";
 
     public ECDH(@NotNull DetectionLocation detectionLocation) {
-        super(new Protocol(NAME, detectionLocation));
+        super(new Algorithm(NAME, detectionLocation), KeyAgreement.class);
     }
 
     public ECDH(
             @Nonnull EllipticCurve ellipticCurve, @Nonnull DetectionLocation detectionLocation) {
-        super(new Protocol(NAME, detectionLocation));
+        super(new Algorithm(NAME, detectionLocation), KeyAgreement.class);
         this.append(ellipticCurve);
     }
 }

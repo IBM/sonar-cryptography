@@ -17,16 +17,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.enricher.algorithm;
+package com.ibm.mapper.model.algorithms;
 
-import com.ibm.enricher.ITypeEnricher;
-import com.ibm.mapper.model.INode;
-import java.util.Map;
+import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.Signature;
+import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public interface ISignatureEnricher extends ITypeEnricher<Signature> {
-    @Override
-    void enrich(
-            @Nonnull Signature signature,
-            @Nonnull Map<Class<? extends INode>, INode> dependingNodes);
+public final class GOSTR341012 extends Algorithm implements Signature {
+    private static final String NAME = "GOSTR341012";
+
+    public GOSTR341012(@Nonnull DetectionLocation detectionLocation) {
+        super(new Algorithm(NAME, detectionLocation), Signature.class);
+    }
 }

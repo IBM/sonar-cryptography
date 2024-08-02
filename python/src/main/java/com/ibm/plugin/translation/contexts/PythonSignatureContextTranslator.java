@@ -27,7 +27,6 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MaskGenerationFunction;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.ProbabilisticSignatureScheme;
-import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.plugin.translation.PythonEnricher;
@@ -93,7 +92,7 @@ public final class PythonSignatureContextTranslator {
                 resAlgorithm.append(new Sign(detectionLocation));
                 return Optional.of(resAlgorithm);
             case VERIFY:
-                // TODO: Handle this case
+            // TODO: Handle this case
             case PADDING:
                 switch (kind) {
                     case PSS:

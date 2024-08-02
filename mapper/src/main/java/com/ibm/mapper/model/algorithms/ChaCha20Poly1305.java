@@ -17,29 +17,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model;
+package com.ibm.mapper.model.algorithms;
 
-import java.util.Optional;
+import com.ibm.mapper.model.AuthenticatedEncryption;
+import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class EllipticCurveAlgorithm extends PublicKeyEncryption {
+public final class ChaCha20Poly1305 extends AuthenticatedEncryption {
 
-    public EllipticCurveAlgorithm(@Nonnull Algorithm algorithm) {
-        super(algorithm);
-    }
-
-    public EllipticCurveAlgorithm(
-            @Nonnull Algorithm algorithm, @Nonnull EllipticCurve ellipticCurve) {
-        super(algorithm);
-        this.append(ellipticCurve);
-    }
-
-    @Nonnull
-    public Optional<EllipticCurve> getCurve() {
-        INode node = this.getChildren().get(EllipticCurve.class);
-        if (node == null) {
-            return Optional.empty();
-        }
-        return Optional.of((EllipticCurve) node);
+    public ChaCha20Poly1305(@Nonnull DetectionLocation detectionLocation) {
+        super(new ChaCha20(detectionLocation));
+        this.append(new Poly1305(detectionLocation));
     }
 }

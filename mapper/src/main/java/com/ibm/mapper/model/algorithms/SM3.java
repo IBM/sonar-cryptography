@@ -17,16 +17,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.enricher.algorithm;
+package com.ibm.mapper.model.algorithms;
 
-import com.ibm.enricher.ITypeEnricher;
-import com.ibm.mapper.model.INode;
-import java.util.Map;
+import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.DigestSize;
+import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public interface ISignatureEnricher extends ITypeEnricher<Signature> {
-    @Override
-    void enrich(
-            @Nonnull Signature signature,
-            @Nonnull Map<Class<? extends INode>, INode> dependingNodes);
+public final class SM3 extends MessageDigest {
+    private static final String NAME = "SM3";
+
+    public SM3(@Nonnull DetectionLocation detectionLocation) {
+        super(new Algorithm(NAME, detectionLocation));
+        this.append(new DigestSize(256, detectionLocation));
+    }
 }

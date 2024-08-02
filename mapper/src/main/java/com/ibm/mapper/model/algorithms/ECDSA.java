@@ -25,16 +25,16 @@ import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
-public final class ECDSA extends Signature {
+public final class ECDSA extends Algorithm implements Signature {
     private static final String NAME = "ECDSA";
 
     public ECDSA(@NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
+        super(new Algorithm(NAME, detectionLocation), Signature.class);
     }
 
     public ECDSA(
             @NotNull EllipticCurve ellipticCurve, @NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
+        super(new Algorithm(NAME, detectionLocation), Signature.class);
         this.append(ellipticCurve);
     }
 }

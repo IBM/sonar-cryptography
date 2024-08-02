@@ -24,7 +24,7 @@ import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.model.algorithms.AES;
 import com.ibm.mapper.model.algorithms.Aria;
 import com.ibm.mapper.model.algorithms.Camellia;
-import com.ibm.mapper.model.algorithms.ChaCha20_Poly1305;
+import com.ibm.mapper.model.algorithms.ChaCha20Poly1305;
 import com.ibm.mapper.model.algorithms.DES;
 import com.ibm.mapper.model.algorithms.GOST28147;
 import com.ibm.mapper.model.algorithms.GOSTR34122015;
@@ -45,7 +45,7 @@ import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class EncryptionAlgorithmMapper implements IMapper {
+public final class EncryptionAlgorithmMapper implements IMapper {
 
     @NotNull @Override
     public Optional<Cipher> parse(
@@ -71,7 +71,7 @@ public class EncryptionAlgorithmMapper implements IMapper {
                     Optional.of(new AES(256, new GCM(detectionLocation), detectionLocation));
             case "AES 256 CBC" ->
                     Optional.of(new AES(256, new CBC(detectionLocation), detectionLocation));
-            case "CHACHA20 POLY1305" -> Optional.of(new ChaCha20_Poly1305(detectionLocation));
+            case "CHACHA20 POLY1305" -> Optional.of(new ChaCha20Poly1305(detectionLocation));
             case "RC4 40" -> Optional.of(new RC4(40, detectionLocation));
             case "RC4 128" -> Optional.of(new RC4(128, detectionLocation));
             case "RC2 CBC 40" ->

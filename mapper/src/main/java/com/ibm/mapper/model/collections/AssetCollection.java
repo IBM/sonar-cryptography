@@ -17,16 +17,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.enricher.algorithm;
+package com.ibm.mapper.model.collections;
 
-import com.ibm.enricher.ITypeEnricher;
 import com.ibm.mapper.model.INode;
-import java.util.Map;
+import java.util.List;
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
-public interface ISignatureEnricher extends ITypeEnricher<Signature> {
+public class AssetCollection extends AbstractAssetCollection<INode> {
+
+    public AssetCollection(@NotNull List<INode> collection) {
+        super(collection, AssetCollection.class);
+    }
+
+    private AssetCollection(@Nonnull AssetCollection assetCollection) {
+        super(assetCollection.collection, assetCollection.kind);
+    }
+
+    @Nonnull
     @Override
-    void enrich(
-            @Nonnull Signature signature,
-            @Nonnull Map<Class<? extends INode>, INode> dependingNodes);
+    public INode deepCopy() {
+        AssetCollection copy = new AssetCollection(this);
+        for (INode child : this.children.values()) {
+            copy.children.put(child.getKind(), child.deepCopy());
+        }
+        return copy;
+    }
 }

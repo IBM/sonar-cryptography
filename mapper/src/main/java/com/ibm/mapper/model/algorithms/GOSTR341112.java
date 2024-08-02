@@ -19,4 +19,25 @@
  */
 package com.ibm.mapper.model.algorithms;
 
-public class GOSTR341112 {}
+import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.BlockSize;
+import com.ibm.mapper.model.DigestSize;
+import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.utils.DetectionLocation;
+import javax.annotation.Nonnull;
+
+// Streebog
+public final class GOSTR341112 extends MessageDigest {
+    private static final String NAME = "GOSTR341112";
+
+    public GOSTR341112(@Nonnull DetectionLocation detectionLocation) {
+        super(new Algorithm(NAME, detectionLocation));
+        this.append(new BlockSize(512, detectionLocation));
+    }
+
+    public GOSTR341112(int digestSize, @Nonnull DetectionLocation detectionLocation) {
+        super(new Algorithm(NAME, detectionLocation));
+        this.append(new DigestSize(digestSize, detectionLocation));
+        this.append(new BlockSize(512, detectionLocation));
+    }
+}

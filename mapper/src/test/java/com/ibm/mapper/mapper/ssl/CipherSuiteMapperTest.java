@@ -19,13 +19,21 @@
  */
 package com.ibm.mapper.mapper.ssl;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
+import com.ibm.mapper.model.CipherSuite;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Identifier;
+import com.ibm.mapper.model.KeyAgreement;
+import com.ibm.mapper.model.algorithms.AES;
+import com.ibm.mapper.model.algorithms.DH;
+import com.ibm.mapper.model.algorithms.DSA;
+import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.utils.DetectionLocation;
+import org.junit.Test;
+
 import java.util.List;
 import java.util.Optional;
-import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CipherSuiteMapperTest {
 
@@ -37,6 +45,28 @@ public class CipherSuiteMapperTest {
         final CipherSuiteMapper mapper = new CipherSuiteMapper();
         final Optional<? extends INode> node =
                 mapper.parse("TLS_DHE_DSS_WITH_AES_256_CBC_SHA256", testDetectionLocation);
+        assertThat(node).isPresent();
+        assertThat(node.get().is(CipherSuite.class)).isTrue();
+        final CipherSuite cipherSuite = (CipherSuite) node.get();
+
+        assertThat(cipherSuite.getAssetCollection()).isPresent();
+        assertThat(cipherSuite.getIdentifierCollection()).isPresent();
+
+        final List<INode> assetCollection = cipherSuite.getAssetCollection().get().getCollection();
+        final List<Identifier> identifierCollection =
+                cipherSuite.getIdentifierCollection().get().getCollection();
+        assertThat(assetCollection).isNotEmpty();
+        assertThat(identifierCollection).isNotEmpty();
+
+        assertThat(identifierCollection.stream().map(Identifier::asString))
+                .contains("0x00", "0x6A");
+
+        assertThat(assetCollection)
+                .contains(
+                        new AES(testDetectionLocation),
+                        new DSA(testDetectionLocation),
+                        new SHA2(256, testDetectionLocation),
+                        new DH(KeyAgreement.class, testDetectionLocation));
     }
 
     @Test

@@ -21,21 +21,22 @@ package com.ibm.mapper.mapper.ssl;
 
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.KeyAgreement;
-import com.ibm.mapper.model.algorithms.DH;
+import com.ibm.mapper.model.algorithms.DSS;
 import com.ibm.mapper.model.algorithms.ECCPWD;
-import com.ibm.mapper.model.algorithms.ECDH;
-import com.ibm.mapper.model.algorithms.GOSTR341112;
+import com.ibm.mapper.model.algorithms.ECDSA;
+import com.ibm.mapper.model.algorithms.GOSTR341012;
 import com.ibm.mapper.model.algorithms.Kerberos;
 import com.ibm.mapper.model.algorithms.PSK;
 import com.ibm.mapper.model.algorithms.RSA;
-import com.ibm.mapper.model.algorithms.SRP;
+import com.ibm.mapper.model.algorithms.SHA;
+import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public final class KeyExchangeAlgorithmMapper implements IMapper {
+// authentication mechanism during the handshake.
+public final class AuthenticationAlgorithmMapper implements IMapper {
 
     @NotNull @Override
     public Optional<? extends Algorithm> parse(
@@ -45,15 +46,31 @@ public final class KeyExchangeAlgorithmMapper implements IMapper {
         }
 
         return switch (str) {
-            case "DHE", "DH" -> Optional.of(new DH(KeyAgreement.class, detectionLocation));
-            case "SRP" -> Optional.of(new SRP(detectionLocation));
-            case "RSA" -> Optional.of(new RSA(KeyAgreement.class, detectionLocation));
-            case "ECDH", "ECDHE" -> Optional.of(new ECDH(detectionLocation));
-            case "ECCPWD" -> Optional.of(new ECCPWD(detectionLocation));
+            case "RSA" -> Optional.of(new RSA(detectionLocation));
+            case "DSS" -> Optional.of(new DSS(detectionLocation));
             case "PSK" -> Optional.of(new PSK(detectionLocation));
+            case "SHA RSA" ->
+                    Optional.of(new RSA(detectionLocation))
+                            .map(
+                                    signature -> {
+                                        signature.append(new SHA(detectionLocation));
+                                        return signature;
+                                    });
+            case "SHA DSS" ->
+                    Optional.of(new DSS(detectionLocation))
+                            .map(
+                                    signature -> {
+                                        signature.append(new SHA(detectionLocation));
+                                        return signature;
+                                    });
+            case "SHA" -> Optional.of(new SHA(detectionLocation));
+            case "SHA256" -> Optional.of(new SHA2(256, detectionLocation));
+            case "SHA384" -> Optional.of(new SHA2(384, detectionLocation));
+            case "GOSTR341012" -> Optional.of(new GOSTR341012(detectionLocation));
+            case "ECCPWD" -> Optional.of(new ECCPWD(detectionLocation));
             case "KRB5" -> Optional.of(new Kerberos(5, detectionLocation));
-            case "GOSTR341112" -> Optional.of(new GOSTR341112(detectionLocation));
-            case "GOSTR341112 256" -> Optional.of(new GOSTR341112(256, detectionLocation));
+            case "ECDSA" -> Optional.of(new ECDSA(detectionLocation));
+            case "anon", "ANON" -> Optional.empty(); // Anonymous (anon)
             default -> Optional.empty();
         };
     }

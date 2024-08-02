@@ -106,201 +106,201 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                             new BlockCipher(
                                     new com.ibm.mapper.model.Algorithm(
                                             valueAction.asString(), detectionLocation)));
-                    /*case ASYMMETRIC_CIPHER_ENGINE_SIGNATURE:
-                        return Optional.of(
-                                new PublicKeyEncryption(
-                                        new com.ibm.mapper.model.Algorithm(
-                                                valueAction.asString(), detectionLocation)));
-                    case WRAP_RFC:
-                        // Should the RFC value be reflected in the translation? Where?
-                        return Optional.of(
-                                new BlockCipher(
-                                        new com.ibm.mapper.model.Algorithm(
-                                                ITranslator.UNKNOWN, detectionLocation)));
-                    case STREAM_CIPHER_ENGINE:
-                        return Optional.of(
-                                new StreamCipher(
-                                        new com.ibm.mapper.model.Algorithm(
-                                                valueAction.asString(), detectionLocation)));
-                    case HASH:
-                        return Optional.of(
+                /*case ASYMMETRIC_CIPHER_ENGINE_SIGNATURE:
+                    return Optional.of(
+                            new PublicKeyEncryption(
+                                    new com.ibm.mapper.model.Algorithm(
+                                            valueAction.asString(), detectionLocation)));
+                case WRAP_RFC:
+                    // Should the RFC value be reflected in the translation? Where?
+                    return Optional.of(
+                            new BlockCipher(
+                                    new com.ibm.mapper.model.Algorithm(
+                                            ITranslator.UNKNOWN, detectionLocation)));
+                case STREAM_CIPHER_ENGINE:
+                    return Optional.of(
+                            new StreamCipher(
+                                    new com.ibm.mapper.model.Algorithm(
+                                            valueAction.asString(), detectionLocation)));
+                case HASH:
+                    return Optional.of(
+                            new MessageDigest(
+                                    new com.ibm.mapper.model.Algorithm(
+                                            valueAction.asString(), detectionLocation)));
+                case BLOCK_CIPHER, BUFFERED_BLOCK_CIPHER:
+                    String blockCipherString = null;
+                    String modeString = valueAction.asString();
+                    boolean addMode = true;
+                    String paddingString = "PKCS7";
+                    boolean addPadding = false;
+
+                    List<String> isNotAModeList =
+                            List.of(
+                                    "Buffered",
+                                    "DefaultBuffered",
+                                    "Padded",
+                                    "PaddedBuffered",
+                                    "PaddedBuffered(PKCS7)");
+                    if (isNotAModeList.contains(modeString)) {
+                        addMode = false;
+
+                        if (modeString.contains(paddingString)) {
+                            addPadding = true;
+                        }
+                    }
+
+                    if (modeString.contains("|")) {
+                        String[] split = modeString.split("\\|");
+                        if (split.length != 2) {
+                            break;
+                        }
+
+                        blockCipherString = split[0];
+                        modeString = split[1];
+                    }
+
+                    mode = new Mode(modeString, detectionLocation);
+                    padding = new Padding(paddingString, detectionLocation);
+                    algorithm =
+                            new com.ibm.mapper.model.Algorithm(
+                                    blockCipherString != null
+                                            ? blockCipherString
+                                            : ITranslator.UNKNOWN,
+                                    detectionLocation);
+                    blockCipher =
+                            new BlockCipher(
+                                    algorithm, addMode ? mode : null, addPadding ? padding : null);
+                    return Optional.of(blockCipher);
+                case AEAD_BLOCK_CIPHER:
+                    String modeName = valueAction.asString();
+
+                    String defaultAlgorithmName = ITranslator.UNKNOWN;
+                    // Some mode implementations assume a default BlockCipher
+                    switch (modeName) {
+                        case "GCM-SIV":
+                            defaultAlgorithmName = "AES";
+                            break;
+                        case "KGCM":
+                            defaultAlgorithmName = "DSTU7624:2014";
+                            modeName = "GCM";
+                            break;
+                        default:
+                            break;
+                    }
+
+                    mode = new Mode(modeName, detectionLocation);
+
+                    algorithm =
+                            new com.ibm.mapper.model.Algorithm(
+                                    defaultAlgorithmName, detectionLocation);
+                    final Cipher cipher = new Cipher(algorithm);
+                    ae = new AuthenticatedEncryption(cipher, mode);
+                    return Optional.of(ae);
+                case AEAD_ENGINE:
+                    ae =
+                            new AuthenticatedEncryption(
+                                    new com.ibm.mapper.model.Algorithm(
+                                            valueAction.asString(), detectionLocation));
+                    return Optional.of(ae);
+                case CHACHA20POLY1305:
+                    ae =
+                            new AuthenticatedEncryption(
+                                    new com.ibm.mapper.model.Algorithm(
+                                            "ChaCha20Poly1305", detectionLocation),
+                                    null,
+                                    null,
+                                    null);
+                    HMAC mac =
+                            new HMAC(
+                                    new com.ibm.mapper.model.Algorithm(
+                                            "Poly1305", detectionLocation));
+                    mac.append(new Tag(detectionLocation));
+                    mac.append(new Digest(detectionLocation));
+
+                    ae.append(mac);
+                    ae.append(
+                            new StreamCipher(
+                                    new com.ibm.mapper.model.Algorithm(
+                                            "ChaCha20", detectionLocation)));
+                    return Optional.of(ae);
+                case ENCODING:
+                    blockCipher =
+                            new BlockCipher(
+                                    new com.ibm.mapper.model.Algorithm(
+                                            ITranslator.UNKNOWN, detectionLocation));
+
+                    padding =
+                            new Padding(valueAction.asString(), detectionLocation);
+                    switch (valueAction.asString()) {
+                        case "OAEP":
+                            blockCipher.append(new OAEP(padding));
+                            break;
+                        default:
+                            blockCipher.append(padding);
+                            break;
+                    }
+
+                    return Optional.of(blockCipher);
+                case ENCODING_SIGNATURE:
+                    pke =
+                            new PublicKeyEncryption(
+                                    new com.ibm.mapper.model.Algorithm(
+                                            ITranslator.UNKNOWN, detectionLocation));
+
+                    padding =
+                            new Padding(valueAction.asString(), detectionLocation);
+                    switch (valueAction.asString()) {
+                        case "OAEP":
+                            pke.append(new OAEP(padding));
+                            break;
+                        default:
+                            pke.append(padding);
+                            break;
+                    }
+
+                    return Optional.of(pke);
+                case ASYMMETRIC_BUFFERED_BLOCK_CIPHER:
+                    blockCipher =
+                            new BlockCipher(
+                                    new com.ibm.mapper.model.Algorithm(
+                                            ITranslator.UNKNOWN, detectionLocation));
+                    return Optional.of(blockCipher);
+                case PADDING:
+                    padding =
+                            new Padding(valueAction.asString(), detectionLocation);
+                    return Optional.of(padding);
+                case PBE:
+                    String algorithmName = valueAction.asString();
+                    switch (valueAction.asString()) {
+                        case "OpenSSLPBE":
+                            algorithmName = "PKCS #5 v2.0 Scheme 1";
+                            break;
+                        case "PKCS12":
+                            algorithmName = "PKCS #12 v1.0";
+                            break;
+                        case "PKCS5S1":
+                            algorithmName = "PKCS #5 v2.0 Scheme 1";
+                            break;
+                        case "PKCS5S2":
+                            algorithmName = "PKCS #5 v2.0 Scheme 2";
+                            break;
+                        default:
+                            break;
+                    }
+
+                    algorithm =
+                            new com.ibm.mapper.model.Algorithm(algorithmName, detectionLocation);
+                    pbe = new PasswordBasedEncryption(algorithm);
+
+                    if (valueAction.asString().equals("OpenSSLPBE")) {
+                        // Default digest is MD5
+                        pbe.append(
                                 new MessageDigest(
                                         new com.ibm.mapper.model.Algorithm(
-                                                valueAction.asString(), detectionLocation)));
-                    case BLOCK_CIPHER, BUFFERED_BLOCK_CIPHER:
-                        String blockCipherString = null;
-                        String modeString = valueAction.asString();
-                        boolean addMode = true;
-                        String paddingString = "PKCS7";
-                        boolean addPadding = false;
+                                                "MD5", detectionLocation)));
+                    }
 
-                        List<String> isNotAModeList =
-                                List.of(
-                                        "Buffered",
-                                        "DefaultBuffered",
-                                        "Padded",
-                                        "PaddedBuffered",
-                                        "PaddedBuffered(PKCS7)");
-                        if (isNotAModeList.contains(modeString)) {
-                            addMode = false;
-
-                            if (modeString.contains(paddingString)) {
-                                addPadding = true;
-                            }
-                        }
-
-                        if (modeString.contains("|")) {
-                            String[] split = modeString.split("\\|");
-                            if (split.length != 2) {
-                                break;
-                            }
-
-                            blockCipherString = split[0];
-                            modeString = split[1];
-                        }
-
-                        mode = new Mode(modeString, detectionLocation);
-                        padding = new Padding(paddingString, detectionLocation);
-                        algorithm =
-                                new com.ibm.mapper.model.Algorithm(
-                                        blockCipherString != null
-                                                ? blockCipherString
-                                                : ITranslator.UNKNOWN,
-                                        detectionLocation);
-                        blockCipher =
-                                new BlockCipher(
-                                        algorithm, addMode ? mode : null, addPadding ? padding : null);
-                        return Optional.of(blockCipher);
-                    case AEAD_BLOCK_CIPHER:
-                        String modeName = valueAction.asString();
-
-                        String defaultAlgorithmName = ITranslator.UNKNOWN;
-                        // Some mode implementations assume a default BlockCipher
-                        switch (modeName) {
-                            case "GCM-SIV":
-                                defaultAlgorithmName = "AES";
-                                break;
-                            case "KGCM":
-                                defaultAlgorithmName = "DSTU7624:2014";
-                                modeName = "GCM";
-                                break;
-                            default:
-                                break;
-                        }
-
-                        mode = new Mode(modeName, detectionLocation);
-
-                        algorithm =
-                                new com.ibm.mapper.model.Algorithm(
-                                        defaultAlgorithmName, detectionLocation);
-                        final Cipher cipher = new Cipher(algorithm);
-                        ae = new AuthenticatedEncryption(cipher, mode);
-                        return Optional.of(ae);
-                    case AEAD_ENGINE:
-                        ae =
-                                new AuthenticatedEncryption(
-                                        new com.ibm.mapper.model.Algorithm(
-                                                valueAction.asString(), detectionLocation));
-                        return Optional.of(ae);
-                    case CHACHA20POLY1305:
-                        ae =
-                                new AuthenticatedEncryption(
-                                        new com.ibm.mapper.model.Algorithm(
-                                                "ChaCha20Poly1305", detectionLocation),
-                                        null,
-                                        null,
-                                        null);
-                        HMAC mac =
-                                new HMAC(
-                                        new com.ibm.mapper.model.Algorithm(
-                                                "Poly1305", detectionLocation));
-                        mac.append(new Tag(detectionLocation));
-                        mac.append(new Digest(detectionLocation));
-
-                        ae.append(mac);
-                        ae.append(
-                                new StreamCipher(
-                                        new com.ibm.mapper.model.Algorithm(
-                                                "ChaCha20", detectionLocation)));
-                        return Optional.of(ae);
-                    case ENCODING:
-                        blockCipher =
-                                new BlockCipher(
-                                        new com.ibm.mapper.model.Algorithm(
-                                                ITranslator.UNKNOWN, detectionLocation));
-
-                        padding =
-                                new Padding(valueAction.asString(), detectionLocation);
-                        switch (valueAction.asString()) {
-                            case "OAEP":
-                                blockCipher.append(new OAEP(padding));
-                                break;
-                            default:
-                                blockCipher.append(padding);
-                                break;
-                        }
-
-                        return Optional.of(blockCipher);
-                    case ENCODING_SIGNATURE:
-                        pke =
-                                new PublicKeyEncryption(
-                                        new com.ibm.mapper.model.Algorithm(
-                                                ITranslator.UNKNOWN, detectionLocation));
-
-                        padding =
-                                new Padding(valueAction.asString(), detectionLocation);
-                        switch (valueAction.asString()) {
-                            case "OAEP":
-                                pke.append(new OAEP(padding));
-                                break;
-                            default:
-                                pke.append(padding);
-                                break;
-                        }
-
-                        return Optional.of(pke);
-                    case ASYMMETRIC_BUFFERED_BLOCK_CIPHER:
-                        blockCipher =
-                                new BlockCipher(
-                                        new com.ibm.mapper.model.Algorithm(
-                                                ITranslator.UNKNOWN, detectionLocation));
-                        return Optional.of(blockCipher);
-                    case PADDING:
-                        padding =
-                                new Padding(valueAction.asString(), detectionLocation);
-                        return Optional.of(padding);
-                    case PBE:
-                        String algorithmName = valueAction.asString();
-                        switch (valueAction.asString()) {
-                            case "OpenSSLPBE":
-                                algorithmName = "PKCS #5 v2.0 Scheme 1";
-                                break;
-                            case "PKCS12":
-                                algorithmName = "PKCS #12 v1.0";
-                                break;
-                            case "PKCS5S1":
-                                algorithmName = "PKCS #5 v2.0 Scheme 1";
-                                break;
-                            case "PKCS5S2":
-                                algorithmName = "PKCS #5 v2.0 Scheme 2";
-                                break;
-                            default:
-                                break;
-                        }
-
-                        algorithm =
-                                new com.ibm.mapper.model.Algorithm(algorithmName, detectionLocation);
-                        pbe = new PasswordBasedEncryption(algorithm);
-
-                        if (valueAction.asString().equals("OpenSSLPBE")) {
-                            // Default digest is MD5
-                            pbe.append(
-                                    new MessageDigest(
-                                            new com.ibm.mapper.model.Algorithm(
-                                                    "MD5", detectionLocation)));
-                        }
-
-                        return Optional.of(pbe);*/
+                    return Optional.of(pbe);*/
                 default:
                     return Optional.empty(); // TODO
             }

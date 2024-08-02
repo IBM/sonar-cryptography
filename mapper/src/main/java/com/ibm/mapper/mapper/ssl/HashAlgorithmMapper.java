@@ -20,9 +20,12 @@
 package com.ibm.mapper.mapper.ssl;
 
 import com.ibm.mapper.mapper.IMapper;
-import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.Cipher;
-import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.algorithms.GOSTR341112;
+import com.ibm.mapper.model.algorithms.MD5;
+import com.ibm.mapper.model.algorithms.SHA;
+import com.ibm.mapper.model.algorithms.SHA2;
+import com.ibm.mapper.model.algorithms.SM3;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
@@ -31,14 +34,20 @@ import org.jetbrains.annotations.Nullable;
 public final class HashAlgorithmMapper implements IMapper {
 
     @NotNull @Override
-    public Optional<? extends INode> parse(
+    public Optional<MessageDigest> parse(
             @Nullable String str, @NotNull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }
 
-        final String name = str.replace(" ", "-").toLowerCase();
-        final Algorithm algorithm = new Algorithm(name, detectionLocation);
-        return Optional.of(new Cipher(algorithm));
+        return switch (str) {
+            case "MD5" -> Optional.of(new MD5(detectionLocation));
+            case "SHA" -> Optional.of(new SHA(detectionLocation));
+            case "SHA256" -> Optional.of(new SHA2(256, detectionLocation));
+            case "SHA384" -> Optional.of(new SHA2(384, detectionLocation));
+            case "SM3" -> Optional.of(new SM3(detectionLocation));
+            case "GOSTR341112" -> Optional.of(new GOSTR341112(detectionLocation));
+            default -> Optional.empty();
+        };
     }
 }

@@ -23,7 +23,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.mapper.mapper.jca.JcaSignatureMapper;
 import com.ibm.mapper.model.Oid;
-import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.List;
 import java.util.Map;

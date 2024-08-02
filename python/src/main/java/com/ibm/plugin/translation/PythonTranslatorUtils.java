@@ -22,7 +22,6 @@ package com.ibm.plugin.translation;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.EllipticCurve;
-import com.ibm.mapper.model.EllipticCurveAlgorithm;
 import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mode;

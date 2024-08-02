@@ -19,14 +19,13 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.model.collections.AlgorithmCollection;
+import com.ibm.mapper.model.collections.AssetCollection;
 import com.ibm.mapper.model.collections.IdentifierCollection;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 public final class CipherSuite implements IAsset {
@@ -44,27 +43,24 @@ public final class CipherSuite implements IAsset {
 
     public CipherSuite(
             @Nonnull String name,
-            @Nullable AlgorithmCollection algorithmCollection,
-            @Nullable IdentifierCollection identifierCollection,
+            @Nonnull AssetCollection assetCollection,
+            @Nonnull IdentifierCollection identifierCollection,
             @Nonnull DetectionLocation detectionLocation) {
         this.name = name;
         this.children = new HashMap<>();
-        if (algorithmCollection != null) {
-            this.append(algorithmCollection);
-        }
-        if (identifierCollection != null) {
-            this.append(identifierCollection);
-        }
+        this.append(assetCollection);
+        this.append(identifierCollection);
         this.detectionLocation = detectionLocation;
         this.kind = CipherSuite.class;
     }
 
     public CipherSuite(
             @Nonnull String name,
-            @Nonnull DetectionLocation detectionLocation,
-            @Nonnull Map<Class<? extends INode>, INode> children) {
+            @Nonnull AssetCollection assetCollection,
+            @Nonnull DetectionLocation detectionLocation) {
         this.name = name;
-        this.children = children;
+        this.children = new HashMap<>();
+        this.append(assetCollection);
         this.detectionLocation = detectionLocation;
         this.kind = CipherSuite.class;
     }
@@ -77,12 +73,12 @@ public final class CipherSuite implements IAsset {
     }
 
     @Nonnull
-    public Optional<AlgorithmCollection> getAlgorithmCollection() {
-        INode node = this.getChildren().get(AlgorithmCollection.class);
+    public Optional<AssetCollection> getAssetCollection() {
+        INode node = this.getChildren().get(AssetCollection.class);
         if (node == null) {
             return Optional.empty();
         }
-        return Optional.of((AlgorithmCollection) node);
+        return Optional.of((AssetCollection) node);
     }
 
     @Nonnull
