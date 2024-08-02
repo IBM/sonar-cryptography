@@ -29,6 +29,7 @@ import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MaskGenerationFunction;
 import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
@@ -52,8 +53,7 @@ public final class JavaDigestContextTranslator extends JavaAbstractLibraryTransl
                                 return algo;
                             });
         }
-
-        return Optional.empty();
+        return Optional.of(new Unknown(value.asString(), detectionLocation));
     }
 
     @Override

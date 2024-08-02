@@ -28,6 +28,7 @@ import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.TagLength;
+import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
@@ -65,6 +66,6 @@ public final class JavaAlgorithmParameterContextTranslator extends JavaAbstractL
             TagLength tagLength = new TagLength(macSize.getValue(), detectionLocation);
             return Optional.of(tagLength);
         }
-        return Optional.empty();
+        return Optional.of(new Unknown(value.asString(), detectionLocation));
     }
 }

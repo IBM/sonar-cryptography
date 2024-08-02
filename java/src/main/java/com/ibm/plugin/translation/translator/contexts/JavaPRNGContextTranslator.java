@@ -28,6 +28,7 @@ import com.ibm.mapper.mapper.jca.JcaPRNGMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.PseudorandomNumberGenerator;
 import com.ibm.mapper.model.Seed;
+import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
@@ -56,6 +57,6 @@ public final class JavaPRNGContextTranslator implements IContextTranslationWithK
                         return prng;
                     });
         }
-        return Optional.empty();
+        return Optional.of(new Unknown(value.asString(), detectionLocation));
     }
 }

@@ -30,7 +30,7 @@ import com.ibm.engine.model.context.PrivateKeyContext;
 import com.ibm.engine.model.context.PublicKeyContext;
 import com.ibm.engine.model.context.SecretKeyContext;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
-import com.ibm.mapper.model.EllipticCurve;
+import com.ibm.mapper.mapper.jca.JcaCurveMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Key;
 import com.ibm.mapper.model.KeyDerivationFunction;
@@ -39,12 +39,11 @@ import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.MaskGenerationFunction;
 import com.ibm.mapper.model.PrivateKey;
 import com.ibm.mapper.model.PublicKey;
-import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.SecretKey;
+import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
-import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
 
@@ -61,14 +60,6 @@ public final class JavaKeyContextTranslator extends JavaAbstractLibraryTranslato
                     .parse(algorithm.asString(), detectionLocation)
                     .map(iNode -> (com.ibm.mapper.model.Algorithm) iNode)
                     .map(
-                            algorithmNode ->
-                                    switch (algorithmNode.asString().trim().toLowerCase()) {
-                                        case "rsa" -> new PublicKeyEncryption(algorithmNode);
-                                        case "diffiehellman", "dh" ->
-                                                new KeyAgreement(algorithmNode);
-                                        default -> algorithmNode;
-                                    })
-                    .map(
                             algorithmNode -> {
                                 algorithmNode.append(new KeyGeneration(detectionLocation));
                                 return algorithmNode;
@@ -82,30 +73,30 @@ public final class JavaKeyContextTranslator extends JavaAbstractLibraryTranslato
                                     return new PublicKey(key);
                                 } else if (detectionContext.is(SecretKeyContext.class)) {
                                     return new SecretKey(key);
-                                } else {
-                                    return switch (algo.asString().trim().toLowerCase()) {
-                                        case "rsa" -> new PublicKey(key);
-                                        default -> algo;
-                                    };
                                 }
+                                return key;
                             });
         } else if (value instanceof KeySize<Tree> keySize) {
             final KeyLength keyLength = new KeyLength(keySize.getValue(), detectionLocation);
             return Optional.of(keyLength);
         } else if (value instanceof Curve<Tree> curve) {
-            final com.ibm.mapper.model.Algorithm algorithm =
-                    new com.ibm.mapper.model.Algorithm("EC", detectionLocation);
-            return Stream.of(algorithm)
-                    .map(EllipticCurveAlgorithm::new)
-                    .peek(
+            final JcaCurveMapper jcaCurveMapper = new JcaCurveMapper();
+            return jcaCurveMapper
+                    .parse(curve.asString(), detectionLocation)
+                    .map(
                             algo -> {
-                                algo.append(new KeyGeneration(detectionLocation));
-                                algo.append(new EllipticCurve(curve.asString(), detectionLocation));
-                            })
-                    .findFirst()
-                    .map(a -> a);
+                                final Key key = new Key(algo);
+                                if (detectionContext.is(PrivateKeyContext.class)) {
+                                    return new PrivateKey(key);
+                                } else if (detectionContext.is(PublicKeyContext.class)) {
+                                    return new PublicKey(key);
+                                } else if (detectionContext.is(SecretKeyContext.class)) {
+                                    return new SecretKey(key);
+                                }
+                                return key;
+                            });
         }
-        return Optional.empty();
+        return Optional.of(new Unknown(value.asString(), detectionLocation));
     }
 
     @Override
@@ -134,6 +125,6 @@ public final class JavaKeyContextTranslator extends JavaAbstractLibraryTranslato
                     break;
             }
         }
-        return Optional.empty();
+        return Optional.of(new Unknown(value.asString(), detectionLocation));
     }
 }

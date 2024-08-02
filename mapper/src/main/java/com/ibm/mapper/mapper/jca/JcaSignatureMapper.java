@@ -31,10 +31,9 @@ import com.ibm.mapper.model.algorithms.EdDSA;
 import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.algorithms.RSAssaPSS;
 import com.ibm.mapper.utils.DetectionLocation;
-
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Optional;
 
 public class JcaSignatureMapper implements IMapper {
 

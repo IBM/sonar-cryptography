@@ -17,17 +17,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.enricher.algorithm;
+package com.ibm.mapper.model.curves;
 
-import com.ibm.enricher.ITypeEnricher;
-import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Signature;
-import java.util.Map;
-import javax.annotation.Nonnull;
+import com.ibm.mapper.model.EllipticCurve;
+import com.ibm.mapper.utils.DetectionLocation;
+import org.jetbrains.annotations.NotNull;
 
-public interface ISignatureEnricher extends ITypeEnricher<Signature> {
-    @Override
-    void enrich(
-            @Nonnull Signature signature,
-            @Nonnull Map<Class<? extends INode>, INode> dependingNodes);
+public final class Secp256r1 extends EllipticCurve {
+    public Secp256r1(@NotNull DetectionLocation detectionLocation) {
+        super("secp256r1", detectionLocation);
+    }
 }

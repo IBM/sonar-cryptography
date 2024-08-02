@@ -24,6 +24,7 @@ import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.rule.IBundle;
 import com.ibm.mapper.IContextTranslationWithKind;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
@@ -40,7 +41,7 @@ public abstract class JavaAbstractLibraryTranslator implements IContextTranslati
         return switch (bundleIdentifier.getIdentifier()) {
             case "Jca" -> translateJCA(value, detectionContext, detectionLocation);
             case "Bc" -> translateBC(value, detectionContext, detectionLocation);
-            default -> Optional.empty();
+            default -> Optional.of(new Unknown(value.asString(), detectionLocation));
         };
     }
 
