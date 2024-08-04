@@ -21,6 +21,7 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.ICipher;
 import com.ibm.mapper.model.Mode;
@@ -34,16 +35,19 @@ public final class AES extends BlockCipher {
 
     public AES(@NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
+        this.append(new BlockSize(128, detectionLocation));
     }
 
     public AES(int digestSize, @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
         this.append(new DigestSize(digestSize, detectionLocation));
+        this.append(new BlockSize(128, detectionLocation));
     }
 
     public AES(int digestSize, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
         this.append(new DigestSize(digestSize, detectionLocation));
+        this.append(new BlockSize(128, detectionLocation));
         this.append(mode);
     }
 
@@ -54,6 +58,7 @@ public final class AES extends BlockCipher {
             @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
         this.append(new DigestSize(digestSize, detectionLocation));
+        this.append(new BlockSize(128, detectionLocation));
         this.append(mode);
         this.append(padding);
     }

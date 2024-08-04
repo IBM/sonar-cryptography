@@ -21,7 +21,6 @@ package com.ibm.enricher.algorithm;
 
 import com.ibm.enricher.IEnricher;
 import com.ibm.mapper.model.AuthenticatedEncryption;
-import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mode;
@@ -68,8 +67,6 @@ public class AESEnricher implements IEnricher {
         // add oid
         final Oid oid = new Oid(buildOid(digestSize, mode), aes.getDetectionContext());
         aes.append(oid);
-        // block size
-        aes.append(new BlockSize(128, aes.getDetectionContext()));
         // authenticated encryption
         if (mode instanceof GCM || mode instanceof CCM) {
             return new AES(AuthenticatedEncryption.class, aes);

@@ -19,31 +19,57 @@
  */
 package com.ibm.enricher.algorithm;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.ibm.enricher.TestBase;
 import com.ibm.mapper.model.AuthenticatedEncryption;
-import com.ibm.mapper.model.BlockSize;
-import com.ibm.mapper.model.DigestSize;
+import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.algorithms.AES;
+import com.ibm.mapper.model.mode.ECB;
 import com.ibm.mapper.model.mode.GCM;
 import com.ibm.mapper.model.padding.PKCS1;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 class AESEnricherTest extends TestBase {
+
+    @Test
+    void oid() {
+        DetectionLocation testDetectionLocation =
+                new DetectionLocation("testfile", 1, 1, List.of("test"));
+        final AES aes =
+                new AES(
+                        256,
+                        new ECB(testDetectionLocation),
+                        testDetectionLocation);
+        this.logBefore(aes);
+
+        final AESEnricher aesEnricher = new AESEnricher();
+        final INode enriched = aesEnricher.enrich(aes);
+        this.logAfter(enriched);
+
+        assertThat(enriched.is(BlockCipher.class)).isTrue();
+        assertThat(enriched).isInstanceOf(AES.class);
+        final AES enrichedAES = (AES) enriched;
+        assertThat(enrichedAES.hasChildOfType(Oid.class)).isPresent();
+        assertThat(enrichedAES.hasChildOfType(Oid.class).get().asString())
+                .isEqualTo("2.16.840.1.101.3.4.1.41");
+    }
 
     @Test
     void ae() {
         DetectionLocation testDetectionLocation =
                 new DetectionLocation("testfile", 1, 1, List.of("test"));
-        final AES aes = new AES(testDetectionLocation);
-        aes.append(new DigestSize(128, testDetectionLocation));
-        aes.append(new GCM(testDetectionLocation));
-        aes.append(new PKCS1(testDetectionLocation));
+        final AES aes =
+                new AES(
+                        128,
+                        new GCM(testDetectionLocation),
+                        new PKCS1(testDetectionLocation),
+                        testDetectionLocation);
         this.logBefore(aes);
 
         final AESEnricher aesEnricher = new AESEnricher();
@@ -53,11 +79,7 @@ class AESEnricherTest extends TestBase {
         assertThat(enriched.is(AuthenticatedEncryption.class)).isTrue();
         assertThat(enriched).isInstanceOf(AES.class);
         final AES enrichedAES = (AES) enriched;
-
-        assertThat(enrichedAES.hasChildOfType(BlockSize.class)).isPresent();
         assertThat(enrichedAES.hasChildOfType(Oid.class)).isPresent();
-
-        assertThat(enrichedAES.hasChildOfType(BlockSize.class).get().asString()).isEqualTo("128");
         assertThat(enrichedAES.hasChildOfType(Oid.class).get().asString())
                 .isEqualTo("2.16.840.1.101.3.4.1.6");
     }
