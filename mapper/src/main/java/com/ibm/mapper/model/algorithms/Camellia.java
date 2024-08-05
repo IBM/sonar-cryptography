@@ -21,13 +21,14 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
-import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.ICipher;
+import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 public final class Camellia extends BlockCipher {
     private static final String NAME = "Camellia";
@@ -36,25 +37,25 @@ public final class Camellia extends BlockCipher {
         super(new Algorithm(NAME, detectionLocation));
     }
 
-    public Camellia(int digestSize, @NotNull DetectionLocation detectionLocation) {
+    public Camellia(int keyLength, @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
-        this.append(new DigestSize(digestSize, detectionLocation));
+        this.append(new KeyLength(keyLength, detectionLocation));
     }
 
     public Camellia(
-            int digestSize, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+            int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
-        this.append(new DigestSize(digestSize, detectionLocation));
+        this.append(new KeyLength(keyLength, detectionLocation));
         this.append(mode);
     }
 
     public Camellia(
-            int digestSize,
+            int keyLength,
             @Nonnull Mode mode,
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
-        this.append(new DigestSize(digestSize, detectionLocation));
+        this.append(new KeyLength(keyLength, detectionLocation));
         this.append(mode);
         this.append(padding);
     }

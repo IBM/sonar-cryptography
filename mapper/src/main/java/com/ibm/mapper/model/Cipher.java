@@ -19,8 +19,8 @@
  */
 package com.ibm.mapper.model;
 
-import java.util.Optional;
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 public class Cipher extends Algorithm implements ICipher, AuthenticatedEncryption {
 
@@ -80,11 +80,11 @@ public class Cipher extends Algorithm implements ICipher, AuthenticatedEncryptio
     }
 
     @Nonnull
-    public Optional<DigestSize> getDigestSize() {
-        INode node = this.getChildren().get(DigestSize.class);
+    public Optional<KeyLength> getKeyLength() {
+        INode node = this.getChildren().get(KeyLength.class);
         if (node == null) {
             return Optional.empty();
         }
-        return Optional.of((DigestSize) node);
+        return Optional.of((KeyLength) node);
     }
 }

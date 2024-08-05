@@ -20,9 +20,10 @@
 package com.ibm.enricher;
 
 import com.ibm.mapper.model.INode;
-import java.util.List;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
+import java.util.Collection;
 
 /**
  * This enricher instance operates on a language-agnostic level, meaning it will enrich the given
@@ -37,15 +38,15 @@ public class Enricher implements IEnricher {
      *
      * @param nodes The list of nodes to enrich
      */
-    public static void enrich(@Nonnull final List<INode> nodes) {
+    @Nonnull
+    public static Collection<INode> enrich(@Nonnull final Collection<INode> nodes) {
         final Enricher enricher = new Enricher();
-        nodes.forEach(enricher::enrich);
-        nodes.forEach(
-                v -> {
-                    if (v.hasChildren()) {
-                        enrich(v.getChildren().values().stream().toList());
-                    }
-                });
+        return nodes.stream()
+                .map(node -> {
+                    final INode enriched = enricher.enrich(node);
+                    enrich(enriched.getChildren().values()).forEach(enriched::append);
+                    return enriched;
+                }).toList();
     }
 
     /**

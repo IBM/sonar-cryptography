@@ -27,14 +27,16 @@ import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.mapper.reorganizer.Reorganizer;
 import com.ibm.mapper.utils.Utils;
 import com.ibm.plugin.translation.translator.JavaTranslator;
-import java.util.Collections;
-import java.util.List;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.JavaCheck;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
+
+import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public final class JavaTranslationProcess
         extends ITranslationProcess<JavaCheck, Tree, Symbol, JavaFileScannerContext> {
@@ -51,18 +53,18 @@ public final class JavaTranslationProcess
                             rootDetectionStore) {
         // 1. Translate
         JavaTranslator javaTranslator = new JavaTranslator();
-        List<INode> translatedValues = javaTranslator.translate(rootDetectionStore);
+        final List<INode> translatedValues = javaTranslator.translate(rootDetectionStore);
         Utils.printNodeTree("translated", translatedValues);
 
         // 2. Reorganize
         Reorganizer javaReorganizer = new Reorganizer(reorganizerRules);
-        List<INode> reorganizedValues = javaReorganizer.reorganize(translatedValues);
+        final List<INode> reorganizedValues = javaReorganizer.reorganize(translatedValues);
         Utils.printNodeTree("reorganised", reorganizedValues);
 
         // 3. Enrich
-        Enricher.enrich(reorganizedValues);
+        final Collection<INode> enrichedValues = Enricher.enrich(reorganizedValues);
         Utils.printNodeTree("enriched", reorganizedValues);
 
-        return Collections.unmodifiableList(reorganizedValues);
+        return Collections.unmodifiableCollection(enrichedValues).stream().toList();
     }
 }

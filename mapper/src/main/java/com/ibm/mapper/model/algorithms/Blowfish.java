@@ -21,13 +21,14 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
-import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.ICipher;
+import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 public final class Blowfish extends BlockCipher {
     private static final String NAME = "Blowfish";
@@ -36,27 +37,27 @@ public final class Blowfish extends BlockCipher {
         super(new Algorithm(NAME, detectionLocation));
     }
 
-    public Blowfish(@Nonnull DigestSize digestSize, @NotNull DetectionLocation detectionLocation) {
+    public Blowfish(int keyLength, @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
-        this.append(digestSize);
+        this.append(new KeyLength(keyLength, detectionLocation));
     }
 
     public Blowfish(
-            @Nonnull DigestSize digestSize,
+            int keyLength,
             @Nonnull Mode mode,
             @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
-        this.append(digestSize);
+        this.append(new KeyLength(keyLength, detectionLocation));
         this.append(mode);
     }
 
     public Blowfish(
-            @Nonnull DigestSize digestSize,
+            int keyLength,
             @Nonnull Mode mode,
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
-        this.append(digestSize);
+        this.append(new KeyLength(keyLength, detectionLocation));
         this.append(mode);
         this.append(padding);
     }

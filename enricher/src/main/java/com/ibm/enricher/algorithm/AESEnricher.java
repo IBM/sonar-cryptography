@@ -21,17 +21,18 @@ package com.ibm.enricher.algorithm;
 
 import com.ibm.enricher.IEnricher;
 import com.ibm.mapper.model.AuthenticatedEncryption;
-import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.algorithms.AES;
 import com.ibm.mapper.model.mode.CCM;
 import com.ibm.mapper.model.mode.GCM;
-import java.util.Map;
+import org.jetbrains.annotations.NotNull;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
+import java.util.Map;
 
 public class AESEnricher implements IEnricher {
     private static final String BASE_OID = "2.16.840.1.101.3.4.1";
@@ -62,10 +63,10 @@ public class AESEnricher implements IEnricher {
 
     @Nonnull
     private INode enrich(@NotNull AES aes) {
-        @Nullable final DigestSize digestSize = aes.getDigestSize().orElse(null);
+        @Nullable final KeyLength keyLength = aes.getKeyLength().orElse(null);
         @Nullable final Mode mode = aes.getMode().orElse(null);
         // add oid
-        final Oid oid = new Oid(buildOid(digestSize, mode), aes.getDetectionContext());
+        final Oid oid = new Oid(buildOid(keyLength, mode), aes.getDetectionContext());
         aes.append(oid);
         // authenticated encryption
         if (mode instanceof GCM || mode instanceof CCM) {
@@ -75,12 +76,12 @@ public class AESEnricher implements IEnricher {
     }
 
     @Nonnull
-    private String buildOid(@Nullable DigestSize digestSize, @Nullable Mode mode) {
+    private String buildOid(@Nullable KeyLength keyLength, @Nullable Mode mode) {
         StringBuilder builder = new StringBuilder(BASE_OID);
-        if (digestSize == null) {
+        if (keyLength == null) {
             return BASE_OID;
         }
-        Integer keySizeOidNumber = KEYSIZE_OID_MAP.get(digestSize.getValue());
+        Integer keySizeOidNumber = KEYSIZE_OID_MAP.get(keyLength.getValue());
         if (keySizeOidNumber != null) {
             builder.append(".").append(keySizeOidNumber);
         }

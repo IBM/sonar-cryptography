@@ -20,13 +20,14 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.ICipher;
+import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.utils.DetectionLocation;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 public final class ChaCha20 extends StreamCipher {
     private static final String NAME = "ChaCha20";
@@ -35,17 +36,17 @@ public final class ChaCha20 extends StreamCipher {
         super(new Algorithm(NAME, detectionLocation));
     }
 
-    public ChaCha20(@Nonnull DigestSize digestSize, @NotNull DetectionLocation detectionLocation) {
+    public ChaCha20(int keyLength, @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
-        this.append(digestSize);
+        this.append(new KeyLength(keyLength, detectionLocation));
     }
 
     public ChaCha20(
-            @Nonnull DigestSize digestSize,
+            int keyLength,
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
-        this.append(digestSize);
+        this.append(new KeyLength(keyLength, detectionLocation));
         this.append(padding);
     }
 
