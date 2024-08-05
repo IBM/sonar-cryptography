@@ -20,9 +20,8 @@
 package com.ibm.mapper.utils;
 
 import com.ibm.engine.rule.IBundle;
-
-import javax.annotation.Nonnull;
 import java.util.List;
+import javax.annotation.Nonnull;
 
 public record DetectionLocation(
         @Nonnull String filePath,

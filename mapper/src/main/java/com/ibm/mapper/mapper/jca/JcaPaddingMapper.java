@@ -25,10 +25,9 @@ import com.ibm.mapper.model.padding.ISO10126;
 import com.ibm.mapper.model.padding.PKCS1;
 import com.ibm.mapper.model.padding.PKCS5;
 import com.ibm.mapper.utils.DetectionLocation;
-
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Optional;
 
 public class JcaPaddingMapper implements IMapper {
 

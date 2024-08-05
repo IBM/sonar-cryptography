@@ -25,9 +25,8 @@ import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public final class ChaCha20 extends StreamCipher {
     private static final String NAME = "ChaCha20";
@@ -42,9 +41,7 @@ public final class ChaCha20 extends StreamCipher {
     }
 
     public ChaCha20(
-            int keyLength,
-            @Nonnull Padding padding,
-            @NotNull DetectionLocation detectionLocation) {
+            int keyLength, @Nonnull Padding padding, @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
         this.append(new KeyLength(keyLength, detectionLocation));
         this.append(padding);

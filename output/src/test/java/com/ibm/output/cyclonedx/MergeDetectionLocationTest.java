@@ -19,19 +19,18 @@
  */
 package com.ibm.output.cyclonedx;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.output.cyclondx.CBOMOutputFile;
+import java.util.Collections;
+import java.util.List;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.component.crypto.CryptoProperties;
 import org.cyclonedx.model.component.crypto.enums.AssetType;
 import org.junit.jupiter.api.Test;
-
-import java.util.Collections;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class MergeDetectionLocationTest {
 
@@ -44,7 +43,8 @@ class MergeDetectionLocationTest {
         Algorithm algorithm = new Algorithm("RSA", detectionLocation);
         outputFile.add(List.of(algorithm));
         // asset 2
-        detectionLocation = new DetectionLocation("test2.java", 2, 2, Collections.emptyList(), () -> "SSL");
+        detectionLocation =
+                new DetectionLocation("test2.java", 2, 2, Collections.emptyList(), () -> "SSL");
         algorithm = new Algorithm("RSA", detectionLocation);
         outputFile.add(List.of(algorithm));
 
@@ -73,7 +73,8 @@ class MergeDetectionLocationTest {
         Algorithm algorithm = new Algorithm("RSA", detectionLocation);
         outputFile.add(List.of(algorithm));
         // asset 2
-        detectionLocation = new DetectionLocation("test1.java", 1, 1, Collections.emptyList(), () -> "SSL");
+        detectionLocation =
+                new DetectionLocation("test1.java", 1, 1, Collections.emptyList(), () -> "SSL");
         algorithm = new Algorithm("RSA", detectionLocation);
         outputFile.add(List.of(algorithm));
 

@@ -26,9 +26,8 @@ import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public final class Blowfish extends BlockCipher {
     private static final String NAME = "Blowfish";
@@ -43,9 +42,7 @@ public final class Blowfish extends BlockCipher {
     }
 
     public Blowfish(
-            int keyLength,
-            @Nonnull Mode mode,
-            @NotNull DetectionLocation detectionLocation) {
+            int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
         super(new Algorithm(NAME, detectionLocation));
         this.append(new KeyLength(keyLength, detectionLocation));
         this.append(mode);

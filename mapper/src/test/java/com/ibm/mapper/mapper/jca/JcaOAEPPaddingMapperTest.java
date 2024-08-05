@@ -19,18 +19,17 @@
  */
 package com.ibm.mapper.mapper.jca;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.ibm.mapper.model.MaskGenerationFunction;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.algorithms.MD5;
 import com.ibm.mapper.model.algorithms.MGF1;
 import com.ibm.mapper.model.padding.OAEP;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
 import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 class JcaOAEPPaddingMapperTest {
 
