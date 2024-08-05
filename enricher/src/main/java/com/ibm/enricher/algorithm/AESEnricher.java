@@ -63,11 +63,21 @@ public class AESEnricher implements IEnricher {
 
     @Nonnull
     private INode enrich(@NotNull AES aes) {
-        @Nullable final KeyLength keyLength = aes.getKeyLength().orElse(null);
+        @Nullable KeyLength keyLength = aes.getKeyLength().orElse(null);
         @Nullable final Mode mode = aes.getMode().orElse(null);
+        // default key length
+        if (keyLength == null) {
+           switch (aes.getDetectionContext().bundle().getIdentifier()) {
+               case "Jca": {
+                   keyLength = new KeyLength(128, aes.getDetectionContext());
+                   aes.append(keyLength);
+               }
+           }
+        }
         // add oid
         final Oid oid = new Oid(buildOid(keyLength, mode), aes.getDetectionContext());
         aes.append(oid);
+
         // authenticated encryption
         if (mode instanceof GCM || mode instanceof CCM) {
             return new AES(AuthenticatedEncryption.class, aes);
