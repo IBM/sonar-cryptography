@@ -28,6 +28,7 @@ import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
 import com.ibm.mapper.model.PasswordLength;
 import com.ibm.mapper.model.SaltLength;
+import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.functionality.Encrypt;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -52,7 +53,7 @@ class AlgorithmTest {
     void baseRSA() {
         final DetectionLocation detectionLocation =
                 new DetectionLocation(filePath, 1, 1, Collections.emptyList(), () -> "SSL");
-        final Algorithm algorithm = new Algorithm("RSA", detectionLocation);
+        final Algorithm algorithm = new RSA(detectionLocation);
 
         final CBOMOutputFile outputFile = new CBOMOutputFile();
         outputFile.add(List.of(algorithm));
@@ -116,7 +117,7 @@ class AlgorithmTest {
         final DetectionLocation detectionLocation =
                 new DetectionLocation(filePath, 1, 1, Collections.emptyList(), () -> "SSL");
 
-        final Algorithm algorithm = new Algorithm("RSA", detectionLocation);
+        final Algorithm algorithm = new RSA(detectionLocation);
         final KeyGeneration keyGeneration = new KeyGeneration(detectionLocation);
         algorithm.append(keyGeneration);
         final Encrypt encrypt = new Encrypt(detectionLocation);

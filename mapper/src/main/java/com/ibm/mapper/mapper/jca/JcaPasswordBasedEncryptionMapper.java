@@ -22,7 +22,7 @@ package com.ibm.mapper.mapper.jca;
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.Cipher;
-import com.ibm.mapper.model.HMAC;
+import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PasswordBasedEncryption;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -71,11 +71,11 @@ public class JcaPasswordBasedEncryptionMapper implements IMapper {
         JcaMacMapper macMapper = new JcaMacMapper();
         Optional<? extends Algorithm> macOptional =
                 macMapper.parse(hmacOrDigestStr, detectionLocation);
-        if (macOptional.isPresent() && macOptional.get() instanceof HMAC hmac) {
+        if (macOptional.isPresent() && macOptional.get() instanceof Mac mac) {
             if (cipherOptional.isPresent() && cipherOptional.get() instanceof Cipher cipher) {
-                return Optional.of(new PasswordBasedEncryption(hmac, cipher));
+                return Optional.of(new PasswordBasedEncryption(mac, cipher));
             } else {
-                return Optional.of(new PasswordBasedEncryption(hmac));
+                return Optional.of(new PasswordBasedEncryption(mac));
             }
         }
 

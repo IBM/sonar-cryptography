@@ -17,6 +17,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model;
+package com.ibm.mapper.model.algorithms;
 
-public interface ICipher extends IAlgorithm {}
+import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.KeyAgreement;
+import com.ibm.mapper.model.curves.Curve25519;
+import com.ibm.mapper.utils.DetectionLocation;
+import org.jetbrains.annotations.NotNull;
+
+public final class X25519 extends Algorithm implements KeyAgreement {
+    private static final String NAME = "x25519";
+
+    public X25519(@NotNull DetectionLocation detectionLocation) {
+        super(NAME, KeyAgreement.class, detectionLocation);
+        this.append(new Curve25519(detectionLocation));
+    }
+}

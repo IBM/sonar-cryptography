@@ -28,10 +28,11 @@ import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.algorithms.AES;
 import com.ibm.mapper.model.mode.CCM;
 import com.ibm.mapper.model.mode.GCM;
-import java.util.Map;
+import org.jetbrains.annotations.NotNull;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
+import java.util.Map;
 
 public class AESEnricher implements IEnricher {
     private static final String BASE_OID = "2.16.840.1.101.3.4.1";

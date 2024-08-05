@@ -28,6 +28,6 @@ public final class EdDSA extends Algorithm implements Signature {
     private static final String NAME = "EdDSA";
 
     public EdDSA(@NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation), Signature.class);
+        super(NAME, Signature.class, detectionLocation);
     }
 }

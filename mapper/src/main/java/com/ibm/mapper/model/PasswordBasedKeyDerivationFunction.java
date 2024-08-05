@@ -19,18 +19,14 @@
  */
 package com.ibm.mapper.model;
 
-import java.util.Optional;
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 /** PBKDF */
-public class PasswordBasedKeyDerivationFunction extends KeyDerivationFunction {
-
-    public PasswordBasedKeyDerivationFunction(@Nonnull Algorithm algorithm) {
-        super(algorithm, PasswordBasedKeyDerivationFunction.class);
-    }
+public interface PasswordBasedKeyDerivationFunction extends KeyDerivationFunction {
 
     @Nonnull
-    public Optional<NumberOfIterations> getIterations() {
+    default Optional<NumberOfIterations> getIterations() {
         INode node = this.getChildren().get(NumberOfIterations.class);
         if (node == null) {
             return Optional.empty();

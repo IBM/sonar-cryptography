@@ -17,15 +17,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model;
+package com.ibm.mapper.model.algorithms;
 
-import javax.annotation.Nonnull;
+import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.KeyAgreement;
+import com.ibm.mapper.model.curves.Curve448;
+import com.ibm.mapper.utils.DetectionLocation;
+import org.jetbrains.annotations.NotNull;
 
-public class HMAC extends Algorithm {
-    public HMAC(@Nonnull MessageDigest messageDigest) {
-        super(
-                new Algorithm("Hmac" + messageDigest.asString(), messageDigest.detectionLocation),
-                HMAC.class);
-        this.append(messageDigest);
+public final class X448 extends Algorithm implements KeyAgreement {
+    private static final String NAME = "x448";
+
+    public X448(@NotNull DetectionLocation detectionLocation) {
+        super(NAME, KeyAgreement.class, detectionLocation);
+        this.append(new Curve448(detectionLocation));
     }
 }

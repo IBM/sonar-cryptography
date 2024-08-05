@@ -27,7 +27,7 @@ import com.ibm.engine.model.MacSize;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.MacContext;
 import com.ibm.mapper.model.BlockCipher;
-import com.ibm.mapper.model.HMAC;
+import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.TagLength;
@@ -85,7 +85,7 @@ class BcDSTUHMACTest extends TestBase {
 
         // Mac
         INode macNode1 = nodes.get(0);
-        assertThat(macNode1.getKind()).isEqualTo(HMAC.class);
+        assertThat(macNode1.getKind()).isEqualTo(Mac.class);
         assertThat(macNode1.getChildren()).hasSize(4);
         assertThat(macNode1.asString())
                 .isEqualTo(findingId == 0 ? "DSTU 7564-MAC" : "DSTU 7624:2014-MAC");

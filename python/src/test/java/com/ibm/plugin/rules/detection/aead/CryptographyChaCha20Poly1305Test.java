@@ -27,7 +27,7 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.KeyAction;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.SecretKeyContext;
-import com.ibm.mapper.model.HMAC;
+import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.SecretKey;
 import com.ibm.mapper.model.StreamCipher;
@@ -107,7 +107,7 @@ public class CryptographyChaCha20Poly1305Test extends TestBase {
         assertThat(encryptNode.asString()).isEqualTo("ENCRYPT");
 
         // Mac under StreamCipher
-        INode macNode = streamCipherNode.getChildren().get(HMAC.class);
+        INode macNode = streamCipherNode.getChildren().get(Mac.class);
         assertThat(macNode).isNotNull();
         assertThat(macNode.asString()).isEqualTo("Poly1305");
 

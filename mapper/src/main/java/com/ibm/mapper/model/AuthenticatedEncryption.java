@@ -19,4 +19,4 @@
  */
 package com.ibm.mapper.model;
 
-public interface AuthenticatedEncryption extends ICipher {}
+public interface AuthenticatedEncryption extends Cipher {}

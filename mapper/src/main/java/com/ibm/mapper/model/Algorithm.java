@@ -20,12 +20,13 @@
 package com.ibm.mapper.model;
 
 import com.ibm.mapper.utils.DetectionLocation;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public class Algorithm implements IAlgorithm {
     @Nonnull protected final Map<Class<? extends INode>, INode> children;
@@ -34,18 +35,18 @@ public class Algorithm implements IAlgorithm {
     @Nonnull protected final String name;
 
     public Algorithm(
-            @Nonnull Algorithm algorithm, @Nonnull final Class<? extends IAlgorithm> asKind) {
+            @Nonnull IAlgorithm algorithm, @Nonnull final Class<? extends IAlgorithm> asKind) {
         this.name = algorithm.getName();
         this.children = algorithm.getChildren();
-        this.detectionLocation = algorithm.detectionLocation;
+        this.detectionLocation = algorithm.getDetectionContext();
         this.kind = asKind;
     }
 
-    public Algorithm(@Nonnull String name, @Nonnull DetectionLocation detectionLocation) {
+    public Algorithm(@Nonnull String name, @Nonnull final Class<? extends IAlgorithm> asKind, @Nonnull DetectionLocation detectionLocation) {
         this.name = name;
         this.children = new HashMap<>();
         this.detectionLocation = detectionLocation;
-        this.kind = Algorithm.class;
+        this.kind = asKind;
     }
 
     private Algorithm(@Nonnull Algorithm algorithm) {

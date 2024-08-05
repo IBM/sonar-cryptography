@@ -19,24 +19,5 @@
  */
 package com.ibm.mapper.model;
 
-import javax.annotation.Nonnull;
-
-public class BlockCipher extends Cipher {
-
-    public BlockCipher(@Nonnull Algorithm algorithm) {
-        super(algorithm, BlockCipher.class);
-    }
-
-    public BlockCipher(@Nonnull Algorithm algorithm, @Nonnull Mode mode) {
-        super(algorithm, mode, BlockCipher.class);
-    }
-
-    public BlockCipher(@Nonnull Algorithm algorithm, @Nonnull Mode mode, @Nonnull Padding padding) {
-        super(algorithm, mode, padding, BlockCipher.class);
-    }
-
-    protected BlockCipher(
-            @Nonnull Algorithm algorithm, @Nonnull final Class<? extends ICipher> asKind) {
-        super(algorithm, asKind);
-    }
+public interface BlockCipher extends Cipher {
 }

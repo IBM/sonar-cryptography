@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
-import com.ibm.mapper.model.HMAC;
+import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyAgreement;
 import com.ibm.mapper.model.MessageDigest;
@@ -96,7 +96,7 @@ class JcaAlgorithmMapperTest {
         Optional<? extends INode> assetOptional =
                 jcaAlgorithmMapper.parse("HmacSHA512/224", testDetectionLocation);
         assertThat(assetOptional).isPresent();
-        assertThat(assetOptional.get().is(HMAC.class)).isTrue();
+        assertThat(assetOptional.get().is(Mac.class)).isTrue();
     }
 
     @Test

@@ -20,25 +20,28 @@
 package com.ibm.mapper.mapper.jca;
 
 import com.ibm.mapper.mapper.IMapper;
+import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.IAlgorithm;
 import com.ibm.mapper.model.PseudorandomNumberGenerator;
 import com.ibm.mapper.model.algorithms.SHA;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class JcaPRNGMapper implements IMapper {
 
     @Nonnull
     @Override
-    public Optional<PseudorandomNumberGenerator> parse(
+    public Optional<? extends IAlgorithm> parse(
             @Nullable String str, @Nonnull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }
 
         if (str.toUpperCase().contains("SHA1")) {
-            return Optional.of(new PseudorandomNumberGenerator(new SHA(detectionLocation)));
+            return Optional.of(new SHA(PseudorandomNumberGenerator.class, new SHA(detectionLocation)));
         }
 
         return switch (str.toUpperCase().trim()) {
@@ -47,7 +50,7 @@ public class JcaPRNGMapper implements IMapper {
                             "NATIVEPRNGBLOCKING",
                             "NATIVEPRNGNONBLOCKING",
                             "WINDOWS-PRNG" ->
-                    Optional.of(new PseudorandomNumberGenerator(detectionLocation));
+                    Optional.of(new Algorithm(str, PseudorandomNumberGenerator.class, detectionLocation));
             default -> Optional.empty();
         };
     }

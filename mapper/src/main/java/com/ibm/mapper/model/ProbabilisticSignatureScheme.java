@@ -19,54 +19,6 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Objects;
-import javax.annotation.Nonnull;
+public interface ProbabilisticSignatureScheme extends Signature {
 
-public final class ProbabilisticSignatureScheme extends Property {
-
-    public ProbabilisticSignatureScheme(@Nonnull DetectionLocation detectionLocation) {
-        super(ProbabilisticSignatureScheme.class, detectionLocation);
-    }
-
-    public ProbabilisticSignatureScheme(@Nonnull MaskGenerationFunction maskGenerationFunction) {
-        super(ProbabilisticSignatureScheme.class, maskGenerationFunction.detectionLocation);
-        this.append(maskGenerationFunction);
-    }
-
-    private ProbabilisticSignatureScheme(
-            @Nonnull ProbabilisticSignatureScheme probabilisticSignatureScheme) {
-        super(
-                ProbabilisticSignatureScheme.class,
-                probabilisticSignatureScheme.detectionLocation,
-                probabilisticSignatureScheme.children);
-    }
-
-    @Nonnull
-    @Override
-    public String asString() {
-        return "PSS";
-    }
-
-    @Nonnull
-    @Override
-    public INode deepCopy() {
-        ProbabilisticSignatureScheme copy = new ProbabilisticSignatureScheme(this);
-        for (INode child : this.children.values()) {
-            copy.children.put(child.getKind(), child.deepCopy());
-        }
-        return copy;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (!(object instanceof ProbabilisticSignatureScheme)) return false;
-        return super.equals(object);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), "PSS");
-    }
 }

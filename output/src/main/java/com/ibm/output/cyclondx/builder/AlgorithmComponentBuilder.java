@@ -19,12 +19,35 @@
  */
 package com.ibm.output.cyclondx.builder;
 
-import com.ibm.mapper.model.*;
-import com.ibm.mapper.model.functionality.*;
+import com.ibm.mapper.model.AuthenticatedEncryption;
+import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.KeyAgreement;
+import com.ibm.mapper.model.KeyDerivationFunction;
+import com.ibm.mapper.model.KeyEncapsulationMechanism;
+import com.ibm.mapper.model.Mac;
+import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.Oid;
+import com.ibm.mapper.model.Padding;
+import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
+import com.ibm.mapper.model.ProbabilisticSignatureScheme;
+import com.ibm.mapper.model.PseudorandomNumberGenerator;
+import com.ibm.mapper.model.PublicKeyEncryption;
+import com.ibm.mapper.model.Signature;
+import com.ibm.mapper.model.StreamCipher;
+import com.ibm.mapper.model.functionality.Decapsulate;
+import com.ibm.mapper.model.functionality.Decrypt;
+import com.ibm.mapper.model.functionality.Digest;
+import com.ibm.mapper.model.functionality.Encapsulate;
+import com.ibm.mapper.model.functionality.Encrypt;
+import com.ibm.mapper.model.functionality.Functionality;
+import com.ibm.mapper.model.functionality.Generate;
+import com.ibm.mapper.model.functionality.KeyDerivation;
+import com.ibm.mapper.model.functionality.KeyGeneration;
+import com.ibm.mapper.model.functionality.Sign;
+import com.ibm.mapper.model.functionality.Tag;
+import com.ibm.mapper.model.functionality.Verify;
 import com.ibm.mapper.model.padding.OAEP;
-import java.util.*;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Evidence;
 import org.cyclonedx.model.component.crypto.AlgorithmProperties;
@@ -34,6 +57,14 @@ import org.cyclonedx.model.component.crypto.enums.CryptoFunction;
 import org.cyclonedx.model.component.crypto.enums.Primitive;
 import org.cyclonedx.model.component.evidence.Occurrence;
 import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
     @Nonnull private final Component component;
@@ -151,7 +182,7 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
             primitives = Primitive.AE;
         } else if (primitive.is(BlockCipher.class)) {
             primitives = Primitive.BLOCK_CIPHER;
-        } else if (primitive.is(HMAC.class)) {
+        } else if (primitive.is(Mac.class)) {
             primitives = Primitive.MAC;
         } else if (primitive.is(MessageDigest.class)) {
             primitives = Primitive.HASH;
@@ -160,7 +191,7 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
             primitives = Primitive.KDF;
         } else if (primitive.is(PseudorandomNumberGenerator.class)) {
             primitives = Primitive.DRBG;
-        } else if (primitive.is(Signature.class)) {
+        } else if (primitive.is(Signature.class) || primitive.is(ProbabilisticSignatureScheme.class)) {
             primitives = Primitive.SIGNATURE;
         } else if (primitive.is(StreamCipher.class)) {
             primitives = Primitive.STREAM_CIPHER;

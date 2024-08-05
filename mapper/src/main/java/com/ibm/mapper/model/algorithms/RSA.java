@@ -26,24 +26,25 @@ import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 public final class RSA extends Algorithm implements KeyAgreement, Signature, PublicKeyEncryption {
     private static final String NAME = "RSA";
 
     public RSA(@NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation), PublicKeyEncryption.class);
+        super(NAME, PublicKeyEncryption.class, detectionLocation);
     }
 
     public RSA(@Nonnull KeyLength keyLength, @Nonnull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation), PublicKeyEncryption.class);
+        super(NAME, PublicKeyEncryption.class, detectionLocation);
         this.append(keyLength);
     }
 
     public RSA(
             @Nonnull final Class<? extends IAlgorithm> asKind,
             @NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation), asKind);
+        super(NAME, PublicKeyEncryption.class, detectionLocation);
     }
 }

@@ -26,7 +26,7 @@ public final class SecretKey extends Key {
         super(key, key.detectionLocation, SecretKey.class);
     }
 
-    public SecretKey(@Nonnull Algorithm algorithm) {
-        super(algorithm, SecretKey.class);
+    public SecretKey(@Nonnull Cipher cipher) {
+        super(cipher, SecretKey.class);
     }
 }

@@ -29,6 +29,6 @@ public final class SRP extends Algorithm implements KeyAgreement {
     private static final String NAME = "SRP";
 
     public SRP(@NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation), KeyAgreement.class);
+        super(NAME, KeyAgreement.class, detectionLocation);
     }
 }

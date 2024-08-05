@@ -25,7 +25,7 @@ import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.MacContext;
-import com.ibm.mapper.model.HMAC;
+import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.model.functionality.Digest;
@@ -41,7 +41,7 @@ import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
-class BcZuc256HMACTest extends TestBase {
+class BcZuc256MacTest extends TestBase {
     @Test
     void test() {
         CheckVerifier.newVerifier()
@@ -74,7 +74,7 @@ class BcZuc256HMACTest extends TestBase {
 
         // Mac
         INode macNode = nodes.get(0);
-        assertThat(macNode.getKind()).isEqualTo(HMAC.class);
+        assertThat(macNode.getKind()).isEqualTo(Mac.class);
         assertThat(macNode.getChildren()).hasSize(3);
         assertThat(macNode.asString()).isEqualTo("ZUC-256");
 

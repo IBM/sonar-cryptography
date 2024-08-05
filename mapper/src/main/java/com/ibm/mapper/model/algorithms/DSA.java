@@ -28,6 +28,6 @@ public class DSA extends Algorithm implements Signature {
     private static final String NAME = "DSA";
 
     public DSA(@NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation), Signature.class);
+        super(NAME, Signature.class, detectionLocation);
     }
 }

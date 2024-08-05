@@ -28,6 +28,6 @@ public final class ECCPWD extends Algorithm implements KeyAgreement {
     private static final String NAME = "ECCPWD";
 
     public ECCPWD(@NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation), KeyAgreement.class);
+        super(NAME, KeyAgreement.class, detectionLocation);
     }
 }

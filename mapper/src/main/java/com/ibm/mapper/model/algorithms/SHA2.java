@@ -23,13 +23,14 @@ import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
+
 import javax.annotation.Nonnull;
 
-public final class SHA2 extends MessageDigest {
+public final class SHA2 extends Algorithm implements MessageDigest {
     private static final String NAME = "SHA";
 
     public SHA2(int digestSize, @Nonnull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME + digestSize, detectionLocation));
+        super(NAME+digestSize, MessageDigest.class, detectionLocation);
         this.append(new DigestSize(digestSize, detectionLocation));
     }
 
@@ -37,7 +38,7 @@ public final class SHA2 extends MessageDigest {
             int digestSize,
             @Nonnull MessageDigest preHash,
             @Nonnull DetectionLocation detectionLocation) {
-        super(new Algorithm(buildPreHashName(digestSize, preHash), detectionLocation));
+        super(buildPreHashName(digestSize, preHash), MessageDigest.class, detectionLocation);
         this.append(new DigestSize(digestSize, detectionLocation));
         this.append(preHash);
     }
@@ -47,5 +48,9 @@ public final class SHA2 extends MessageDigest {
         return preHash.getDigestSize()
                 .map(size -> NAME + size.asString() + "/" + digestSize)
                 .orElse(NAME + digestSize);
+    }
+
+    public SHA2(@Nonnull final Class<? extends MessageDigest> asKind, @Nonnull SHA2 sha2) {
+        super(sha2, asKind);
     }
 }

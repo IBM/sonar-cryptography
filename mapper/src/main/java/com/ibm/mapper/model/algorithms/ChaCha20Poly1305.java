@@ -19,12 +19,13 @@
  */
 package com.ibm.mapper.model.algorithms;
 
+import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
-import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.utils.DetectionLocation;
+
 import javax.annotation.Nonnull;
 
-public final class ChaCha20Poly1305 extends Cipher implements AuthenticatedEncryption {
+public final class ChaCha20Poly1305 extends Algorithm implements AuthenticatedEncryption {
 
     public ChaCha20Poly1305(@Nonnull DetectionLocation detectionLocation) {
         super(new ChaCha20(detectionLocation), AuthenticatedEncryption.class);

@@ -19,10 +19,5 @@
  */
 package com.ibm.mapper.model;
 
-import javax.annotation.Nonnull;
-
-public final class KeyEncapsulationMechanism extends Algorithm {
-    public KeyEncapsulationMechanism(@Nonnull Algorithm algorithm) {
-        super(algorithm, KeyEncapsulationMechanism.class);
-    }
+public interface KeyEncapsulationMechanism extends IAlgorithm {
 }

@@ -25,19 +25,20 @@ import com.ibm.mapper.model.KeyAgreement;
 import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 public final class DH extends Algorithm implements Signature, KeyAgreement, PublicKeyEncryption {
     private static final String NAME = "DH"; // DiffieHellman
 
     public DH(@NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation), PublicKeyEncryption.class);
+        super(NAME, PublicKeyEncryption.class, detectionLocation);
     }
 
     public DH(
             @Nonnull final Class<? extends IAlgorithm> asKind,
             @NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation), asKind);
+        super(NAME, asKind, detectionLocation);
     }
 }

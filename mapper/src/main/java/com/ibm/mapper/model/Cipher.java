@@ -19,50 +19,13 @@
  */
 package com.ibm.mapper.model;
 
-import java.util.Optional;
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
-public class Cipher extends Algorithm implements ICipher, AuthenticatedEncryption {
-
-    protected Cipher(@Nonnull Algorithm algorithm, @Nonnull final Class<? extends ICipher> asKind) {
-        super(algorithm, asKind);
-    }
-
-    protected Cipher(
-            @Nonnull Algorithm algorithm,
-            @Nonnull Mode mode,
-            @Nonnull final Class<? extends ICipher> asKind) {
-        super(algorithm, asKind);
-        this.append(mode);
-    }
-
-    public Cipher(@Nonnull Algorithm algorithm) {
-        super(algorithm, Cipher.class);
-    }
-
-    public Cipher(
-            @Nonnull Algorithm algorithm,
-            @Nonnull Mode mode,
-            @Nonnull Padding padding,
-            @Nonnull final Class<? extends ICipher> asKind) {
-        super(algorithm, asKind);
-        this.append(mode);
-        this.append(padding);
-    }
-
-    public Cipher(@Nonnull Algorithm algorithm, @Nonnull Mode mode) {
-        super(algorithm, Cipher.class);
-        this.append(mode);
-    }
-
-    public Cipher(@Nonnull Algorithm algorithm, @Nonnull Mode mode, @Nonnull Padding padding) {
-        super(algorithm, Cipher.class);
-        this.append(mode);
-        this.append(padding);
-    }
+public interface Cipher extends IAlgorithm  {
 
     @Nonnull
-    public Optional<Mode> getMode() {
+    default Optional<Mode> getMode() {
         INode node = this.getChildren().get(Mode.class);
         if (node == null) {
             return Optional.empty();
@@ -71,7 +34,7 @@ public class Cipher extends Algorithm implements ICipher, AuthenticatedEncryptio
     }
 
     @Nonnull
-    public Optional<Padding> getPadding() {
+    default Optional<Padding> getPadding() {
         INode node = this.getChildren().get(Padding.class);
         if (node == null) {
             return Optional.empty();
@@ -80,7 +43,7 @@ public class Cipher extends Algorithm implements ICipher, AuthenticatedEncryptio
     }
 
     @Nonnull
-    public Optional<KeyLength> getKeyLength() {
+    default Optional<KeyLength> getKeyLength() {
         INode node = this.getChildren().get(KeyLength.class);
         if (node == null) {
             return Optional.empty();

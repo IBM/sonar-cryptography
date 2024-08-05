@@ -20,17 +20,18 @@
 package com.ibm.mapper.mapper.jca;
 
 import com.ibm.mapper.mapper.IMapper;
-import com.ibm.mapper.model.ECAlgorithm;
+import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.PasswordBasedEncryption;
 import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.algorithms.DH;
 import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.List;
-import java.util.Optional;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Optional;
 
 public class JcaAlgorithmMapper implements IMapper {
 
@@ -67,8 +68,11 @@ public class JcaAlgorithmMapper implements IMapper {
             case "PBE", "PBES2" -> Optional.of(new PasswordBasedEncryption(detectionLocation));
             case "DH", "DIFFIEHELLMAN" -> Optional.of(new DH(detectionLocation));
             case "RSA" -> Optional.of(new RSA(detectionLocation));
-            case "EC" -> Optional.of(new ECAlgorithm(detectionLocation));
-            default -> Optional.of(new Unknown(str, detectionLocation));
+            default -> {
+                final Algorithm algorithm = new Algorithm(str, Algorithm.class, detectionLocation);
+                algorithm.append(new Unknown(detectionLocation));
+                yield Optional.of(algorithm);
+            }
         };
     }
 }

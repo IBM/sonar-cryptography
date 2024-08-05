@@ -55,6 +55,21 @@ import com.ibm.output.cyclondx.builder.KeyComponentBuilder;
 import com.ibm.output.cyclondx.builder.ProtocolComponentBuilder;
 import com.ibm.output.cyclondx.builder.RelatedCryptoMaterialComponentBuilder;
 import com.ibm.output.util.Utils;
+import org.apache.commons.io.FileUtils;
+import org.cyclonedx.Version;
+import org.cyclonedx.generators.BomGeneratorFactory;
+import org.cyclonedx.generators.json.BomJsonGenerator;
+import org.cyclonedx.model.Bom;
+import org.cyclonedx.model.Component;
+import org.cyclonedx.model.Dependency;
+import org.cyclonedx.model.Metadata;
+import org.cyclonedx.model.OrganizationalEntity;
+import org.cyclonedx.model.Service;
+import org.cyclonedx.model.component.evidence.Occurrence;
+import org.cyclonedx.model.metadata.ToolInformation;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -68,20 +83,6 @@ import java.util.Properties;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import org.apache.commons.io.FileUtils;
-import org.cyclonedx.Version;
-import org.cyclonedx.generators.BomGeneratorFactory;
-import org.cyclonedx.generators.json.BomJsonGenerator;
-import org.cyclonedx.model.Bom;
-import org.cyclonedx.model.Component;
-import org.cyclonedx.model.Dependency;
-import org.cyclonedx.model.Metadata;
-import org.cyclonedx.model.OrganizationalEntity;
-import org.cyclonedx.model.Service;
-import org.cyclonedx.model.component.evidence.Occurrence;
-import org.cyclonedx.model.metadata.ToolInformation;
 
 public class CBOMOutputFile implements IOutputFile {
 

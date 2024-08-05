@@ -22,12 +22,17 @@ package com.ibm.mapper.model.algorithms;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
+
 import javax.annotation.Nonnull;
 
-public final class Poly1305 extends MessageDigest {
+public final class Poly1305 extends Algorithm implements MessageDigest {
     private static final String NAME = "Poly1305";
 
     public Poly1305(@Nonnull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
+        super(NAME, MessageDigest.class, detectionLocation);
+    }
+
+    public Poly1305(@Nonnull final Class<? extends MessageDigest> asKind, @Nonnull Poly1305 poly1305) {
+        super(poly1305, asKind);
     }
 }

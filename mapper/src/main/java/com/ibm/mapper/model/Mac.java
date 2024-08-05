@@ -19,29 +19,5 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
-import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
-
-public class ECAlgorithm extends Algorithm {
-    private static final String NAME = "EC";
-
-    public ECAlgorithm(@NotNull DetectionLocation detectionLocation) {
-        super(NAME, detectionLocation);
-    }
-
-    public ECAlgorithm(@Nonnull EllipticCurve ellipticCurve) {
-        super(NAME + "-" + ellipticCurve.asString(), ellipticCurve.detectionLocation);
-        this.append(ellipticCurve);
-    }
-
-    @Nonnull
-    public Optional<EllipticCurve> getCurve() {
-        INode node = this.getChildren().get(EllipticCurve.class);
-        if (node == null) {
-            return Optional.empty();
-        }
-        return Optional.of((EllipticCurve) node);
-    }
+public interface Mac extends MessageDigest {
 }

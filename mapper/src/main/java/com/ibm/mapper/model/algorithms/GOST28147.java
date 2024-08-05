@@ -21,25 +21,26 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
-import com.ibm.mapper.model.ICipher;
+import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.utils.DetectionLocation;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class GOST28147 extends BlockCipher {
+import javax.annotation.Nonnull;
+
+public final class GOST28147 extends Algorithm implements BlockCipher {
     private static final String NAME = "GOST28147"; // Magma, GOST 28147-89 (RFC 5830)
 
     public GOST28147(@NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
+        super(NAME, BlockCipher.class, detectionLocation);
     }
 
     public GOST28147(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
+        super(NAME, BlockCipher.class, detectionLocation);
         this.append(mode);
     }
 
-    public GOST28147(@Nonnull final Class<? extends ICipher> asKind, @NotNull GOST28147 gost28147) {
+    public GOST28147(@Nonnull final Class<? extends Cipher> asKind, @NotNull GOST28147 gost28147) {
         super(gost28147, asKind);
     }
 }

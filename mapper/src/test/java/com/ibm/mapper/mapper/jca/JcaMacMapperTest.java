@@ -19,21 +19,22 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PasswordBasedEncryption;
 import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.utils.DetectionLocation;
+import org.junit.jupiter.api.Test;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.junit.jupiter.api.Test;
 
-class JcaHMACMapperTest {
+import static org.assertj.core.api.Assertions.assertThat;
+
+class JcaMacMapperTest {
 
     @Test
     void truncatedDigest() {
@@ -103,9 +104,9 @@ class JcaHMACMapperTest {
 
         assertThat(pbe.getDigest()).isEmpty();
         assertThat(pbe.getCipher()).isEmpty();
-        assertThat(pbe.getHmac()).isPresent();
+        assertThat(pbe.getMac()).isPresent();
 
-        Optional<HMAC> mac = pbe.getHmac();
+        Optional<Mac> mac = pbe.getMac();
         assertThat(mac).isPresent();
         assertThat(mac.get().getName()).isEqualTo("HmacSHA256");
         assertThat(mac.get().hasChildren()).isTrue();

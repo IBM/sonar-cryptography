@@ -21,7 +21,7 @@ package com.ibm.mapper.mapper.jca;
 
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.HMAC;
+import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
 import com.ibm.mapper.model.algorithms.PBKDF2;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -50,7 +50,7 @@ public class JcaPBKDFMapper implements IMapper {
         final JcaMacMapper jcaMacMapper = new JcaMacMapper();
         final Optional<? extends Algorithm> macOptional =
                 jcaMacMapper.parse(prf, detectionLocation);
-        if (macOptional.isPresent() && macOptional.get() instanceof HMAC hmac) {
+        if (macOptional.isPresent() && macOptional.get() instanceof Mac hmac) {
             return macOptional.map(mac -> new PBKDF2(hmac, detectionLocation));
         }
         return Optional.empty();

@@ -21,53 +21,48 @@ package com.ibm.mapper.model;
 
 import com.ibm.mapper.ITranslator;
 import com.ibm.mapper.utils.DetectionLocation;
+
+import javax.annotation.Nonnull;
 import java.util.Objects;
 import java.util.Optional;
-import javax.annotation.Nonnull;
 
-public final class PasswordBasedEncryption extends Algorithm {
+public class PasswordBasedEncryption extends Algorithm {
 
     public PasswordBasedEncryption(@Nonnull DetectionLocation detectionLocation) {
-        super(new Algorithm(ITranslator.UNKNOWN, detectionLocation), PasswordBasedEncryption.class);
+        super(ITranslator.UNKNOWN, PasswordBasedEncryption.class, detectionLocation);
     }
-
     // example: PBEWithHmacSHA1AndAES_128
-    public PasswordBasedEncryption(@Nonnull HMAC hmac, @Nonnull Cipher cipher) {
-        super(
-                new Algorithm(
-                        "PBEWith" + hmac.asString() + "And" + cipher.asString(),
-                        hmac.detectionLocation),
-                PasswordBasedEncryption.class);
-        this.append(hmac);
+    public PasswordBasedEncryption(@Nonnull Mac mac, @Nonnull Cipher cipher) {
+        super("PBEWith" + mac.asString() + "And" + cipher.asString(),
+                PasswordBasedEncryption.class,
+                mac.getDetectionContext());
+        this.append(mac);
         this.append(cipher);
     }
 
     // example: PBEWithMD5AndDES
     public PasswordBasedEncryption(@Nonnull MessageDigest digest, @Nonnull Cipher cipher) {
-        super(
-                new Algorithm(
-                        "PBEWith" + digest.asString() + "And" + cipher.asString(),
-                        digest.detectionLocation),
-                PasswordBasedEncryption.class);
+        super("PBEWith" + digest.asString() + "And" + cipher.asString(),
+                PasswordBasedEncryption.class,
+                digest.getDetectionContext());
         this.append(digest);
         this.append(cipher);
     }
 
     // example: PBEWithHmacSHA1
-    public PasswordBasedEncryption(@Nonnull HMAC hmac) {
-        super(
-                new Algorithm("PBEWith" + hmac.asString(), hmac.detectionLocation),
-                PasswordBasedEncryption.class);
-        this.append(hmac);
+    public PasswordBasedEncryption(@Nonnull Mac mac) {
+        super("PBEWith" + mac.asString(),
+                PasswordBasedEncryption.class, mac.getDetectionContext());
+        this.append(mac);
     }
 
     @Nonnull
-    public Optional<HMAC> getHmac() {
-        INode node = this.getChildren().get(HMAC.class);
+    public Optional<Mac> getMac() {
+        INode node = this.getChildren().get(Mac.class);
         if (node == null) {
             return Optional.empty();
         }
-        return Optional.of((HMAC) node);
+        return Optional.of((Mac) node);
     }
 
     @Nonnull

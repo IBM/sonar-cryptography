@@ -22,7 +22,7 @@ package com.ibm.mapper.mapper.jca;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.mapper.model.KeyAgreement;
-import com.ibm.mapper.model.algorithms.x448;
+import com.ibm.mapper.model.algorithms.X448;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +40,7 @@ class JcaKeyAgreementMapperTest {
                 jcaKeyAgreementMapperTest.parse("X448", testDetectionLocation);
 
         assertThat(keyAgreementOptional).isPresent();
-        assertThat(keyAgreementOptional.get()).isInstanceOf(x448.class);
+        assertThat(keyAgreementOptional.get()).isInstanceOf(X448.class);
         assertThat(keyAgreementOptional.get().is(KeyAgreement.class)).isTrue();
     }
 }

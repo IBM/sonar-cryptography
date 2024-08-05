@@ -21,7 +21,7 @@ package com.ibm.mapper.mapper.jca;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.ibm.mapper.model.HMAC;
+import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
@@ -54,10 +54,10 @@ class JcaPBKDFMapperTest {
 
         Map<Class<? extends INode>, INode> children = pbkdfOptional.get().getChildren();
         assertThat(children).hasSize(1);
-        INode child = children.get(HMAC.class);
-        assertThat(child.is(HMAC.class)).isTrue();
+        INode child = children.get(Mac.class);
+        assertThat(child.is(Mac.class)).isTrue();
 
-        HMAC mac = (HMAC) child;
+        Mac mac = (Mac) child;
         assertThat(mac.getName()).isEqualTo("HmacSHA256");
         assertThat(mac.hasChildren()).isTrue();
         children = mac.getChildren();

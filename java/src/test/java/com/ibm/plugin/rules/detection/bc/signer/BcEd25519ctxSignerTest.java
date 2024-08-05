@@ -26,7 +26,6 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.OperationMode;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.SignatureContext;
-import com.ibm.mapper.model.ECAlgorithm;
 import com.ibm.mapper.model.EllipticCurve;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Signature;
@@ -88,7 +87,7 @@ class BcEd25519ctxSignerTest extends TestBase {
         assertThat(signatureNode.asString()).isEqualTo("EdDSA");
 
         // EllipticCurveAlgorithm under Signature
-        INode ellipticCurveAlgorithmNode = signatureNode.getChildren().get(ECAlgorithm.class);
+        INode ellipticCurveAlgorithmNode = signatureNode.getChildren().get(EllipticCurveAlgorithm.class);
         assertThat(ellipticCurveAlgorithmNode).isNotNull();
         assertThat(ellipticCurveAlgorithmNode.getChildren()).hasSize(1);
         assertThat(ellipticCurveAlgorithmNode.asString()).isEqualTo("EC");

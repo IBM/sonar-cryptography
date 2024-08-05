@@ -25,7 +25,7 @@ import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.context.MacContext;
-import com.ibm.mapper.model.HMAC;
+import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.INode;
 import com.ibm.plugin.TestBase;
 import java.util.List;
@@ -37,7 +37,7 @@ import org.sonar.plugins.python.api.symbols.Symbol;
 import org.sonar.plugins.python.api.tree.Tree;
 import org.sonar.python.checks.utils.PythonCheckVerifier;
 
-public class CryptographyHMACTest extends TestBase {
+public class CryptographyMacTest extends TestBase {
     @Test
     void test() {
         PythonCheckVerifier.verify(
@@ -66,7 +66,7 @@ public class CryptographyHMACTest extends TestBase {
         assertThat(nodes).hasSize(1);
 
         INode macNode = nodes.get(0);
-        assertThat(macNode).isInstanceOf(HMAC.class);
+        assertThat(macNode).isInstanceOf(Mac.class);
         assertThat(macNode.asString()).isEqualTo("HMAC-SHA256");
     }
 }

@@ -19,11 +19,10 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.Cipher;
+import com.ibm.mapper.model.IAlgorithm;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.PasswordBasedEncryption;
@@ -34,9 +33,12 @@ import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.mode.CFB;
 import com.ibm.mapper.model.mode.ECB;
 import com.ibm.mapper.utils.DetectionLocation;
+import org.junit.jupiter.api.Test;
+
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class JcaCipherMapperTest {
 
@@ -91,7 +93,7 @@ class JcaCipherMapperTest {
         assertThat(digest.getBlockSize().get().getValue()).isEqualTo(512);
 
         assertThat(pbe.getCipher()).isPresent();
-        Algorithm encryptionAlgorithm = pbe.getCipher().get();
+        IAlgorithm encryptionAlgorithm = pbe.getCipher().get();
         assertThat(encryptionAlgorithm).isInstanceOf(DES.class);
     }
 

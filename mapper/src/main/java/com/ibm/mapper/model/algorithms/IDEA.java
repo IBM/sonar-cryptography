@@ -21,26 +21,27 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
-import com.ibm.mapper.model.ICipher;
+import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.utils.DetectionLocation;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
+
 // International Data Encryption Algorithm
-public final class IDEA extends BlockCipher {
+public final class IDEA extends Algorithm implements BlockCipher {
     private static final String NAME = "IDEA"; // IPES
 
     public IDEA(@NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
+        super(NAME, BlockCipher.class, detectionLocation);
     }
 
     public IDEA(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
+        super(NAME, BlockCipher.class, detectionLocation);
         this.append(mode);
     }
 
-    public IDEA(@Nonnull final Class<? extends ICipher> asKind, @NotNull IDEA idea) {
+    public IDEA(@Nonnull final Class<? extends Cipher> asKind, @NotNull IDEA idea) {
         super(idea, asKind);
     }
 }

@@ -21,23 +21,24 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
-import com.ibm.mapper.model.ICipher;
+import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class SEED extends BlockCipher {
+import javax.annotation.Nonnull;
+
+public final class SEED extends Algorithm implements BlockCipher {
     private static final String NAME = "SEED";
 
     public SEED(@NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
+        super(NAME, BlockCipher.class, detectionLocation);
     }
 
     public SEED(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
+        super(NAME, BlockCipher.class, detectionLocation);
         this.append(mode);
     }
 
@@ -45,18 +46,18 @@ public final class SEED extends BlockCipher {
             @Nonnull Mode mode,
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
+        super(NAME, BlockCipher.class, detectionLocation);
         this.append(mode);
         this.append(padding);
     }
 
     public SEED(int keyLength, @NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
+        super(NAME, BlockCipher.class, detectionLocation);
         this.append(new KeyLength(keyLength, detectionLocation));
     }
 
     public SEED(int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
+        super(NAME, BlockCipher.class, detectionLocation);
         this.append(new KeyLength(keyLength, detectionLocation));
         this.append(mode);
     }
@@ -66,13 +67,13 @@ public final class SEED extends BlockCipher {
             @Nonnull Mode mode,
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
+        super(NAME, BlockCipher.class, detectionLocation);
         this.append(new KeyLength(keyLength, detectionLocation));
         this.append(mode);
         this.append(padding);
     }
 
-    public SEED(@Nonnull final Class<? extends ICipher> asKind, @NotNull SEED seed) {
+    public SEED(@Nonnull final Class<? extends Cipher> asKind, @NotNull SEED seed) {
         super(seed, asKind);
     }
 }

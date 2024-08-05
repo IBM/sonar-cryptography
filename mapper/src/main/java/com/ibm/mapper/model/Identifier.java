@@ -22,7 +22,7 @@ package com.ibm.mapper.model;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class Identifier extends Property {
+public final class Identifier extends Property {
 
     @Nonnull private final String value;
 

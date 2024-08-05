@@ -21,7 +21,7 @@ package com.ibm.plugin.translation.reorganizer.rules;
 
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.BlockSize;
-import com.ibm.mapper.model.HMAC;
+import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
@@ -47,7 +47,7 @@ public final class MacReorganizer {
     private static final IReorganizerRule MOVE_NODES_UNDER_CIPHER =
             new ReorganizerRuleBuilder()
                     .createReorganizerRule()
-                    .forNodeKind(HMAC.class)
+                    .forNodeKind(Mac.class)
                     .withDetectionCondition(
                             (node, parent, roots) -> {
                                 return (node.hasChildOfType(BlockCipher.class).isPresent()

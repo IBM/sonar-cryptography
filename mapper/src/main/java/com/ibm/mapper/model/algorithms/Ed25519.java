@@ -29,7 +29,7 @@ public final class Ed25519 extends Algorithm implements Signature {
     private static final String NAME = "Ed25519";
 
     public Ed25519(@NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation), Signature.class);
+        super(NAME, Signature.class, detectionLocation);
         this.append(new Curve25519(detectionLocation));
         this.append(new SHA2(512, detectionLocation));
     }

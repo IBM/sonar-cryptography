@@ -24,20 +24,25 @@ import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
+
 import javax.annotation.Nonnull;
 
 // Streebog
-public final class GOSTR341112 extends MessageDigest {
+public final class GOSTR341112 extends Algorithm implements MessageDigest {
     private static final String NAME = "GOSTR341112";
 
     public GOSTR341112(@Nonnull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
+        super(NAME, MessageDigest.class, detectionLocation);
         this.append(new BlockSize(512, detectionLocation));
     }
 
     public GOSTR341112(int digestSize, @Nonnull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
+        super(NAME, MessageDigest.class, detectionLocation);
         this.append(new DigestSize(digestSize, detectionLocation));
         this.append(new BlockSize(512, detectionLocation));
+    }
+
+    public GOSTR341112(@Nonnull final Class<? extends MessageDigest> asKind, @Nonnull GOSTR341112 gostr341112) {
+        super(gostr341112, asKind);
     }
 }
