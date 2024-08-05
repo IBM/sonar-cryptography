@@ -19,8 +19,6 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.Cipher;
@@ -34,16 +32,19 @@ import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.mode.CFB;
 import com.ibm.mapper.model.mode.ECB;
 import com.ibm.mapper.utils.DetectionLocation;
+import org.junit.jupiter.api.Test;
+
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class JcaCipherMapperTest {
 
     @Test
     void base() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaCipherMapper jcaCipherMapper = new JcaCipherMapper();
         Optional<? extends Algorithm> cipherOptional =
@@ -67,7 +68,7 @@ class JcaCipherMapperTest {
     @Test
     void pbe() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaCipherMapper jcaCipherMapper = new JcaCipherMapper();
         Optional<? extends Algorithm> cipherOptional =
@@ -98,7 +99,7 @@ class JcaCipherMapperTest {
     @Test
     void blockSize() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaCipherMapper jcaCipherMapper = new JcaCipherMapper();
         Optional<? extends Algorithm> cipherOptional =
@@ -122,7 +123,7 @@ class JcaCipherMapperTest {
     @Test
     void rsa() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaCipherMapper jcaAlgorithmMapper = new JcaCipherMapper();
         Optional<? extends Algorithm> algorithm =

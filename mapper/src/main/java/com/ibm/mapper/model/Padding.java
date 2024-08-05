@@ -20,14 +20,15 @@
 package com.ibm.mapper.model;
 
 import com.ibm.mapper.utils.DetectionLocation;
+
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Objects;
-import javax.annotation.Nonnull;
 
 public class Padding extends Property {
     @Nonnull private final String name;
 
-    protected Padding(@Nonnull String name, @Nonnull DetectionLocation detectionLocation) {
+    public Padding(@Nonnull String name, @Nonnull DetectionLocation detectionLocation) {
         super(Padding.class, detectionLocation, new HashMap<>());
         this.name = name;
     }

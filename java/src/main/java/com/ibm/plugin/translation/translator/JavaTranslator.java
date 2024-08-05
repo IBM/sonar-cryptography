@@ -48,13 +48,6 @@ import com.ibm.plugin.translation.translator.contexts.JavaPRNGContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.JavaProtocolContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.JavaSecretKeyContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.JavaSignatureContextTranslator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +61,14 @@ import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.NewClassTree;
 import org.sonar.plugins.java.api.tree.SyntaxToken;
 import org.sonar.plugins.java.api.tree.Tree;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public final class JavaTranslator
         extends ITranslator<JavaCheck, Tree, Symbol, JavaFileScannerContext> {
@@ -226,7 +227,7 @@ public final class JavaTranslator
             @Nonnull final IDetectionContext detectionValueContext,
             @Nonnull final String filePath) {
         DetectionLocation detectionLocation =
-                getDetectionContextFrom(value.getLocation(), filePath);
+                getDetectionContextFrom(value.getLocation(), bundleIdentifier, filePath);
         if (detectionLocation == null) {
             return Optional.empty();
         }
@@ -316,7 +317,7 @@ public final class JavaTranslator
      *     process, it returns null.
      */
     @Nullable public DetectionLocation getDetectionContextFrom(
-            @Nonnull Tree location, @Nonnull String filePath) {
+            @Nonnull Tree location, @Nonnull IBundle bundle, @Nonnull String filePath) {
         SyntaxToken firstToken = location.firstToken();
         SyntaxToken lastToken = location.lastToken();
         if (firstToken != null && lastToken != null) {
@@ -354,7 +355,7 @@ public final class JavaTranslator
                 default:
                     // nothing
             }
-            return new DetectionLocation(filePath, lineNumber, offset, keywords);
+            return new DetectionLocation(filePath, lineNumber, offset, keywords, bundle);
         }
         return null;
     }

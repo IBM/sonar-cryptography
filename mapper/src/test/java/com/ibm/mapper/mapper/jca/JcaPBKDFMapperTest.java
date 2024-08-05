@@ -38,7 +38,7 @@ class JcaPBKDFMapperTest {
     @Test
     void base() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaPBKDFMapper jcaPBKDFMapper = new JcaPBKDFMapper();
         Optional<PasswordBasedKeyDerivationFunction> pbkdfOptional =

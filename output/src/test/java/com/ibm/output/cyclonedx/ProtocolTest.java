@@ -37,7 +37,7 @@ class ProtocolTest {
     @Test
     void base() {
         DetectionLocation detectionLocation =
-                new DetectionLocation("test.java", 1, 1, Collections.emptyList());
+                new DetectionLocation("test.java", 1, 1, Collections.emptyList(), () -> "SSL");
 
         final CBOMOutputFile outputFile = new CBOMOutputFile();
 

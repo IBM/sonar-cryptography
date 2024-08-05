@@ -19,11 +19,14 @@
  */
 package com.ibm.mapper.utils;
 
-import java.util.List;
+import com.ibm.engine.rule.IBundle;
+
 import javax.annotation.Nonnull;
+import java.util.List;
 
 public record DetectionLocation(
         @Nonnull String filePath,
         @Nonnull Integer lineNumber,
         @Nonnull Integer offSet,
-        @Nonnull List<String> keywords) {}
+        @Nonnull List<String> keywords,
+        @Nonnull IBundle bundle) {}

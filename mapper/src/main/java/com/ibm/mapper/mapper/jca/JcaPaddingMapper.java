@@ -25,9 +25,10 @@ import com.ibm.mapper.model.padding.ISO10126;
 import com.ibm.mapper.model.padding.PKCS1;
 import com.ibm.mapper.model.padding.PKCS5;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class JcaPaddingMapper implements IMapper {
 
@@ -54,7 +55,7 @@ public class JcaPaddingMapper implements IMapper {
             case "ISO10126PADDING" -> Optional.of(new ISO10126(detectionLocation));
             case "PKCS1PADDING" -> Optional.of(new PKCS1(detectionLocation));
             case "PKCS5PADDING" -> Optional.of(new PKCS5(detectionLocation));
-            default -> Optional.empty();
+            default -> Optional.of(new Padding(padding, detectionLocation));
         };
     }
 }

@@ -19,22 +19,23 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.padding.OAEP;
 import com.ibm.mapper.model.padding.PKCS1;
 import com.ibm.mapper.utils.DetectionLocation;
+import org.junit.jupiter.api.Test;
+
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class JcaPaddingMapperTest {
 
     @Test
     void padding() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaPaddingMapper jcaPaddingMapper = new JcaPaddingMapper();
         Optional<? extends INode> asset =
@@ -46,7 +47,7 @@ class JcaPaddingMapperTest {
     @Test
     void oaep() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaPaddingMapper jcaPaddingMapper = new JcaPaddingMapper();
         Optional<? extends INode> asset =

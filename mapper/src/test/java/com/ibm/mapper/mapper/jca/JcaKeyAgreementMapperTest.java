@@ -19,21 +19,22 @@
  */
 package com.ibm.mapper.mapper.jca;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.ibm.mapper.model.KeyAgreement;
 import com.ibm.mapper.model.algorithms.x448;
 import com.ibm.mapper.utils.DetectionLocation;
+import org.junit.jupiter.api.Test;
+
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class JcaKeyAgreementMapperTest {
 
     @Test
     void base() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaKeyAgreementMapper jcaKeyAgreementMapperTest = new JcaKeyAgreementMapper();
         Optional<KeyAgreement> keyAgreementOptional =

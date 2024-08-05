@@ -19,8 +19,6 @@
  */
 package com.ibm.mapper.mapper.ssl;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.ibm.mapper.model.CipherSuite;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Identifier;
@@ -30,16 +28,19 @@ import com.ibm.mapper.model.algorithms.DH;
 import com.ibm.mapper.model.algorithms.DSA;
 import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.utils.DetectionLocation;
+import org.junit.Test;
+
 import java.util.List;
 import java.util.Optional;
-import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CipherSuiteMapperTest {
 
     @Test
     public void test1() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         final CipherSuiteMapper mapper = new CipherSuiteMapper();
         final Optional<? extends INode> node =

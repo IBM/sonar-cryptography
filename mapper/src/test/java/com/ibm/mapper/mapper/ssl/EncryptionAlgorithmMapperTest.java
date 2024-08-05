@@ -36,7 +36,7 @@ public class EncryptionAlgorithmMapperTest {
     @Test
     public void test() {
         final DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         final EncryptionAlgorithmMapper mapper = new EncryptionAlgorithmMapper();
         final Collection<String> encCollection =

@@ -35,7 +35,7 @@ class JcaPasswordBasedEncryptionMapperTest {
     @Test
     void base() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaPasswordBasedEncryptionMapper jcaPasswordBasedEncryptionMapper =
                 new JcaPasswordBasedEncryptionMapper();

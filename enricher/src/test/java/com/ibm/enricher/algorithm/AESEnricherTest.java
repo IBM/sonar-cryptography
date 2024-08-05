@@ -40,7 +40,7 @@ class AESEnricherTest extends TestBase {
     @Test
     void oid() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
         final AES aes =
                 new AES(
                         256,
@@ -63,7 +63,7 @@ class AESEnricherTest extends TestBase {
     @Test
     void ae() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
         final AES aes =
                 new AES(
                         128,
