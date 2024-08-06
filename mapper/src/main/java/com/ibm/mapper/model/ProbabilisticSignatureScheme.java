@@ -19,6 +19,4 @@
  */
 package com.ibm.mapper.model;
 
-public interface ProbabilisticSignatureScheme extends Signature {
-
-}
+public interface ProbabilisticSignatureScheme extends Signature {}

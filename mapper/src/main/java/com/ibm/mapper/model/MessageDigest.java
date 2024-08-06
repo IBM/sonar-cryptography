@@ -19,10 +19,10 @@
  */
 package com.ibm.mapper.model;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
+import javax.annotation.Nonnull;
 
-public interface MessageDigest extends IAlgorithm {
+public interface MessageDigest extends Mac {
 
     @Nonnull
     default Optional<DigestSize> getDigestSize() {

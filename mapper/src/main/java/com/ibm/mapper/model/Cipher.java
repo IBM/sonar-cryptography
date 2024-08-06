@@ -19,10 +19,10 @@
  */
 package com.ibm.mapper.model;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
+import javax.annotation.Nonnull;
 
-public interface Cipher extends IAlgorithm  {
+public interface Cipher extends IAlgorithm {
 
     @Nonnull
     default Optional<Mode> getMode() {

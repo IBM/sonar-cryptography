@@ -26,9 +26,8 @@ import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public final class RC5 extends Algorithm implements BlockCipher {
     private static final String NAME = "RC5"; // ARC2

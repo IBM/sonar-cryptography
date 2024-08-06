@@ -48,6 +48,13 @@ import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.mapper.model.functionality.Verify;
 import com.ibm.mapper.model.padding.OAEP;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Evidence;
 import org.cyclonedx.model.component.crypto.AlgorithmProperties;
@@ -57,14 +64,6 @@ import org.cyclonedx.model.component.crypto.enums.CryptoFunction;
 import org.cyclonedx.model.component.crypto.enums.Primitive;
 import org.cyclonedx.model.component.evidence.Occurrence;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
 
 public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
     @Nonnull private final Component component;
@@ -191,7 +190,8 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
             primitives = Primitive.KDF;
         } else if (primitive.is(PseudorandomNumberGenerator.class)) {
             primitives = Primitive.DRBG;
-        } else if (primitive.is(Signature.class) || primitive.is(ProbabilisticSignatureScheme.class)) {
+        } else if (primitive.is(Signature.class)
+                || primitive.is(ProbabilisticSignatureScheme.class)) {
             primitives = Primitive.SIGNATURE;
         } else if (primitive.is(StreamCipher.class)) {
             primitives = Primitive.STREAM_CIPHER;

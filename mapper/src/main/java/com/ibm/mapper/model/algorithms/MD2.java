@@ -22,20 +22,26 @@ package com.ibm.mapper.model.algorithms;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.DigestSize;
+import com.ibm.mapper.model.IAlgorithm;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
-
 import javax.annotation.Nonnull;
 
 public final class MD2 extends Algorithm implements MessageDigest {
 
     public MD2(@Nonnull DetectionLocation detectionLocation) {
-        super("MD2", MessageDigest.class,  detectionLocation);
+        super("MD2", MessageDigest.class, detectionLocation);
         this.append(new BlockSize(128, detectionLocation));
         this.append(new DigestSize(128, detectionLocation));
     }
 
-    public MD2(@Nonnull final Class<? extends MessageDigest> asKind, @Nonnull MD2 md2) {
+    public MD2(
+            @Nonnull final Class<? extends IAlgorithm> asKind,
+            @Nonnull DetectionLocation detectionLocation) {
+        super("MD2", asKind, detectionLocation);
+    }
+
+    public MD2(@Nonnull final Class<? extends IAlgorithm> asKind, @Nonnull MD2 md2) {
         super(md2, asKind);
     }
 }

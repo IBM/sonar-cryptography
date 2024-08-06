@@ -27,7 +27,6 @@ import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
-import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
@@ -54,7 +53,7 @@ public final class JavaKeyAgreementContextTranslator extends JavaAbstractLibrary
                 return Optional.of(new KeyGeneration(detectionLocation));
             }
         }
-        return Optional.of(new Unknown(value.asString(), detectionLocation));
+        return Optional.empty();
     }
 
     @Override
@@ -72,6 +71,6 @@ public final class JavaKeyAgreementContextTranslator extends JavaAbstractLibrary
                 return Optional.of(new KeyGeneration(detectionLocation));
             }
         }
-        return Optional.of(new Unknown(value.asString(), detectionLocation));
+        return Optional.empty();
     }
 }

@@ -28,15 +28,14 @@ import com.ibm.mapper.model.Identifier;
 import com.ibm.mapper.model.collections.AssetCollection;
 import com.ibm.mapper.model.collections.IdentifierCollection;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class CipherSuiteMapper implements IMapper {
 

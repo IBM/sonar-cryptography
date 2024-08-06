@@ -26,7 +26,6 @@ import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.mapper.mapper.jca.JcaMacMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.TagLength;
-import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -63,7 +62,7 @@ public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslato
                             blockSizeDetection.getValue(), detectionLocation);
             return Optional.of(blockSize);
         }
-        return Optional.of(new Unknown(value.asString(), detectionLocation));
+        return Optional.empty();
     }
 
     @Override
@@ -225,6 +224,6 @@ public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslato
                             blockSizeDetection.getValue(), detectionLocation);
             return Optional.of(blockSize);
         }*/
-        return Optional.of(new Unknown(value.asString(), detectionLocation));
+        return Optional.empty();
     }
 }

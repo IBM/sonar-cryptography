@@ -24,9 +24,8 @@ import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public final class GOST28147 extends Algorithm implements BlockCipher {
     private static final String NAME = "GOST28147"; // Magma, GOST 28147-89 (RFC 5830)

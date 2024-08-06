@@ -26,9 +26,8 @@ import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public final class RC4 extends Algorithm implements StreamCipher {
     private static final String NAME = "RC4"; // ARC4, ARCFOUR

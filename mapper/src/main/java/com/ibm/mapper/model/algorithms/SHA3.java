@@ -21,6 +21,7 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.DigestSize;
+import com.ibm.mapper.model.IAlgorithm;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
@@ -42,7 +43,14 @@ public final class SHA3 extends Algorithm implements MessageDigest {
         this.append(preHash);
     }
 
-    public SHA3(@Nonnull final Class<? extends MessageDigest> asKind, @Nonnull SHA3 sha3) {
+    public SHA3(
+            int digestSize,
+            @Nonnull final Class<? extends IAlgorithm> asKind,
+            @Nonnull DetectionLocation detectionLocation) {
+        super(NAME + "-" + digestSize, asKind, detectionLocation);
+    }
+
+    public SHA3(@Nonnull final Class<? extends IAlgorithm> asKind, @Nonnull SHA3 sha3) {
         super(sha3, asKind);
     }
 }

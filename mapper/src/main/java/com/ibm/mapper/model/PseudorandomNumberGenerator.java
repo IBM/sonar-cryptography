@@ -19,5 +19,4 @@
  */
 package com.ibm.mapper.model;
 
-public interface PseudorandomNumberGenerator extends MessageDigest {
-}
+public interface PseudorandomNumberGenerator extends MessageDigest {}

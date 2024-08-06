@@ -19,6 +19,4 @@
  */
 package com.ibm.mapper.model;
 
-public interface StreamCipher extends Cipher {
-    
-}
+public interface StreamCipher extends Cipher {}

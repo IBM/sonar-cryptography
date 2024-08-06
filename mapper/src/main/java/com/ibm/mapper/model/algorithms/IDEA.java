@@ -24,9 +24,8 @@ import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 // International Data Encryption Algorithm
 public final class IDEA extends Algorithm implements BlockCipher {

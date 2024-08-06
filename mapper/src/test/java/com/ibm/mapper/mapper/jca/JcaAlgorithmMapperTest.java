@@ -23,9 +23,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
-import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyAgreement;
+import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PasswordBasedEncryption;
 import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;

@@ -19,6 +19,8 @@
  */
 package com.ibm.enricher.algorithm;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.ibm.enricher.TestBase;
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
@@ -29,11 +31,8 @@ import com.ibm.mapper.model.mode.ECB;
 import com.ibm.mapper.model.mode.GCM;
 import com.ibm.mapper.model.padding.PKCS1;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 class AESEnricherTest extends TestBase {
 

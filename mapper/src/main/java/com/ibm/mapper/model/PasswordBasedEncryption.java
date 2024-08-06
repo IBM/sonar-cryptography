@@ -21,19 +21,20 @@ package com.ibm.mapper.model;
 
 import com.ibm.mapper.ITranslator;
 import com.ibm.mapper.utils.DetectionLocation;
-
-import javax.annotation.Nonnull;
 import java.util.Objects;
 import java.util.Optional;
+import javax.annotation.Nonnull;
 
 public class PasswordBasedEncryption extends Algorithm {
 
     public PasswordBasedEncryption(@Nonnull DetectionLocation detectionLocation) {
         super(ITranslator.UNKNOWN, PasswordBasedEncryption.class, detectionLocation);
     }
+
     // example: PBEWithHmacSHA1AndAES_128
     public PasswordBasedEncryption(@Nonnull Mac mac, @Nonnull Cipher cipher) {
-        super("PBEWith" + mac.asString() + "And" + cipher.asString(),
+        super(
+                "PBEWith" + mac.asString() + "And" + cipher.asString(),
                 PasswordBasedEncryption.class,
                 mac.getDetectionContext());
         this.append(mac);
@@ -42,7 +43,8 @@ public class PasswordBasedEncryption extends Algorithm {
 
     // example: PBEWithMD5AndDES
     public PasswordBasedEncryption(@Nonnull MessageDigest digest, @Nonnull Cipher cipher) {
-        super("PBEWith" + digest.asString() + "And" + cipher.asString(),
+        super(
+                "PBEWith" + digest.asString() + "And" + cipher.asString(),
                 PasswordBasedEncryption.class,
                 digest.getDetectionContext());
         this.append(digest);
@@ -51,8 +53,7 @@ public class PasswordBasedEncryption extends Algorithm {
 
     // example: PBEWithHmacSHA1
     public PasswordBasedEncryption(@Nonnull Mac mac) {
-        super("PBEWith" + mac.asString(),
-                PasswordBasedEncryption.class, mac.getDetectionContext());
+        super("PBEWith" + mac.asString(), PasswordBasedEncryption.class, mac.getDetectionContext());
         this.append(mac);
     }
 

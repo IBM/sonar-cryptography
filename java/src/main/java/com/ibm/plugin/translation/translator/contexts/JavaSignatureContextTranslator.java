@@ -24,7 +24,6 @@ import com.ibm.engine.model.SignatureAction;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.model.functionality.Verify;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -49,7 +48,7 @@ public final class JavaSignatureContextTranslator extends JavaAbstractLibraryTra
                 case PADDING -> Optional.empty();
             };
         }
-        return Optional.of(new Unknown(value.asString(), detectionLocation));
+        return Optional.empty();
     }
 
     @Override
@@ -122,6 +121,6 @@ public final class JavaSignatureContextTranslator extends JavaAbstractLibraryTra
                     break;
             }
         }*/
-        return Optional.of(new Unknown(value.asString(), detectionLocation));
+        return Optional.empty();
     }
 }

@@ -20,9 +20,8 @@
 package com.ibm.mapper.model;
 
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public final class Unknown extends Property {
 

@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
 public final class PBKDF2 extends Algorithm implements PasswordBasedKeyDerivationFunction {
 
     public PBKDF2(@Nonnull Mac mac, @Nonnull DetectionLocation detectionLocation) {
-        super("PBKDF2", PasswordBasedKeyDerivationFunction.class,  detectionLocation);
+        super("PBKDF2", PasswordBasedKeyDerivationFunction.class, detectionLocation);
         this.append(mac);
     }
 }

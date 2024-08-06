@@ -21,8 +21,8 @@ package com.ibm.plugin.translation.reorganizer.rules;
 
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.BlockSize;
-import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.StreamCipher;

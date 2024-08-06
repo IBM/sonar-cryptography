@@ -19,5 +19,4 @@
  */
 package com.ibm.mapper.model;
 
-public interface Mac extends MessageDigest {
-}
+public interface Mac extends IAlgorithm {}

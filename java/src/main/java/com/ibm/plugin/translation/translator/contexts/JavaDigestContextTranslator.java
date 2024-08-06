@@ -22,14 +22,10 @@ package com.ibm.plugin.translation.translator.contexts;
 import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.ValueAction;
-import com.ibm.engine.model.context.DigestContext;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.mapper.mapper.jca.JcaMessageDigestMapper;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.MaskGenerationFunction;
-import com.ibm.mapper.model.MessageDigest;
-import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
@@ -53,7 +49,7 @@ public final class JavaDigestContextTranslator extends JavaAbstractLibraryTransl
                                 return algo;
                             });
         }
-        return Optional.of(new Unknown(value.asString(), detectionLocation));
+        return Optional.empty();
     }
 
     @Override
@@ -105,7 +101,7 @@ public final class JavaDigestContextTranslator extends JavaAbstractLibraryTransl
                     break;
             }
 
-            final com.ibm.mapper.model.Algorithm algorithm =
+            /*final com.ibm.mapper.model.Algorithm algorithm =
                     new com.ibm.mapper.model.Algorithm(digestName, detectionLocation);
 
             final DigestContext.Kind kind = ((DigestContext) detectionContext).kind();
@@ -116,7 +112,7 @@ public final class JavaDigestContextTranslator extends JavaAbstractLibraryTransl
                                 Optional.ofNullable(digestSize)
                                         .map(size -> new MessageDigest(algorithm, size))
                                         .orElse(new MessageDigest(algorithm)));
-            };
+            };*/
         } else if (value instanceof com.ibm.engine.model.DigestSize) {
             return Optional.of(
                     new DigestSize(Integer.parseInt(value.asString()), detectionLocation));

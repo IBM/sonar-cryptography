@@ -21,16 +21,16 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.DigestSize;
+import com.ibm.mapper.model.IAlgorithm;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
-
 import javax.annotation.Nonnull;
 
 public final class SHA2 extends Algorithm implements MessageDigest {
     private static final String NAME = "SHA";
 
     public SHA2(int digestSize, @Nonnull DetectionLocation detectionLocation) {
-        super(NAME+digestSize, MessageDigest.class, detectionLocation);
+        super(NAME + digestSize, MessageDigest.class, detectionLocation);
         this.append(new DigestSize(digestSize, detectionLocation));
     }
 
@@ -43,14 +43,21 @@ public final class SHA2 extends Algorithm implements MessageDigest {
         this.append(preHash);
     }
 
+    public SHA2(
+            int digestSize,
+            @Nonnull final Class<? extends IAlgorithm> asKind,
+            @Nonnull DetectionLocation detectionLocation) {
+        super(NAME + digestSize, asKind, detectionLocation);
+    }
+
+    public SHA2(@Nonnull final Class<? extends IAlgorithm> asKind, @Nonnull SHA2 sha2) {
+        super(sha2, asKind);
+    }
+
     @Nonnull
     private static String buildPreHashName(int digestSize, @Nonnull MessageDigest preHash) {
         return preHash.getDigestSize()
                 .map(size -> NAME + size.asString() + "/" + digestSize)
                 .orElse(NAME + digestSize);
-    }
-
-    public SHA2(@Nonnull final Class<? extends MessageDigest> asKind, @Nonnull SHA2 sha2) {
-        super(sha2, asKind);
     }
 }

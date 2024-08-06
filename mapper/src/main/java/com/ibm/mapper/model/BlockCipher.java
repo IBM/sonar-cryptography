@@ -19,5 +19,4 @@
  */
 package com.ibm.mapper.model;
 
-public interface BlockCipher extends Cipher {
-}
+public interface BlockCipher extends Cipher {}

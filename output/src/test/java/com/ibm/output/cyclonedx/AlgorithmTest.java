@@ -28,7 +28,9 @@ import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
 import com.ibm.mapper.model.PasswordLength;
 import com.ibm.mapper.model.SaltLength;
+import com.ibm.mapper.model.algorithms.PBKDF2;
 import com.ibm.mapper.model.algorithms.RSA;
+import com.ibm.mapper.model.algorithms.SHA;
 import com.ibm.mapper.model.functionality.Encrypt;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -144,12 +146,11 @@ class AlgorithmTest {
     void pbkdfWithSaltAndPassword() {
         final DetectionLocation detectionLocation =
                 new DetectionLocation(filePath, 1, 1, Collections.emptyList(), () -> "SSL");
-        final Algorithm algorithm = new Algorithm("PBKDF2WithHmacSHA1", detectionLocation);
+        final PasswordBasedKeyDerivationFunction pbkdf =
+                new PBKDF2(new SHA(detectionLocation), detectionLocation);
         final SaltLength saltLength = new SaltLength(192, detectionLocation);
         final PasswordLength passwordLength = new PasswordLength(32, detectionLocation);
         final KeyLength keyLength = new KeyLength(1024, detectionLocation);
-        final PasswordBasedKeyDerivationFunction pbkdf =
-                new PasswordBasedKeyDerivationFunction(algorithm);
         pbkdf.append(saltLength);
         pbkdf.append(passwordLength);
         pbkdf.append(keyLength);

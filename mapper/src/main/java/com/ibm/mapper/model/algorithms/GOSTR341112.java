@@ -24,7 +24,6 @@ import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
-
 import javax.annotation.Nonnull;
 
 // Streebog
@@ -42,7 +41,9 @@ public final class GOSTR341112 extends Algorithm implements MessageDigest {
         this.append(new BlockSize(512, detectionLocation));
     }
 
-    public GOSTR341112(@Nonnull final Class<? extends MessageDigest> asKind, @Nonnull GOSTR341112 gostr341112) {
+    public GOSTR341112(
+            @Nonnull final Class<? extends MessageDigest> asKind,
+            @Nonnull GOSTR341112 gostr341112) {
         super(gostr341112, asKind);
     }
 }

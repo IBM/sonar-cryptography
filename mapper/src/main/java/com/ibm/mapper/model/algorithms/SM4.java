@@ -24,9 +24,8 @@ import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public final class SM4 extends Algorithm implements BlockCipher {
     private static final String NAME = "SM4"; // SMS4

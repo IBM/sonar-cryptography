@@ -19,5 +19,4 @@
  */
 package com.ibm.mapper.model;
 
-public interface KeyEncapsulationMechanism extends IAlgorithm {
-}
+public interface KeyEncapsulationMechanism extends IAlgorithm {}

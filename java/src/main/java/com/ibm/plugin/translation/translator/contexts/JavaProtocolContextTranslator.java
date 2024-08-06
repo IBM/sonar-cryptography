@@ -81,6 +81,6 @@ public final class JavaProtocolContextTranslator implements IContextTranslationW
             };
         }
 
-        return Optional.of(new Unknown(value.asString(), detectionLocation));
+        return Optional.of(new Unknown(detectionLocation));
     }
 }

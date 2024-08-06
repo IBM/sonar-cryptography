@@ -30,10 +30,9 @@ import com.ibm.mapper.model.curves.Secp256r1;
 import com.ibm.mapper.model.curves.Secp384r1;
 import com.ibm.mapper.model.curves.Secp521r1;
 import com.ibm.mapper.utils.DetectionLocation;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
 
 public final class JcaCurveMapper implements IMapper {
 
@@ -47,9 +46,12 @@ public final class JcaCurveMapper implements IMapper {
         return switch (str.toUpperCase().trim()) {
             case "ED25519" -> Optional.of(new Ed25519(detectionLocation));
             case "ED448" -> Optional.of(new Ed448(detectionLocation));
-            case "SECP256R1" -> Optional.of(new EllipticCurveAlgorithm(new Secp256r1(detectionLocation)));
-            case "SECP384R1" -> Optional.of(new EllipticCurveAlgorithm(new Secp384r1(detectionLocation)));
-            case "SECP521R1" -> Optional.of(new EllipticCurveAlgorithm(new Secp521r1(detectionLocation)));
+            case "SECP256R1" ->
+                    Optional.of(new EllipticCurveAlgorithm(new Secp256r1(detectionLocation)));
+            case "SECP384R1" ->
+                    Optional.of(new EllipticCurveAlgorithm(new Secp384r1(detectionLocation)));
+            case "SECP521R1" ->
+                    Optional.of(new EllipticCurveAlgorithm(new Secp521r1(detectionLocation)));
             case "X25519" -> Optional.of(new X25519(detectionLocation));
             case "X448" -> Optional.of(new X448(detectionLocation));
             default -> Optional.empty();

@@ -21,8 +21,8 @@ package com.ibm.mapper.mapper.jca;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
 import com.ibm.mapper.model.algorithms.PBKDF2;
