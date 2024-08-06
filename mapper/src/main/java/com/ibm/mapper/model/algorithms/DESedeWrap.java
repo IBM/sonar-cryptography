@@ -21,7 +21,7 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
-import com.ibm.mapper.model.Cipher;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
@@ -60,7 +60,7 @@ public final class DESedeWrap extends Algorithm implements BlockCipher {
     }
 
     public DESedeWrap(
-            @Nonnull final Class<? extends Cipher> asKind, @NotNull DESedeWrap deSedeWrap) {
+            @Nonnull final Class<? extends IPrimitive> asKind, @NotNull DESedeWrap deSedeWrap) {
         super(deSedeWrap, asKind);
     }
 }

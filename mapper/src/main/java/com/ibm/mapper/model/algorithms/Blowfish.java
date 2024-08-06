@@ -21,7 +21,7 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
-import com.ibm.mapper.model.Cipher;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
@@ -59,7 +59,7 @@ public final class Blowfish extends Algorithm implements BlockCipher {
         this.append(padding);
     }
 
-    public Blowfish(@Nonnull final Class<? extends Cipher> asKind, @NotNull Blowfish blowfish) {
+    public Blowfish(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull Blowfish blowfish) {
         super(blowfish, asKind);
     }
 }

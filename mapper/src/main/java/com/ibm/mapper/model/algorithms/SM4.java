@@ -21,7 +21,7 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
-import com.ibm.mapper.model.Cipher;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
@@ -39,7 +39,7 @@ public final class SM4 extends Algorithm implements BlockCipher {
         this.append(mode);
     }
 
-    public SM4(@Nonnull final Class<? extends Cipher> asKind, @NotNull SM4 sm4) {
+    public SM4(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull SM4 sm4) {
         super(sm4, asKind);
     }
 }

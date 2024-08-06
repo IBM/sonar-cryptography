@@ -21,7 +21,7 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
-import com.ibm.mapper.model.Cipher;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
@@ -40,7 +40,7 @@ public final class IDEA extends Algorithm implements BlockCipher {
         this.append(mode);
     }
 
-    public IDEA(@Nonnull final Class<? extends Cipher> asKind, @NotNull IDEA idea) {
+    public IDEA(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull IDEA idea) {
         super(idea, asKind);
     }
 }

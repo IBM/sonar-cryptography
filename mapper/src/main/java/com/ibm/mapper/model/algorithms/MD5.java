@@ -22,26 +22,27 @@ package com.ibm.mapper.model.algorithms;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.DigestSize;
-import com.ibm.mapper.model.IAlgorithm;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
 public final class MD5 extends Algorithm implements MessageDigest {
+    private static final String NAME = "MD5";
 
     public MD5(@Nonnull DetectionLocation detectionLocation) {
-        super("MD5", MessageDigest.class, detectionLocation);
+        super(NAME, MessageDigest.class, detectionLocation);
         this.append(new BlockSize(512, detectionLocation));
         this.append(new DigestSize(128, detectionLocation));
     }
 
     public MD5(
-            @Nonnull final Class<? extends IAlgorithm> asKind,
+            @Nonnull final Class<? extends IPrimitive> asKind,
             @Nonnull DetectionLocation detectionLocation) {
-        super("MD5", asKind, detectionLocation);
+        super(NAME, asKind, detectionLocation);
     }
 
-    public MD5(@Nonnull final Class<? extends IAlgorithm> asKind, @Nonnull MD5 md5) {
+    public MD5(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull MD5 md5) {
         super(md5, asKind);
     }
 }

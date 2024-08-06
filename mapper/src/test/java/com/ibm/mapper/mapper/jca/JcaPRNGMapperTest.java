@@ -21,7 +21,6 @@ package com.ibm.mapper.mapper.jca;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.ibm.mapper.model.IAlgorithm;
 import com.ibm.mapper.model.PseudorandomNumberGenerator;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.List;
@@ -36,7 +35,7 @@ class JcaPRNGMapperTest {
                 new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaPRNGMapper jcaPRNGMapper = new JcaPRNGMapper();
-        Optional<? extends IAlgorithm> prngOptional =
+        Optional<? extends PseudorandomNumberGenerator> prngOptional =
                 jcaPRNGMapper.parse("NativePRNGBlocking", testDetectionLocation);
         assertThat(prngOptional).isPresent();
         assertThat(prngOptional.get()).isInstanceOf(PseudorandomNumberGenerator.class);
@@ -50,7 +49,7 @@ class JcaPRNGMapperTest {
                 new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaPRNGMapper jcaPRNGMapper = new JcaPRNGMapper();
-        Optional<? extends IAlgorithm> prngOptional =
+        Optional<? extends PseudorandomNumberGenerator> prngOptional =
                 jcaPRNGMapper.parse("SHA1PRNG", testDetectionLocation);
         assertThat(prngOptional).isPresent();
         assertThat(prngOptional.get()).isInstanceOf(PseudorandomNumberGenerator.class);

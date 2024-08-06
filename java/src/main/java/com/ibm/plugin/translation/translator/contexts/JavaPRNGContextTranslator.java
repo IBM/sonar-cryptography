@@ -25,8 +25,8 @@ import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.rule.IBundle;
 import com.ibm.mapper.IContextTranslationWithKind;
 import com.ibm.mapper.mapper.jca.JcaPRNGMapper;
-import com.ibm.mapper.model.IAlgorithm;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.Seed;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
@@ -47,7 +47,7 @@ public final class JavaPRNGContextTranslator implements IContextTranslationWithK
 
         if (value instanceof SeedSize<Tree> seedSize) {
             JcaPRNGMapper jcaPRNGMapper = new JcaPRNGMapper();
-            Optional<? extends IAlgorithm> prngOptional =
+            Optional<? extends IPrimitive> prngOptional =
                     jcaPRNGMapper.parse("NativePRNG", detectionLocation);
             return prngOptional.map(
                     prng -> {

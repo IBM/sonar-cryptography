@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.Cipher;
-import com.ibm.mapper.model.IAlgorithm;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.PasswordBasedEncryption;
@@ -92,7 +92,7 @@ class JcaCipherMapperTest {
         assertThat(digest.getBlockSize().get().getValue()).isEqualTo(512);
 
         assertThat(pbe.getCipher()).isPresent();
-        IAlgorithm encryptionAlgorithm = pbe.getCipher().get();
+        IPrimitive encryptionAlgorithm = pbe.getCipher().get();
         assertThat(encryptionAlgorithm).isInstanceOf(DES.class);
     }
 

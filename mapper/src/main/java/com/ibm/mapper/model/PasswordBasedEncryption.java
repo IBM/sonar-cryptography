@@ -25,7 +25,7 @@ import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
-public class PasswordBasedEncryption extends Algorithm {
+public class PasswordBasedEncryption extends Algorithm implements IPrimitive {
 
     public PasswordBasedEncryption(@Nonnull DetectionLocation detectionLocation) {
         super(ITranslator.UNKNOWN, PasswordBasedEncryption.class, detectionLocation);

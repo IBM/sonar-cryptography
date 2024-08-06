@@ -20,7 +20,7 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.IAlgorithm;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyAgreement;
 import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.Signature;
@@ -36,7 +36,7 @@ public final class DH extends Algorithm implements Signature, KeyAgreement, Publ
     }
 
     public DH(
-            @Nonnull final Class<? extends IAlgorithm> asKind,
+            @Nonnull final Class<? extends IPrimitive> asKind,
             @NotNull DetectionLocation detectionLocation) {
         super(NAME, asKind, detectionLocation);
     }

@@ -21,7 +21,7 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
-import com.ibm.mapper.model.Cipher;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
@@ -72,7 +72,7 @@ public final class DES extends Algorithm implements BlockCipher {
         this.append(padding);
     }
 
-    public DES(@Nonnull final Class<? extends Cipher> asKind, @NotNull DES des) {
+    public DES(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull DES des) {
         super(des, asKind);
     }
 }

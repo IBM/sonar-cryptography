@@ -23,7 +23,7 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 
 /** PBKDF */
-public interface KeyDerivationFunction extends IAlgorithm {
+public interface KeyDerivationFunction extends IPrimitive {
 
     @Nonnull
     default Optional<SaltLength> getSalt() {

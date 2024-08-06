@@ -22,7 +22,7 @@ package com.ibm.mapper.model.algorithms;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.BlockSize;
-import com.ibm.mapper.model.Cipher;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
@@ -63,7 +63,7 @@ public final class AES extends Algorithm implements BlockCipher {
         this.append(padding);
     }
 
-    public AES(@Nonnull final Class<? extends Cipher> asKind, @Nonnull AES aes) {
+    public AES(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull AES aes) {
         super(aes, asKind);
     }
 }

@@ -21,7 +21,7 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
-import com.ibm.mapper.model.Cipher;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
@@ -40,7 +40,8 @@ public final class GOSTR34122015 extends Algorithm implements BlockCipher {
     }
 
     public GOSTR34122015(
-            @Nonnull final Class<? extends Cipher> asKind, @NotNull GOSTR34122015 gostr34122015) {
+            @Nonnull final Class<? extends IPrimitive> asKind,
+            @NotNull GOSTR34122015 gostr34122015) {
         super(gostr34122015, asKind);
     }
 }

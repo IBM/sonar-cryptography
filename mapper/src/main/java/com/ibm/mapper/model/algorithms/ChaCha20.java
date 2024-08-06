@@ -20,7 +20,7 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.Cipher;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.StreamCipher;
@@ -47,7 +47,7 @@ public final class ChaCha20 extends Algorithm implements StreamCipher {
         this.append(padding);
     }
 
-    public ChaCha20(@Nonnull final Class<? extends Cipher> asKind, @NotNull ChaCha20 chaCha20) {
+    public ChaCha20(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull ChaCha20 chaCha20) {
         super(chaCha20, asKind);
     }
 }

@@ -19,4 +19,4 @@
  */
 package com.ibm.mapper.model;
 
-public interface MaskGenerationFunction extends IAlgorithm {}
+public interface MaskGenerationFunction extends IPrimitive {}

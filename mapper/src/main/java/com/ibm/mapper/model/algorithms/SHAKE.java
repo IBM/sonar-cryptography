@@ -21,6 +21,7 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.DigestSize;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
@@ -33,7 +34,7 @@ public final class SHAKE extends Algorithm implements MessageDigest {
         this.append(new DigestSize(digestSize, detectionLocation));
     }
 
-    public SHAKE(@Nonnull final Class<? extends MessageDigest> asKind, @Nonnull SHAKE shake) {
+    public SHAKE(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull SHAKE shake) {
         super(shake, asKind);
     }
 }

@@ -23,7 +23,7 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class Unknown extends Property {
+public final class Unknown extends Property implements IPrimitive {
 
     public Unknown(@Nonnull DetectionLocation detectionLocation) {
         super(Unknown.class, detectionLocation);
@@ -64,5 +64,10 @@ public final class Unknown extends Property {
             copy.children.put(child.getKind(), child.deepCopy());
         }
         return copy;
+    }
+
+    @NotNull @Override
+    public String getName() {
+        return this.asString();
     }
 }

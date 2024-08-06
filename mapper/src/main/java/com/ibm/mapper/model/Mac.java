@@ -19,4 +19,4 @@
  */
 package com.ibm.mapper.model;
 
-public interface Mac extends IAlgorithm {}
+public interface Mac extends IPrimitive {}

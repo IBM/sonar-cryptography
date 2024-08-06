@@ -20,29 +20,25 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.BlockSize;
-import com.ibm.mapper.model.DigestSize;
+import com.ibm.mapper.model.AuthenticatedEncryption;
+import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
-public final class MD2 extends Algorithm implements MessageDigest {
-    private static final String NAME = "MD2";
+public final class Ascon extends Algorithm
+        implements MessageDigest, BlockCipher, AuthenticatedEncryption {
+    private static final String NAME = "Ascon";
 
-    public MD2(@Nonnull DetectionLocation detectionLocation) {
-        super(NAME, MessageDigest.class, detectionLocation);
-        this.append(new BlockSize(128, detectionLocation));
-        this.append(new DigestSize(128, detectionLocation));
+    public Ascon(@NotNull DetectionLocation detectionLocation) {
+        super(NAME, AuthenticatedEncryption.class, detectionLocation);
     }
 
-    public MD2(
+    public Ascon(
             @Nonnull final Class<? extends IPrimitive> asKind,
-            @Nonnull DetectionLocation detectionLocation) {
+            @NotNull DetectionLocation detectionLocation) {
         super(NAME, asKind, detectionLocation);
-    }
-
-    public MD2(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull MD2 md2) {
-        super(md2, asKind);
     }
 }

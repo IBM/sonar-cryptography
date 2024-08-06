@@ -20,7 +20,7 @@
 package com.ibm.mapper.mapper.ssl;
 
 import com.ibm.mapper.mapper.IMapper;
-import com.ibm.mapper.model.Cipher;
+import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.algorithms.AES;
 import com.ibm.mapper.model.algorithms.Aria;
 import com.ibm.mapper.model.algorithms.Camellia;
@@ -48,7 +48,7 @@ import org.jetbrains.annotations.Nullable;
 public final class EncryptionAlgorithmMapper implements IMapper {
 
     @NotNull @Override
-    public Optional<Cipher> parse(
+    public Optional<? extends Algorithm> parse(
             @Nullable String str, @NotNull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();

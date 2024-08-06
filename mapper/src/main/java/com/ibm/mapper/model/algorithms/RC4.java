@@ -20,7 +20,7 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.Cipher;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
@@ -58,7 +58,7 @@ public final class RC4 extends Algorithm implements StreamCipher {
         this.append(padding);
     }
 
-    public RC4(@Nonnull final Class<? extends Cipher> asKind, @NotNull RC4 rc4) {
+    public RC4(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull RC4 rc4) {
         super(rc4, asKind);
     }
 }

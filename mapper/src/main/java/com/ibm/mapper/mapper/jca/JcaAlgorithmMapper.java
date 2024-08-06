@@ -68,7 +68,7 @@ public class JcaAlgorithmMapper implements IMapper {
             case "DH", "DIFFIEHELLMAN" -> Optional.of(new DH(detectionLocation));
             case "RSA" -> Optional.of(new RSA(detectionLocation));
             default -> {
-                final Algorithm algorithm = new Algorithm(str, Algorithm.class, detectionLocation);
+                final Algorithm algorithm = new Algorithm(str, Unknown.class, detectionLocation);
                 algorithm.append(new Unknown(detectionLocation));
                 yield Optional.of(algorithm);
             }

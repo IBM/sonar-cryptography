@@ -22,7 +22,7 @@ package com.ibm.mapper.model;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
-public interface MessageDigest extends Mac {
+public interface MessageDigest extends Mac, PseudorandomNumberGenerator, IPrimitive {
 
     @Nonnull
     default Optional<DigestSize> getDigestSize() {
