@@ -20,7 +20,7 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.IAlgorithm;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyAgreement;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.PublicKeyEncryption;
@@ -33,17 +33,17 @@ public final class RSA extends Algorithm implements KeyAgreement, Signature, Pub
     private static final String NAME = "RSA";
 
     public RSA(@NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation), PublicKeyEncryption.class);
+        super(NAME, PublicKeyEncryption.class, detectionLocation);
     }
 
     public RSA(@Nonnull KeyLength keyLength, @Nonnull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation), PublicKeyEncryption.class);
+        super(NAME, PublicKeyEncryption.class, detectionLocation);
         this.append(keyLength);
     }
 
     public RSA(
-            @Nonnull final Class<? extends IAlgorithm> asKind,
+            @Nonnull final Class<? extends IPrimitive> asKind,
             @NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation), asKind);
+        super(NAME, asKind, detectionLocation);
     }
 }

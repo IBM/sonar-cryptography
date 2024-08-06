@@ -22,47 +22,10 @@ package com.ibm.mapper.model;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
-public class Cipher extends Algorithm {
-
-    protected Cipher(@Nonnull Algorithm algorithm, @Nonnull final Class<? extends Cipher> asKind) {
-        super(algorithm, asKind);
-    }
-
-    protected Cipher(
-            @Nonnull Algorithm algorithm,
-            @Nonnull Mode mode,
-            @Nonnull final Class<? extends Cipher> asKind) {
-        super(algorithm, asKind);
-        this.append(mode);
-    }
-
-    public Cipher(@Nonnull Algorithm algorithm) {
-        super(algorithm, Cipher.class);
-    }
-
-    public Cipher(
-            @Nonnull Algorithm algorithm,
-            @Nonnull Mode mode,
-            @Nonnull Padding padding,
-            @Nonnull final Class<? extends Cipher> asKind) {
-        super(algorithm, asKind);
-        this.append(mode);
-        this.append(padding);
-    }
-
-    public Cipher(@Nonnull Algorithm algorithm, @Nonnull Mode mode) {
-        super(algorithm, Cipher.class);
-        this.append(mode);
-    }
-
-    public Cipher(@Nonnull Algorithm algorithm, @Nonnull Mode mode, @Nonnull Padding padding) {
-        super(algorithm, Cipher.class);
-        this.append(mode);
-        this.append(padding);
-    }
+public interface Cipher extends IPrimitive, AuthenticatedEncryption {
 
     @Nonnull
-    public Optional<Mode> getMode() {
+    default Optional<Mode> getMode() {
         INode node = this.getChildren().get(Mode.class);
         if (node == null) {
             return Optional.empty();
@@ -71,7 +34,7 @@ public class Cipher extends Algorithm {
     }
 
     @Nonnull
-    public Optional<Padding> getPadding() {
+    default Optional<Padding> getPadding() {
         INode node = this.getChildren().get(Padding.class);
         if (node == null) {
             return Optional.empty();
@@ -80,11 +43,11 @@ public class Cipher extends Algorithm {
     }
 
     @Nonnull
-    public Optional<DigestSize> getDigestSize() {
-        INode node = this.getChildren().get(DigestSize.class);
+    default Optional<KeyLength> getKeyLength() {
+        INode node = this.getChildren().get(KeyLength.class);
         if (node == null) {
             return Optional.empty();
         }
-        return Optional.of((DigestSize) node);
+        return Optional.of((KeyLength) node);
     }
 }

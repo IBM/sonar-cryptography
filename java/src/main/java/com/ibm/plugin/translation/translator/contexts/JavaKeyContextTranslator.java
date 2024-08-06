@@ -33,14 +33,10 @@ import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.mapper.jca.JcaCurveMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Key;
-import com.ibm.mapper.model.KeyDerivationFunction;
-import com.ibm.mapper.model.KeyEncapsulationMechanism;
 import com.ibm.mapper.model.KeyLength;
-import com.ibm.mapper.model.MaskGenerationFunction;
 import com.ibm.mapper.model.PrivateKey;
 import com.ibm.mapper.model.PublicKey;
 import com.ibm.mapper.model.SecretKey;
-import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
@@ -96,7 +92,7 @@ public final class JavaKeyContextTranslator extends JavaAbstractLibraryTranslato
                                 return key;
                             });
         }
-        return Optional.of(new Unknown(value.asString(), detectionLocation));
+        return Optional.empty();
     }
 
     @Override
@@ -108,7 +104,7 @@ public final class JavaKeyContextTranslator extends JavaAbstractLibraryTranslato
             final KeyContext.Kind kind = ((SecretKeyContext) detectionContext).kind();
             com.ibm.mapper.model.Algorithm algorithm;
             switch (kind) {
-                case KDF:
+                /*case KDF:
                     algorithm =
                             new com.ibm.mapper.model.Algorithm(
                                     valueAction.asString(), detectionLocation);
@@ -120,11 +116,11 @@ public final class JavaKeyContextTranslator extends JavaAbstractLibraryTranslato
                     algorithm =
                             new com.ibm.mapper.model.Algorithm(
                                     valueAction.asString(), detectionLocation);
-                    return Optional.of(new KeyEncapsulationMechanism(algorithm));
+                    return Optional.of(new KeyEncapsulationMechanism(algorithm));*/
                 default:
                     break;
             }
         }
-        return Optional.of(new Unknown(value.asString(), detectionLocation));
+        return Optional.empty();
     }
 }

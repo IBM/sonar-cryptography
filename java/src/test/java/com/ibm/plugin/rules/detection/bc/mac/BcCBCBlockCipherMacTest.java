@@ -30,8 +30,8 @@ import com.ibm.engine.model.context.AlgorithmParameterContext;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.MacContext;
 import com.ibm.mapper.model.BlockCipher;
-import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.TagLength;
@@ -49,7 +49,7 @@ import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
-class BcCBCBlockCipherHMACTest extends TestBase {
+class BcCBCBlockCipherMacTest extends TestBase {
     @Test
     void test() {
         CheckVerifier.newVerifier()
@@ -139,7 +139,7 @@ class BcCBCBlockCipherHMACTest extends TestBase {
 
         // Mac
         INode macNode3 = nodes.get(0);
-        assertThat(macNode3.getKind()).isEqualTo(HMAC.class);
+        assertThat(macNode3.getKind()).isEqualTo(Mac.class);
         assertThat(macNode3.getChildren()).hasSize(findingId == 3 ? 3 : 4);
         assertThat(macNode3.asString()).isEqualTo("CBC-MAC-AES");
 

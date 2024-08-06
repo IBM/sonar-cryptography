@@ -31,14 +31,15 @@ public class JcaPRNGMapper implements IMapper {
 
     @Nonnull
     @Override
-    public Optional<PseudorandomNumberGenerator> parse(
+    public Optional<? extends PseudorandomNumberGenerator> parse(
             @Nullable String str, @Nonnull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }
 
         if (str.toUpperCase().contains("SHA1")) {
-            return Optional.of(new PseudorandomNumberGenerator(new SHA(detectionLocation)));
+            return Optional.of(
+                    new SHA(PseudorandomNumberGenerator.class, new SHA(detectionLocation)));
         }
 
         return switch (str.toUpperCase().trim()) {
@@ -47,7 +48,7 @@ public class JcaPRNGMapper implements IMapper {
                             "NATIVEPRNGBLOCKING",
                             "NATIVEPRNGNONBLOCKING",
                             "WINDOWS-PRNG" ->
-                    Optional.of(new PseudorandomNumberGenerator(detectionLocation));
+                    Optional.empty(); // todo
             default -> Optional.empty();
         };
     }

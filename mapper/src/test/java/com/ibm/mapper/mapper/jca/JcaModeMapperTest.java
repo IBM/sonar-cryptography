@@ -34,7 +34,7 @@ class JcaModeMapperTest {
     @Test
     void base() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaModeMapper jcaModeMapper = new JcaModeMapper();
         Optional<Mode> modeOptional = jcaModeMapper.parse("CCM", testDetectionLocation);
@@ -47,7 +47,7 @@ class JcaModeMapperTest {
     @Test
     void blockSize() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaModeMapper jcaModeMapper = new JcaModeMapper();
         Optional<Mode> modeOptional = jcaModeMapper.parse("OFB32", testDetectionLocation);

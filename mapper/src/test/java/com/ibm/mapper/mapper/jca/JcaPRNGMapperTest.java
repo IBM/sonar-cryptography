@@ -32,10 +32,10 @@ class JcaPRNGMapperTest {
     @Test
     void base() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaPRNGMapper jcaPRNGMapper = new JcaPRNGMapper();
-        Optional<PseudorandomNumberGenerator> prngOptional =
+        Optional<? extends PseudorandomNumberGenerator> prngOptional =
                 jcaPRNGMapper.parse("NativePRNGBlocking", testDetectionLocation);
         assertThat(prngOptional).isPresent();
         assertThat(prngOptional.get()).isInstanceOf(PseudorandomNumberGenerator.class);
@@ -46,10 +46,10 @@ class JcaPRNGMapperTest {
     @Test
     void sha1prng() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaPRNGMapper jcaPRNGMapper = new JcaPRNGMapper();
-        Optional<PseudorandomNumberGenerator> prngOptional =
+        Optional<? extends PseudorandomNumberGenerator> prngOptional =
                 jcaPRNGMapper.parse("SHA1PRNG", testDetectionLocation);
         assertThat(prngOptional).isPresent();
         assertThat(prngOptional.get()).isInstanceOf(PseudorandomNumberGenerator.class);

@@ -22,6 +22,7 @@ package com.ibm.output.cyclonedx;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.output.cyclondx.CBOMOutputFile;
 import java.util.Collections;
@@ -39,12 +40,13 @@ class MergeDetectionLocationTest {
         final CBOMOutputFile outputFile = new CBOMOutputFile();
         // asset 1
         DetectionLocation detectionLocation =
-                new DetectionLocation("test1.java", 1, 1, Collections.emptyList());
-        Algorithm algorithm = new Algorithm("RSA", detectionLocation);
+                new DetectionLocation("test1.java", 1, 1, Collections.emptyList(), () -> "SSL");
+        Algorithm algorithm = new RSA(detectionLocation);
         outputFile.add(List.of(algorithm));
         // asset 2
-        detectionLocation = new DetectionLocation("test2.java", 2, 2, Collections.emptyList());
-        algorithm = new Algorithm("RSA", detectionLocation);
+        detectionLocation =
+                new DetectionLocation("test2.java", 2, 2, Collections.emptyList(), () -> "SSL");
+        algorithm = new RSA(detectionLocation);
         outputFile.add(List.of(algorithm));
 
         final Bom bom = outputFile.getBom();
@@ -68,12 +70,13 @@ class MergeDetectionLocationTest {
         final CBOMOutputFile outputFile = new CBOMOutputFile();
         // asset 1
         DetectionLocation detectionLocation =
-                new DetectionLocation("test1.java", 1, 1, Collections.emptyList());
-        Algorithm algorithm = new Algorithm("RSA", detectionLocation);
+                new DetectionLocation("test1.java", 1, 1, Collections.emptyList(), () -> "SSL");
+        Algorithm algorithm = new RSA(detectionLocation);
         outputFile.add(List.of(algorithm));
         // asset 2
-        detectionLocation = new DetectionLocation("test1.java", 1, 1, Collections.emptyList());
-        algorithm = new Algorithm("RSA", detectionLocation);
+        detectionLocation =
+                new DetectionLocation("test1.java", 1, 1, Collections.emptyList(), () -> "SSL");
+        algorithm = new RSA(detectionLocation);
         outputFile.add(List.of(algorithm));
 
         final Bom bom = outputFile.getBom();

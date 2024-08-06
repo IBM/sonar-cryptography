@@ -33,7 +33,7 @@ public class SSLVersionMapperTest {
     @Test
     public void test1() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         final SSLVersionMapper mapper = new SSLVersionMapper();
         final Optional<? extends INode> version = mapper.parse("TLSv1.2", testDetectionLocation);
@@ -46,7 +46,7 @@ public class SSLVersionMapperTest {
     @Test
     public void test2() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         final SSLVersionMapper mapper = new SSLVersionMapper();
         final Optional<? extends INode> version = mapper.parse("TLSv1", testDetectionLocation);
@@ -59,7 +59,7 @@ public class SSLVersionMapperTest {
     @Test
     public void test3() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         final SSLVersionMapper mapper = new SSLVersionMapper();
         final Optional<? extends INode> version = mapper.parse("tlsv1.3", testDetectionLocation);

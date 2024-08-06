@@ -28,6 +28,6 @@ public final class XDH extends Algorithm implements KeyAgreement {
     private static final String NAME = "XDH";
 
     public XDH(@NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation), KeyAgreement.class);
+        super(NAME, KeyAgreement.class, detectionLocation);
     }
 }

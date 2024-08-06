@@ -17,18 +17,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.enricher.utils;
+package com.ibm.mapper.model;
 
-import javax.annotation.Nonnull;
-
-public final class Utils {
-
-    private Utils() {
-        // nothing
-    }
-
-    @Nonnull
-    public static String sanitiseAlgorithmName(@Nonnull String algorithmName) {
-        return algorithmName.trim().toUpperCase();
-    }
-}
+public interface Mac extends IPrimitive {}

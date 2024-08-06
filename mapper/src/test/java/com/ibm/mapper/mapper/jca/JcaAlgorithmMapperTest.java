@@ -23,9 +23,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
-import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyAgreement;
+import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PasswordBasedEncryption;
 import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
@@ -42,7 +42,7 @@ class JcaAlgorithmMapperTest {
     @Test
     void blockCipher() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
         Optional<? extends INode> assetOptional =
@@ -54,7 +54,7 @@ class JcaAlgorithmMapperTest {
     @Test
     void streamCipher() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
         Optional<? extends INode> assetOptional =
@@ -66,7 +66,7 @@ class JcaAlgorithmMapperTest {
     @Test
     void aeCipher() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
         Optional<? extends INode> assetOptional =
@@ -78,7 +78,7 @@ class JcaAlgorithmMapperTest {
     @Test
     void keyAgreement() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
         Optional<? extends INode> assetOptional =
@@ -90,19 +90,19 @@ class JcaAlgorithmMapperTest {
     @Test
     void mac() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
         Optional<? extends INode> assetOptional =
                 jcaAlgorithmMapper.parse("HmacSHA512/224", testDetectionLocation);
         assertThat(assetOptional).isPresent();
-        assertThat(assetOptional.get().is(HMAC.class)).isTrue();
+        assertThat(assetOptional.get().is(Mac.class)).isTrue();
     }
 
     @Test
     void digest() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
         Optional<? extends INode> assetOptional =
@@ -114,7 +114,7 @@ class JcaAlgorithmMapperTest {
     @Test
     void pbe() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
         Optional<? extends INode> assetOptional =
@@ -126,7 +126,7 @@ class JcaAlgorithmMapperTest {
     @Test
     void pbkdf() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
         Optional<? extends INode> assetOptional =
@@ -138,7 +138,7 @@ class JcaAlgorithmMapperTest {
     @Test
     void prng() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
         Optional<? extends INode> assetOptional =
@@ -150,7 +150,7 @@ class JcaAlgorithmMapperTest {
     @Test
     void signature() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
         Optional<? extends INode> assetOptional =

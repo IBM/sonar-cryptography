@@ -28,6 +28,9 @@ import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
 import com.ibm.mapper.model.PasswordLength;
 import com.ibm.mapper.model.SaltLength;
+import com.ibm.mapper.model.algorithms.PBKDF2;
+import com.ibm.mapper.model.algorithms.RSA;
+import com.ibm.mapper.model.algorithms.SHA;
 import com.ibm.mapper.model.functionality.Encrypt;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -51,8 +54,8 @@ class AlgorithmTest {
     @Test
     void baseRSA() {
         final DetectionLocation detectionLocation =
-                new DetectionLocation(filePath, 1, 1, Collections.emptyList());
-        final Algorithm algorithm = new Algorithm("RSA", detectionLocation);
+                new DetectionLocation(filePath, 1, 1, Collections.emptyList(), () -> "SSL");
+        final Algorithm algorithm = new RSA(detectionLocation);
 
         final CBOMOutputFile outputFile = new CBOMOutputFile();
         outputFile.add(List.of(algorithm));
@@ -80,7 +83,7 @@ class AlgorithmTest {
     @Test
     void RSAwithKeyLength() {
         final DetectionLocation detectionLocation =
-                new DetectionLocation(filePath, 1, 1, Collections.emptyList());
+                new DetectionLocation(filePath, 1, 1, Collections.emptyList(), () -> "SSL");
         JcaAlgorithmMapper algorithmMapper = new JcaAlgorithmMapper();
         Optional<? extends INode> algorithmOptional =
                 algorithmMapper.parse("RSA", detectionLocation);
@@ -114,9 +117,9 @@ class AlgorithmTest {
     void algorithmWithMultipleCryptoFunctions() {
         final CBOMOutputFile outputFile = new CBOMOutputFile();
         final DetectionLocation detectionLocation =
-                new DetectionLocation(filePath, 1, 1, Collections.emptyList());
+                new DetectionLocation(filePath, 1, 1, Collections.emptyList(), () -> "SSL");
 
-        final Algorithm algorithm = new Algorithm("RSA", detectionLocation);
+        final Algorithm algorithm = new RSA(detectionLocation);
         final KeyGeneration keyGeneration = new KeyGeneration(detectionLocation);
         algorithm.append(keyGeneration);
         final Encrypt encrypt = new Encrypt(detectionLocation);
@@ -142,13 +145,12 @@ class AlgorithmTest {
     @Test
     void pbkdfWithSaltAndPassword() {
         final DetectionLocation detectionLocation =
-                new DetectionLocation(filePath, 1, 1, Collections.emptyList());
-        final Algorithm algorithm = new Algorithm("PBKDF2WithHmacSHA1", detectionLocation);
+                new DetectionLocation(filePath, 1, 1, Collections.emptyList(), () -> "SSL");
+        final PasswordBasedKeyDerivationFunction pbkdf =
+                new PBKDF2(new SHA(detectionLocation), detectionLocation);
         final SaltLength saltLength = new SaltLength(192, detectionLocation);
         final PasswordLength passwordLength = new PasswordLength(32, detectionLocation);
         final KeyLength keyLength = new KeyLength(1024, detectionLocation);
-        final PasswordBasedKeyDerivationFunction pbkdf =
-                new PasswordBasedKeyDerivationFunction(algorithm);
         pbkdf.append(saltLength);
         pbkdf.append(passwordLength);
         pbkdf.append(keyLength);

@@ -21,44 +21,45 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
-import com.ibm.mapper.model.DigestSize;
+import com.ibm.mapper.model.IPrimitive;
+import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class DES extends BlockCipher {
+public final class DES extends Algorithm implements BlockCipher {
     private static final String NAME = "DES";
 
     public DES(@NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
+        super(NAME, BlockCipher.class, detectionLocation);
     }
 
-    public DES(int digestSize, @NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
-        this.append(new DigestSize(digestSize, detectionLocation));
+    public DES(int keyLength, @NotNull DetectionLocation detectionLocation) {
+        super(NAME, BlockCipher.class, detectionLocation);
+        this.append(new KeyLength(keyLength, detectionLocation));
     }
 
-    public DES(int digestSize, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
-        this.append(new DigestSize(digestSize, detectionLocation));
+    public DES(int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+        super(NAME, BlockCipher.class, detectionLocation);
+        this.append(new KeyLength(keyLength, detectionLocation));
         this.append(mode);
     }
 
     public DES(
-            int digestSize,
+            int keyLength,
             @Nonnull Mode mode,
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
-        this.append(new DigestSize(digestSize, detectionLocation));
+        super(NAME, BlockCipher.class, detectionLocation);
+        this.append(new KeyLength(keyLength, detectionLocation));
         this.append(mode);
         this.append(padding);
     }
 
     public DES(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
+        super(NAME, BlockCipher.class, detectionLocation);
         this.append(mode);
     }
 
@@ -66,8 +67,12 @@ public final class DES extends BlockCipher {
             @Nonnull Mode mode,
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation));
+        super(NAME, BlockCipher.class, detectionLocation);
         this.append(mode);
         this.append(padding);
+    }
+
+    public DES(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull DES des) {
+        super(des, asKind);
     }
 }

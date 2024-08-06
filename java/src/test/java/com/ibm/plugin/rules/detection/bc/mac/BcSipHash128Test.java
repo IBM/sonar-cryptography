@@ -26,8 +26,8 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.MacContext;
 import com.ibm.mapper.model.DigestSize;
-import com.ibm.mapper.model.HMAC;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Tag;
@@ -75,7 +75,7 @@ class BcSipHash128Test extends TestBase {
 
         // Mac
         INode macNode1 = nodes.get(0);
-        assertThat(macNode1.getKind()).isEqualTo(HMAC.class);
+        assertThat(macNode1.getKind()).isEqualTo(Mac.class);
         assertThat(macNode1.getChildren()).hasSize(3);
         assertThat(macNode1.asString()).isEqualTo("SipHash");
 

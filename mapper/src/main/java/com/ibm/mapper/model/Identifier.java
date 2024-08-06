@@ -22,12 +22,12 @@ package com.ibm.mapper.model;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class Identifier extends Property {
+public final class Identifier extends Property {
 
     @Nonnull private final String value;
 
     public Identifier(@Nonnull String value, @Nonnull DetectionLocation detectionLocation) {
-        super(Version.class, detectionLocation);
+        super(Identifier.class, detectionLocation);
         this.value = value;
     }
 

@@ -19,11 +19,4 @@
  */
 package com.ibm.mapper.model;
 
-import javax.annotation.Nonnull;
-
-public class MaskGenerationFunction extends Algorithm {
-
-    public MaskGenerationFunction(@Nonnull Algorithm algorithm) {
-        super(algorithm, MaskGenerationFunction.class);
-    }
-}
+public interface MaskGenerationFunction extends IPrimitive {}

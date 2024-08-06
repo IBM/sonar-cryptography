@@ -19,15 +19,23 @@
  */
 package com.ibm.enricher.algorithm;
 
-import com.ibm.mapper.model.*;
+import com.ibm.enricher.IEnricher;
+import com.ibm.mapper.model.AuthenticatedEncryption;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.Mode;
+import com.ibm.mapper.model.Oid;
+import com.ibm.mapper.model.algorithms.AES;
+import com.ibm.mapper.model.mode.CCM;
+import com.ibm.mapper.model.mode.GCM;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
-public class AESEnricher implements IAlgorithmEnricher {
+public class AESEnricher implements IEnricher {
     private static final String BASE_OID = "2.16.840.1.101.3.4.1";
 
-    // https://oidref.com/2.16.840.1.101.3.4.1
     private static final Map<String, Integer> MODE_OID_MAP =
             Map.of(
                     "ecb", 1,
@@ -44,29 +52,37 @@ public class AESEnricher implements IAlgorithmEnricher {
                     192, 2,
                     256, 4);
 
-    @Override
-    public void enrich(
-            @Nonnull final Algorithm algorithm,
-            @Nonnull final Map<Class<? extends INode>, INode> dependingNodes) {
-        final KeyLength keyLength = (KeyLength) dependingNodes.get(KeyLength.class);
-        final Mode mode = (Mode) dependingNodes.get(Mode.class);
-        doEnrichment(algorithm, keyLength, mode);
+    @NotNull @Override
+    public INode enrich(@NotNull INode node) {
+        if (node instanceof AES aes) {
+            return enrich(aes);
+        }
+        return node;
     }
 
-    private void doEnrichment(
-            @Nonnull Algorithm algorithm, @Nullable KeyLength keyLength, @Nullable Mode mode) {
-        final Map<Class<? extends INode>, INode> children = algorithm.getChildren();
-
-        if (mode == null) {
-            mode = (Mode) children.get(Mode.class);
-        }
-
+    @Nonnull
+    private INode enrich(@NotNull AES aes) {
+        @Nullable KeyLength keyLength = aes.getKeyLength().orElse(null);
+        @Nullable final Mode mode = aes.getMode().orElse(null);
+        // default key length
         if (keyLength == null) {
-            keyLength = (KeyLength) children.get(KeyLength.class);
+            switch (aes.getDetectionContext().bundle().getIdentifier()) {
+                case "Jca":
+                    {
+                        keyLength = new KeyLength(128, aes.getDetectionContext());
+                        aes.append(keyLength);
+                    }
+            }
         }
+        // add oid
+        final Oid oid = new Oid(buildOid(keyLength, mode), aes.getDetectionContext());
+        aes.append(oid);
 
-        final Oid oid = new Oid(buildOid(keyLength, mode), algorithm.getDetectionContext());
-        algorithm.append(oid);
+        // authenticated encryption
+        if (mode instanceof GCM || mode instanceof CCM) {
+            return new AES(AuthenticatedEncryption.class, aes);
+        }
+        return aes;
     }
 
     @Nonnull

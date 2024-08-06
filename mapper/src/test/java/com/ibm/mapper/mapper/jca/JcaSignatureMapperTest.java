@@ -39,7 +39,7 @@ class JcaSignatureMapperTest {
     @Test
     void NONEwithRSA() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaSignatureMapper jcaSignatureMapper = new JcaSignatureMapper();
         Optional<Signature> signatureOptional =
@@ -54,7 +54,7 @@ class JcaSignatureMapperTest {
     @Test
     void SHA384withDSA() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaSignatureMapper jcaSignatureMapper = new JcaSignatureMapper();
         Optional<Signature> signatureOptional =
@@ -75,7 +75,7 @@ class JcaSignatureMapperTest {
     @Test
     void SHA3_224withECDSA() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaSignatureMapper jcaSignatureMapper = new JcaSignatureMapper();
         Optional<Signature> signatureOptional =
@@ -96,7 +96,7 @@ class JcaSignatureMapperTest {
     @Test
     void SHA1withDSAinP1363Format() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaSignatureMapper jcaSignatureMapper = new JcaSignatureMapper();
         Optional<Signature> signatureOptional =
@@ -118,7 +118,7 @@ class JcaSignatureMapperTest {
     @Test
     void RSASSA_PSS() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaSignatureMapper jcaSignatureMapper = new JcaSignatureMapper();
         Optional<Signature> signatureOptional =

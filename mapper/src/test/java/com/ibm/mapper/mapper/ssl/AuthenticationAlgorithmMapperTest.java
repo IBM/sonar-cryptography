@@ -36,7 +36,7 @@ public class AuthenticationAlgorithmMapperTest {
     @Test
     public void test() {
         final DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         final AuthenticationAlgorithmMapper mapper = new AuthenticationAlgorithmMapper();
         final Collection<String> authCollection =

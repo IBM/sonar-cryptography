@@ -21,15 +21,16 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.DigestSize;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public final class SHA3 extends MessageDigest {
+public final class SHA3 extends Algorithm implements MessageDigest {
     private static final String NAME = "SHA3";
 
     public SHA3(int digestSize, @Nonnull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME + "-" + digestSize, detectionLocation));
+        super(NAME + "-" + digestSize, MessageDigest.class, detectionLocation);
         this.append(new DigestSize(digestSize, detectionLocation));
     }
 
@@ -37,8 +38,19 @@ public final class SHA3 extends MessageDigest {
             int digestSize,
             @Nonnull MessageDigest preHash,
             @Nonnull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME + "-" + digestSize, detectionLocation));
+        super(NAME + "-" + digestSize, MessageDigest.class, detectionLocation);
         this.append(new DigestSize(digestSize, detectionLocation));
         this.append(preHash);
+    }
+
+    public SHA3(
+            int digestSize,
+            @Nonnull final Class<? extends IPrimitive> asKind,
+            @Nonnull DetectionLocation detectionLocation) {
+        super(NAME + "-" + digestSize, asKind, detectionLocation);
+    }
+
+    public SHA3(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull SHA3 sha3) {
+        super(sha3, asKind);
     }
 }

@@ -30,12 +30,12 @@ public final class ECDH extends Algorithm implements KeyAgreement {
     private static final String NAME = "ECDH";
 
     public ECDH(@NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation), KeyAgreement.class);
+        super(NAME, KeyAgreement.class, detectionLocation);
     }
 
     public ECDH(
             @Nonnull EllipticCurve ellipticCurve, @Nonnull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation), KeyAgreement.class);
+        super(NAME, KeyAgreement.class, detectionLocation);
         this.append(ellipticCurve);
     }
 }

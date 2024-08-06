@@ -41,7 +41,7 @@ public abstract class JavaAbstractLibraryTranslator implements IContextTranslati
         return switch (bundleIdentifier.getIdentifier()) {
             case "Jca" -> translateJCA(value, detectionContext, detectionLocation);
             case "Bc" -> translateBC(value, detectionContext, detectionLocation);
-            default -> Optional.of(new Unknown(value.asString(), detectionLocation));
+            default -> Optional.of(new Unknown(detectionLocation));
         };
     }
 

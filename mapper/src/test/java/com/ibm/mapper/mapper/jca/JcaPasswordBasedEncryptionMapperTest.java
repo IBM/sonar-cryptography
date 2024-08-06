@@ -22,7 +22,7 @@ package com.ibm.mapper.mapper.jca;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.mapper.model.Cipher;
-import com.ibm.mapper.model.HMAC;
+import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.PasswordBasedEncryption;
 import com.ibm.mapper.model.algorithms.AES;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -35,7 +35,7 @@ class JcaPasswordBasedEncryptionMapperTest {
     @Test
     void base() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaPasswordBasedEncryptionMapper jcaPasswordBasedEncryptionMapper =
                 new JcaPasswordBasedEncryptionMapper();
@@ -50,9 +50,9 @@ class JcaPasswordBasedEncryptionMapperTest {
         assertThat(pbe.getChildren()).hasSize(2);
         assertThat(pbe.getDigest()).isEmpty();
         assertThat(pbe.getCipher()).isPresent();
-        assertThat(pbe.getHmac()).isPresent();
+        assertThat(pbe.getMac()).isPresent();
 
-        HMAC mac = pbe.getHmac().get();
+        Mac mac = pbe.getMac().get();
         assertThat(mac.getName()).isEqualTo("HmacSHA256");
         assertThat(mac.getChildren()).hasSize(1);
 

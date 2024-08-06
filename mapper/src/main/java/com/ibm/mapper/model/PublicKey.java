@@ -22,8 +22,8 @@ package com.ibm.mapper.model;
 import javax.annotation.Nonnull;
 
 public final class PublicKey extends Key {
-    public PublicKey(@Nonnull Algorithm algorithm) {
-        super(algorithm, PublicKey.class);
+    public PublicKey(@Nonnull PublicKeyEncryption publicKeyEncryption) {
+        super(publicKeyEncryption, PublicKey.class);
     }
 
     public PublicKey(@Nonnull Key key) {

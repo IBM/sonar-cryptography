@@ -22,7 +22,7 @@ package com.ibm.mapper.model;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
-public interface Signature extends IAlgorithm {
+public interface Signature extends IPrimitive {
 
     @Nonnull
     default Optional<OutputFormat> getFormat() {

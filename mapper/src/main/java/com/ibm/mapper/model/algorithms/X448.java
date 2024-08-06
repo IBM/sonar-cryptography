@@ -17,11 +17,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.enricher.utils.oid;
+package com.ibm.mapper.model.algorithms;
 
-import javax.annotation.Nonnull;
+import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.KeyAgreement;
+import com.ibm.mapper.model.curves.Curve448;
+import com.ibm.mapper.utils.DetectionLocation;
+import org.jetbrains.annotations.NotNull;
 
-public class OidBuilder {
+public final class X448 extends Algorithm implements KeyAgreement {
+    private static final String NAME = "x448";
 
-    @Nonnull private static final String NIST = "2.16.840.1.101.3.4";
+    public X448(@NotNull DetectionLocation detectionLocation) {
+        super(NAME, KeyAgreement.class, detectionLocation);
+        this.append(new Curve448(detectionLocation));
+    }
 }

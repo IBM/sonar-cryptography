@@ -26,9 +26,8 @@ import com.ibm.engine.rule.IBundle;
 import com.ibm.mapper.IContextTranslationWithKind;
 import com.ibm.mapper.mapper.jca.JcaPRNGMapper;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.PseudorandomNumberGenerator;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.Seed;
-import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
@@ -48,7 +47,7 @@ public final class JavaPRNGContextTranslator implements IContextTranslationWithK
 
         if (value instanceof SeedSize<Tree> seedSize) {
             JcaPRNGMapper jcaPRNGMapper = new JcaPRNGMapper();
-            Optional<PseudorandomNumberGenerator> prngOptional =
+            Optional<? extends IPrimitive> prngOptional =
                     jcaPRNGMapper.parse("NativePRNG", detectionLocation);
             return prngOptional.map(
                     prng -> {
@@ -57,6 +56,6 @@ public final class JavaPRNGContextTranslator implements IContextTranslationWithK
                         return prng;
                     });
         }
-        return Optional.of(new Unknown(value.asString(), detectionLocation));
+        return Optional.empty();
     }
 }

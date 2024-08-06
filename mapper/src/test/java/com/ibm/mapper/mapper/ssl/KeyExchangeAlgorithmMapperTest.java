@@ -36,7 +36,7 @@ public class KeyExchangeAlgorithmMapperTest {
     @Test
     public void test() {
         final DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         final KeyExchangeAlgorithmMapper mapper = new KeyExchangeAlgorithmMapper();
         final Collection<String> kexCollection =

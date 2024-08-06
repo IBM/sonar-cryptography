@@ -21,9 +21,9 @@ package com.ibm.output.cyclonedx;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.Key;
 import com.ibm.mapper.model.PublicKey;
+import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.output.cyclondx.CBOMOutputFile;
 import java.util.Collections;
@@ -38,11 +38,11 @@ class KeyTest {
     @Test
     void base() {
         DetectionLocation detectionLocation =
-                new DetectionLocation("test.java", 1, 1, Collections.emptyList());
+                new DetectionLocation("test.java", 1, 1, Collections.emptyList(), () -> "SSL");
 
         final CBOMOutputFile outputFile = new CBOMOutputFile();
 
-        final Key key = new PublicKey(new Algorithm("RSA", detectionLocation));
+        final Key key = new PublicKey(new RSA(detectionLocation));
         outputFile.add(List.of(key));
 
         final Bom bom = outputFile.getBom();

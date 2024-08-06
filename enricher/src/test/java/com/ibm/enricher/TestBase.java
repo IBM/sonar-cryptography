@@ -17,31 +17,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model;
+package com.ibm.enricher;
 
-import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.utils.Utils;
+import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.BeforeEach;
+import org.slf4j.event.Level;
+import org.sonar.api.testfixtures.log.LogTesterJUnit5;
 
-public class ECAlgorithm extends Algorithm {
-    private static final String NAME = "EC";
+public abstract class TestBase {
 
-    public ECAlgorithm(@NotNull DetectionLocation detectionLocation) {
-        super(NAME, detectionLocation);
+    @BeforeEach
+    public void debug() {
+        LogTesterJUnit5 logTesterJUnit5 = new LogTesterJUnit5();
+        logTesterJUnit5.setLevel(Level.DEBUG);
     }
 
-    public ECAlgorithm(@Nonnull EllipticCurve ellipticCurve) {
-        super(NAME + "-" + ellipticCurve.asString(), ellipticCurve.detectionLocation);
-        this.append(ellipticCurve);
+    protected void logBefore(@Nonnull INode node) {
+        Utils.printNodeTree("before", List.of(node));
     }
 
-    @Nonnull
-    public Optional<EllipticCurve> getCurve() {
-        INode node = this.getChildren().get(EllipticCurve.class);
-        if (node == null) {
-            return Optional.empty();
-        }
-        return Optional.of((EllipticCurve) node);
+    protected void logAfter(@Nonnull INode node) {
+        Utils.printNodeTree("after", List.of(node));
     }
 }

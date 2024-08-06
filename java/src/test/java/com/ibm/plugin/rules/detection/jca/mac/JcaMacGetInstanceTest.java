@@ -36,7 +36,7 @@ import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
-class JcaHMACGetInstanceTest extends TestBase {
+class JcaMacGetInstanceTest extends TestBase {
 
     @Test
     void test() {
@@ -69,7 +69,7 @@ class JcaHMACGetInstanceTest extends TestBase {
          */
         assertThat(nodes).hasSize(1);
         INode node = nodes.get(0);
-        assertThat(node).isInstanceOf(HMAC.class);
+        assertThat(node).isInstanceOf(Mac.class);
         assertThat(node.asString()).isEqualTo("HmacSHA3-384");
 
         INode digest = node.getChildren().get(MessageDigest.class);

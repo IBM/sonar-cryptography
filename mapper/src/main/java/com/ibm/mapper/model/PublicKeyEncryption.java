@@ -19,4 +19,4 @@
  */
 package com.ibm.mapper.model;
 
-public interface PublicKeyEncryption extends IAlgorithm {}
+public interface PublicKeyEncryption extends IPrimitive {}

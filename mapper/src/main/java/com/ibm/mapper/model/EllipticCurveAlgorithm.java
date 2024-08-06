@@ -21,11 +21,11 @@ package com.ibm.mapper.model;
 
 import javax.annotation.Nonnull;
 
-public class HMAC extends Algorithm {
-    public HMAC(@Nonnull MessageDigest messageDigest) {
-        super(
-                new Algorithm("Hmac" + messageDigest.asString(), messageDigest.detectionLocation),
-                HMAC.class);
-        this.append(messageDigest);
+public class EllipticCurveAlgorithm extends Algorithm
+        implements PublicKeyEncryption, Signature, KeyAgreement {
+
+    public EllipticCurveAlgorithm(@Nonnull EllipticCurve curve) {
+        super("EC-" + curve, PublicKeyEncryption.class, curve.detectionLocation);
+        this.append(curve);
     }
 }

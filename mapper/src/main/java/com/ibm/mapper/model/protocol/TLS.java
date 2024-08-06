@@ -31,11 +31,11 @@ import org.jetbrains.annotations.NotNull;
 public final class TLS extends Protocol {
 
     public TLS(@NotNull DetectionLocation detectionLocation) {
-        super("TLS", detectionLocation);
+        super(new Protocol("TLS", detectionLocation), TLS.class);
     }
 
     public TLS(@Nonnull Version version) {
-        super("TLSv" + version.asString(), version.getDetectionContext());
+        super(new Protocol("TLSv" + version.asString(), version.getDetectionContext()), TLS.class);
         this.append(version);
     }
 

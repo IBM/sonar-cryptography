@@ -24,6 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.Cipher;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.PasswordBasedEncryption;
@@ -43,7 +44,7 @@ class JcaCipherMapperTest {
     @Test
     void base() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaCipherMapper jcaCipherMapper = new JcaCipherMapper();
         Optional<? extends Algorithm> cipherOptional =
@@ -67,7 +68,7 @@ class JcaCipherMapperTest {
     @Test
     void pbe() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaCipherMapper jcaCipherMapper = new JcaCipherMapper();
         Optional<? extends Algorithm> cipherOptional =
@@ -91,14 +92,14 @@ class JcaCipherMapperTest {
         assertThat(digest.getBlockSize().get().getValue()).isEqualTo(512);
 
         assertThat(pbe.getCipher()).isPresent();
-        Algorithm encryptionAlgorithm = pbe.getCipher().get();
+        IPrimitive encryptionAlgorithm = pbe.getCipher().get();
         assertThat(encryptionAlgorithm).isInstanceOf(DES.class);
     }
 
     @Test
     void blockSize() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaCipherMapper jcaCipherMapper = new JcaCipherMapper();
         Optional<? extends Algorithm> cipherOptional =
@@ -122,7 +123,7 @@ class JcaCipherMapperTest {
     @Test
     void rsa() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaCipherMapper jcaAlgorithmMapper = new JcaCipherMapper();
         Optional<? extends Algorithm> algorithm =

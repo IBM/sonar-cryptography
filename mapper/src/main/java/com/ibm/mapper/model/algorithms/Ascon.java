@@ -17,17 +17,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.enricher.algorithm;
+package com.ibm.mapper.model.algorithms;
 
-import com.ibm.enricher.ITypeEnricher;
-import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Signature;
-import java.util.Map;
+import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.AuthenticatedEncryption;
+import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.IPrimitive;
+import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
-public interface ISignatureEnricher extends ITypeEnricher<Signature> {
-    @Override
-    void enrich(
-            @Nonnull Signature signature,
-            @Nonnull Map<Class<? extends INode>, INode> dependingNodes);
+public final class Ascon extends Algorithm
+        implements MessageDigest, BlockCipher, AuthenticatedEncryption {
+    private static final String NAME = "Ascon";
+
+    public Ascon(@NotNull DetectionLocation detectionLocation) {
+        super(NAME, AuthenticatedEncryption.class, detectionLocation);
+    }
+
+    public Ascon(
+            @Nonnull final Class<? extends IPrimitive> asKind,
+            @NotNull DetectionLocation detectionLocation) {
+        super(NAME, asKind, detectionLocation);
+    }
 }

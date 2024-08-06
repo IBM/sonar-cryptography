@@ -29,12 +29,12 @@ public final class ECDSA extends Algorithm implements Signature {
     private static final String NAME = "ECDSA";
 
     public ECDSA(@NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation), Signature.class);
+        super(NAME, Signature.class, detectionLocation);
     }
 
     public ECDSA(
             @NotNull EllipticCurve ellipticCurve, @NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation), Signature.class);
+        super(NAME, Signature.class, detectionLocation);
         this.append(ellipticCurve);
     }
 }

@@ -32,10 +32,8 @@ import com.ibm.mapper.mapper.bc.BcOperationModeEncryptionMapper;
 import com.ibm.mapper.mapper.bc.BcOperationModeWrappingMapper;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.mapper.jca.JcaCipherOperationModeMapper;
-import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
-import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.functionality.Encapsulate;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
@@ -64,7 +62,7 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                 default -> Optional.empty();
             };
         }
-        return Optional.of(new Unknown(value.asString(), detectionLocation));
+        return Optional.empty();
     }
 
     @Override
@@ -102,12 +100,12 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
             //            PasswordBasedEncryption pbe;
 
             switch (kind) {
-                case ASYMMETRIC_CIPHER_ENGINE, BLOCK_CIPHER_ENGINE, WRAP_ENGINE:
+                /*case ASYMMETRIC_CIPHER_ENGINE, BLOCK_CIPHER_ENGINE, WRAP_ENGINE:
                     return Optional.of(
                             new BlockCipher(
                                     new com.ibm.mapper.model.Algorithm(
                                             valueAction.asString(), detectionLocation)));
-                /*case ASYMMETRIC_CIPHER_ENGINE_SIGNATURE:
+                case ASYMMETRIC_CIPHER_ENGINE_SIGNATURE:
                     return Optional.of(
                             new PublicKeyEncryption(
                                     new com.ibm.mapper.model.Algorithm(

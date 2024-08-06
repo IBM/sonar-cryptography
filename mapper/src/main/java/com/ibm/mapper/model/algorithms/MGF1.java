@@ -24,9 +24,9 @@ import com.ibm.mapper.model.MaskGenerationFunction;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public final class MGF1 extends MaskGenerationFunction {
+public final class MGF1 extends Algorithm implements MaskGenerationFunction {
 
     public MGF1(@Nonnull DetectionLocation detectionLocation) {
-        super(new Algorithm("MGF1", detectionLocation));
+        super("MGF1", MaskGenerationFunction.class, detectionLocation);
     }
 }

@@ -226,7 +226,7 @@ public final class JavaTranslator
             @Nonnull final IDetectionContext detectionValueContext,
             @Nonnull final String filePath) {
         DetectionLocation detectionLocation =
-                getDetectionContextFrom(value.getLocation(), filePath);
+                getDetectionContextFrom(value.getLocation(), bundleIdentifier, filePath);
         if (detectionLocation == null) {
             return Optional.empty();
         }
@@ -316,7 +316,7 @@ public final class JavaTranslator
      *     process, it returns null.
      */
     @Nullable public DetectionLocation getDetectionContextFrom(
-            @Nonnull Tree location, @Nonnull String filePath) {
+            @Nonnull Tree location, @Nonnull IBundle bundle, @Nonnull String filePath) {
         SyntaxToken firstToken = location.firstToken();
         SyntaxToken lastToken = location.lastToken();
         if (firstToken != null && lastToken != null) {
@@ -354,7 +354,7 @@ public final class JavaTranslator
                 default:
                     // nothing
             }
-            return new DetectionLocation(filePath, lineNumber, offset, keywords);
+            return new DetectionLocation(filePath, lineNumber, offset, keywords, bundle);
         }
         return null;
     }

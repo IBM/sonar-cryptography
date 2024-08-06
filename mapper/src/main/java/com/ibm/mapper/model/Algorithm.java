@@ -29,23 +29,26 @@ import org.jetbrains.annotations.NotNull;
 
 public class Algorithm implements IAlgorithm {
     @Nonnull protected final Map<Class<? extends INode>, INode> children;
-    @Nonnull protected final Class<? extends IAlgorithm> kind;
+    @Nonnull protected final Class<? extends IPrimitive> kind;
     @Nonnull protected final DetectionLocation detectionLocation;
     @Nonnull protected final String name;
 
     public Algorithm(
-            @Nonnull Algorithm algorithm, @Nonnull final Class<? extends IAlgorithm> asKind) {
+            @Nonnull IAlgorithm algorithm, @Nonnull final Class<? extends IPrimitive> asKind) {
         this.name = algorithm.getName();
         this.children = algorithm.getChildren();
-        this.detectionLocation = algorithm.detectionLocation;
+        this.detectionLocation = algorithm.getDetectionContext();
         this.kind = asKind;
     }
 
-    public Algorithm(@Nonnull String name, @Nonnull DetectionLocation detectionLocation) {
+    public Algorithm(
+            @Nonnull String name,
+            @Nonnull final Class<? extends IPrimitive> asKind,
+            @Nonnull DetectionLocation detectionLocation) {
         this.name = name;
         this.children = new HashMap<>();
         this.detectionLocation = detectionLocation;
-        this.kind = Algorithm.class;
+        this.kind = asKind;
     }
 
     private Algorithm(@Nonnull Algorithm algorithm) {
@@ -75,7 +78,7 @@ public class Algorithm implements IAlgorithm {
     }
 
     @Nonnull
-    public Class<? extends IAlgorithm> getKind() {
+    public Class<? extends IPrimitive> getKind() {
         return kind;
     }
 

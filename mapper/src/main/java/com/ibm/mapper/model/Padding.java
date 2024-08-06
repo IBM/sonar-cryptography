@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 public class Padding extends Property {
     @Nonnull private final String name;
 
-    protected Padding(@Nonnull String name, @Nonnull DetectionLocation detectionLocation) {
+    public Padding(@Nonnull String name, @Nonnull DetectionLocation detectionLocation) {
         super(Padding.class, detectionLocation, new HashMap<>());
         this.name = name;
     }

@@ -19,12 +19,10 @@
  */
 package com.ibm.enricher;
 
-import com.ibm.enricher.algorithm.AlgorithmEnricher;
-import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.INode;
-import java.util.List;
-import java.util.Map;
+import java.util.Collection;
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This enricher instance operates on a language-agnostic level, meaning it will enrich the given
@@ -39,15 +37,17 @@ public class Enricher implements IEnricher {
      *
      * @param nodes The list of nodes to enrich
      */
-    public static void enrich(@Nonnull final List<INode> nodes) {
+    @Nonnull
+    public static Collection<INode> enrich(@Nonnull final Collection<INode> nodes) {
         final Enricher enricher = new Enricher();
-        nodes.forEach(enricher::enrich);
-        nodes.forEach(
-                v -> {
-                    if (v.hasChildren()) {
-                        enrich(v.getChildren().values().stream().toList());
-                    }
-                });
+        return nodes.stream()
+                .map(
+                        node -> {
+                            final INode enriched = enricher.enrich(node);
+                            enrich(enriched.getChildren().values()).forEach(enriched::append);
+                            return enriched;
+                        })
+                .toList();
     }
 
     /**
@@ -55,11 +55,8 @@ public class Enricher implements IEnricher {
      *
      * @param node The node to enrich
      */
-    @Override
-    public void enrich(@Nonnull INode node) {
-        if (node instanceof Algorithm algorithm) {
-            final AlgorithmEnricher algorithmEnricher = new AlgorithmEnricher();
-            algorithmEnricher.enrich(algorithm, Map.of());
-        }
+    @NotNull @Override
+    public INode enrich(@Nonnull INode node) {
+        return node;
     }
 }

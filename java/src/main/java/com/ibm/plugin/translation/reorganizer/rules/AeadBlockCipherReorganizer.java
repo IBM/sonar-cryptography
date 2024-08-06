@@ -20,7 +20,7 @@
 package com.ibm.plugin.translation.reorganizer.rules;
 
 import com.ibm.mapper.model.AuthenticatedEncryption;
-import com.ibm.mapper.model.HMAC;
+import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.mapper.reorganizer.builder.ReorganizerRuleBuilder;
@@ -93,7 +93,7 @@ public final class AeadBlockCipherReorganizer {
                             List.of(
                                     new ReorganizerRuleBuilder()
                                             .createReorganizerRule()
-                                            .forNodeKind(HMAC.class)
+                                            .forNodeKind(Mac.class)
                                             .noAction(),
                                     new ReorganizerRuleBuilder()
                                             .createReorganizerRule()
@@ -103,7 +103,7 @@ public final class AeadBlockCipherReorganizer {
                             (node, parent, roots) -> {
                                 TagLength tagLength =
                                         (TagLength) node.getChildren().get(TagLength.class);
-                                HMAC mac = (HMAC) node.getChildren().get(HMAC.class);
+                                Mac mac = (Mac) node.getChildren().get(Mac.class);
 
                                 mac.append(tagLength);
                                 node.removeChildOfType(TagLength.class);

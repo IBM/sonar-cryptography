@@ -22,27 +22,10 @@ package com.ibm.mapper.model;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
-public class MessageDigest extends Algorithm {
-    public MessageDigest(@Nonnull Algorithm algorithm) {
-        super(algorithm, MessageDigest.class);
-    }
-
-    public MessageDigest(@Nonnull Algorithm algorithm, @Nonnull DigestSize digestSize) {
-        super(algorithm, MessageDigest.class);
-        this.append(digestSize);
-    }
-
-    public MessageDigest(
-            @Nonnull Algorithm algorithm,
-            @Nonnull DigestSize digestSize,
-            @Nonnull BlockSize blockSize) {
-        super(algorithm, MessageDigest.class);
-        this.append(digestSize);
-        this.append(blockSize);
-    }
+public interface MessageDigest extends Mac, PseudorandomNumberGenerator, IPrimitive {
 
     @Nonnull
-    public Optional<DigestSize> getDigestSize() {
+    default Optional<DigestSize> getDigestSize() {
         INode node = this.getChildren().get(DigestSize.class);
         if (node == null) {
             return Optional.empty();
@@ -51,7 +34,7 @@ public class MessageDigest extends Algorithm {
     }
 
     @Nonnull
-    public Optional<BlockSize> getBlockSize() {
+    default Optional<BlockSize> getBlockSize() {
         INode node = this.getChildren().get(BlockSize.class);
         if (node == null) {
             return Optional.empty();

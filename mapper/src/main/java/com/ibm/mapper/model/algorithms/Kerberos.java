@@ -28,10 +28,10 @@ public final class Kerberos extends Algorithm implements KeyAgreement {
     private static final String NAME = "KRB";
 
     public Kerberos(@NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation), KeyAgreement.class);
+        super(NAME, KeyAgreement.class, detectionLocation);
     }
 
     public Kerberos(int version, @NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME + version, detectionLocation), KeyAgreement.class);
+        super(NAME + version, KeyAgreement.class, detectionLocation);
     }
 }

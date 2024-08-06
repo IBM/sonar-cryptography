@@ -26,6 +26,8 @@ import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.context.AlgorithmParameterContext;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.PublicKeyEncryption;
+import com.ibm.mapper.model.algorithms.DH;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -66,7 +68,8 @@ class JcaAlgorithmParameterGeneratorGetInstanceTest extends TestBase {
          */
         assertThat(nodes).hasSize(1);
         INode node = nodes.get(0);
-        assertThat(node).isInstanceOf(com.ibm.mapper.model.Algorithm.class);
+        assertThat(node).isInstanceOf(PublicKeyEncryption.class);
+        assertThat(node).isInstanceOf(DH.class);
         assertThat(node.asString()).isEqualTo("DH");
     }
 }

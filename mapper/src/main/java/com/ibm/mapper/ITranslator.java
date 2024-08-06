@@ -46,5 +46,5 @@ public abstract class ITranslator<R, T, S, P> {
             @Nonnull final String filePath);
 
     @Nullable protected abstract DetectionLocation getDetectionContextFrom(
-            @Nonnull T location, @Nonnull String filePath);
+            @Nonnull T location, @Nonnull final IBundle bundle, @Nonnull String filePath);
 }

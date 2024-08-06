@@ -25,6 +25,7 @@ import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.model.context.ProtocolContext;
 import com.ibm.engine.rule.IBundle;
 import com.ibm.mapper.IContextTranslationWithKind;
+import com.ibm.mapper.mapper.ssl.CipherSuiteMapper;
 import com.ibm.mapper.mapper.ssl.SSLVersionMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Protocol;
@@ -67,9 +68,10 @@ public final class JavaProtocolContextTranslator implements IContextTranslationW
             };
         } else if (value instanceof CipherSuite<Tree> cipherSuite) {
             return switch (kind) {
-                /* case TLS -> {
-                    return
-                }*/
+                case TLS ->
+                        new CipherSuiteMapper()
+                                .parse(cipherSuite.get(), detectionLocation)
+                                .map(n -> n);
                 default ->
                         Optional.of(cipherSuite)
                                 .map(
@@ -79,6 +81,6 @@ public final class JavaProtocolContextTranslator implements IContextTranslationW
             };
         }
 
-        return Optional.of(new Unknown(value.asString(), detectionLocation));
+        return Optional.of(new Unknown(detectionLocation));
     }
 }

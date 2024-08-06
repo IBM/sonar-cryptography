@@ -17,13 +17,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.enricher;
+package com.ibm.mapper.model;
 
-import com.ibm.mapper.model.INode;
-import java.util.Map;
-import javax.annotation.Nonnull;
-
-public interface ITypeEnricher<T extends INode> {
-
-    void enrich(@Nonnull T node, @Nonnull Map<Class<? extends INode>, INode> dependingNodes);
-}
+public interface IPrimitive extends IAlgorithm {}

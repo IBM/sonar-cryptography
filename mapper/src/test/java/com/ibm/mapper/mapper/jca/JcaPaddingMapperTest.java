@@ -34,7 +34,7 @@ class JcaPaddingMapperTest {
     @Test
     void padding() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaPaddingMapper jcaPaddingMapper = new JcaPaddingMapper();
         Optional<? extends INode> asset =
@@ -46,7 +46,7 @@ class JcaPaddingMapperTest {
     @Test
     void oaep() {
         DetectionLocation testDetectionLocation =
-                new DetectionLocation("testfile", 1, 1, List.of("test"));
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaPaddingMapper jcaPaddingMapper = new JcaPaddingMapper();
         Optional<? extends INode> asset =

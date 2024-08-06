@@ -20,15 +20,15 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.HMAC;
+import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public final class PBKDF1 extends PasswordBasedKeyDerivationFunction {
+public final class PBKDF1 extends Algorithm implements PasswordBasedKeyDerivationFunction {
 
-    public PBKDF1(@Nonnull HMAC hmac, @Nonnull DetectionLocation detectionLocation) {
-        super(new Algorithm("PBKDF1", detectionLocation));
-        this.append(hmac);
+    public PBKDF1(@Nonnull Mac mac, @Nonnull DetectionLocation detectionLocation) {
+        super("PBKDF1", PasswordBasedKeyDerivationFunction.class, detectionLocation);
+        this.append(mac);
     }
 }

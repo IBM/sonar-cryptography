@@ -29,6 +29,6 @@ public final class PSK extends Algorithm implements KeyAgreement {
     private static final String NAME = "PSK";
 
     public PSK(@NotNull DetectionLocation detectionLocation) {
-        super(new Algorithm(NAME, detectionLocation), KeyAgreement.class);
+        super(NAME, KeyAgreement.class, detectionLocation);
     }
 }

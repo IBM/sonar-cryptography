@@ -19,4 +19,4 @@
  */
 package com.ibm.mapper.model;
 
-public interface KeyAgreement extends IAlgorithm {}
+public interface KeyAgreement extends IPrimitive {}
