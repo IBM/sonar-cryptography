@@ -25,13 +25,14 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.Size;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.model.context.ISupportKind;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import javax.annotation.Nonnull;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @SuppressWarnings("java:S3457")
 public class DetectionStoreLogger<R, T, S, P> {
@@ -90,11 +91,9 @@ public class DetectionStoreLogger<R, T, S, P> {
                                                                         .toString()
                                                                         .substring(0, 5)
                                                                 + ", bundle: "
-                                                                + getFormattedNumericString(
-                                                                        store.getDetectionRule()
+                                                                + store.getDetectionRule()
                                                                                 .bundle()
                                                                                 .getIdentifier()
-                                                                                .hashCode())
                                                                 + ", level: "
                                                                 + store.getLevel()
                                                                 + ", hash: "
