@@ -51,7 +51,7 @@ public class JcaMacMapper implements IMapper {
             return pbeOptional;
         }
 
-        if (str.toLowerCase().contains("with")) {
+        if (str.toLowerCase().contains("with") || !str.toLowerCase().contains("hmac")) {
             return Optional.empty();
         }
 

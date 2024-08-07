@@ -20,7 +20,6 @@
 package com.ibm.enricher;
 
 import com.ibm.mapper.model.INode;
-
 import javax.annotation.Nonnull;
 
 public interface IEnricher {

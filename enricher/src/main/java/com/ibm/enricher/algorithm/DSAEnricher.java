@@ -21,15 +21,15 @@ package com.ibm.enricher.algorithm;
 
 import com.ibm.enricher.IEnricher;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.algorithms.DES;
+import com.ibm.mapper.model.algorithms.DSA;
 import org.jetbrains.annotations.NotNull;
 
-public class DESEnricher implements IEnricher, IEnrichWithDefaultKeySize {
+public class DSAEnricher implements IEnricher, IEnrichWithDefaultKeySize {
     @Override
     public @NotNull INode enrich(@NotNull INode node) {
-        if (node instanceof DES des) {
-            this.applyDefaultKeySize(des, 56);
-            return des;
+        if (node instanceof DSA dsa) {
+            this.applyDefaultKeySize(dsa, 2048);
+            return dsa;
         }
         return node;
     }

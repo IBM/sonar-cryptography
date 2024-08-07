@@ -22,18 +22,19 @@ package com.ibm.enricher;
 import com.ibm.enricher.algorithm.AESEnricher;
 import com.ibm.enricher.algorithm.DESEnricher;
 import com.ibm.enricher.algorithm.DHEnricher;
+import com.ibm.enricher.algorithm.DSAEnricher;
 import com.ibm.enricher.algorithm.RSAEnricher;
 import com.ibm.enricher.algorithm.SHA2Enricher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.algorithms.AES;
 import com.ibm.mapper.model.algorithms.DES;
 import com.ibm.mapper.model.algorithms.DH;
+import com.ibm.mapper.model.algorithms.DSA;
 import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.algorithms.SHA2;
-import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nonnull;
 import java.util.Collection;
+import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This enricher instance operates on a language-agnostic level, meaning it will enrich the given
@@ -79,6 +80,9 @@ public class Enricher implements IEnricher {
         }
         if (node instanceof DH dh) {
             return new DHEnricher().enrich(dh);
+        }
+        if (node instanceof DSA dsa) {
+            return new DSAEnricher().enrich(dsa);
         }
 
         if (node instanceof SHA2 sha2) {

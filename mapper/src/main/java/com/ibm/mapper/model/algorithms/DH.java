@@ -26,9 +26,8 @@ import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public final class DH extends Algorithm implements Signature, KeyAgreement, PublicKeyEncryption {
     private static final String NAME = "DH"; // DiffieHellman

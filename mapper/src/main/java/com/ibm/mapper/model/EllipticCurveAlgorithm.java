@@ -25,7 +25,7 @@ public class EllipticCurveAlgorithm extends Algorithm
         implements PublicKeyEncryption, Signature, KeyAgreement {
 
     public EllipticCurveAlgorithm(@Nonnull EllipticCurve curve) {
-        super("EC-" + curve, PublicKeyEncryption.class, curve.detectionLocation);
+        super("EC-" + curve.asString(), PublicKeyEncryption.class, curve.detectionLocation);
         this.append(curve);
     }
 }

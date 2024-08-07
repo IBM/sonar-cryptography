@@ -22,9 +22,8 @@ package com.ibm.enricher.algorithm;
 import com.ibm.enricher.IEnricher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.algorithms.DH;
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class DHEnricher implements IEnricher, IEnrichWithDefaultKeySize {
 
