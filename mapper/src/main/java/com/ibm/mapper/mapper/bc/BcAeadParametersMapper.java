@@ -22,15 +22,28 @@ package com.ibm.mapper.mapper.bc;
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.algorithms.Elephant;
-import com.ibm.mapper.model.algorithms.ISAP;
-import com.ibm.mapper.model.algorithms.ascon.Ascon;
+import com.ibm.mapper.model.algorithms.ascon.Ascon128;
+import com.ibm.mapper.model.algorithms.ascon.Ascon128a;
+import com.ibm.mapper.model.algorithms.ascon.Ascon80pq;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class BcAeadMapper implements IMapper {
+public class BcAeadParametersMapper implements IMapper {
+
+    // case "ascon128", "SCHWAEMM128_128", "ascon128a", "SCHWAEMM256_128":
+    //     keySize = 128;
+    //     break;
+    // case "ascon80pq":
+    //     keySize = 160;
+    //     break;
+    // case "SCHWAEMM192_192":
+    //     keySize = 192;
+    //     break;
+    // case "SCHWAEMM256_256":
+    //     keySize = 256;
+    //     break;
 
     @Override
     @Nonnull
@@ -46,17 +59,14 @@ public class BcAeadMapper implements IMapper {
     private Optional<? extends Algorithm> map(
             @Nonnull String cipherAlgorithm, @Nonnull DetectionLocation detectionLocation) {
         return switch (cipherAlgorithm) {
-            case "AsconEngine" -> Optional.of(new Ascon(detectionLocation));
-            case "ElephantEngine" -> Optional.of(new Elephant(detectionLocation));
-            // case "Grain128AEADEngine" -> Optional.of();
-            case "IsapEngine" -> Optional.of(new ISAP(detectionLocation));
-            // case "PhotonBeetleEngine" -> Optional.of();
-            // case "SparkleEngine" -> Optional.of();
-            // case "XoodyakEngine" -> Optional.of();
-            default -> {
-                System.out.println(cipherAlgorithm);
-                yield Optional.empty();
-            }
+            case "ascon128" -> Optional.of(new Ascon128(detectionLocation));
+            case "ascon128a" -> Optional.of(new Ascon128a(detectionLocation));
+            case "ascon80pq" -> Optional.of(new Ascon80pq(detectionLocation));
+            case "SCHWAEMM128_128" -> Optional.empty();
+            case "SCHWAEMM256_128" -> Optional.empty();
+            case "SCHWAEMM256_256" -> Optional.empty();
+            case "SCHWAEMM192_192" -> Optional.empty();
+            default -> Optional.empty();
         };
     }
 }

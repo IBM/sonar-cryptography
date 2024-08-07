@@ -61,7 +61,6 @@ public final class BcAEADCipherEngine {
 
         for (Map.Entry<String, BouncyCastleInfoMap.Info> entry : infoMap.entrySet()) {
             final String engine = entry.getKey();
-            final String engineName = infoMap.getDisplayName(engine, "Engine");
             final String parameters = entry.getValue().getParameterClass();
 
             if (parameters == null) {
@@ -70,7 +69,7 @@ public final class BcAEADCipherEngine {
                                 .createDetectionRule()
                                 .forObjectTypes("org.bouncycastle.crypto.engines." + engine)
                                 .forConstructor()
-                                .shouldBeDetectedAs(new ValueActionFactory<>(engineName))
+                                .shouldBeDetectedAs(new ValueActionFactory<>(engine))
                                 .withoutParameters()
                                 .buildForContext(new CipherContext(CipherContext.Kind.AEAD_ENGINE))
                                 .inBundle(() -> "Bc")
@@ -81,7 +80,7 @@ public final class BcAEADCipherEngine {
                                 .createDetectionRule()
                                 .forObjectTypes("org.bouncycastle.crypto.engines." + engine)
                                 .forConstructor()
-                                .shouldBeDetectedAs(new ValueActionFactory<>(engineName))
+                                .shouldBeDetectedAs(new ValueActionFactory<>(engine))
                                 .withMethodParameter(
                                         "org.bouncycastle.crypto.engines."
                                                 + engine
