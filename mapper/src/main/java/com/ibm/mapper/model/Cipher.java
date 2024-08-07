@@ -22,7 +22,7 @@ package com.ibm.mapper.model;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
-public interface Cipher extends IPrimitive, AuthenticatedEncryption {
+public interface Cipher extends IPrimitive {
 
     @Nonnull
     default Optional<Mode> getMode() {
