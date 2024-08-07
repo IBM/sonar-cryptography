@@ -19,4 +19,17 @@
  */
 package com.ibm.mapper.model;
 
-public interface PublicKeyEncryption extends IPrimitive {}
+import java.util.Optional;
+import javax.annotation.Nonnull;
+
+public interface PublicKeyEncryption extends IPrimitive {
+
+    @Nonnull
+    default Optional<KeyLength> getKeyLength() {
+        INode node = this.getChildren().get(KeyLength.class);
+        if (node == null) {
+            return Optional.empty();
+        }
+        return Optional.of((KeyLength) node);
+    }
+}

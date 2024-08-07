@@ -19,7 +19,11 @@
  */
 package com.ibm.enricher;
 
+import com.ibm.enricher.algorithm.AESEnricher;
+import com.ibm.enricher.algorithm.RSAEnricher;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.algorithms.AES;
+import com.ibm.mapper.model.algorithms.RSA;
 import java.util.Collection;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +35,6 @@ import org.jetbrains.annotations.NotNull;
  * enricher instance as part of the language package.
  */
 public class Enricher implements IEnricher {
-
     /**
      * Enriches a list of nodes with additional information.
      *
@@ -57,6 +60,12 @@ public class Enricher implements IEnricher {
      */
     @NotNull @Override
     public INode enrich(@Nonnull INode node) {
+        if (node instanceof AES aes) {
+            return new AESEnricher().enrich(aes);
+        }
+        if (node instanceof RSA rsa) {
+            return new RSAEnricher().enrich(rsa);
+        }
         return node;
     }
 }

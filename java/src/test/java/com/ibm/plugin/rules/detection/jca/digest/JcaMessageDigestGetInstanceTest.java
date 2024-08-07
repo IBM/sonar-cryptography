@@ -50,13 +50,6 @@ class JcaMessageDigestGetInstanceTest extends TestBase {
                 .verifyIssues();
     }
 
-    /**
-     * DEBUG [detectionStore] (DigestContext, Algorithm) SHA-512/224 DEBUG [translation]
-     * (MessageDigest) SHA-512/224 DEBUG [translation] └─ (DigestSize) 224 DEBUG [translation] └─
-     * (MessageDigest) SHA-224 DEBUG [translation] └─ (DigestSize) 224 DEBUG [translation] └─
-     * (BlockSize) 512 DEBUG [translation] └─ (KeyLength) 224 DEBUG [translation] └─ (BlockSize)
-     * 1024
-     */
     @Override
     public void asserts(
             int findingId,
@@ -76,7 +69,7 @@ class JcaMessageDigestGetInstanceTest extends TestBase {
         assertThat(nodes).hasSize(1);
         INode node = nodes.get(0);
         assertThat(node).isInstanceOf(MessageDigest.class);
-        assertThat(node.asString()).isEqualTo("SHA-512/224");
+        assertThat(node.asString()).isEqualTo("SHA512/224");
 
         INode digestSize = node.getChildren().get(DigestSize.class);
         assertThat(digestSize).isNotNull();
@@ -88,7 +81,7 @@ class JcaMessageDigestGetInstanceTest extends TestBase {
 
         INode digest = node.getChildren().get(MessageDigest.class);
         assertThat(digest).isNotNull();
-        assertThat(digest.asString()).isEqualTo("SHA-224");
+        assertThat(digest.asString()).isEqualTo("SHA224");
 
         digestSize = digest.getChildren().get(DigestSize.class);
         assertThat(digestSize).isNotNull();

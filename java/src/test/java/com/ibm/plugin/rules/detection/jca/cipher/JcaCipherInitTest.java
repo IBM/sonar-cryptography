@@ -26,7 +26,10 @@ import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.OperationMode;
 import com.ibm.engine.model.context.CipherContext;
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.Mode;
+import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.functionality.Decrypt;
 import com.ibm.plugin.TestBase;
 import java.util.List;
@@ -48,12 +51,6 @@ class JcaCipherInitTest extends TestBase {
                 .verifyIssues();
     }
 
-    /**
-     * DEBUG [detectionStore] (CipherContext, Algorithm) RSA/ECB/PKCS1Padding DEBUG [detectionStore]
-     * └─ (CipherContext, OperationMode) 2 DEBUG [translation] (BlockCipher) RSA DEBUG [translation]
-     * └─ (KeyLength) 2048 DEBUG [translation] └─ (Mode) ECB DEBUG [translation] └─ (Padding) PKCS1
-     * DEBUG [translation] └─ (Functionality) DECRYPT
-     */
     @Override
     public void asserts(
             int findingId,
