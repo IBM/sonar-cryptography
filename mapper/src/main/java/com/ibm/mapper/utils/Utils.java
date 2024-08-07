@@ -20,7 +20,6 @@
 package com.ibm.mapper.utils;
 
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.collections.IAssetCollection;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -54,12 +53,13 @@ public final class Utils {
                     if (node.hasChildren()) {
                         printNodes(step, tabs + 1, node.getChildren().values());
                     }
-                    if (node instanceof IAssetCollection<? extends INode> collection) {
-                        printNodes(
-                                step,
-                                tabs + 1,
-                                ((IAssetCollection<INode>) collection).getCollection());
-                    }
+                    // TODO: reenable this
+                    // if (node instanceof IAssetCollection<? extends INode> collection) {
+                    //     printNodes(
+                    //             step,
+                    //             tabs + 1,
+                    //             ((IAssetCollection<INode>) collection).getCollection());
+                    // }
                 });
     }
 
