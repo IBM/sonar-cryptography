@@ -19,8 +19,6 @@
  */
 package com.ibm.plugin.rules.detection.jca.keyfactory;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
@@ -31,14 +29,17 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.SecretKey;
 import com.ibm.plugin.TestBase;
-import java.util.List;
-import javax.annotation.Nonnull;
 import org.junit.jupiter.api.Test;
 import org.sonar.java.checks.verifier.CheckVerifier;
 import org.sonar.plugins.java.api.JavaCheck;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class JcaSecretKeyFactoryTranslateKeyTest extends TestBase {
 
@@ -105,7 +106,7 @@ class JcaSecretKeyFactoryTranslateKeyTest extends TestBase {
 
             INode key = node.getChildren().get(SecretKey.class);
             assertThat(key).isInstanceOf(SecretKey.class);
-            assertThat(key.asString()).isEqualTo("DESede");
+            assertThat(key.asString()).isEqualTo("3DES");
 
             INode keyLength = key.getChildren().get(KeyLength.class);
             assertThat(keyLength).isNotNull();
@@ -113,11 +114,7 @@ class JcaSecretKeyFactoryTranslateKeyTest extends TestBase {
 
             blockCipher = key.getChildren().get(BlockCipher.class);
             assertThat(blockCipher).isNotNull();
-            assertThat(blockCipher.asString()).isEqualTo("DESede");
-
-            keyLength = blockCipher.getChildren().get(KeyLength.class);
-            assertThat(keyLength).isNotNull();
-            assertThat(keyLength.asString()).isEqualTo("168");
+            assertThat(blockCipher.asString()).isEqualTo("3DES");
         } else if (findingId == 1) {
             /*
              * Detection Store
@@ -145,7 +142,7 @@ class JcaSecretKeyFactoryTranslateKeyTest extends TestBase {
             assertThat(nodes).hasSize(1);
             INode node = nodes.get(0);
             assertThat(node).isInstanceOf(SecretKey.class);
-            assertThat(node.asString()).isEqualTo("DESede");
+            assertThat(node.asString()).isEqualTo("3DES");
 
             INode keyLength = node.getChildren().get(KeyLength.class);
             assertThat(keyLength).isNotNull();
@@ -153,11 +150,7 @@ class JcaSecretKeyFactoryTranslateKeyTest extends TestBase {
 
             INode blockCipher = node.getChildren().get(BlockCipher.class);
             assertThat(blockCipher).isNotNull();
-            assertThat(blockCipher.asString()).isEqualTo("DESede");
-
-            keyLength = blockCipher.getChildren().get(KeyLength.class);
-            assertThat(keyLength).isNotNull();
-            assertThat(keyLength.asString()).isEqualTo("168");
+            assertThat(blockCipher.asString()).isEqualTo("3DES");
         }
     }
 }

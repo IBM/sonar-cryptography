@@ -21,7 +21,6 @@ package com.ibm.enricher.algorithm;
 
 import com.ibm.enricher.IEnricher;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.algorithms.DH;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,8 +39,6 @@ public class DHEnricher implements IEnricher, IEnrichWithDefaultKeySize {
     @Nonnull
     private DH enrich(@Nonnull DH dh) {
         this.applyDefaultKeySize(dh, 3072);
-
-        dh.append(new Oid("1.2.840.113549.1.3.1", dh.getDetectionContext()));
         return dh;
     }
 }

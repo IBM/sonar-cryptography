@@ -20,11 +20,13 @@
 package com.ibm.enricher;
 
 import com.ibm.enricher.algorithm.AESEnricher;
+import com.ibm.enricher.algorithm.DESEnricher;
 import com.ibm.enricher.algorithm.DHEnricher;
 import com.ibm.enricher.algorithm.RSAEnricher;
 import com.ibm.enricher.algorithm.SHA2Enricher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.algorithms.AES;
+import com.ibm.mapper.model.algorithms.DES;
 import com.ibm.mapper.model.algorithms.DH;
 import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.algorithms.SHA2;
@@ -67,6 +69,9 @@ public class Enricher implements IEnricher {
     public INode enrich(@Nonnull INode node) {
         if (node instanceof AES aes) {
             return new AESEnricher().enrich(aes);
+        }
+        if (node instanceof DES des) {
+            return new DESEnricher().enrich(des);
         }
 
         if (node instanceof RSA rsa) {

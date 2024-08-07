@@ -21,7 +21,6 @@ package com.ibm.enricher.algorithm;
 
 import com.ibm.enricher.IEnricher;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.algorithms.RSA;
 import org.jetbrains.annotations.NotNull;
@@ -41,10 +40,6 @@ public class RSAEnricher implements IEnricher, IEnrichWithDefaultKeySize {
 
     @NotNull private RSA enrich(@NotNull RSA rsa) {
         this.applyDefaultKeySize(rsa, 2048);
-        // oid
-        final Oid oid = new Oid("1.2.840.113549.1.1.1", rsa.getDetectionContext());
-        rsa.append(oid);
-
         return rsa;
     }
 
