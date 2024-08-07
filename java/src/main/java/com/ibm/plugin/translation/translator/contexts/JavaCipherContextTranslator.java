@@ -29,12 +29,12 @@ import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.mapper.mapper.bc.BcAeadMapper;
+import com.ibm.mapper.mapper.bc.BcAeadParametersMapper;
 import com.ibm.mapper.mapper.bc.BcOperationModeEncryptionMapper;
 import com.ibm.mapper.mapper.bc.BcOperationModeWrappingMapper;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.mapper.jca.JcaCipherOperationModeMapper;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.functionality.Encapsulate;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
@@ -307,25 +307,29 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                     return Optional.empty(); // TODO
             }
         } else if (value instanceof AlgorithmParameter<Tree> algorithmParameter) {
-            int keySize;
-            switch (algorithmParameter.asString()) {
-                case "ascon128", "SCHWAEMM128_128", "ascon128a", "SCHWAEMM256_128":
-                    keySize = 128;
-                    break;
-                case "ascon128pq":
-                    keySize = 160;
-                    break;
-                case "SCHWAEMM192_192":
-                    keySize = 192;
-                    break;
-                case "SCHWAEMM256_256":
-                    keySize = 256;
-                    break;
-                default:
-                    return Optional.empty();
-            }
-            KeyLength keyLength = new KeyLength(keySize, detectionLocation);
-            return Optional.of(keyLength);
+            BcAeadParametersMapper bcAeadParametersMapper = new BcAeadParametersMapper();
+            return bcAeadParametersMapper
+                    .parse(algorithmParameter.asString(), detectionLocation)
+                    .map(f -> f);
+            // int keySize;
+            // switch (algorithmParameter.asString()) {
+            //     case "ascon128", "SCHWAEMM128_128", "ascon128a", "SCHWAEMM256_128":
+            //         keySize = 128;
+            //         break;
+            //     case "ascon128pq":
+            //         keySize = 160;
+            //         break;
+            //     case "SCHWAEMM192_192":
+            //         keySize = 192;
+            //         break;
+            //     case "SCHWAEMM256_256":
+            //         keySize = 256;
+            //         break;
+            //     default:
+            //         return Optional.empty();
+            // }
+            // KeyLength keyLength = new KeyLength(keySize, detectionLocation);
+            // return Optional.of(keyLength);
         } else if (value instanceof BlockSize<Tree> blockSize) {
             return switch (kind) {
                 case BLOCK_CIPHER, WRAP_ENGINE ->

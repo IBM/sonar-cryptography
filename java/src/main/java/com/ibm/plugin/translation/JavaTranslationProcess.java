@@ -53,7 +53,7 @@ public final class JavaTranslationProcess
         // 1. Translate
         JavaTranslator javaTranslator = new JavaTranslator();
         final List<INode> translatedValues = javaTranslator.translate(rootDetectionStore);
-        Utils.printNodeTree("translated", translatedValues);
+        Utils.printNodeTree("translated ", translatedValues);
 
         // 2. Reorganize
         Reorganizer javaReorganizer = new Reorganizer(reorganizerRules);
@@ -62,7 +62,7 @@ public final class JavaTranslationProcess
 
         // 3. Enrich
         final Collection<INode> enrichedValues = Enricher.enrich(reorganizedValues);
-        Utils.printNodeTree("enriched", reorganizedValues);
+        Utils.printNodeTree("enriched   ", reorganizedValues);
 
         return Collections.unmodifiableCollection(enrichedValues).stream().toList();
     }
