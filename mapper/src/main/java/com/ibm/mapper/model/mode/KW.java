@@ -17,13 +17,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.enricher;
+package com.ibm.mapper.model.mode;
 
-import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Mode;
+import com.ibm.mapper.utils.DetectionLocation;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
+// Key wrap
+public final class KW extends Mode {
 
-public interface IEnricher {
-    @Nonnull
-    INode enrich(@Nonnull INode node);
+    public KW(@NotNull DetectionLocation detectionLocation) {
+        super("WRAP", detectionLocation);
+    }
 }

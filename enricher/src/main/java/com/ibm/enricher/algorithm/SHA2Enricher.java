@@ -20,11 +20,15 @@
 package com.ibm.enricher.algorithm;
 
 import com.ibm.enricher.IEnricher;
+import com.ibm.mapper.model.BlockSize;
+import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.algorithms.SHA2;
 import java.util.Optional;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,7 +43,6 @@ public class SHA2Enricher implements IEnricher {
 
     @Nonnull
     private SHA2 enrich(@Nonnull SHA2 sha2) {
-        // oid
         sha2.getDigestSize()
                 .ifPresent(
                         digestSize -> {
@@ -48,40 +51,93 @@ public class SHA2Enricher implements IEnricher {
                                     final Optional<INode> preHashOptional =
                                             sha2.hasChildOfType(MessageDigest.class);
                                     preHashOptional.ifPresentOrElse(
-                                            preHash -> {
-                                                if (preHash instanceof SHA2) {
-                                                    sha2.append(
-                                                            new Oid(
-                                                                    "2.16.840.1.101.3.4.2.6",
-                                                                    sha2.getDetectionContext()));
-                                                }
-                                            },
-                                            () ->
-                                                    sha2.append(
-                                                            new Oid(
-                                                                    "2.16.840.1.101.3.4.2.1",
-                                                                    sha2.getDetectionContext())));
+                                            preHash ->
+                                                    checkPreHash(
+                                                            sha2,
+                                                            preHash,
+                                                            () ->
+                                                                    Stream.of(
+                                                                            new BlockSize(
+                                                                                    1024,
+                                                                                    sha2
+                                                                                            .getDetectionContext()),
+                                                                            new Oid(
+                                                                                    "2.16.840.1.101.3.4.2.6",
+                                                                                    sha2
+                                                                                            .getDetectionContext()))),
+                                            () -> {
+                                                sha2.append(
+                                                        new BlockSize(
+                                                                512, sha2.getDetectionContext()));
+                                                sha2.append(
+                                                        new Oid(
+                                                                "2.16.840.1.101.3.4.2.1",
+                                                                sha2.getDetectionContext()));
+                                            });
                                 }
-                                case 384 ->
-                                        sha2.append(
-                                                new Oid(
-                                                        "2.16.840.1.101.3.4.2.2",
-                                                        sha2.getDetectionContext()));
-                                case 512 ->
-                                        sha2.append(
-                                                new Oid(
-                                                        "2.16.840.1.101.3.4.2.3",
-                                                        sha2.getDetectionContext()));
-                                case 224 ->
-                                        sha2.append(
-                                                new Oid(
-                                                        "2.16.840.1.101.3.4.2.4",
-                                                        sha2.getDetectionContext()));
+                                case 384 -> {
+                                    sha2.append(new BlockSize(1024, sha2.getDetectionContext()));
+                                    sha2.append(
+                                            new Oid(
+                                                    "2.16.840.1.101.3.4.2.2",
+                                                    sha2.getDetectionContext()));
+                                }
+                                case 512 -> {
+                                    sha2.append(new BlockSize(1024, sha2.getDetectionContext()));
+                                    sha2.append(
+                                            new Oid(
+                                                    "2.16.840.1.101.3.4.2.3",
+                                                    sha2.getDetectionContext()));
+                                }
+                                case 224 -> {
+                                    final Optional<INode> preHashOptional =
+                                            sha2.hasChildOfType(MessageDigest.class);
+                                    preHashOptional.ifPresentOrElse(
+                                            preHash ->
+                                                    checkPreHash(
+                                                            sha2,
+                                                            preHash,
+                                                            () ->
+                                                                    Stream.of(
+                                                                            new BlockSize(
+                                                                                    1024,
+                                                                                    sha2
+                                                                                            .getDetectionContext()),
+                                                                            new Oid(
+                                                                                    "2.16.840.1.101.3.4.2.5",
+                                                                                    sha2
+                                                                                            .getDetectionContext()))),
+                                            () -> {
+                                                sha2.append(
+                                                        new BlockSize(
+                                                                512, sha2.getDetectionContext()));
+                                                sha2.append(
+                                                        new Oid(
+                                                                "2.16.840.1.101.3.4.2.4",
+                                                                sha2.getDetectionContext()));
+                                            });
+                                }
                                 default -> {
                                     // nothing
                                 }
                             }
                         });
         return sha2;
+    }
+
+    private void checkPreHash(
+            @Nonnull SHA2 sha2,
+            @Nonnull INode preHash,
+            @Nonnull Supplier<Stream<INode>> childNodeSupplier) {
+        if (preHash instanceof SHA2) {
+            preHash.hasChildOfType(DigestSize.class)
+                    .map(d -> ((DigestSize) d).getValue())
+                    .ifPresent(
+                            size -> {
+                                if (size == 512) {
+                                    childNodeSupplier.get().forEach(sha2::append);
+                                }
+                            });
+        }
     }
 }

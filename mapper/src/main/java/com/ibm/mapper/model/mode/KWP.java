@@ -17,13 +17,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.enricher;
+package com.ibm.mapper.model.mode;
 
-import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Mode;
+import com.ibm.mapper.utils.DetectionLocation;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-
-public interface IEnricher {
-    @Nonnull
-    INode enrich(@Nonnull INode node);
+// Key wrap pad, warppad
+public final class KWP extends Mode {
+    public KWP(@NotNull DetectionLocation detectionLocation) {
+        super("WRAP-PAD", detectionLocation);
+    }
 }

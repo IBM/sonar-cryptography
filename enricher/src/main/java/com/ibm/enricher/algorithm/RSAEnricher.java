@@ -21,14 +21,12 @@ package com.ibm.enricher.algorithm;
 
 import com.ibm.enricher.IEnricher;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.algorithms.RSA;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 
-public class RSAEnricher implements IEnricher {
+public class RSAEnricher implements IEnricher, IEnrichWithDefaultKeySize {
 
     @NotNull @Override
     public INode enrich(@NotNull INode node) {
@@ -42,17 +40,7 @@ public class RSAEnricher implements IEnricher {
     }
 
     @NotNull private RSA enrich(@NotNull RSA rsa) {
-        @Nullable KeyLength keyLength = rsa.getKeyLength().orElse(null);
-        // default key length
-        if (keyLength == null) {
-            switch (rsa.getDetectionContext().bundle().getIdentifier()) {
-                case "Jca":
-                    {
-                        keyLength = new KeyLength(2048, rsa.getDetectionContext());
-                        rsa.append(keyLength);
-                    }
-            }
-        }
+        this.applyDefaultKeySize(rsa, 2048);
         // oid
         final Oid oid = new Oid("1.2.840.113549.1.1.1", rsa.getDetectionContext());
         rsa.append(oid);

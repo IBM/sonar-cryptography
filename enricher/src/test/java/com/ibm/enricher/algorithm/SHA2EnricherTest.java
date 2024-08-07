@@ -22,6 +22,7 @@ package com.ibm.enricher.algorithm;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.enricher.TestBase;
+import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.algorithms.SHA2;
@@ -51,16 +52,31 @@ class SHA2EnricherTest extends TestBase {
     void oid2() {
         DetectionLocation testDetectionLocation =
                 new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "Jca");
-        final SHA2 sha512_256 =
+        final SHA2 sha512256 =
                 new SHA2(256, new SHA2(512, testDetectionLocation), testDetectionLocation);
-        this.logBefore(sha512_256);
+        this.logBefore(sha512256);
 
         final SHA2Enricher sha2Enricher = new SHA2Enricher();
-        final INode enriched = sha2Enricher.enrich(sha512_256);
+        final INode enriched = sha2Enricher.enrich(sha512256);
         this.logAfter(enriched);
 
         assertThat(enriched.hasChildOfType(Oid.class)).isPresent();
         assertThat(enriched.hasChildOfType(Oid.class).get().asString())
                 .isEqualTo("2.16.840.1.101.3.4.2.6");
+    }
+
+    @Test
+    void blockSize() {
+        DetectionLocation testDetectionLocation =
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "Jca");
+        final SHA2 sha256 = new SHA2(256, testDetectionLocation);
+        this.logBefore(sha256);
+
+        final SHA2Enricher sha2Enricher = new SHA2Enricher();
+        final INode enriched = sha2Enricher.enrich(sha256);
+        this.logAfter(enriched);
+
+        assertThat(enriched.hasChildOfType(BlockSize.class)).isPresent();
+        assertThat(enriched.hasChildOfType(BlockSize.class).get().asString()).isEqualTo("512");
     }
 }

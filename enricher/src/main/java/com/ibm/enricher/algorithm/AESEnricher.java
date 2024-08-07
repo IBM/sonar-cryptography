@@ -28,12 +28,13 @@ import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.algorithms.AES;
 import com.ibm.mapper.model.mode.CCM;
 import com.ibm.mapper.model.mode.GCM;
-import java.util.Map;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 
-public class AESEnricher implements IEnricher {
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Map;
+
+public class AESEnricher implements IEnricher, IEnrichWithDefaultKeySize {
     private static final String BASE_OID = "2.16.840.1.101.3.4.1";
 
     private static final Map<String, Integer> MODE_OID_MAP =
@@ -64,16 +65,7 @@ public class AESEnricher implements IEnricher {
     private INode enrich(@NotNull AES aes) {
         @Nullable KeyLength keyLength = aes.getKeyLength().orElse(null);
         @Nullable final Mode mode = aes.getMode().orElse(null);
-        // default key length
-        if (keyLength == null) {
-            switch (aes.getDetectionContext().bundle().getIdentifier()) {
-                case "Jca":
-                    {
-                        keyLength = new KeyLength(128, aes.getDetectionContext());
-                        aes.append(keyLength);
-                    }
-            }
-        }
+        this.applyDefaultKeySize(aes, 128);
         // add oid
         final Oid oid = new Oid(buildOid(keyLength, mode), aes.getDetectionContext());
         aes.append(oid);
