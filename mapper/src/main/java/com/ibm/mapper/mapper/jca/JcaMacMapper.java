@@ -56,8 +56,7 @@ public class JcaMacMapper implements IMapper {
         }
 
         final String messageDigestStr =
-                str.substring(str.toLowerCase().trim().indexOf("Hmac".toLowerCase()) + 4)
-                        .replace("-", "");
+                str.substring(str.toLowerCase().trim().indexOf("Hmac".toLowerCase()) + 4);
 
         return switch (messageDigestStr.toUpperCase().trim()) {
             case "MD2" -> Optional.of(new MD2(Mac.class, detectionLocation));

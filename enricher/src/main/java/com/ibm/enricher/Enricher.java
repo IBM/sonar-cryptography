@@ -26,6 +26,7 @@ import com.ibm.enricher.algorithm.DSAEnricher;
 import com.ibm.enricher.algorithm.PBKDF2Enricher;
 import com.ibm.enricher.algorithm.RSAEnricher;
 import com.ibm.enricher.algorithm.SHA2Enricher;
+import com.ibm.enricher.algorithm.SHA3Enricher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.algorithms.AES;
 import com.ibm.mapper.model.algorithms.DES;
@@ -34,6 +35,7 @@ import com.ibm.mapper.model.algorithms.DSA;
 import com.ibm.mapper.model.algorithms.PBKDF2;
 import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.algorithms.SHA2;
+import com.ibm.mapper.model.algorithms.SHA3;
 import java.util.Collection;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
@@ -89,6 +91,9 @@ public class Enricher implements IEnricher {
 
         if (node instanceof SHA2 sha2) {
             return new SHA2Enricher().enrich(sha2);
+        }
+        if (node instanceof SHA3 sha3) {
+            return new SHA3Enricher().enrich(sha3);
         }
 
         if (node instanceof PBKDF2 pbkdf2) {
