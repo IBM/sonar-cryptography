@@ -51,7 +51,7 @@ public class JcaPBKDFMapper implements IMapper {
         final Optional<? extends Algorithm> macOptional =
                 jcaMacMapper.parse(prf, detectionLocation);
         if (macOptional.isPresent() && macOptional.get() instanceof Mac hmac) {
-            return macOptional.map(mac -> new PBKDF2(hmac, detectionLocation));
+            return macOptional.map(mac -> new PBKDF2(hmac));
         }
         return Optional.empty();
     }
