@@ -48,13 +48,6 @@ import com.ibm.plugin.translation.translator.contexts.JavaPRNGContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.JavaProtocolContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.JavaSecretKeyContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.JavaSignatureContextTranslator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +61,14 @@ import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.NewClassTree;
 import org.sonar.plugins.java.api.tree.SyntaxToken;
 import org.sonar.plugins.java.api.tree.Tree;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public final class JavaTranslator
         extends ITranslator<JavaCheck, Tree, Symbol, JavaFileScannerContext> {
@@ -199,6 +200,9 @@ public final class JavaTranslator
                 }
             }
         }
+        // TODO: use to add child detections only to the right nodes
+        //  detectionStore.childrenForEachParameter((id, children) -> { });
+
         // Check if the nodes are empty
         if (nodes.isEmpty()) {
             // Call a recursive method to traverse and add detection stores

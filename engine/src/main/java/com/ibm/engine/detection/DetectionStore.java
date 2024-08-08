@@ -27,11 +27,21 @@ import com.ibm.engine.language.IScanContext;
 import com.ibm.engine.model.IAction;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.context.IDetectionContext;
-import com.ibm.engine.rule.*;
-import com.ibm.engine.utils.DetectionStoreUtils;
-import java.util.*;
+import com.ibm.engine.rule.DetectableParameter;
+import com.ibm.engine.rule.DetectionRule;
+import com.ibm.engine.rule.IDetectionRule;
+import com.ibm.engine.rule.MethodDetectionRule;
+import com.ibm.engine.rule.Parameter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.TreeMap;
+import java.util.UUID;
 import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -382,31 +392,6 @@ public class DetectionStore<R, T, S, P> implements IHookDetectionObserver<R, T, 
         }
     }
 
-    public void onNoMatch(@Nonnull T expression) {
-        final List<IDetectionRule<T>> nextDetectionRules = detectionRule.nextDetectionRules();
-        if (detectionRule instanceof DetectionRule<T> tDetectionRule) {
-            nextDetectionRules.addAll(
-                    tDetectionRule.parameters().stream()
-                            .map(Parameter::getDetectionRules)
-                            .flatMap(List::stream)
-                            .collect(Collectors.toSet()));
-        }
-
-        for (IDetectionRule<T> rule : nextDetectionRules) {
-            final DetectionStore<R, T, S, P> newDetectionStore =
-                    new DetectionStore<>(-1, rule, scanContext, handler, statusReporting);
-            final IDetectionEngine<T, S> detectionEngine =
-                    handler.getLanguageSupport().createDetectionEngineInstance(newDetectionStore);
-            detectionEngine.run(TraceSymbol.createStart(), expression);
-
-            if (!newDetectionStore.getDetectionValues().isEmpty()
-                    || newDetectionStore.getActionValue().isPresent()) {
-                this.attach(newDetectionStore);
-                return;
-            }
-        }
-    }
-
     public void onNewHookRegistration(@Nonnull IHook<R, T, S, P> hook) {
         handler.subscribeToHookDetectionObservable(hook, this);
     }
@@ -508,23 +493,6 @@ public class DetectionStore<R, T, S, P> implements IHookDetectionObserver<R, T, 
                                             .createDetectionEngineInstance(newDetectionStore);
                             detectionEngine.run(TraceSymbol.createStart(), expression);
                         });
-    }
-
-    public boolean isSubTreeOf(@Nonnull DetectionStore<R, T, S, P> root) {
-        if (DetectionStoreUtils.treeEqual(root, this)) {
-            return true;
-        }
-
-        for (DetectionStore<R, T, S, P> child : root.getChildren()) {
-            if (child.getDetectionValues().isEmpty() && child.getActionValue().isEmpty()) {
-                continue;
-            }
-
-            if (this.isSubTreeOf(child)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public enum Scope {
