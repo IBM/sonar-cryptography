@@ -31,13 +31,13 @@ public class Ascon extends Algorithm implements BlockCipher {
     private static final String NAME = "Ascon";
 
     public Ascon(@NotNull DetectionLocation detectionLocation) {
-        super(NAME, AuthenticatedEncryption.class, detectionLocation);
+        this(NAME, AuthenticatedEncryption.class, detectionLocation);
     }
 
     public Ascon(
             @Nonnull final Class<? extends IPrimitive> asKind,
             @NotNull DetectionLocation detectionLocation) {
-        super(NAME, asKind, detectionLocation);
+        this(NAME, asKind, detectionLocation);
     }
 
     protected Ascon(

@@ -17,25 +17,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms;
+package com.ibm.mapper.model.algorithms.isap;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
-import com.ibm.mapper.model.IPrimitive;
+import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class ISAP extends Algorithm implements AuthenticatedEncryption {
-    private static final String NAME = "ISAP";
+public class Isap extends Algorithm implements AuthenticatedEncryption {
+    private static final String NAME = "Isap";
 
-    public ISAP(@NotNull DetectionLocation detectionLocation) {
-        super(NAME, AuthenticatedEncryption.class, detectionLocation);
+    public Isap(@NotNull DetectionLocation detectionLocation) {
+        this(NAME, detectionLocation);
     }
 
-    public ISAP(
-            @Nonnull final Class<? extends IPrimitive> asKind,
-            @NotNull DetectionLocation detectionLocation) {
-        super(NAME, asKind, detectionLocation);
+    protected Isap(@Nonnull String name, @NotNull DetectionLocation detectionLocation) {
+        super(name, AuthenticatedEncryption.class, detectionLocation);
+        this.append(new KeyLength(128, detectionLocation));
+        this.append(new TagLength(128, detectionLocation));
     }
 }
