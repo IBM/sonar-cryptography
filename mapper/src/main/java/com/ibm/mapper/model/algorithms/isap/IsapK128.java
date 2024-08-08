@@ -17,22 +17,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms.elephant;
+package com.ibm.mapper.model.algorithms.isap;
 
-import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.AuthenticatedEncryption;
+import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.utils.DetectionLocation;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public class Elephant extends Algorithm implements AuthenticatedEncryption {
-    private static final String NAME = "Elephant";
+public class IsapK128 extends Isap {
+    private static final String NAME = "Isap-K-128";
 
-    public Elephant(@NotNull DetectionLocation detectionLocation) {
-        this(NAME, detectionLocation);
-    }
-
-    protected Elephant(@Nonnull String name, @NotNull DetectionLocation detectionLocation) {
-        super(name, AuthenticatedEncryption.class, detectionLocation);
+    public IsapK128(@NotNull DetectionLocation detectionLocation) {
+        super(NAME, detectionLocation);
+        this.append(new BlockSize(144, detectionLocation));
     }
 }
