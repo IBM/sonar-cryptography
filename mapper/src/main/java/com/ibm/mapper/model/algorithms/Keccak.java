@@ -20,22 +20,14 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.AuthenticatedEncryption;
-import com.ibm.mapper.model.IPrimitive;
+import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class Elephant extends Algorithm implements AuthenticatedEncryption {
-    private static final String NAME = "Elephant";
+public class Keccak extends Algorithm implements MessageDigest {
+    private static final String NAME = "Keccak";
 
-    public Elephant(@NotNull DetectionLocation detectionLocation) {
-        super(NAME, AuthenticatedEncryption.class, detectionLocation);
-    }
-
-    public Elephant(
-            @Nonnull final Class<? extends IPrimitive> asKind,
-            @NotNull DetectionLocation detectionLocation) {
-        super(NAME, asKind, detectionLocation);
+    public Keccak(@NotNull DetectionLocation detectionLocation) {
+        super(NAME, MessageDigest.class, detectionLocation);
     }
 }
