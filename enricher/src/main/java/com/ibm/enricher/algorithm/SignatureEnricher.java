@@ -33,9 +33,10 @@ import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.algorithms.SHA;
 import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.model.algorithms.SHA3;
-import java.util.Optional;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
+import java.util.Optional;
 
 public class SignatureEnricher implements IEnricher {
     @Override
@@ -54,11 +55,15 @@ public class SignatureEnricher implements IEnricher {
         if (signature instanceof ECDSA ecdsa) {
             return enrichECDSA(ecdsa);
         }
+        if (signature instanceof RSA rsa) {
+            return enrichRSA(rsa);
+        }
         return signature;
     }
 
+    @SuppressWarnings("java:S3776")
     @Nonnull
-    Signature enrichRSA(@NotNull RSA rsa) {
+    private Signature enrichRSA(@NotNull RSA rsa) {
         Optional<INode> possibleDigest = rsa.hasChildOfType(MessageDigest.class);
         if (possibleDigest.isEmpty()) {
             return rsa;

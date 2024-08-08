@@ -27,7 +27,9 @@ import com.ibm.enricher.algorithm.PBKDF2Enricher;
 import com.ibm.enricher.algorithm.RSAEnricher;
 import com.ibm.enricher.algorithm.SHA2Enricher;
 import com.ibm.enricher.algorithm.SHA3Enricher;
+import com.ibm.enricher.algorithm.SignatureEnricher;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.algorithms.AES;
 import com.ibm.mapper.model.algorithms.DES;
 import com.ibm.mapper.model.algorithms.DH;
@@ -36,9 +38,10 @@ import com.ibm.mapper.model.algorithms.PBKDF2;
 import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.model.algorithms.SHA3;
-import java.util.Collection;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
+import java.util.Collection;
 
 /**
  * This enricher instance operates on a language-agnostic level, meaning it will enrich the given
@@ -73,31 +76,35 @@ public class Enricher implements IEnricher {
     @NotNull @Override
     public INode enrich(@Nonnull INode node) {
         if (node instanceof AES aes) {
-            return new AESEnricher().enrich(aes);
+            node = new AESEnricher().enrich(aes);
         }
         if (node instanceof DES des) {
-            return new DESEnricher().enrich(des);
+            node = new DESEnricher().enrich(des);
         }
 
         if (node instanceof RSA rsa) {
-            return new RSAEnricher().enrich(rsa);
+            node = new RSAEnricher().enrich(rsa);
         }
         if (node instanceof DH dh) {
-            return new DHEnricher().enrich(dh);
+            node = new DHEnricher().enrich(dh);
         }
         if (node instanceof DSA dsa) {
-            return new DSAEnricher().enrich(dsa);
+            node = new DSAEnricher().enrich(dsa);
         }
 
         if (node instanceof SHA2 sha2) {
-            return new SHA2Enricher().enrich(sha2);
+            node = new SHA2Enricher().enrich(sha2);
         }
         if (node instanceof SHA3 sha3) {
-            return new SHA3Enricher().enrich(sha3);
+            node = new SHA3Enricher().enrich(sha3);
         }
 
         if (node instanceof PBKDF2 pbkdf2) {
-            return new PBKDF2Enricher().enrich(pbkdf2);
+            node = new PBKDF2Enricher().enrich(pbkdf2);
+        }
+
+        if (node instanceof Signature signature) {
+            node = new SignatureEnricher().enrich(signature);
         }
         return node;
     }

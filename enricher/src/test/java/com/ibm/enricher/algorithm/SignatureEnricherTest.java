@@ -19,18 +19,21 @@
  */
 package com.ibm.enricher.algorithm;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.ibm.enricher.TestBase;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Oid;
+import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.algorithms.DSA;
 import com.ibm.mapper.model.algorithms.ECDSA;
+import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.model.algorithms.SHA3;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.List;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class SignatureEnricherTest extends TestBase {
 
@@ -66,5 +69,22 @@ class SignatureEnricherTest extends TestBase {
         assertThat(ecdsa.hasChildOfType(Oid.class)).isPresent();
         assertThat(ecdsa.hasChildOfType(Oid.class).get().asString())
                 .isEqualTo("2.16.840.1.101.3.4.3.11");
+    }
+
+    @Test
+    void shaAndRSA() {
+        DetectionLocation testDetectionLocation =
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
+        final RSA rsa = new RSA(Signature.class, testDetectionLocation);
+        rsa.append(new SHA2(224, new SHA2(512, testDetectionLocation) , testDetectionLocation));
+        this.logBefore(rsa);
+
+        final SignatureEnricher signatureEnricher = new SignatureEnricher();
+        final INode enriched = signatureEnricher.enrich(rsa);
+        this.logAfter(enriched);
+
+        assertThat(rsa.hasChildOfType(Oid.class)).isPresent();
+        assertThat(rsa.hasChildOfType(Oid.class).get().asString())
+                .isEqualTo("1.2.840.113549.1.1.15");
     }
 }
