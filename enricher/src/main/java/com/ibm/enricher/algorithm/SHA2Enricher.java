@@ -52,7 +52,7 @@ public class SHA2Enricher implements IEnricher {
                                             sha2.hasChildOfType(MessageDigest.class);
                                     preHashOptional.ifPresentOrElse(
                                             preHash ->
-                                                    checkPreHash(
+                                                    evaluatePreHash(
                                                             sha2,
                                                             preHash,
                                                             () ->
@@ -94,7 +94,7 @@ public class SHA2Enricher implements IEnricher {
                                             sha2.hasChildOfType(MessageDigest.class);
                                     preHashOptional.ifPresentOrElse(
                                             preHash ->
-                                                    checkPreHash(
+                                                    evaluatePreHash(
                                                             sha2,
                                                             preHash,
                                                             () ->
@@ -125,7 +125,7 @@ public class SHA2Enricher implements IEnricher {
         return sha2;
     }
 
-    private void checkPreHash(
+    private void evaluatePreHash(
             @Nonnull SHA2 sha2,
             @Nonnull INode preHash,
             @Nonnull Supplier<Stream<INode>> childNodeSupplier) {

@@ -27,5 +27,6 @@ public class EllipticCurveAlgorithm extends Algorithm
     public EllipticCurveAlgorithm(@Nonnull EllipticCurve curve) {
         super("EC-" + curve.asString(), PublicKeyEncryption.class, curve.detectionLocation);
         this.append(curve);
+        this.append(new Oid("1.2.840.10045.2.1", curve.detectionLocation));
     }
 }
