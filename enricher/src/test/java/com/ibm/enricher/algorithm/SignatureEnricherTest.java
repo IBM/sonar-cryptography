@@ -19,6 +19,8 @@
  */
 package com.ibm.enricher.algorithm;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.ibm.enricher.TestBase;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Oid;
@@ -29,11 +31,8 @@ import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.model.algorithms.SHA3;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 class SignatureEnricherTest extends TestBase {
 
@@ -76,7 +75,7 @@ class SignatureEnricherTest extends TestBase {
         DetectionLocation testDetectionLocation =
                 new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
         final RSA rsa = new RSA(Signature.class, testDetectionLocation);
-        rsa.append(new SHA2(224, new SHA2(512, testDetectionLocation) , testDetectionLocation));
+        rsa.append(new SHA2(224, new SHA2(512, testDetectionLocation), testDetectionLocation));
         this.logBefore(rsa);
 
         final SignatureEnricher signatureEnricher = new SignatureEnricher();

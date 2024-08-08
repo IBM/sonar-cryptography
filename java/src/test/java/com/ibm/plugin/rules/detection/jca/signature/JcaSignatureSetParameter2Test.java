@@ -19,23 +19,32 @@
  */
 package com.ibm.plugin.rules.detection.jca.signature;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.SaltSize;
 import com.ibm.engine.model.context.SignatureContext;
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.MaskGenerationFunction;
+import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.Oid;
+import com.ibm.mapper.model.ProbabilisticSignatureScheme;
+import com.ibm.mapper.model.PublicKeyEncryption;
+import com.ibm.mapper.model.SaltLength;
+import com.ibm.mapper.model.Signature;
 import com.ibm.plugin.TestBase;
-import java.util.List;
-import javax.annotation.Nonnull;
 import org.junit.jupiter.api.Test;
 import org.sonar.java.checks.verifier.CheckVerifier;
 import org.sonar.plugins.java.api.JavaCheck;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class JcaSignatureSetParameter2Test extends TestBase {
 
@@ -90,32 +99,32 @@ class JcaSignatureSetParameter2Test extends TestBase {
         assertThat(nodes).hasSize(1);
         INode node = nodes.get(0);
         assertThat(node).isInstanceOf(Signature.class);
+        assertThat(node.is(ProbabilisticSignatureScheme.class)).isTrue();
         assertThat(node.asString()).isEqualTo("RSASSA-PSS");
 
-        INode algorithm = node.getChildren().get(com.ibm.mapper.model.Algorithm.class);
+        INode algorithm = node.getChildren().get(PublicKeyEncryption.class);
         assertThat(algorithm).isNotNull();
         assertThat(algorithm.asString()).isEqualTo("RSA");
+
         INode oid = algorithm.getChildren().get(Oid.class);
         assertThat(oid).isNotNull();
         assertThat(oid.asString()).isEqualTo("1.2.840.113549.1.1.1");
+
         INode keyLength = algorithm.getChildren().get(KeyLength.class);
         assertThat(keyLength).isNotNull();
         assertThat(keyLength.asString()).isEqualTo("2048");
 
         oid = node.getChildren().get(Oid.class);
         assertThat(oid).isNotNull();
-        assertThat(oid.asString()).isEqualTo("2.16.840.1.101.3.4.3.14");
+        assertThat(oid.asString()).isEqualTo("1.2.840.113549.1.1.10");
 
         INode mgf1 = node.getChildren().get(MaskGenerationFunction.class);
         assertThat(mgf1).isNotNull();
         assertThat(mgf1.asString()).isEqualTo("MGF1");
+
         INode md = mgf1.getChildren().get(MessageDigest.class);
         assertThat(md).isNotNull();
-        assertThat(md.asString()).isEqualTo("SHA-256");
-
-        INode pss = node.getChildren().get(ProbabilisticSignatureScheme.class);
-        assertThat(pss).isNotNull();
-        assertThat(pss.asString()).isEqualTo("PSS");
+        assertThat(md.asString()).isEqualTo("SHA256");
 
         INode salt = node.getChildren().get(SaltLength.class);
         assertThat(salt).isNotNull();

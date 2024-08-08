@@ -21,12 +21,12 @@ package com.ibm.plugin.rules.detection.jca.keyagreement;
 
 import static com.ibm.plugin.rules.detection.TypeShortcuts.STRING_TYPE;
 
-import com.google.common.collect.Streams;
 import com.ibm.engine.model.context.KeyAgreementContext;
 import com.ibm.engine.model.factory.AlgorithmFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.List;
+import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
@@ -43,7 +43,7 @@ public final class JcaKeyAgreementGetInstance {
                     .buildForContext(new KeyAgreementContext())
                     .inBundle(() -> "Jca")
                     .withDependingDetectionRules(
-                            Streams.concat(
+                            Stream.concat(
                                             JcaKeyAgreementInit.rules().stream(),
                                             JcaKeyAgreementGenerateSecret.rules().stream())
                                     .toList());
@@ -59,7 +59,7 @@ public final class JcaKeyAgreementGetInstance {
                     .buildForContext(new KeyAgreementContext())
                     .inBundle(() -> "Jca")
                     .withDependingDetectionRules(
-                            Streams.concat(
+                            Stream.concat(
                                             JcaKeyAgreementInit.rules().stream(),
                                             JcaKeyAgreementGenerateSecret.rules().stream())
                                     .toList());
@@ -75,7 +75,7 @@ public final class JcaKeyAgreementGetInstance {
                     .buildForContext(new KeyAgreementContext())
                     .inBundle(() -> "Jca")
                     .withDependingDetectionRules(
-                            Streams.concat(
+                            Stream.concat(
                                             JcaKeyAgreementInit.rules().stream(),
                                             JcaKeyAgreementGenerateSecret.rules().stream())
                                     .toList());

@@ -20,16 +20,19 @@
 package com.ibm.plugin.translation.translator.contexts;
 
 import com.ibm.engine.model.IValue;
+import com.ibm.engine.model.SaltSize;
 import com.ibm.engine.model.SignatureAction;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.SaltLength;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.model.functionality.Verify;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
+
+import java.util.Optional;
 
 public final class JavaSignatureContextTranslator extends JavaAbstractLibraryTranslator {
 
@@ -47,6 +50,8 @@ public final class JavaSignatureContextTranslator extends JavaAbstractLibraryTra
                 case VERIFY -> Optional.of(new Verify(detectionLocation));
                 case PADDING -> Optional.empty();
             };
+        } else if (value instanceof SaltSize<Tree> saltSize) {
+            return Optional.of(new SaltLength(saltSize.getValue(), detectionLocation));
         }
         return Optional.empty();
     }

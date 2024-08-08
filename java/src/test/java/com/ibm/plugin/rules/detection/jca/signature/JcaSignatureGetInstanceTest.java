@@ -19,22 +19,29 @@
  */
 package com.ibm.plugin.rules.detection.jca.signature;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.context.SignatureContext;
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.BlockSize;
+import com.ibm.mapper.model.DigestSize;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.Oid;
+import com.ibm.mapper.model.Signature;
 import com.ibm.plugin.TestBase;
-import java.util.List;
-import javax.annotation.Nonnull;
 import org.junit.jupiter.api.Test;
 import org.sonar.java.checks.verifier.CheckVerifier;
 import org.sonar.plugins.java.api.JavaCheck;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class JcaSignatureGetInstanceTest extends TestBase {
 
@@ -47,12 +54,6 @@ class JcaSignatureGetInstanceTest extends TestBase {
                 .verifyIssues();
     }
 
-    /**
-     * DEBUG [detectionStore] (SignatureContext, Algorithm) SHA384withDSA DEBUG [translation]
-     * (Signature) SHA384withDSA DEBUG [translation] └─ (MessageDigest) SHA-384 DEBUG [translation]
-     * └─ (KeyLength) 384 DEBUG [translation] └─ (DigestSize) 384 DEBUG [translation] └─ (BlockSize)
-     * 1024 DEBUG [translation] └─ (Algorithm) DSA
-     */
     @Override
     public void asserts(
             int findingId,
@@ -66,32 +67,52 @@ class JcaSignatureGetInstanceTest extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(SignatureContext.class);
         assertThat(value).isInstanceOf(Algorithm.class);
         assertThat(value.asString()).isEqualTo("SHA384withDSA");
+
         /*
          * Translation
          */
         assertThat(nodes).hasSize(1);
-        INode node = nodes.get(0);
-        assertThat(node).isInstanceOf(Signature.class);
-        assertThat(node.asString()).isEqualTo("SHA384withDSA");
 
-        INode algorithm = node.getChildren().get(com.ibm.mapper.model.Algorithm.class);
-        assertThat(algorithm).isNotNull();
-        assertThat(algorithm.asString()).isEqualTo("DSA");
+        // Signature
+        INode signatureNode = nodes.get(0);
+        assertThat(signatureNode.getKind()).isEqualTo(Signature.class);
+        assertThat(signatureNode.getChildren()).hasSize(3);
+        assertThat(signatureNode.asString()).isEqualTo("DSA");
 
-        INode digest = node.getChildren().get(MessageDigest.class);
-        assertThat(digest).isNotNull();
-        assertThat(digest.asString()).isEqualTo("SHA-384");
+        // KeyLength under Signature
+        INode keyLengthNode = signatureNode.getChildren().get(KeyLength.class);
+        assertThat(keyLengthNode).isNotNull();
+        assertThat(keyLengthNode.getChildren()).isEmpty();
+        assertThat(keyLengthNode.asString()).isEqualTo("2048");
 
-        INode keyLength = digest.getChildren().get(KeyLength.class);
-        assertThat(keyLength).isNotNull();
-        assertThat(keyLength.asString()).isEqualTo("384");
+        // MessageDigest under Signature
+        INode messageDigestNode = signatureNode.getChildren().get(MessageDigest.class);
+        assertThat(messageDigestNode).isNotNull();
+        assertThat(messageDigestNode.getChildren()).hasSize(3);
+        assertThat(messageDigestNode.asString()).isEqualTo("SHA384");
 
-        INode digestSize = digest.getChildren().get(DigestSize.class);
-        assertThat(digestSize).isNotNull();
-        assertThat(digestSize.asString()).isEqualTo("384");
+        // BlockSize under MessageDigest under Signature
+        INode blockSizeNode = messageDigestNode.getChildren().get(BlockSize.class);
+        assertThat(blockSizeNode).isNotNull();
+        assertThat(blockSizeNode.getChildren()).isEmpty();
+        assertThat(blockSizeNode.asString()).isEqualTo("1024");
 
-        INode blockSize = digest.getChildren().get(BlockSize.class);
-        assertThat(blockSize).isNotNull();
-        assertThat(blockSize.asString()).isEqualTo("1024");
+        // DigestSize under MessageDigest under Signature
+        INode digestSizeNode = messageDigestNode.getChildren().get(DigestSize.class);
+        assertThat(digestSizeNode).isNotNull();
+        assertThat(digestSizeNode.getChildren()).isEmpty();
+        assertThat(digestSizeNode.asString()).isEqualTo("384");
+
+        // Oid under MessageDigest under Signature
+        INode oidNode = messageDigestNode.getChildren().get(Oid.class);
+        assertThat(oidNode).isNotNull();
+        assertThat(oidNode.getChildren()).isEmpty();
+        assertThat(oidNode.asString()).isEqualTo("2.16.840.1.101.3.4.2.2");
+
+        // Oid under Signature
+        INode oidNode1 = signatureNode.getChildren().get(Oid.class);
+        assertThat(oidNode1).isNotNull();
+        assertThat(oidNode1.getChildren()).isEmpty();
+        assertThat(oidNode1.asString()).isEqualTo("2.16.840.1.101.3.4.3.3");
     }
 }
