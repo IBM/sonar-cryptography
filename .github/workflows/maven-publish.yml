@@ -9,10 +9,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-java-17:
+  deploy:
     runs-on: ubuntu-latest
-    env:
-      SONAR_JRE: '17'
     permissions:
       contents: read
       packages: write
@@ -27,26 +25,3 @@ jobs:
       run: mvn --batch-mode deploy
       env:
         GITHUB_TOKEN: ${{ github.token }}
-
-  build-java-11:
-    runs-on: ubuntu-latest
-    env:
-      SONAR_JRE: '11'
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-      - name: Deploy to GitHub Packages
-        run: |
-          export MVN_VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
-          mvn versions:set -DnewVersion=$MVN_VERSION-jre11
-          mvn versions:commit
-          mvn --batch-mode deploy
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
