@@ -25,13 +25,14 @@ import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.rule.IBundle;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * The translation method is responsible for translating the provided detection store. It performs
@@ -131,7 +132,7 @@ public abstract class ITranslator<R, T, S, P> {
                                 translate(bundle, value, context, filePath);
                         translatedNode.ifPresent(translatedNodesForId::add);
                     }
-                    nodes.put(id, translatedNodesForId);
+                    nodes.computeIfAbsent(id, n -> new ArrayList<>()).addAll(translatedNodesForId);
                 });
         return nodes;
     }
