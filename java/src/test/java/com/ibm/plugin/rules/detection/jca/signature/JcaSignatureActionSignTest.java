@@ -33,6 +33,7 @@ import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.Signature;
+import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -82,10 +83,11 @@ class JcaSignatureActionSignTest extends TestBase {
          */
 
         assertThat(nodes).hasSize(1);
+
         // Signature
         INode signatureNode = nodes.get(0);
         assertThat(signatureNode.getKind()).isEqualTo(Signature.class);
-        assertThat(signatureNode.getChildren()).hasSize(3);
+        assertThat(signatureNode.getChildren()).hasSize(4);
         assertThat(signatureNode.asString()).isEqualTo("DSA");
 
         // KeyLength under Signature
@@ -93,6 +95,18 @@ class JcaSignatureActionSignTest extends TestBase {
         assertThat(keyLengthNode).isNotNull();
         assertThat(keyLengthNode.getChildren()).isEmpty();
         assertThat(keyLengthNode.asString()).isEqualTo("2048");
+
+        // Oid under Signature
+        INode oidNode = signatureNode.getChildren().get(Oid.class);
+        assertThat(oidNode).isNotNull();
+        assertThat(oidNode.getChildren()).isEmpty();
+        assertThat(oidNode.asString()).isEqualTo("2.16.840.1.101.3.4.3.3");
+
+        // Sign under Signature
+        INode signNode = signatureNode.getChildren().get(Sign.class);
+        assertThat(signNode).isNotNull();
+        assertThat(signNode.getChildren()).isEmpty();
+        assertThat(signNode.asString()).isEqualTo("SIGN");
 
         // MessageDigest under Signature
         INode messageDigestNode = signatureNode.getChildren().get(MessageDigest.class);
@@ -113,15 +127,9 @@ class JcaSignatureActionSignTest extends TestBase {
         assertThat(digestSizeNode.asString()).isEqualTo("384");
 
         // Oid under MessageDigest under Signature
-        INode oidNode = messageDigestNode.getChildren().get(Oid.class);
-        assertThat(oidNode).isNotNull();
-        assertThat(oidNode.getChildren()).isEmpty();
-        assertThat(oidNode.asString()).isEqualTo("2.16.840.1.101.3.4.2.2");
-
-        // Oid under Signature
-        INode oidNode1 = signatureNode.getChildren().get(Oid.class);
+        INode oidNode1 = messageDigestNode.getChildren().get(Oid.class);
         assertThat(oidNode1).isNotNull();
         assertThat(oidNode1.getChildren()).isEmpty();
-        assertThat(oidNode1.asString()).isEqualTo("2.16.840.1.101.3.4.3.3");
+        assertThat(oidNode1.asString()).isEqualTo("2.16.840.1.101.3.4.2.2");
     }
 }

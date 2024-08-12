@@ -26,7 +26,16 @@ import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.SaltSize;
 import com.ibm.engine.model.context.SignatureContext;
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.BlockSize;
+import com.ibm.mapper.model.DigestSize;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.MaskGenerationFunction;
+import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.Oid;
+import com.ibm.mapper.model.ProbabilisticSignatureScheme;
+import com.ibm.mapper.model.PublicKeyEncryption;
+import com.ibm.mapper.model.SaltLength;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -88,41 +97,102 @@ class JcaSignatureSetParameter3Test extends TestBase {
          * Translation
          */
         assertThat(nodes).hasSize(1);
-        INode node = nodes.get(0);
-        assertThat(node).isInstanceOf(Signature.class);
-        assertThat(node.asString()).isEqualTo("RSASSA-PSS");
 
-        INode algorithm = node.getChildren().get(com.ibm.mapper.model.Algorithm.class);
-        assertThat(algorithm).isNotNull();
-        assertThat(algorithm.asString()).isEqualTo("RSA");
-        INode oid = algorithm.getChildren().get(Oid.class);
-        assertThat(oid).isNotNull();
-        assertThat(oid.asString()).isEqualTo("1.2.840.113549.1.1.1");
-        INode keyLength = algorithm.getChildren().get(KeyLength.class);
-        assertThat(keyLength).isNotNull();
-        assertThat(keyLength.asString()).isEqualTo("2048");
+        // ProbabilisticSignatureScheme
+        INode probabilisticSignatureSchemeNode = nodes.get(0);
+        assertThat(probabilisticSignatureSchemeNode.getKind())
+                .isEqualTo(ProbabilisticSignatureScheme.class);
+        assertThat(probabilisticSignatureSchemeNode.getChildren()).hasSize(5);
+        assertThat(probabilisticSignatureSchemeNode.asString()).isEqualTo("RSASSA-PSS");
 
-        oid = node.getChildren().get(Oid.class);
-        assertThat(oid).isNotNull();
-        assertThat(oid.asString()).isEqualTo("2.16.840.1.101.3.4.3.14");
+        // PublicKeyEncryption under ProbabilisticSignatureScheme
+        INode publicKeyEncryptionNode =
+                probabilisticSignatureSchemeNode.getChildren().get(PublicKeyEncryption.class);
+        assertThat(publicKeyEncryptionNode).isNotNull();
+        assertThat(publicKeyEncryptionNode.getChildren()).hasSize(2);
+        assertThat(publicKeyEncryptionNode.asString()).isEqualTo("RSA");
 
-        INode mgf1 = node.getChildren().get(MaskGenerationFunction.class);
-        assertThat(mgf1).isNotNull();
-        assertThat(mgf1.asString()).isEqualTo("MGF1");
-        INode md = mgf1.getChildren().get(MessageDigest.class);
-        assertThat(md).isNotNull();
-        assertThat(md.asString()).isEqualTo("SHA-1");
+        // KeyLength under PublicKeyEncryption under ProbabilisticSignatureScheme
+        INode keyLengthNode = publicKeyEncryptionNode.getChildren().get(KeyLength.class);
+        assertThat(keyLengthNode).isNotNull();
+        assertThat(keyLengthNode.getChildren()).isEmpty();
+        assertThat(keyLengthNode.asString()).isEqualTo("2048");
 
-        INode pss = node.getChildren().get(ProbabilisticSignatureScheme.class);
-        assertThat(pss).isNotNull();
-        assertThat(pss.asString()).isEqualTo("PSS");
+        // Oid under PublicKeyEncryption under ProbabilisticSignatureScheme
+        INode oidNode = publicKeyEncryptionNode.getChildren().get(Oid.class);
+        assertThat(oidNode).isNotNull();
+        assertThat(oidNode.getChildren()).isEmpty();
+        assertThat(oidNode.asString()).isEqualTo("1.2.840.113549.1.1.1");
 
-        INode salt = node.getChildren().get(SaltLength.class);
-        assertThat(salt).isNotNull();
-        assertThat(salt.asString()).isEqualTo("160");
+        // SaltLength under ProbabilisticSignatureScheme
+        INode saltLengthNode = probabilisticSignatureSchemeNode.getChildren().get(SaltLength.class);
+        assertThat(saltLengthNode).isNotNull();
+        assertThat(saltLengthNode.getChildren()).isEmpty();
+        assertThat(saltLengthNode.asString()).isEqualTo("160");
 
-        md = node.getChildren().get(MessageDigest.class);
-        assertThat(md).isNotNull();
-        assertThat(md.asString()).isEqualTo("SHA3-256");
+        // MessageDigest under ProbabilisticSignatureScheme
+        INode messageDigestNode =
+                probabilisticSignatureSchemeNode.getChildren().get(MessageDigest.class);
+        assertThat(messageDigestNode).isNotNull();
+        assertThat(messageDigestNode.getChildren()).hasSize(3);
+        assertThat(messageDigestNode.asString()).isEqualTo("SHA3-256");
+
+        // BlockSize under MessageDigest under ProbabilisticSignatureScheme
+        INode blockSizeNode = messageDigestNode.getChildren().get(BlockSize.class);
+        assertThat(blockSizeNode).isNotNull();
+        assertThat(blockSizeNode.getChildren()).isEmpty();
+        assertThat(blockSizeNode.asString()).isEqualTo("1088");
+
+        // DigestSize under MessageDigest under ProbabilisticSignatureScheme
+        INode digestSizeNode = messageDigestNode.getChildren().get(DigestSize.class);
+        assertThat(digestSizeNode).isNotNull();
+        assertThat(digestSizeNode.getChildren()).isEmpty();
+        assertThat(digestSizeNode.asString()).isEqualTo("256");
+
+        // Oid under MessageDigest under ProbabilisticSignatureScheme
+        INode oidNode1 = messageDigestNode.getChildren().get(Oid.class);
+        assertThat(oidNode1).isNotNull();
+        assertThat(oidNode1.getChildren()).isEmpty();
+        assertThat(oidNode1.asString()).isEqualTo("2.16.840.1.101.3.4.2.8");
+
+        // Oid under ProbabilisticSignatureScheme
+        INode oidNode2 = probabilisticSignatureSchemeNode.getChildren().get(Oid.class);
+        assertThat(oidNode2).isNotNull();
+        assertThat(oidNode2.getChildren()).isEmpty();
+        assertThat(oidNode2.asString()).isEqualTo("1.2.840.113549.1.1.10");
+
+        // MaskGenerationFunction under ProbabilisticSignatureScheme
+        INode maskGenerationFunctionNode =
+                probabilisticSignatureSchemeNode.getChildren().get(MaskGenerationFunction.class);
+        assertThat(maskGenerationFunctionNode).isNotNull();
+        assertThat(maskGenerationFunctionNode.getChildren()).hasSize(2);
+        assertThat(maskGenerationFunctionNode.asString()).isEqualTo("MGF1");
+
+        // MessageDigest under MaskGenerationFunction under ProbabilisticSignatureScheme
+        INode messageDigestNode1 =
+                maskGenerationFunctionNode.getChildren().get(MessageDigest.class);
+        assertThat(messageDigestNode1).isNotNull();
+        assertThat(messageDigestNode1.getChildren()).hasSize(2);
+        assertThat(messageDigestNode1.asString()).isEqualTo("SHA1");
+
+        // BlockSize under MessageDigest under MaskGenerationFunction under
+        // ProbabilisticSignatureScheme
+        INode blockSizeNode1 = messageDigestNode1.getChildren().get(BlockSize.class);
+        assertThat(blockSizeNode1).isNotNull();
+        assertThat(blockSizeNode1.getChildren()).isEmpty();
+        assertThat(blockSizeNode1.asString()).isEqualTo("512");
+
+        // DigestSize under MessageDigest under MaskGenerationFunction under
+        // ProbabilisticSignatureScheme
+        INode digestSizeNode1 = messageDigestNode1.getChildren().get(DigestSize.class);
+        assertThat(digestSizeNode1).isNotNull();
+        assertThat(digestSizeNode1.getChildren()).isEmpty();
+        assertThat(digestSizeNode1.asString()).isEqualTo("160");
+
+        // Oid under MaskGenerationFunction under ProbabilisticSignatureScheme
+        INode oidNode3 = maskGenerationFunctionNode.getChildren().get(Oid.class);
+        assertThat(oidNode3).isNotNull();
+        assertThat(oidNode3.getChildren()).isEmpty();
+        assertThat(oidNode3.asString()).isEqualTo("1.2.840.113549.1.1.8");
     }
 }
