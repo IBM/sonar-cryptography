@@ -116,7 +116,12 @@ public abstract class ITranslator<R, T, S, P> {
                         actionValue -> {
                             final Optional<INode> translatedNode =
                                     translate(bundle, actionValue, context, filePath);
-                            translatedNode.ifPresent(node -> nodes.put(-1, List.of(node)));
+                            translatedNode.ifPresent(
+                                    node -> {
+                                        final List<INode> newNodes = new ArrayList<>();
+                                        newNodes.add(node);
+                                        nodes.put(-1, newNodes);
+                                    });
                         });
         store.detectionValuesForEachParameter(
                 (id, values) -> {
