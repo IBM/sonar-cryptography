@@ -34,14 +34,14 @@ in source code and generates [CBOM](https://cyclonedx.org/capabilities/cbom/).
 
 ## Installation
 
+> ![NOTE] To run the plugin, you need a running SonarQube instance with one of the supported 
+> versions. If you don't have one but want to try the plugin, you can use the
+> included Docker Compose to set up a development environment. See 
+> [here](CONTRIBUTING.md#build) for instructions.
+
 Copy the plugin (the JAR file from the [latest releases](https://github.com/IBM/sonar-cryptography/releases))
 to `$SONARQUBE_HOME/extensions/plugins` and restart 
 SonarQube ([more](https://docs.sonarqube.org/latest/setup-and-upgrade/install-a-plugin/)).
-
-> [!NOTE]
-> We are currently in the process of adding the plugin to the SonarQube marketplace. You will then be able to install
-> the plugin directly via the marketplace (only applicable for the community version, 
-> [see](https://docs.sonarsource.com/sonarqube/latest/instance-administration/marketplace/)).
 
 ## Using
 
