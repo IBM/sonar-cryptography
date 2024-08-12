@@ -64,16 +64,16 @@ public abstract class ITranslator<R, T, S, P> {
     private void travers(
             @Nonnull DetectionStore<R, T, S, P> store,
             @Nonnull Map<Integer, List<INode>> parentNodes) {
-        store.getChildrenForMethod().forEach(child -> check(-1, child, parentNodes));
+        store.getChildrenForMethod().forEach(child -> translateAndAppend(-1, child, parentNodes));
         store.childrenForEachParameter(
                 (id, children) -> {
                     for (DetectionStore<R, T, S, P> child : children) {
-                        check(id, child, parentNodes);
+                        translateAndAppend(id, child, parentNodes);
                     }
                 });
     }
 
-    private void check(
+    private void translateAndAppend(
             int id,
             @Nonnull DetectionStore<R, T, S, P> child,
             @Nonnull Map<Integer, List<INode>> parentNodes) {
