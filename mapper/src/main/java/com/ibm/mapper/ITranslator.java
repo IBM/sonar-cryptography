@@ -33,27 +33,28 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-/**
- * The translation method is responsible for translating the provided detection store. It performs
- * several important tasks within its implementation: <br>
- * retrieve the detection values, and for each value, a new issue is reported using the provided
- * rule, location, and string representation.
- * <li>Retrieves the file path of the root detection store. This allows the method to identify and
- *     retrieve the assets associated with the root detection values.
- * <li>Translates the detection values into asset values using the provided rootDetectionStore. The
- *     resulting assets are stored in a new List<INode> called rootAssetValues.
- * <li>Handles any child detection stores by recursively traversing the detection store hierarchy.
- *     This ensures that all relevant assets are accounted for during the translation process.
- * <li>Prints the node tree based on the translated detection values. This allows developers to
- *     visualize the structure and relationships between different nodes in the system.
- * <li>Finally, returns the rootAssetValues list as the output of the method. This allows other
- *     parts of the program to use the translated detection values for further processing or
- *     analysis. <br>
- */
 public abstract class ITranslator<R, T, S, P> {
 
     public static final String UNKNOWN = "unknown";
 
+    /**
+     * The translation method is responsible for translating the provided detection store. It
+     * performs several important tasks within its implementation: <br>
+     * retrieve the detection values, and for each value, a new issue is reported using the provided
+     * rule, location, and string representation.
+     * <li>Retrieves the file path of the root detection store. This allows the method to identify
+     *     and retrieve the assets associated with the root detection values.
+     * <li>Translates the detection values into asset values using the provided rootDetectionStore.
+     *     The resulting assets are stored in a new List<INode> called rootAssetValues.
+     * <li>Handles any child detection stores by recursively traversing the detection store
+     *     hierarchy. This ensures that all relevant assets are accounted for during the translation
+     *     process.
+     * <li>Prints the node tree based on the translated detection values. This allows developers to
+     *     visualize the structure and relationships between different nodes in the system.
+     * <li>Finally, returns the rootAssetValues list as the output of the method. This allows other
+     *     parts of the program to use the translated detection values for further processing or
+     *     analysis. <br>
+     */
     @Nonnull
     public List<INode> translate(@Nonnull DetectionStore<R, T, S, P> rootDetectionStore) {
         final Map<Integer, List<INode>> rootNodes = translateStore(rootDetectionStore);
