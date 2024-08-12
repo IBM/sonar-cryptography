@@ -100,6 +100,7 @@ public abstract class ITranslator<R, T, S, P> {
         if (nodes.isEmpty()) {
             nodes = parentNodes;
         }
+        // next iteration
         travers(child, nodes);
     }
 
@@ -110,6 +111,13 @@ public abstract class ITranslator<R, T, S, P> {
         final IDetectionContext context = store.getDetectionValueContext();
 
         final Map<Integer, List<INode>> nodes = new HashMap<>();
+        store.getActionValue()
+                .ifPresent(
+                        actionValue -> {
+                            final Optional<INode> translatedNode =
+                                    translate(bundle, actionValue, context, filePath);
+                            translatedNode.ifPresent(node -> nodes.put(-1, List.of(node)));
+                        });
         store.detectionValuesForEachParameter(
                 (id, values) -> {
                     final List<INode> translatedNodesForId = new ArrayList<>();
