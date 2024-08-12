@@ -28,6 +28,7 @@ import com.ibm.engine.model.KeyAction;
 import com.ibm.engine.model.context.SecretKeyContext;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.SecretKey;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.functionality.KeyGeneration;
@@ -94,7 +95,7 @@ class JcaDSAPrivateKeySpecTest extends TestBase {
         // Signature under SecretKey
         INode signatureNode = secretKeyNode.getChildren().get(Signature.class);
         assertThat(signatureNode).isNotNull();
-        assertThat(signatureNode.getChildren()).hasSize(2);
+        assertThat(signatureNode.getChildren()).hasSize(3);
         assertThat(signatureNode.asString()).isEqualTo("DSA");
 
         // KeyLength under Signature under SecretKey
@@ -108,5 +109,11 @@ class JcaDSAPrivateKeySpecTest extends TestBase {
         assertThat(keyGenerationNode).isNotNull();
         assertThat(keyGenerationNode.getChildren()).isEmpty();
         assertThat(keyGenerationNode.asString()).isEqualTo("KEYGENERATION");
+
+        // OID under Signature under SecretKey
+        INode oid = signatureNode.getChildren().get(Oid.class);
+        assertThat(oid).isNotNull();
+        assertThat(oid.getChildren()).isEmpty();
+        assertThat(oid.asString()).isEqualTo("1.2.840.10040.4.1");
     }
 }

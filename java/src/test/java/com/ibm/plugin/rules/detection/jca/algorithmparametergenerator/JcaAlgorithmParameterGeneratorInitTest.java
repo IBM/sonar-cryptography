@@ -86,6 +86,6 @@ class JcaAlgorithmParameterGeneratorInitTest extends TestBase {
 
         INode defaultKeyLength = node.getChildren().get(KeyLength.class);
         assertThat(defaultKeyLength).isNotNull();
-        assertThat(defaultKeyLength.asString()).isEqualTo("2048");
+        assertThat(defaultKeyLength.asString()).isEqualTo("3072");
     }
 }
