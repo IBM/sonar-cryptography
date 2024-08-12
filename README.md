@@ -34,7 +34,8 @@ in source code and generates [CBOM](https://cyclonedx.org/capabilities/cbom/).
 
 ## Installation
 
-> ![NOTE] To run the plugin, you need a running SonarQube instance with one of the supported 
+> [!NOTE] 
+> To run the plugin, you need a running SonarQube instance with one of the supported 
 > versions. If you don't have one but want to try the plugin, you can use the
 > included Docker Compose to set up a development environment. See 
 > [here](CONTRIBUTING.md#build) for instructions.
