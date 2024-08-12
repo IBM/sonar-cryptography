@@ -36,24 +36,21 @@ mvn checkstyle::check
 
 ## Build
 
-In the project directory run the following command:
+Execute the following command in the project directory:
 ```shell
 mvn clean package
 ```
 The `.jar` file will be stored in the target directory and also copied to
 `.SonarQube/plugins`.
 
-
 ## Run the Plugin with SonarQube
 
 ```shell
-UID=${UID} GID=${GID} docker-compose up
+UID=${UID} docker-compose up
 ```
 
 ### Configure SonarQube
 
-For the initial configuration and setup have a look to the [official SonarQube documentation](https://docs.sonarqube.org/latest/try-out-sonarqube/).
+For the initial configuration and setup, 
+take a look at the [official SonarQube documentation](https://docs.sonarqube.org/latest/try-out-sonarqube/).
 
-### Create a Quality Profile with Crypto Rules
-
-See detailed instructions in the root [README.md](./README.md#create-a-quality-profile-with-crypto-rules)
