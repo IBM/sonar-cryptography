@@ -197,11 +197,6 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                     ae = new AuthenticatedEncryption(cipher, mode);
                     return Optional.of(ae); */
                 case AEAD_ENGINE:
-                    // ae =
-                    //         new AuthenticatedEncryption(
-                    //                 new com.ibm.mapper.model.Algorithm(
-                    //                         valueAction.asString(), detectionLocation));
-                    // return Optional.of(ae);
                     BcAeadMapper bcAeadMapper = new BcAeadMapper();
                     return bcAeadMapper
                             .parse(valueAction.asString(), detectionLocation)
@@ -311,25 +306,6 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
             return bcAeadParametersMapper
                     .parse(algorithmParameter.asString(), detectionLocation)
                     .map(f -> f);
-            // int keySize;
-            // switch (algorithmParameter.asString()) {
-            //     case "ascon128", "SCHWAEMM128_128", "ascon128a", "SCHWAEMM256_128":
-            //         keySize = 128;
-            //         break;
-            //     case "ascon128pq":
-            //         keySize = 160;
-            //         break;
-            //     case "SCHWAEMM192_192":
-            //         keySize = 192;
-            //         break;
-            //     case "SCHWAEMM256_256":
-            //         keySize = 256;
-            //         break;
-            //     default:
-            //         return Optional.empty();
-            // }
-            // KeyLength keyLength = new KeyLength(keySize, detectionLocation);
-            // return Optional.of(keyLength);
         } else if (value instanceof BlockSize<Tree> blockSize) {
             return switch (kind) {
                 case BLOCK_CIPHER, WRAP_ENGINE ->

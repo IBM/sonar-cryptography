@@ -23,6 +23,7 @@ import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.algorithms.Schwaemm;
 import com.ibm.mapper.model.algorithms.Xoodyak;
 import com.ibm.mapper.model.algorithms.ascon.Ascon;
@@ -60,9 +61,10 @@ public class BcAeadMapper implements IMapper {
             case "XoodyakEngine" ->
                     Optional.of(new Xoodyak(AuthenticatedEncryption.class, detectionLocation));
             default -> {
-                // TODO:
-                System.out.println(cipherAlgorithm);
-                yield Optional.empty();
+                final Algorithm algorithm =
+                        new Algorithm(cipherAlgorithm, Unknown.class, detectionLocation);
+                algorithm.append(new Unknown(detectionLocation));
+                yield Optional.of(algorithm);
             }
         };
     }

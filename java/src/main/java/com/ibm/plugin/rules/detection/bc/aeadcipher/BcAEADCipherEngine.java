@@ -45,11 +45,9 @@ public final class BcAEADCipherEngine {
     static {
         infoMap.putKey("AsconEngine").putParameterClass("AsconParameters");
         infoMap.putKey("ElephantEngine").putParameterClass("ElephantParameters");
-        infoMap.putKey("Grain128AEADEngine").putName("Grain-128AEAD");
-        infoMap.putKey("IsapEngine").putName("ISAP").putParameterClass("IsapType");
-        infoMap.putKey("PhotonBeetleEngine")
-                .putName("PHOTON-Beetle")
-                .putParameterClass("PhotonBeetleParameters");
+        infoMap.putKey("Grain128AEADEngine");
+        infoMap.putKey("IsapEngine").putParameterClass("IsapType");
+        infoMap.putKey("PhotonBeetleEngine").putParameterClass("PhotonBeetleParameters");
         infoMap.putKey("SparkleEngine").putParameterClass("SparkleParameters");
         infoMap.putKey("XoodyakEngine");
     }
