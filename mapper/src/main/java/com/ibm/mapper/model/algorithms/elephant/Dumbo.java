@@ -26,7 +26,7 @@ import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
 public class Dumbo extends Elephant {
-    private static final String NAME = "Dumbo";
+    private static final String NAME = "Dumbo"; // Elephant-Spongent-π[160]
 
     public Dumbo(@NotNull DetectionLocation detectionLocation) {
         super(NAME, detectionLocation);

@@ -26,7 +26,7 @@ import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
 public class Delirium extends Elephant {
-    private static final String NAME = "Delirium";
+    private static final String NAME = "Delirium"; // Elephant-Keccak-f[200]
 
     public Delirium(@NotNull DetectionLocation detectionLocation) {
         super(NAME, detectionLocation);
