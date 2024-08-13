@@ -22,6 +22,7 @@ package com.ibm.mapper.model.algorithms.ascon;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.ClassicalBitSecurityLevel;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
@@ -45,5 +46,6 @@ public class Ascon extends Algorithm implements BlockCipher {
             @Nonnull final Class<? extends IPrimitive> asKind,
             @NotNull DetectionLocation detectionLocation) {
         super(name, asKind, detectionLocation);
+        this.append(new ClassicalBitSecurityLevel(128, detectionLocation));
     }
 }
