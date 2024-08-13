@@ -24,7 +24,9 @@ import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.algorithms.ascon.Ascon;
 import com.ibm.mapper.model.algorithms.elephant.Elephant;
+import com.ibm.mapper.model.algorithms.grain.Grain128AEAD;
 import com.ibm.mapper.model.algorithms.isap.Isap;
+import com.ibm.mapper.model.algorithms.photonbeetle.PhotonBeetleAEAD;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -48,9 +50,9 @@ public class BcAeadMapper implements IMapper {
         return switch (cipherAlgorithm) {
             case "AsconEngine" -> Optional.of(new Ascon(detectionLocation));
             case "ElephantEngine" -> Optional.of(new Elephant(detectionLocation));
-            // case "Grain128AEADEngine" -> Optional.of();
+            case "Grain128AEADEngine" -> Optional.of(new Grain128AEAD(detectionLocation));
             case "IsapEngine" -> Optional.of(new Isap(detectionLocation));
-            // case "PhotonBeetleEngine" -> Optional.of();
+            case "PhotonBeetleEngine" -> Optional.of(new PhotonBeetleAEAD(detectionLocation));
             // case "SparkleEngine" -> Optional.of();
             // case "XoodyakEngine" -> Optional.of();
             default -> {

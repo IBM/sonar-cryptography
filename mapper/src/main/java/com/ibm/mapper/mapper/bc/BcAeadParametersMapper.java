@@ -32,6 +32,7 @@ import com.ibm.mapper.model.algorithms.isap.IsapA128;
 import com.ibm.mapper.model.algorithms.isap.IsapA128a;
 import com.ibm.mapper.model.algorithms.isap.IsapK128;
 import com.ibm.mapper.model.algorithms.isap.IsapK128a;
+import com.ibm.mapper.model.algorithms.photonbeetle.PhotonBeetleAEAD;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -76,6 +77,8 @@ public class BcAeadParametersMapper implements IMapper {
             case "ISAP_A_128A" -> Optional.of(new IsapA128a(detectionLocation));
             case "ISAP_K_128" -> Optional.of(new IsapK128(detectionLocation));
             case "ISAP_K_128A" -> Optional.of(new IsapK128a(detectionLocation));
+            case "pb128" -> Optional.of(new PhotonBeetleAEAD(128, detectionLocation));
+            case "pb32" -> Optional.of(new PhotonBeetleAEAD(32, detectionLocation));
             case "SCHWAEMM128_128" -> Optional.empty();
             case "SCHWAEMM256_128" -> Optional.empty();
             case "SCHWAEMM256_256" -> Optional.empty();
