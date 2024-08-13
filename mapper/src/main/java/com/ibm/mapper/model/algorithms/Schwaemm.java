@@ -17,27 +17,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms.photonbeetle;
+package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
-import com.ibm.mapper.model.BlockSize;
+import com.ibm.mapper.model.ClassicalBitSecurityLevel;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class PhotonBeetleAEAD extends Algorithm implements AuthenticatedEncryption {
-    private static final String NAME = "PHOTON-Beetle-AEAD";
+public class Schwaemm extends Algorithm implements AuthenticatedEncryption {
+    private static final String NAME = "Schwaemm";
 
-    public PhotonBeetleAEAD(@Nonnull DetectionLocation detectionLocation) {
+    public Schwaemm(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, AuthenticatedEncryption.class, detectionLocation);
-        this.append(new KeyLength(128, detectionLocation));
-        this.append(new TagLength(128, detectionLocation));
     }
 
-    public PhotonBeetleAEAD(int rate, @Nonnull DetectionLocation detectionLocation) {
-        this(detectionLocation);
-        this.append(new BlockSize(rate, detectionLocation));
+    private Schwaemm(@Nonnull String name, @Nonnull DetectionLocation detectionLocation) {
+        super(name, AuthenticatedEncryption.class, detectionLocation);
+    }
+
+    public Schwaemm(int rate, @Nonnull DetectionLocation detectionLocation) {
+        this(NAME + rate, detectionLocation);
+    }
+
+    public Schwaemm(int rate, int capacity, @Nonnull DetectionLocation detectionLocation) {
+        this(NAME + rate + "-" + capacity, detectionLocation);
+        this.append(new KeyLength(capacity, detectionLocation));
+        this.append(new TagLength(capacity, detectionLocation));
+        this.append(new ClassicalBitSecurityLevel(capacity - 8, detectionLocation));
     }
 }

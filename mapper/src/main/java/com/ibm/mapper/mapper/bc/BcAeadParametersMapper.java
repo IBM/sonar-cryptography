@@ -22,6 +22,7 @@ package com.ibm.mapper.mapper.bc;
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.algorithms.Schwaemm;
 import com.ibm.mapper.model.algorithms.ascon.Ascon128;
 import com.ibm.mapper.model.algorithms.ascon.Ascon128a;
 import com.ibm.mapper.model.algorithms.ascon.Ascon80pq;
@@ -79,10 +80,10 @@ public class BcAeadParametersMapper implements IMapper {
             case "ISAP_K_128A" -> Optional.of(new IsapK128a(detectionLocation));
             case "pb128" -> Optional.of(new PhotonBeetleAEAD(128, detectionLocation));
             case "pb32" -> Optional.of(new PhotonBeetleAEAD(32, detectionLocation));
-            case "SCHWAEMM128_128" -> Optional.empty();
-            case "SCHWAEMM256_128" -> Optional.empty();
-            case "SCHWAEMM256_256" -> Optional.empty();
-            case "SCHWAEMM192_192" -> Optional.empty();
+            case "SCHWAEMM128_128" -> Optional.of(new Schwaemm(128, 128, detectionLocation));
+            case "SCHWAEMM256_128" -> Optional.of(new Schwaemm(256, 128, detectionLocation));
+            case "SCHWAEMM256_256" -> Optional.of(new Schwaemm(256, 256, detectionLocation));
+            case "SCHWAEMM192_192" -> Optional.of(new Schwaemm(192, 192, detectionLocation));
             default -> Optional.empty();
         };
     }
