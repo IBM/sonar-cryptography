@@ -22,8 +22,9 @@ package com.ibm.enricher.algorithm;
 import com.ibm.enricher.IEnricher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.algorithms.DH;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 public class DHEnricher implements IEnricher, IEnrichWithDefaultKeySize {
 
@@ -37,7 +38,7 @@ public class DHEnricher implements IEnricher, IEnrichWithDefaultKeySize {
 
     @Nonnull
     private DH enrich(@Nonnull DH dh) {
-        this.applyDefaultKeySize(dh, 3072);
+        this.applyDefaultKeySizeForJca(dh, 3072);
         return dh;
     }
 }

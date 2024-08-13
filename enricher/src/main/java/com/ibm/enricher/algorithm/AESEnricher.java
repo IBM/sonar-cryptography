@@ -64,7 +64,7 @@ public class AESEnricher implements IEnricher, IEnrichWithDefaultKeySize {
     private INode enrich(@NotNull AES aes) {
         @Nullable KeyLength keyLength = aes.getKeyLength().orElse(null);
         @Nullable final Mode mode = aes.getMode().orElse(null);
-        this.applyDefaultKeySize(aes, 128);
+        this.applyDefaultKeySizeForJca(aes, 128);
         // add oid
         final Oid oid = new Oid(buildOid(keyLength, mode), aes.getDetectionContext());
         aes.put(oid);

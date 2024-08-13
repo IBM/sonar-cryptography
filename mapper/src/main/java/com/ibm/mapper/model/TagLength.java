@@ -20,11 +20,12 @@
 package com.ibm.mapper.model;
 
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Objects;
+
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 public final class TagLength extends Property {
-    @Nonnull private final Integer value; // in bit
+    @Nonnull private final Integer value; // bit
 
     public TagLength(@Nonnull Integer value, @Nonnull DetectionLocation detectionLocation) {
         super(TagLength.class, detectionLocation);

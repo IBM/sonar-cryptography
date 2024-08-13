@@ -39,7 +39,7 @@ public class RSAEnricher implements IEnricher, IEnrichWithDefaultKeySize {
     }
 
     @NotNull private RSA enrich(@NotNull RSA rsa) {
-        this.applyDefaultKeySize(rsa, 2048);
+        this.applyDefaultKeySizeForJca(rsa, 2048);
         return rsa;
     }
 
