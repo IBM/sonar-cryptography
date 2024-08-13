@@ -21,8 +21,10 @@ package com.ibm.mapper.mapper.bc;
 
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.algorithms.Schwaemm;
+import com.ibm.mapper.model.algorithms.Xoodyak;
 import com.ibm.mapper.model.algorithms.ascon.Ascon;
 import com.ibm.mapper.model.algorithms.elephant.Elephant;
 import com.ibm.mapper.model.algorithms.grain.Grain128AEAD;
@@ -55,8 +57,10 @@ public class BcAeadMapper implements IMapper {
             case "IsapEngine" -> Optional.of(new Isap(detectionLocation));
             case "PhotonBeetleEngine" -> Optional.of(new PhotonBeetleAEAD(detectionLocation));
             case "SparkleEngine" -> Optional.of(new Schwaemm(detectionLocation));
-            // case "XoodyakEngine" -> Optional.of();
+            case "XoodyakEngine" ->
+                    Optional.of(new Xoodyak(AuthenticatedEncryption.class, detectionLocation));
             default -> {
+                // TODO:
                 System.out.println(cipherAlgorithm);
                 yield Optional.empty();
             }

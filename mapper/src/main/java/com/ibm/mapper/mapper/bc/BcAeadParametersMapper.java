@@ -41,19 +41,6 @@ import javax.annotation.Nullable;
 
 public class BcAeadParametersMapper implements IMapper {
 
-    // case "ascon128", "SCHWAEMM128_128", "ascon128a", "SCHWAEMM256_128":
-    //     keySize = 128;
-    //     break;
-    // case "ascon80pq":
-    //     keySize = 160;
-    //     break;
-    // case "SCHWAEMM192_192":
-    //     keySize = 192;
-    //     break;
-    // case "SCHWAEMM256_256":
-    //     keySize = 256;
-    //     break;
-
     @Override
     @Nonnull
     public Optional<? extends INode> parse(
