@@ -25,7 +25,11 @@ import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.context.CipherContext;
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.Mode;
+import com.ibm.mapper.model.Padding;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -69,8 +73,7 @@ class ResolveFunctionCascadeTest extends TestBase {
         assertThat(mode.asString()).isEqualTo("ECB");
 
         INode padding = node.getChildren().get(Padding.class);
-        assertThat(padding).isNotNull();
-        assertThat(padding.asString()).isEqualTo("");
+        assertThat(padding).isNull();
 
         INode defaultKeyLength = node.getChildren().get(KeyLength.class);
         assertThat(defaultKeyLength).isNotNull();

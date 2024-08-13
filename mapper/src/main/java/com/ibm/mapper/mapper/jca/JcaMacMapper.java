@@ -51,13 +51,12 @@ public class JcaMacMapper implements IMapper {
             return pbeOptional;
         }
 
-        if (str.toLowerCase().contains("with")) {
+        if (str.toLowerCase().contains("with") || !str.toLowerCase().contains("hmac")) {
             return Optional.empty();
         }
 
         final String messageDigestStr =
-                str.substring(str.toLowerCase().trim().indexOf("Hmac".toLowerCase()) + 4)
-                        .replace("-", "");
+                str.substring(str.toLowerCase().trim().indexOf("Hmac".toLowerCase()) + 4);
 
         return switch (messageDigestStr.toUpperCase().trim()) {
             case "MD2" -> Optional.of(new MD2(Mac.class, detectionLocation));

@@ -17,16 +17,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model;
+package com.ibm.mapper.model.mode;
 
-import javax.annotation.Nonnull;
+import com.ibm.mapper.model.Mode;
+import com.ibm.mapper.utils.DetectionLocation;
+import org.jetbrains.annotations.NotNull;
 
-public class EllipticCurveAlgorithm extends Algorithm
-        implements PublicKeyEncryption, Signature, KeyAgreement {
-
-    public EllipticCurveAlgorithm(@Nonnull EllipticCurve curve) {
-        super("EC-" + curve.asString(), PublicKeyEncryption.class, curve.detectionLocation);
-        this.append(curve);
-        this.append(new Oid("1.2.840.10045.2.1", curve.detectionLocation));
+// Key wrap pad, warppad
+public final class KWP extends Mode {
+    public KWP(@NotNull DetectionLocation detectionLocation) {
+        super("WRAP-PAD", detectionLocation);
     }
 }

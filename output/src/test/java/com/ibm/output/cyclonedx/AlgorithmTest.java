@@ -146,8 +146,7 @@ class AlgorithmTest {
     void pbkdfWithSaltAndPassword() {
         final DetectionLocation detectionLocation =
                 new DetectionLocation(filePath, 1, 1, Collections.emptyList(), () -> "SSL");
-        final PasswordBasedKeyDerivationFunction pbkdf =
-                new PBKDF2(new SHA(detectionLocation), detectionLocation);
+        final PasswordBasedKeyDerivationFunction pbkdf = new PBKDF2(new SHA(detectionLocation));
         final SaltLength saltLength = new SaltLength(192, detectionLocation);
         final PasswordLength passwordLength = new PasswordLength(32, detectionLocation);
         final KeyLength keyLength = new KeyLength(1024, detectionLocation);

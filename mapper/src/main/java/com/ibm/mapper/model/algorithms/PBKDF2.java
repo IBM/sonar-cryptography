@@ -22,13 +22,12 @@ package com.ibm.mapper.model.algorithms;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
-import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
 public final class PBKDF2 extends Algorithm implements PasswordBasedKeyDerivationFunction {
 
-    public PBKDF2(@Nonnull Mac mac, @Nonnull DetectionLocation detectionLocation) {
-        super("PBKDF2", PasswordBasedKeyDerivationFunction.class, detectionLocation);
+    public PBKDF2(@Nonnull Mac mac) {
+        super("PBKDF2", PasswordBasedKeyDerivationFunction.class, mac.getDetectionContext());
         this.append(mac);
     }
 }

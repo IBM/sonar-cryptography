@@ -21,6 +21,7 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mode;
@@ -39,12 +40,14 @@ public final class DES extends Algorithm implements BlockCipher {
     public DES(int keyLength, @NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
         this.append(new KeyLength(keyLength, detectionLocation));
+        this.append(new BlockSize(64, detectionLocation));
     }
 
     public DES(int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
         this.append(new KeyLength(keyLength, detectionLocation));
         this.append(mode);
+        this.append(new BlockSize(64, detectionLocation));
     }
 
     public DES(
@@ -56,11 +59,13 @@ public final class DES extends Algorithm implements BlockCipher {
         this.append(new KeyLength(keyLength, detectionLocation));
         this.append(mode);
         this.append(padding);
+        this.append(new BlockSize(64, detectionLocation));
     }
 
     public DES(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
         this.append(mode);
+        this.append(new BlockSize(64, detectionLocation));
     }
 
     public DES(
@@ -70,6 +75,7 @@ public final class DES extends Algorithm implements BlockCipher {
         super(NAME, BlockCipher.class, detectionLocation);
         this.append(mode);
         this.append(padding);
+        this.append(new BlockSize(64, detectionLocation));
     }
 
     public DES(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull DES des) {

@@ -29,6 +29,7 @@ import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Key;
 import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -72,7 +73,7 @@ class ResolveCallFromOtherClassTest extends TestBase {
             assertThat(node).isInstanceOf(Key.class);
             assertThat(node.asString()).isEqualTo("RSA");
 
-            INode blockCipher = node.getChildren().get(com.ibm.mapper.model.Algorithm.class);
+            INode blockCipher = node.getChildren().get(PublicKeyEncryption.class);
             assertThat(blockCipher).isNotNull();
             assertThat(blockCipher.asString()).isEqualTo("RSA");
 

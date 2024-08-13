@@ -20,6 +20,7 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
@@ -29,5 +30,6 @@ public class DSA extends Algorithm implements Signature {
 
     public DSA(@NotNull DetectionLocation detectionLocation) {
         super(NAME, Signature.class, detectionLocation);
+        this.append(new Oid("1.2.840.10040.4.1", detectionLocation));
     }
 }

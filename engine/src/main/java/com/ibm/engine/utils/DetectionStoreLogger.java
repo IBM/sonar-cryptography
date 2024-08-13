@@ -90,11 +90,9 @@ public class DetectionStoreLogger<R, T, S, P> {
                                                                         .toString()
                                                                         .substring(0, 5)
                                                                 + ", bundle: "
-                                                                + getFormattedNumericString(
-                                                                        store.getDetectionRule()
-                                                                                .bundle()
-                                                                                .getIdentifier()
-                                                                                .hashCode())
+                                                                + store.getDetectionRule()
+                                                                        .bundle()
+                                                                        .getIdentifier()
                                                                 + ", level: "
                                                                 + store.getLevel()
                                                                 + ", hash: "

@@ -30,6 +30,7 @@ import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Oid;
+import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.SecretKey;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.plugin.TestBase;
@@ -81,6 +82,7 @@ class JcaKeyAgreementGenerateSecretAlgorithmTest extends TestBase {
         INode node = nodes.get(0);
         assertThat(node).isNotNull();
         assertThat(node.asString()).isEqualTo("DH");
+        assertThat(node.is(PublicKeyEncryption.class)).isTrue();
 
         INode oid = node.getChildren().get(Oid.class);
         assertThat(oid).isNotNull();

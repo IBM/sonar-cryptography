@@ -54,6 +54,7 @@ public class JcaPaddingMapper implements IMapper {
             case "ISO10126PADDING" -> Optional.of(new ISO10126(detectionLocation));
             case "PKCS1PADDING" -> Optional.of(new PKCS1(detectionLocation));
             case "PKCS5PADDING" -> Optional.of(new PKCS5(detectionLocation));
+            case "NOPADDING" -> Optional.empty();
             default -> Optional.of(new Padding(padding, detectionLocation));
         };
     }

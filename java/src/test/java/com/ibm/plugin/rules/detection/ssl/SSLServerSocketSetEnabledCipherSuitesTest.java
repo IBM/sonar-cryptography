@@ -68,6 +68,12 @@ class SSLServerSocketSetEnabledCipherSuitesTest extends TestBase {
         /*
          * Translation
          */
+        assertThat(nodes).hasSize(1);
 
+        // CipherSuite
+        INode cipherSuiteNode = nodes.get(0);
+        assertThat(cipherSuiteNode.getKind()).isEqualTo(com.ibm.mapper.model.CipherSuite.class);
+        assertThat(cipherSuiteNode.getChildren()).hasSize(2);
+        assertThat(cipherSuiteNode.asString()).isEqualTo("TLS_DHE_DSS_WITH_AES_256_CBC_SHA256");
     }
 }

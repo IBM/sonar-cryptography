@@ -25,7 +25,13 @@ import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.context.MacContext;
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.BlockSize;
+import com.ibm.mapper.model.DigestSize;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Mac;
+import com.ibm.mapper.model.Oid;
+import com.ibm.mapper.model.functionality.Digest;
+import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -46,42 +52,60 @@ class JcaMacGetInstanceTest extends TestBase {
                 .verifyIssues();
     }
 
-    /**
-     * DEBUG [detectionStore] (MacContext, Algorithm) HmacSHA3-384 DEBUG [translation] (Mac)
-     * HmacSHA3-384 DEBUG [translation] └─ (MessageDigest) SHA3-384 DEBUG [translation] └─
-     * (BlockSize) 832 DEBUG [translation] └─ (DigestSize) 384
-     */
     @Override
     public void asserts(
             int findingId,
             @Nonnull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
             @Nonnull List<INode> nodes) {
+
         /*
          * Detection Store
          */
         assertThat(detectionStore.getDetectionValues()).hasSize(1);
-        IValue<Tree> value = detectionStore.getDetectionValues().get(0);
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(MacContext.class);
-        assertThat(value).isInstanceOf(Algorithm.class);
-        assertThat(value.asString()).isEqualTo("HmacSHA3-384");
+        IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
+        assertThat(value0).isInstanceOf(Algorithm.class);
+        assertThat(value0.asString()).isEqualTo("HmacSHA3-384");
+
         /*
          * Translation
          */
         assertThat(nodes).hasSize(1);
-        INode node = nodes.get(0);
-        assertThat(node).isInstanceOf(Mac.class);
-        assertThat(node.asString()).isEqualTo("HmacSHA3-384");
 
-        INode digest = node.getChildren().get(MessageDigest.class);
-        assertThat(digest).isNotNull();
-        assertThat(digest.asString()).isEqualTo("SHA3-384");
+        // Mac
+        INode macNode = nodes.get(0);
+        assertThat(macNode.getKind()).isEqualTo(Mac.class);
+        assertThat(macNode.getChildren()).hasSize(5);
+        assertThat(macNode.asString()).isEqualTo("SHA3-384");
 
-        INode digestSize = digest.getChildren().get(DigestSize.class);
-        assertThat(digestSize).isNotNull();
-        assertThat(digestSize.asString()).isEqualTo("384");
+        // BlockSize under Mac
+        INode blockSizeNode = macNode.getChildren().get(BlockSize.class);
+        assertThat(blockSizeNode).isNotNull();
+        assertThat(blockSizeNode.getChildren()).isEmpty();
+        assertThat(blockSizeNode.asString()).isEqualTo("832");
 
-        INode blockSize = digest.getChildren().get(BlockSize.class);
-        assertThat(blockSize).isNotNull();
-        assertThat(blockSize.asString()).isEqualTo("832");
+        // Oid under Mac
+        INode oidNode = macNode.getChildren().get(Oid.class);
+        assertThat(oidNode).isNotNull();
+        assertThat(oidNode.getChildren()).isEmpty();
+        assertThat(oidNode.asString()).isEqualTo("2.16.840.1.101.3.4.2.9");
+
+        // Digest under Mac
+        INode digestNode = macNode.getChildren().get(Digest.class);
+        assertThat(digestNode).isNotNull();
+        assertThat(digestNode.getChildren()).isEmpty();
+        assertThat(digestNode.asString()).isEqualTo("DIGEST");
+
+        // Tag under Mac
+        INode tagNode = macNode.getChildren().get(Tag.class);
+        assertThat(tagNode).isNotNull();
+        assertThat(tagNode.getChildren()).isEmpty();
+        assertThat(tagNode.asString()).isEqualTo("TAG");
+
+        // DigestSize under Mac
+        INode digestSizeNode = macNode.getChildren().get(DigestSize.class);
+        assertThat(digestSizeNode).isNotNull();
+        assertThat(digestSizeNode.getChildren()).isEmpty();
+        assertThat(digestSizeNode.asString()).isEqualTo("384");
     }
 }

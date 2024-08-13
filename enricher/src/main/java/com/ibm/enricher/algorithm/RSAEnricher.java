@@ -17,16 +17,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model;
+package com.ibm.enricher.algorithm;
 
-import javax.annotation.Nonnull;
+import com.ibm.enricher.IEnricher;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Signature;
+import com.ibm.mapper.model.algorithms.RSA;
+import org.jetbrains.annotations.NotNull;
 
-public class EllipticCurveAlgorithm extends Algorithm
-        implements PublicKeyEncryption, Signature, KeyAgreement {
+public class RSAEnricher implements IEnricher, IEnrichWithDefaultKeySize {
 
-    public EllipticCurveAlgorithm(@Nonnull EllipticCurve curve) {
-        super("EC-" + curve.asString(), PublicKeyEncryption.class, curve.detectionLocation);
-        this.append(curve);
-        this.append(new Oid("1.2.840.10045.2.1", curve.detectionLocation));
+    @NotNull @Override
+    public INode enrich(@NotNull INode node) {
+        if (node instanceof RSA rsa) {
+            if (rsa.is(Signature.class)) {
+                return enrichSignature(rsa);
+            }
+            return enrich(rsa);
+        }
+        return node;
+    }
+
+    @NotNull private RSA enrich(@NotNull RSA rsa) {
+        this.applyDefaultKeySize(rsa, 2048);
+        return rsa;
+    }
+
+    @NotNull private RSA enrichSignature(@NotNull RSA rsa) {
+        return rsa;
     }
 }

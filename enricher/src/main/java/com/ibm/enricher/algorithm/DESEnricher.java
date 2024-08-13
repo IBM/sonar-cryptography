@@ -17,16 +17,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model;
+package com.ibm.enricher.algorithm;
 
-import javax.annotation.Nonnull;
+import com.ibm.enricher.IEnricher;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.algorithms.DES;
+import org.jetbrains.annotations.NotNull;
 
-public class EllipticCurveAlgorithm extends Algorithm
-        implements PublicKeyEncryption, Signature, KeyAgreement {
-
-    public EllipticCurveAlgorithm(@Nonnull EllipticCurve curve) {
-        super("EC-" + curve.asString(), PublicKeyEncryption.class, curve.detectionLocation);
-        this.append(curve);
-        this.append(new Oid("1.2.840.10045.2.1", curve.detectionLocation));
+public class DESEnricher implements IEnricher, IEnrichWithDefaultKeySize {
+    @Override
+    public @NotNull INode enrich(@NotNull INode node) {
+        if (node instanceof DES des) {
+            this.applyDefaultKeySize(des, 56);
+            return des;
+        }
+        return node;
     }
 }

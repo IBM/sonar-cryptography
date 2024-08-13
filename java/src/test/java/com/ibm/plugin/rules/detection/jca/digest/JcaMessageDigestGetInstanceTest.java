@@ -29,6 +29,8 @@ import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.Oid;
+import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -50,13 +52,6 @@ class JcaMessageDigestGetInstanceTest extends TestBase {
                 .verifyIssues();
     }
 
-    /**
-     * DEBUG [detectionStore] (DigestContext, Algorithm) SHA-512/224 DEBUG [translation]
-     * (MessageDigest) SHA-512/224 DEBUG [translation] └─ (DigestSize) 224 DEBUG [translation] └─
-     * (MessageDigest) SHA-224 DEBUG [translation] └─ (DigestSize) 224 DEBUG [translation] └─
-     * (BlockSize) 512 DEBUG [translation] └─ (KeyLength) 224 DEBUG [translation] └─ (BlockSize)
-     * 1024
-     */
     @Override
     public void asserts(
             int findingId,
@@ -76,11 +71,18 @@ class JcaMessageDigestGetInstanceTest extends TestBase {
         assertThat(nodes).hasSize(1);
         INode node = nodes.get(0);
         assertThat(node).isInstanceOf(MessageDigest.class);
-        assertThat(node.asString()).isEqualTo("SHA-512/224");
+        assertThat(node.asString()).isEqualTo("SHA512/224");
 
         INode digestSize = node.getChildren().get(DigestSize.class);
         assertThat(digestSize).isNotNull();
         assertThat(digestSize.asString()).isEqualTo("224");
+
+        INode function = node.getChildren().get(Digest.class);
+        assertThat(function).isNotNull();
+
+        INode oid = node.getChildren().get(Oid.class);
+        assertThat(oid).isNotNull();
+        assertThat(oid.asString()).isEqualTo("2.16.840.1.101.3.4.2.5");
 
         INode blockSize = node.getChildren().get(BlockSize.class);
         assertThat(blockSize).isNotNull();
@@ -88,14 +90,18 @@ class JcaMessageDigestGetInstanceTest extends TestBase {
 
         INode digest = node.getChildren().get(MessageDigest.class);
         assertThat(digest).isNotNull();
-        assertThat(digest.asString()).isEqualTo("SHA-224");
+        assertThat(digest.asString()).isEqualTo("SHA512");
 
         digestSize = digest.getChildren().get(DigestSize.class);
         assertThat(digestSize).isNotNull();
-        assertThat(digestSize.asString()).isEqualTo("224");
+        assertThat(digestSize.asString()).isEqualTo("512");
 
         blockSize = digest.getChildren().get(BlockSize.class);
         assertThat(blockSize).isNotNull();
-        assertThat(blockSize.asString()).isEqualTo("512");
+        assertThat(blockSize.asString()).isEqualTo("1024");
+
+        oid = digest.getChildren().get(Oid.class);
+        assertThat(oid).isNotNull();
+        assertThat(oid.asString()).isEqualTo("2.16.840.1.101.3.4.2.3");
     }
 }

@@ -23,6 +23,7 @@ import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyAgreement;
 import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -31,19 +32,23 @@ import org.jetbrains.annotations.NotNull;
 
 public final class RSA extends Algorithm implements KeyAgreement, Signature, PublicKeyEncryption {
     private static final String NAME = "RSA";
+    private static final String OID = "1.2.840.113549.1.1.1";
 
     public RSA(@NotNull DetectionLocation detectionLocation) {
         super(NAME, PublicKeyEncryption.class, detectionLocation);
+        this.append(new Oid(OID, detectionLocation));
     }
 
     public RSA(@Nonnull KeyLength keyLength, @Nonnull DetectionLocation detectionLocation) {
         super(NAME, PublicKeyEncryption.class, detectionLocation);
         this.append(keyLength);
+        this.append(new Oid(OID, detectionLocation));
     }
 
     public RSA(
             @Nonnull final Class<? extends IPrimitive> asKind,
             @NotNull DetectionLocation detectionLocation) {
         super(NAME, asKind, detectionLocation);
+        this.append(new Oid(OID, detectionLocation));
     }
 }

@@ -46,5 +46,7 @@ class JcaECPrivateKeySpecTest extends TestBase {
     public void asserts(
             int findingId,
             @Nonnull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
-            @Nonnull List<INode> nodes) {}
+            @Nonnull List<INode> nodes) {
+        // TODO
+    }
 }

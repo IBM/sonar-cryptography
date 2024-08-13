@@ -17,35 +17,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.engine.utils;
+package com.ibm.enricher.algorithm;
 
-import com.ibm.engine.detection.DetectionStore;
-import java.util.List;
+import com.ibm.enricher.IEnricher;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.algorithms.DH;
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
-public final class DetectionStoreUtils {
+public class DHEnricher implements IEnricher, IEnrichWithDefaultKeySize {
 
-    private DetectionStoreUtils() {
-        // nothing
+    @Override
+    public @NotNull INode enrich(@NotNull INode node) {
+        if (node instanceof DH dh) {
+            return enrich(dh);
+        }
+        return node;
     }
 
-    public static <R, T, S, P> boolean treeEqual(
-            @Nonnull DetectionStore<R, T, S, P> d1, @Nonnull DetectionStore<R, T, S, P> d2) {
-        return d1.equals(d2) && areChildrenEqual(d1.getChildren(), d2.getChildren());
-    }
-
-    private static <R, T, S, P> boolean areChildrenEqual(
-            @Nonnull List<DetectionStore<R, T, S, P>> c1,
-            @Nonnull List<DetectionStore<R, T, S, P>> c2) {
-        if (c1.size() != c2.size()) {
-            return false;
-        }
-
-        for (int i = 0; i < c1.size(); i++) {
-            if (!c1.get(i).isSubTreeOf(c2.get(i)) || !c2.get(i).isSubTreeOf(c1.get(i))) {
-                return false;
-            }
-        }
-        return true;
+    @Nonnull
+    private DH enrich(@Nonnull DH dh) {
+        this.applyDefaultKeySize(dh, 3072);
+        return dh;
     }
 }

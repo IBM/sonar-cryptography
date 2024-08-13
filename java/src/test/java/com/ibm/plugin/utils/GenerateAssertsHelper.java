@@ -22,7 +22,7 @@ package com.ibm.plugin.utils;
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.IValue;
 import com.ibm.mapper.model.INode;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.FileWriter;
@@ -214,10 +214,10 @@ public class GenerateAssertsHelper {
         if (kindName.equals("Algorithm")) {
             // Remove the confusion between the engine's and the mapper's Algorithm
             kindName = node.getKind().getName();
-        } else if (kindName.equals("Oid")) {
-            // Don't put Oids in assert statements
-            return;
-        }
+        } /* else if (kindName.equals("Oid")) {
+              // Don't put Oids in assert statements
+              return;
+          } */
 
         String title;
         if (index >= 0) {

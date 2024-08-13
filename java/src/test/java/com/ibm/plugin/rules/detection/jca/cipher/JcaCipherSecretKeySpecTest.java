@@ -22,11 +22,19 @@ package com.ibm.plugin.rules.detection.jca.cipher;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.engine.detection.DetectionStore;
-import com.ibm.engine.model.*;
 import com.ibm.engine.model.Algorithm;
+import com.ibm.engine.model.IValue;
+import com.ibm.engine.model.KeySize;
+import com.ibm.engine.model.OperationMode;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.SecretKeyContext;
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.BlockSize;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.Mode;
+import com.ibm.mapper.model.Padding;
+import com.ibm.mapper.model.SecretKey;
 import com.ibm.mapper.model.functionality.Decrypt;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.plugin.TestBase;
@@ -98,7 +106,7 @@ class JcaCipherSecretKeySpecTest extends TestBase {
             // BlockCipher
             INode blockCipherNode = nodes.get(0);
             assertThat(blockCipherNode.getKind()).isEqualTo(BlockCipher.class);
-            assertThat(blockCipherNode.getChildren()).hasSize(6);
+            assertThat(blockCipherNode.getChildren()).hasSize(7);
             assertThat(blockCipherNode.asString()).isEqualTo("AES");
 
             // KeyLength under BlockCipher
@@ -140,7 +148,7 @@ class JcaCipherSecretKeySpecTest extends TestBase {
             // BlockCipher under SecretKey under BlockCipher
             INode blockCipherNode1 = secretKeyNode.getChildren().get(BlockCipher.class);
             assertThat(blockCipherNode1).isNotNull();
-            assertThat(blockCipherNode1.getChildren()).hasSize(3);
+            assertThat(blockCipherNode1.getChildren()).hasSize(4);
             assertThat(blockCipherNode1.asString()).isEqualTo("AES");
 
             // KeyGeneration under BlockCipher under SecretKey under BlockCipher
@@ -154,6 +162,12 @@ class JcaCipherSecretKeySpecTest extends TestBase {
             assertThat(keyLengthNode2).isNotNull();
             assertThat(keyLengthNode2.getChildren()).isEmpty();
             assertThat(keyLengthNode2.asString()).isEqualTo("128");
+
+            // BlockSize under BlockCipher under SecretKey under BlockCipher
+            INode blockSizeNode = blockCipherNode1.getChildren().get(BlockSize.class);
+            assertThat(blockSizeNode).isNotNull();
+            assertThat(blockSizeNode.getChildren()).isEmpty();
+            assertThat(blockSizeNode.asString()).isEqualTo("128");
 
         } else if (findingId == 1) {
             /*
@@ -196,6 +210,12 @@ class JcaCipherSecretKeySpecTest extends TestBase {
             INode defaultKeyLength = blockCipher.getChildren().get(KeyLength.class);
             assertThat(defaultKeyLength).isNotNull();
             assertThat(defaultKeyLength.asString()).isEqualTo("128");
+
+            // BlockSize under BlockCipher under SecretKey under BlockCipher
+            INode blockSizeNode = blockCipher.getChildren().get(BlockSize.class);
+            assertThat(blockSizeNode).isNotNull();
+            assertThat(blockSizeNode.getChildren()).isEmpty();
+            assertThat(blockSizeNode.asString()).isEqualTo("128");
         }
     }
 }

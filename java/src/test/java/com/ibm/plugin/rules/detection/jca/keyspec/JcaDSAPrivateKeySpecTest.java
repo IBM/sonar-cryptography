@@ -24,10 +24,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
-import com.ibm.engine.model.KeySize;
-import com.ibm.engine.model.context.KeyContext;
+import com.ibm.engine.model.KeyAction;
 import com.ibm.engine.model.context.SecretKeyContext;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.Oid;
+import com.ibm.mapper.model.SecretKey;
+import com.ibm.mapper.model.Signature;
+import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -58,18 +62,58 @@ class JcaDSAPrivateKeySpecTest extends TestBase {
          * Detection Store
          */
         assertThat(detectionStore.getDetectionValues()).hasSize(1);
-        IValue<Tree> value = detectionStore.getDetectionValues().get(0);
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(SecretKeyContext.class);
-        assertThat(value).isInstanceOf(Algorithm.class);
-        assertThat(value.asString()).isEqualTo("DSA");
+        IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
+        assertThat(value0).isInstanceOf(Algorithm.class);
+        assertThat(value0.asString()).isEqualTo("DSA");
 
-        DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store =
-                getStoreOfValueType(KeySize.class, detectionStore.getChildren());
-        assertThat(store).isNotNull();
-        assertThat(store.getDetectionValueContext()).isInstanceOf(KeyContext.class);
-        assertThat(store.getDetectionValues()).hasSize(1);
-        value = store.getDetectionValues().get(0);
-        assertThat(value).isInstanceOf(KeySize.class);
-        assertThat(value.asString()).isEqualTo("112");
+        DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
+                getStoreOfValueType(KeyAction.class, detectionStore.getChildren());
+        assertThat(store_1.getDetectionValues()).hasSize(1);
+        assertThat(store_1.getDetectionValueContext()).isInstanceOf(SecretKeyContext.class);
+        IValue<Tree> value0_1 = store_1.getDetectionValues().get(0);
+        assertThat(value0_1).isInstanceOf(KeyAction.class);
+        assertThat(value0_1.asString()).isEqualTo("GENERATION");
+
+        /*
+         * Translation
+         */
+        assertThat(nodes).hasSize(1);
+
+        // SecretKey
+        INode secretKeyNode = nodes.get(0);
+        assertThat(secretKeyNode.getKind()).isEqualTo(SecretKey.class);
+        assertThat(secretKeyNode.getChildren()).hasSize(2);
+        assertThat(secretKeyNode.asString()).isEqualTo("DSA");
+
+        // KeyLength under SecretKey
+        INode keyLengthNode = secretKeyNode.getChildren().get(KeyLength.class);
+        assertThat(keyLengthNode).isNotNull();
+        assertThat(keyLengthNode.getChildren()).isEmpty();
+        assertThat(keyLengthNode.asString()).isEqualTo("112");
+
+        // Signature under SecretKey
+        INode signatureNode = secretKeyNode.getChildren().get(Signature.class);
+        assertThat(signatureNode).isNotNull();
+        assertThat(signatureNode.getChildren()).hasSize(3);
+        assertThat(signatureNode.asString()).isEqualTo("DSA");
+
+        // KeyLength under Signature under SecretKey
+        INode keyLengthNode1 = signatureNode.getChildren().get(KeyLength.class);
+        assertThat(keyLengthNode1).isNotNull();
+        assertThat(keyLengthNode1.getChildren()).isEmpty();
+        assertThat(keyLengthNode1.asString()).isEqualTo("2048");
+
+        // KeyGeneration under Signature under SecretKey
+        INode keyGenerationNode = signatureNode.getChildren().get(KeyGeneration.class);
+        assertThat(keyGenerationNode).isNotNull();
+        assertThat(keyGenerationNode.getChildren()).isEmpty();
+        assertThat(keyGenerationNode.asString()).isEqualTo("KEYGENERATION");
+
+        // OID under Signature under SecretKey
+        INode oid = signatureNode.getChildren().get(Oid.class);
+        assertThat(oid).isNotNull();
+        assertThat(oid.getChildren()).isEmpty();
+        assertThat(oid.asString()).isEqualTo("1.2.840.10040.4.1");
     }
 }

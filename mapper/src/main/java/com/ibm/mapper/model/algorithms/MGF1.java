@@ -21,6 +21,7 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.MaskGenerationFunction;
+import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
@@ -28,5 +29,6 @@ public final class MGF1 extends Algorithm implements MaskGenerationFunction {
 
     public MGF1(@Nonnull DetectionLocation detectionLocation) {
         super("MGF1", MaskGenerationFunction.class, detectionLocation);
+        this.append(new Oid("1.2.840.113549.1.1.8", detectionLocation));
     }
 }

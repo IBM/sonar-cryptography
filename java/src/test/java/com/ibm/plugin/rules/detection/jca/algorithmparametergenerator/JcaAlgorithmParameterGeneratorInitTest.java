@@ -28,8 +28,8 @@ import com.ibm.engine.model.KeySize;
 import com.ibm.engine.model.context.AlgorithmParameterContext;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.PublicKeyEncryption;
-import com.ibm.mapper.model.algorithms.DH;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -79,13 +79,23 @@ class JcaAlgorithmParameterGeneratorInitTest extends TestBase {
          * Translation
          */
         assertThat(nodes).hasSize(1);
-        INode node = nodes.get(0);
-        assertThat(node).isInstanceOf(PublicKeyEncryption.class);
-        assertThat(node).isInstanceOf(DH.class);
-        assertThat(node.asString()).isEqualTo("DH");
 
-        INode defaultKeyLength = node.getChildren().get(KeyLength.class);
-        assertThat(defaultKeyLength).isNotNull();
-        assertThat(defaultKeyLength.asString()).isEqualTo("2048");
+        // PublicKeyEncryption
+        INode publicKeyEncryptionNode = nodes.get(0);
+        assertThat(publicKeyEncryptionNode.getKind()).isEqualTo(PublicKeyEncryption.class);
+        assertThat(publicKeyEncryptionNode.getChildren()).hasSize(2);
+        assertThat(publicKeyEncryptionNode.asString()).isEqualTo("DH");
+
+        // KeyLength under PublicKeyEncryption
+        INode keyLengthNode = publicKeyEncryptionNode.getChildren().get(KeyLength.class);
+        assertThat(keyLengthNode).isNotNull();
+        assertThat(keyLengthNode.getChildren()).isEmpty();
+        assertThat(keyLengthNode.asString()).isEqualTo("2048");
+
+        // Oid under PublicKeyEncryption
+        INode oidNode = publicKeyEncryptionNode.getChildren().get(Oid.class);
+        assertThat(oidNode).isNotNull();
+        assertThat(oidNode.getChildren()).isEmpty();
+        assertThat(oidNode.asString()).isEqualTo("1.2.840.113549.1.3.1");
     }
 }
