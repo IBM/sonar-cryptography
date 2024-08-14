@@ -27,6 +27,7 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.algorithms.AES;
+import com.ibm.mapper.model.algorithms.ChaCha20Poly1305;
 import com.ibm.mapper.model.algorithms.Schwaemm;
 import com.ibm.mapper.model.algorithms.Xoodyak;
 import com.ibm.mapper.model.algorithms.ascon.Ascon;
@@ -76,11 +77,11 @@ public class BcAeadMapper implements IMapper {
                     Optional.of(
                             cipherWithMode(
                                     new AES(detectionLocation), new GCMSIV(detectionLocation)));
-            case "KCCMBlockCipher" -> Optional.of(unknownWithMode(new CCM(detectionLocation))); // ?
-            case "KGCMBlockCipher" -> Optional.of(unknownWithMode(new GCM(detectionLocation))); // ?
+            case "KCCMBlockCipher" -> Optional.of(unknownWithMode(new CCM(detectionLocation)));
+            case "KGCMBlockCipher" -> Optional.of(unknownWithMode(new GCM(detectionLocation)));
             case "OCBBlockCipher" -> Optional.of(unknownWithMode(new OCB(detectionLocation)));
 
-            // TODO: case ChaCha20Poly1305?
+            case "ChaCha20Poly1305" -> Optional.of(new ChaCha20Poly1305(detectionLocation));
 
             default -> {
                 final Algorithm algorithm =

@@ -171,34 +171,12 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                             new BlockCipher(
                                     algorithm, addMode ? mode : null, addPadding ? padding : null);
                     return Optional.of(blockCipher); */
-                case AEAD_ENGINE, AEAD_BLOCK_CIPHER:
+                case AEAD_ENGINE, AEAD_BLOCK_CIPHER, CHACHA20POLY1305:
                     BcAeadMapper bcAeadMapper = new BcAeadMapper();
                     return bcAeadMapper
                             .parse(valueAction.asString(), detectionLocation)
                             .map(f -> f);
-
-                /* case CHACHA20POLY1305:
-                    ae =
-                            new AuthenticatedEncryption(
-                                    new com.ibm.mapper.model.Algorithm(
-                                            "ChaCha20Poly1305", detectionLocation),
-                                    null,
-                                    null,
-                                    null);
-                    HMAC mac =
-                            new HMAC(
-                                    new com.ibm.mapper.model.Algorithm(
-                                            "Poly1305", detectionLocation));
-                    mac.append(new Tag(detectionLocation));
-                    mac.append(new Digest(detectionLocation));
-
-                    ae.append(mac);
-                    ae.append(
-                            new StreamCipher(
-                                    new com.ibm.mapper.model.Algorithm(
-                                            "ChaCha20", detectionLocation)));
-                    return Optional.of(ae);
-                case ENCODING:
+                /* case ENCODING:
                     blockCipher =
                             new BlockCipher(
                                     new com.ibm.mapper.model.Algorithm(
