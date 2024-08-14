@@ -27,6 +27,8 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
 public class PhotonBeetleHash extends Algorithm implements MessageDigest {
+    // https://csrc.nist.gov/CSRC/media/Projects/lightweight-cryptography/documents/round-2/spec-doc-rnd2/photon-beetle-spec-round2.pdf
+
     private static final String NAME = "PHOTON-Beetle-Hash";
 
     public PhotonBeetleHash(@Nonnull DetectionLocation detectionLocation) {

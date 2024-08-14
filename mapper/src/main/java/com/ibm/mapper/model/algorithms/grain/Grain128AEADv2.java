@@ -21,16 +21,20 @@ package com.ibm.mapper.model.algorithms.grain;
 
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.ClassicalBitSecurityLevel;
+import com.ibm.mapper.model.InitializationVectorLength;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
 public class Grain128AEADv2 extends Grain {
+    // https://csrc.nist.gov/CSRC/media/Projects/lightweight-cryptography/documents/finalist-round/updated-spec-doc/grain-128aead-spec-final.pdf
+
     private static final String NAME = "Grain-128AEADv2";
 
     public Grain128AEADv2(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, AuthenticatedEncryption.class, detectionLocation);
         this.put(new KeyLength(128, detectionLocation));
+        this.put(new InitializationVectorLength(96, detectionLocation));
         this.put(new ClassicalBitSecurityLevel(128, detectionLocation));
     }
 }

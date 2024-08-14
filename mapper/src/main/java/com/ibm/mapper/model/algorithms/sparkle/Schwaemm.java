@@ -17,17 +17,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms;
+package com.ibm.mapper.model.algorithms.sparkle;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.ClassicalBitSecurityLevel;
 import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.NonceLength;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
 public class Schwaemm extends Algorithm implements AuthenticatedEncryption {
+    // https://csrc.nist.gov/CSRC/media/Projects/lightweight-cryptography/documents/finalist-round/updated-spec-doc/sparkle-spec-final.pdf
+
     private static final String NAME = "Schwaemm";
 
     public Schwaemm(@Nonnull DetectionLocation detectionLocation) {
@@ -40,12 +43,14 @@ public class Schwaemm extends Algorithm implements AuthenticatedEncryption {
 
     public Schwaemm(int rate, @Nonnull DetectionLocation detectionLocation) {
         this(NAME + rate, detectionLocation);
+        this.put(new NonceLength(rate, detectionLocation));
     }
 
     public Schwaemm(int rate, int capacity, @Nonnull DetectionLocation detectionLocation) {
         this(NAME + rate + "-" + capacity, detectionLocation);
         this.put(new KeyLength(capacity, detectionLocation));
         this.put(new TagLength(capacity, detectionLocation));
+        this.put(new NonceLength(rate, detectionLocation));
         this.put(new ClassicalBitSecurityLevel(capacity - 8, detectionLocation));
     }
 }

@@ -21,7 +21,6 @@ package com.ibm.mapper.model.algorithms.elephant;
 
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.ClassicalBitSecurityLevel;
-import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +30,6 @@ public class Dumbo extends Elephant {
 
     public Dumbo(@NotNull DetectionLocation detectionLocation) {
         super(NAME, detectionLocation);
-        this.put(new KeyLength(128, detectionLocation));
         this.put(new BlockSize(160, detectionLocation));
         this.put(new TagLength(64, detectionLocation));
         this.put(new ClassicalBitSecurityLevel(112, detectionLocation));

@@ -22,6 +22,7 @@ package com.ibm.mapper.model.algorithms.ascon;
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.NonceLength;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
@@ -32,6 +33,7 @@ public final class Ascon80pq extends Ascon implements AuthenticatedEncryption {
     public Ascon80pq(@NotNull DetectionLocation detectionLocation) {
         super(NAME, AuthenticatedEncryption.class, detectionLocation);
         this.put(new KeyLength(160, detectionLocation));
+        this.put(new NonceLength(128, detectionLocation));
         this.put(new TagLength(128, detectionLocation));
         this.put(new BlockSize(64, detectionLocation));
     }

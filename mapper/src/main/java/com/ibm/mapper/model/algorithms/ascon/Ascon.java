@@ -29,6 +29,8 @@ import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
 public class Ascon extends Algorithm implements BlockCipher {
+    // https://csrc.nist.gov/CSRC/media/Projects/lightweight-cryptography/documents/round-2/spec-doc-rnd2/ascon-spec-round2.pdf
+
     private static final String NAME = "Ascon";
 
     public Ascon(@NotNull DetectionLocation detectionLocation) {

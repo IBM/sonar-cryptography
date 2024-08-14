@@ -21,11 +21,15 @@ package com.ibm.mapper.model.algorithms.elephant;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
+import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.NonceLength;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
 public class Elephant extends Algorithm implements AuthenticatedEncryption {
+    // https://csrc.nist.gov/CSRC/media/Projects/lightweight-cryptography/documents/finalist-round/updated-spec-doc/elephant-spec-final.pdf
+
     private static final String NAME = "Elephant";
 
     public Elephant(@NotNull DetectionLocation detectionLocation) {
@@ -34,5 +38,7 @@ public class Elephant extends Algorithm implements AuthenticatedEncryption {
 
     protected Elephant(@Nonnull String name, @NotNull DetectionLocation detectionLocation) {
         super(name, AuthenticatedEncryption.class, detectionLocation);
+        this.put(new KeyLength(128, detectionLocation));
+        this.put(new NonceLength(96, detectionLocation));
     }
 }

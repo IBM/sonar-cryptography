@@ -23,12 +23,15 @@ import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.ClassicalBitSecurityLevel;
 import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.NonceLength;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
 public class Isap extends Algorithm implements AuthenticatedEncryption {
+    // https://csrc.nist.gov/CSRC/media/Projects/Lightweight-Cryptography/documents/round-1/spec-doc/ISAP-spec.pdf
+
     private static final String NAME = "Isap";
 
     public Isap(@NotNull DetectionLocation detectionLocation) {
@@ -38,6 +41,7 @@ public class Isap extends Algorithm implements AuthenticatedEncryption {
     protected Isap(@Nonnull String name, @NotNull DetectionLocation detectionLocation) {
         super(name, AuthenticatedEncryption.class, detectionLocation);
         this.put(new KeyLength(128, detectionLocation));
+        this.put(new NonceLength(128, detectionLocation));
         this.put(new TagLength(128, detectionLocation));
         this.put(new ClassicalBitSecurityLevel(128, detectionLocation));
     }
