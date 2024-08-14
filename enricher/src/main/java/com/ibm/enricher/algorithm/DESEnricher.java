@@ -28,7 +28,7 @@ public class DESEnricher implements IEnricher, IEnrichWithDefaultKeySize {
     @Override
     public @NotNull INode enrich(@NotNull INode node) {
         if (node instanceof DES des) {
-            this.applyDefaultKeySize(des, 56);
+            this.applyDefaultKeySizeForJca(des, 56);
             return des;
         }
         return node;

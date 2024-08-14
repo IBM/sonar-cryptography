@@ -28,7 +28,7 @@ public class DSAEnricher implements IEnricher, IEnrichWithDefaultKeySize {
     @Override
     public @NotNull INode enrich(@NotNull INode node) {
         if (node instanceof DSA dsa) {
-            this.applyDefaultKeySize(dsa, 2048);
+            this.applyDefaultKeySizeForJca(dsa, 2048);
             return dsa;
         }
         return node;
