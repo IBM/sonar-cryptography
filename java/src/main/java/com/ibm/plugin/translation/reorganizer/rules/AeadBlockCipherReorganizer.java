@@ -19,12 +19,17 @@
  */
 package com.ibm.plugin.translation.reorganizer.rules;
 
+import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
+import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.mapper.reorganizer.builder.ReorganizerRuleBuilder;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -34,7 +39,6 @@ public final class AeadBlockCipherReorganizer {
         // private
     }
 
-    /*
     @Nonnull
     private static final IReorganizerRule MERGE_AE_AND_BLOCK_CIPHER =
             new ReorganizerRuleBuilder()
@@ -55,7 +59,8 @@ public final class AeadBlockCipherReorganizer {
                                                         .deepCopy();
 
                                 INode newAuthenticatedEncryption =
-                                        new AuthenticatedEncryption(blockCipher, null, null, null);
+                                        new Algorithm(blockCipher, AuthenticatedEncryption.class);
+                                // new AuthenticatedEncryption(blockCipher, null, null, null);
 
                                 for (Map.Entry<Class<? extends INode>, INode> childKeyValue :
                                         node.getChildren().entrySet()) {
@@ -81,8 +86,6 @@ public final class AeadBlockCipherReorganizer {
                                     return roots;
                                 }
                             });
-
-     */
 
     @Nonnull
     private static final IReorganizerRule MOVE_TAG_LENGTH_UNDER_MAC =
@@ -113,6 +116,6 @@ public final class AeadBlockCipherReorganizer {
     @Unmodifiable
     @Nonnull
     public static List<IReorganizerRule> rules() {
-        return List.of(MOVE_TAG_LENGTH_UNDER_MAC); // MERGE_AE_AND_BLOCK_CIPHER
+        return List.of(MERGE_AE_AND_BLOCK_CIPHER, MOVE_TAG_LENGTH_UNDER_MAC);
     }
 }

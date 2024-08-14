@@ -35,12 +35,14 @@ public final class BcKGCMBlockCipher {
         // nothing
     }
 
+    private static final String MODE = "KGCMBlockCipher";
+
     private static final IDetectionRule<Tree> CONSTRUCTOR_1 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.modes.KGCMBlockCipher")
+                    .forObjectTypes("org.bouncycastle.crypto.modes." + MODE)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("KGCM"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(MODE))
                     .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                     .addDependingDetectionRules(BcBlockCipher.all())
                     .buildForContext(new CipherContext(CipherContext.Kind.AEAD_BLOCK_CIPHER))

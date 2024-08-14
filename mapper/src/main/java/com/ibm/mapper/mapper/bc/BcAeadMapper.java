@@ -19,11 +19,14 @@
  */
 package com.ibm.mapper.mapper.bc;
 
+import com.ibm.mapper.ITranslator;
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Unknown;
+import com.ibm.mapper.model.algorithms.AES;
 import com.ibm.mapper.model.algorithms.Schwaemm;
 import com.ibm.mapper.model.algorithms.Xoodyak;
 import com.ibm.mapper.model.algorithms.ascon.Ascon;
@@ -31,6 +34,11 @@ import com.ibm.mapper.model.algorithms.elephant.Elephant;
 import com.ibm.mapper.model.algorithms.grain.Grain128AEAD;
 import com.ibm.mapper.model.algorithms.isap.Isap;
 import com.ibm.mapper.model.algorithms.photonbeetle.PhotonBeetleAEAD;
+import com.ibm.mapper.model.mode.CCM;
+import com.ibm.mapper.model.mode.EAX;
+import com.ibm.mapper.model.mode.GCM;
+import com.ibm.mapper.model.mode.GCMSIV;
+import com.ibm.mapper.model.mode.OCB;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -49,7 +57,7 @@ public class BcAeadMapper implements IMapper {
     }
 
     @Nonnull
-    private Optional<? extends Algorithm> map(
+    private Optional<? extends INode> map(
             @Nonnull String cipherAlgorithm, @Nonnull DetectionLocation detectionLocation) {
         return switch (cipherAlgorithm) {
             case "AsconEngine" -> Optional.of(new Ascon(detectionLocation));
@@ -60,6 +68,20 @@ public class BcAeadMapper implements IMapper {
             case "SparkleEngine" -> Optional.of(new Schwaemm(detectionLocation));
             case "XoodyakEngine" ->
                     Optional.of(new Xoodyak(AuthenticatedEncryption.class, detectionLocation));
+
+            case "CCMBlockCipher" -> Optional.of(unknownWithMode(new CCM(detectionLocation)));
+            case "EAXBlockCipher" -> Optional.of(unknownWithMode(new EAX(detectionLocation)));
+            case "GCMBlockCipher" -> Optional.of(unknownWithMode(new GCM(detectionLocation)));
+            case "GCMSIVBlockCipher" ->
+                    Optional.of(
+                            cipherWithMode(
+                                    new AES(detectionLocation), new GCMSIV(detectionLocation)));
+            case "KCCMBlockCipher" -> Optional.of(unknownWithMode(new CCM(detectionLocation))); // ?
+            case "KGCMBlockCipher" -> Optional.of(unknownWithMode(new GCM(detectionLocation))); // ?
+            case "OCBBlockCipher" -> Optional.of(unknownWithMode(new OCB(detectionLocation)));
+
+            // TODO: case ChaCha20Poly1305?
+
             default -> {
                 final Algorithm algorithm =
                         new Algorithm(cipherAlgorithm, Unknown.class, detectionLocation);
@@ -67,5 +89,19 @@ public class BcAeadMapper implements IMapper {
                 yield Optional.of(algorithm);
             }
         };
+    }
+
+    private INode cipherWithMode(@Nonnull Algorithm cipher, @Nonnull Mode mode) {
+        cipher.append(mode);
+        return cipher;
+    }
+
+    private INode unknownWithMode(@Nonnull Mode mode) {
+        Algorithm cipher =
+                new Algorithm(
+                        ITranslator.UNKNOWN,
+                        AuthenticatedEncryption.class,
+                        mode.getDetectionContext());
+        return cipherWithMode(cipher, mode);
     }
 }

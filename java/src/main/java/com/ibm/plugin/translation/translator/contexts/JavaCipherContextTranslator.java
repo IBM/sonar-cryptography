@@ -170,33 +170,8 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                     blockCipher =
                             new BlockCipher(
                                     algorithm, addMode ? mode : null, addPadding ? padding : null);
-                    return Optional.of(blockCipher);
-                case AEAD_BLOCK_CIPHER:
-                    String modeName = valueAction.asString();
-
-                    String defaultAlgorithmName = ITranslator.UNKNOWN;
-                    // Some mode implementations assume a default BlockCipher
-                    switch (modeName) {
-                        case "GCM-SIV":
-                            defaultAlgorithmName = "AES";
-                            break;
-                        case "KGCM":
-                            defaultAlgorithmName = "DSTU7624:2014";
-                            modeName = "GCM";
-                            break;
-                        default:
-                            break;
-                    }
-
-                    mode = new Mode(modeName, detectionLocation);
-
-                    algorithm =
-                            new com.ibm.mapper.model.Algorithm(
-                                    defaultAlgorithmName, detectionLocation);
-                    final Cipher cipher = new Cipher(algorithm);
-                    ae = new AuthenticatedEncryption(cipher, mode);
-                    return Optional.of(ae); */
-                case AEAD_ENGINE:
+                    return Optional.of(blockCipher); */
+                case AEAD_ENGINE, AEAD_BLOCK_CIPHER:
                     BcAeadMapper bcAeadMapper = new BcAeadMapper();
                     return bcAeadMapper
                             .parse(valueAction.asString(), detectionLocation)

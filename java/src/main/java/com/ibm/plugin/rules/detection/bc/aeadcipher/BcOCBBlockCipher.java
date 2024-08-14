@@ -35,14 +35,16 @@ public final class BcOCBBlockCipher {
         // nothing
     }
 
+    private static final String MODE = "OCBBlockCipher";
+
     // TODO: add a way to distinguish between the main and the hash ciphers,
     // that can be used in translation
     private static final IDetectionRule<Tree> CONSTRUCTOR_1 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.modes.OCBBlockCipher")
+                    .forObjectTypes("org.bouncycastle.crypto.modes." + MODE)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("OCB"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(MODE))
                     .withMethodParameter("org.bouncycastle.crypto.BlockCipher") // hash cipher
                     .addDependingDetectionRules(
                             BcBlockCipher.all(new CipherContext(CipherContext.Kind.HASH)))
