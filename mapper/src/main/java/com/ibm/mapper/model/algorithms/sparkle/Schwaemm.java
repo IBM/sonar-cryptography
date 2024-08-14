@@ -21,6 +21,7 @@ package com.ibm.mapper.model.algorithms.sparkle;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
+import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.ClassicalBitSecurityLevel;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.NonceLength;
@@ -28,7 +29,7 @@ import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class Schwaemm extends Algorithm implements AuthenticatedEncryption {
+public class Schwaemm extends Algorithm implements AuthenticatedEncryption, BlockCipher {
     // https://csrc.nist.gov/CSRC/media/Projects/lightweight-cryptography/documents/finalist-round/updated-spec-doc/sparkle-spec-final.pdf
 
     private static final String NAME = "Schwaemm";

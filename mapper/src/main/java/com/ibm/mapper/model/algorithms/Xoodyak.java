@@ -29,6 +29,8 @@ import javax.annotation.Nonnull;
 
 public class Xoodyak extends Algorithm
         implements MessageDigest, StreamCipher, AuthenticatedEncryption {
+    // https://csrc.nist.gov/CSRC/media/Projects/lightweight-cryptography/documents/finalist-round/updated-spec-doc/xoodyak-spec-final.pdf
+
     private static final String NAME = "Xoodyak";
 
     public Xoodyak(@Nonnull DetectionLocation detectionLocation) {
