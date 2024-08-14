@@ -62,7 +62,7 @@ public final class AsymmetricBlockCipherReorganizer {
                                 for (Map.Entry<Class<? extends INode>, INode> childKeyValue :
                                         node.getChildren().entrySet()) {
                                     if (!childKeyValue.getKey().equals(PublicKeyEncryption.class)) {
-                                        newPke.append(childKeyValue.getValue());
+                                        newPke.put(childKeyValue.getValue());
                                     }
                                 }
 
@@ -79,7 +79,7 @@ public final class AsymmetricBlockCipherReorganizer {
                                     return rootsCopy;
                                 } else {
                                     // Replace the previous PublicKeyEncryption node
-                                    parent.append(newPke);
+                                    parent.put(newPke);
                                     return roots;
                                 }
                             });
@@ -108,10 +108,10 @@ public final class AsymmetricBlockCipherReorganizer {
                                 /* Append the DigestSize (without its DigestSize) child to the new DigestSize */
                                 INode digestSize = node.deepCopy();
                                 digestSize.removeChildOfType(MessageDigest.class);
-                                messageDigestChild.append(digestSize);
+                                messageDigestChild.put(digestSize);
 
                                 // Append the MessageDigest to the parent
-                                parent.append(messageDigestChild);
+                                parent.put(messageDigestChild);
                                 return roots;
                             });
 
@@ -137,7 +137,7 @@ public final class AsymmetricBlockCipherReorganizer {
                                         node.getChildren().get(MessageDigest.class).deepCopy();
 
                                 // Add the message digest under the OAEP node
-                                oaepChild.append(messageDigestChild);
+                                oaepChild.put(messageDigestChild);
                                 // Remove the message digest from the BlockCipher's children
                                 node.removeChildOfType(MessageDigest.class);
 

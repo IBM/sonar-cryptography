@@ -31,7 +31,7 @@ public final class SHAKE extends Algorithm implements MessageDigest {
 
     public SHAKE(int digestSize, @Nonnull DetectionLocation detectionLocation) {
         super(NAME, MessageDigest.class, detectionLocation);
-        this.append(new DigestSize(digestSize, detectionLocation));
+        this.put(new DigestSize(digestSize, detectionLocation));
     }
 
     public SHAKE(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull SHAKE shake) {

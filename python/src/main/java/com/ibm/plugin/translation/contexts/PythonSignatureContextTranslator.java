@@ -89,7 +89,7 @@ public final class PythonSignatureContextTranslator {
             case SIGN:
                 baseAlgorithm = new Algorithm(PythonEnricher.TO_BE_ENRICHED, detectionLocation);
                 resAlgorithm = new Signature(baseAlgorithm);
-                resAlgorithm.append(new Sign(detectionLocation));
+                resAlgorithm.put(new Sign(detectionLocation));
                 return Optional.of(resAlgorithm);
             case VERIFY:
             // TODO: Handle this case

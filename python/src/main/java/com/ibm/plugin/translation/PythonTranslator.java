@@ -220,11 +220,11 @@ public class PythonTranslator extends ITranslator<PythonCheck, Tree, Symbol, Pyt
         if (parentNode.hasChildOfType(childNode.getKind()).isPresent()) {
             INode existingChildNode = parentNode.getChildren().get(childNode.getKind());
             for (INode grandChildNode : existingChildNode.getChildren().values()) {
-                childNode.append(grandChildNode);
+                childNode.put(grandChildNode);
             }
-            parentNode.append(childNode);
+            parentNode.put(childNode);
         } else {
-            parentNode.append(childNode);
+            parentNode.put(childNode);
         }
     }
 

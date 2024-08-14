@@ -20,6 +20,7 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyLength;
@@ -29,7 +30,7 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class Aria extends Algorithm implements BlockCipher {
+public final class Aria extends Algorithm implements BlockCipher, AuthenticatedEncryption {
     private static final String NAME = "Aria";
 
     public Aria(@NotNull DetectionLocation detectionLocation) {
@@ -38,13 +39,13 @@ public final class Aria extends Algorithm implements BlockCipher {
 
     public Aria(int keyLength, @NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
-        this.append(new KeyLength(keyLength, detectionLocation));
+        this.put(new KeyLength(keyLength, detectionLocation));
     }
 
     public Aria(int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
-        this.append(new KeyLength(keyLength, detectionLocation));
-        this.append(mode);
+        this.put(new KeyLength(keyLength, detectionLocation));
+        this.put(mode);
     }
 
     public Aria(
@@ -53,9 +54,9 @@ public final class Aria extends Algorithm implements BlockCipher {
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
-        this.append(new KeyLength(keyLength, detectionLocation));
-        this.append(mode);
-        this.append(padding);
+        this.put(new KeyLength(keyLength, detectionLocation));
+        this.put(mode);
+        this.put(padding);
     }
 
     public Aria(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull Aria aria) {

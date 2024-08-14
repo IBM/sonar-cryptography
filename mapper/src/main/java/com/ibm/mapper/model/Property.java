@@ -50,7 +50,7 @@ public abstract class Property implements IProperty {
     }
 
     @Override
-    public void append(@Nonnull INode child) {
+    public void put(@Nonnull INode child) {
         this.children.put(child.getKind(), child);
     }
 

@@ -48,7 +48,7 @@ public abstract class AbstractAssetCollection<K extends INode> implements IAsset
     }
 
     @Override
-    public void append(@NotNull INode child) {
+    public void put(@NotNull INode child) {
         this.children.put(child.getKind(), child);
     }
 

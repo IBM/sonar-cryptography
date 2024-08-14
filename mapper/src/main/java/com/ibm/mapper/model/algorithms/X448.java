@@ -30,6 +30,6 @@ public final class X448 extends Algorithm implements KeyAgreement {
 
     public X448(@NotNull DetectionLocation detectionLocation) {
         super(NAME, KeyAgreement.class, detectionLocation);
-        this.append(new Curve448(detectionLocation));
+        this.put(new Curve448(detectionLocation));
     }
 }

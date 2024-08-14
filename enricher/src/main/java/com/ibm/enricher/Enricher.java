@@ -23,6 +23,7 @@ import com.ibm.enricher.algorithm.AESEnricher;
 import com.ibm.enricher.algorithm.DESEnricher;
 import com.ibm.enricher.algorithm.DHEnricher;
 import com.ibm.enricher.algorithm.DSAEnricher;
+import com.ibm.enricher.algorithm.MacOrDigestEnricher;
 import com.ibm.enricher.algorithm.PBKDF2Enricher;
 import com.ibm.enricher.algorithm.RSAEnricher;
 import com.ibm.enricher.algorithm.RSAssaPSSEnricher;
@@ -30,6 +31,7 @@ import com.ibm.enricher.algorithm.SHA2Enricher;
 import com.ibm.enricher.algorithm.SHA3Enricher;
 import com.ibm.enricher.algorithm.SignatureEnricher;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.algorithms.AES;
 import com.ibm.mapper.model.algorithms.DES;
@@ -63,7 +65,7 @@ public class Enricher implements IEnricher {
                 .map(
                         node -> {
                             final INode enriched = enricher.enrich(node);
-                            enrich(enriched.getChildren().values()).forEach(enriched::append);
+                            enrich(enriched.getChildren().values()).forEach(enriched::put);
                             return enriched;
                         })
                 .toList();
@@ -109,6 +111,10 @@ public class Enricher implements IEnricher {
 
         if (node instanceof Signature) {
             node = new SignatureEnricher().enrich(node);
+        }
+
+        if (node instanceof MessageDigest) {
+            node = new MacOrDigestEnricher().enrich(node);
         }
         return node;
     }

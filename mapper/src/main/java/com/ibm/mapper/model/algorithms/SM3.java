@@ -31,7 +31,7 @@ public final class SM3 extends Algorithm implements MessageDigest {
 
     public SM3(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, MessageDigest.class, detectionLocation);
-        this.append(new DigestSize(256, detectionLocation));
+        this.put(new DigestSize(256, detectionLocation));
     }
 
     public SM3(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull SM3 sm3) {

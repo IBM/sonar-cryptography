@@ -92,8 +92,8 @@ public class JcaCipherMapper implements IMapper {
         }
         final Algorithm algorithm = possibleCipher.get();
 
-        modeOptional.ifPresent(algorithm::append);
-        paddingOptional.ifPresent(algorithm::append);
+        modeOptional.ifPresent(algorithm::put);
+        paddingOptional.ifPresent(algorithm::put);
         return Optional.of(algorithm);
     }
 
@@ -120,7 +120,7 @@ public class JcaCipherMapper implements IMapper {
             case "CHACHA20" -> Optional.of(new ChaCha20(detectionLocation));
             case "CHACHA20-POLY1305" -> {
                 final ChaCha20 chaCha20 = new ChaCha20(detectionLocation);
-                chaCha20.append(new Poly1305(detectionLocation));
+                chaCha20.put(new Poly1305(detectionLocation));
                 yield Optional.of(chaCha20);
             }
             case "RSA" -> Optional.of(new RSA(detectionLocation));

@@ -30,7 +30,7 @@ public final class Ed448 extends Algorithm implements Signature {
 
     public Ed448(@NotNull DetectionLocation detectionLocation) {
         super(NAME, Signature.class, detectionLocation);
-        this.append(new Curve448(detectionLocation));
-        this.append(new SHAKE(256, detectionLocation));
+        this.put(new Curve448(detectionLocation));
+        this.put(new SHAKE(256, detectionLocation));
     }
 }

@@ -38,13 +38,13 @@ public final class RC4 extends Algorithm implements StreamCipher {
 
     public RC4(int keyLength, @NotNull DetectionLocation detectionLocation) {
         super(NAME, StreamCipher.class, detectionLocation);
-        this.append(new KeyLength(keyLength, detectionLocation));
+        this.put(new KeyLength(keyLength, detectionLocation));
     }
 
     public RC4(int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
         super(NAME, StreamCipher.class, detectionLocation);
-        this.append(new KeyLength(keyLength, detectionLocation));
-        this.append(mode);
+        this.put(new KeyLength(keyLength, detectionLocation));
+        this.put(mode);
     }
 
     public RC4(
@@ -53,9 +53,9 @@ public final class RC4 extends Algorithm implements StreamCipher {
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
         super(NAME, StreamCipher.class, detectionLocation);
-        this.append(new KeyLength(keyLength, detectionLocation));
-        this.append(mode);
-        this.append(padding);
+        this.put(new KeyLength(keyLength, detectionLocation));
+        this.put(mode);
+        this.put(padding);
     }
 
     public RC4(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull RC4 rc4) {

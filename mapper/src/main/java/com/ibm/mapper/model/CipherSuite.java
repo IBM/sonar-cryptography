@@ -48,8 +48,8 @@ public final class CipherSuite implements IAsset {
             @Nonnull DetectionLocation detectionLocation) {
         this.name = name;
         this.children = new HashMap<>();
-        this.append(assetCollection);
-        this.append(identifierCollection);
+        this.put(assetCollection);
+        this.put(identifierCollection);
         this.detectionLocation = detectionLocation;
         this.kind = CipherSuite.class;
     }
@@ -60,7 +60,7 @@ public final class CipherSuite implements IAsset {
             @Nonnull DetectionLocation detectionLocation) {
         this.name = name;
         this.children = new HashMap<>();
-        this.append(assetCollection);
+        this.put(assetCollection);
         this.detectionLocation = detectionLocation;
         this.kind = CipherSuite.class;
     }
@@ -139,7 +139,7 @@ public final class CipherSuite implements IAsset {
     }
 
     @Override
-    public void append(@Nonnull INode child) {
+    public void put(@Nonnull INode child) {
         this.children.put(child.getKind(), child);
     }
 

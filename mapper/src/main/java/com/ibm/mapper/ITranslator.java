@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 public abstract class ITranslator<R, T, S, P> {
 
@@ -77,32 +78,51 @@ public abstract class ITranslator<R, T, S, P> {
     private void translateAndAppend(
             int id,
             @Nonnull DetectionStore<R, T, S, P> child,
-            @Nonnull Map<Integer, List<INode>> parentNodes) {
+            @Nonnull Map<Integer, List<INode>> mapOfParentNodes) {
+
         Map<Integer, List<INode>> nodes = translateStore(child);
         // collect nodes and add to parent
-        final List<INode> collection = nodes.values().stream().flatMap(List::stream).toList();
-        Optional.ofNullable(parentNodes.get(id))
+        final List<INode> newNodesCollection =
+                nodes.values().stream().flatMap(List::stream).toList();
+
+        Optional.ofNullable(mapOfParentNodes.get(id))
                 .ifPresentOrElse(
-                        parents -> parents.forEach(p -> collection.forEach(p::append)),
+                        parentNodes -> this.append(parentNodes, newNodesCollection),
                         () -> {
-                            if (parentNodes.isEmpty()) {
-                                parentNodes.put(-1, collection);
+                            // no parent node with related id
+                            if (mapOfParentNodes.isEmpty()) {
+                                mapOfParentNodes.put(-1, newNodesCollection); // add node as main
                             } else {
-                                parentNodes.values().stream()
+                                mapOfParentNodes.values().stream()
                                         .findFirst()
                                         .ifPresent(
-                                                parents ->
-                                                        parents.forEach(
-                                                                p ->
-                                                                        collection.forEach(
-                                                                                p::append)));
+                                                parentNodes ->
+                                                        this.append(
+                                                                parentNodes, newNodesCollection));
                             }
                         });
         if (nodes.isEmpty()) {
-            nodes = parentNodes;
+            nodes = mapOfParentNodes;
         }
         // next iteration
         travers(child, nodes);
+    }
+
+    private void append(@Nonnull List<INode> parentNodes, @Nonnull List<INode> newNodesCollection) {
+        @Unmodifiable
+        final List<INode> copyParentNodes = List.copyOf(parentNodes); // copy of references
+        for (INode parentNode : copyParentNodes) {
+            newNodesCollection.forEach(
+                    childNode -> {
+                        if (parentNode.hasChildOfType(childNode.getKind()).isPresent()) {
+                            final INode newParent = parentNode.deepCopy();
+                            newParent.put(childNode);
+                            parentNodes.add(newParent);
+                        } else {
+                            parentNode.put(childNode);
+                        }
+                    });
+        }
     }
 
     @Nonnull

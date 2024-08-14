@@ -31,7 +31,7 @@ public final class SHA3 extends Algorithm implements MessageDigest {
 
     public SHA3(int digestSize, @Nonnull DetectionLocation detectionLocation) {
         super(NAME + "-" + digestSize, MessageDigest.class, detectionLocation);
-        this.append(new DigestSize(digestSize, detectionLocation));
+        this.put(new DigestSize(digestSize, detectionLocation));
     }
 
     public SHA3(
@@ -39,8 +39,8 @@ public final class SHA3 extends Algorithm implements MessageDigest {
             @Nonnull MessageDigest preHash,
             @Nonnull DetectionLocation detectionLocation) {
         super(NAME + "-" + digestSize, MessageDigest.class, detectionLocation);
-        this.append(new DigestSize(digestSize, detectionLocation));
-        this.append(preHash);
+        this.put(new DigestSize(digestSize, detectionLocation));
+        this.put(preHash);
     }
 
     public SHA3(

@@ -37,8 +37,8 @@ public class PasswordBasedEncryption extends Algorithm implements IPrimitive {
                 "PBEWith" + mac.asString() + "And" + cipher.asString(),
                 PasswordBasedEncryption.class,
                 mac.getDetectionContext());
-        this.append(mac);
-        this.append(cipher);
+        this.put(mac);
+        this.put(cipher);
     }
 
     // example: PBEWithMD5AndDES
@@ -47,14 +47,14 @@ public class PasswordBasedEncryption extends Algorithm implements IPrimitive {
                 "PBEWith" + digest.asString() + "And" + cipher.asString(),
                 PasswordBasedEncryption.class,
                 digest.getDetectionContext());
-        this.append(digest);
-        this.append(cipher);
+        this.put(digest);
+        this.put(cipher);
     }
 
     // example: PBEWithHmacSHA1
     public PasswordBasedEncryption(@Nonnull Mac mac) {
         super("PBEWith" + mac.asString(), PasswordBasedEncryption.class, mac.getDetectionContext());
-        this.append(mac);
+        this.put(mac);
     }
 
     @Nonnull

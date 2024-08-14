@@ -132,7 +132,7 @@ public class PythonEnricher implements IEnricher {
                             ? nodesMap.get(BlockCipher.class)
                             : nodesMap.get(StreamCipher.class);
             INode mode = nodesMap.get(Mode.class);
-            cipher.append(mode);
+            cipher.put(mode);
             newValues.remove(mode);
         }
 
@@ -152,7 +152,7 @@ public class PythonEnricher implements IEnricher {
                             NumberOfIterations.class)) {
                 if (nodesMap.containsKey(clazz)) {
                     INode node = nodesMap.get(clazz);
-                    kdf.append(node);
+                    kdf.put(node);
                     newValues.remove(node);
                 }
             }
@@ -190,7 +190,7 @@ public class PythonEnricher implements IEnricher {
             // Add the Algorithm to the Signature only when the Signature does not yet have
             // EllipticCurveAlgorithm information
             if (signatureChild.getChildren().get(EllipticCurveAlgorithm.class) == null) {
-                signatureChild.append(algorithmChildOfSignature);
+                signatureChild.put(algorithmChildOfSignature);
             }
         } else if (privateKey.getChildren().get(Algorithm.class)
                 instanceof Algorithm algorithmChild) { // `instanceof` also performs null check
@@ -201,13 +201,13 @@ public class PythonEnricher implements IEnricher {
             INode keyLengthChild = privateKey.getChildren().get(KeyLength.class);
             if (keyLengthChild != null) {
                 // Add the KeyLength if it exists
-                algorithmChildOfSignature.append(keyLengthChild.deepCopy());
+                algorithmChildOfSignature.put(keyLengthChild.deepCopy());
             }
 
             // Add the Algorithm to the Signature only when the Signature does not yet have
             // Algorithm information
             if (signatureChild.getChildren().get(Algorithm.class) == null) {
-                signatureChild.append(algorithmChildOfSignature);
+                signatureChild.put(algorithmChildOfSignature);
             }
         }
     }
@@ -244,7 +244,7 @@ public class PythonEnricher implements IEnricher {
             Signature signatureWithName =
                     new Signature(new Algorithm(signatureName, signature.getDetectionContext()));
             signature.getChildren().forEach((k, v) -> signatureWithName.append(v));
-            privateKey.append(signatureWithName);
+            privateKey.put(signatureWithName);
         }
     }
 
@@ -274,11 +274,11 @@ public class PythonEnricher implements IEnricher {
                     .forEach(
                             (k, v) -> {
                                 if (!(v instanceof Signature)) {
-                                    newSignatureNode.append(v);
+                                    newSignatureNode.put(v);
                                 }
                             });
 
-            privateKey.append(newSignatureNode);
+            privateKey.put(newSignatureNode);
         }
     }
 
@@ -297,7 +297,7 @@ public class PythonEnricher implements IEnricher {
             // Add the Algorithm to the PrivateKey only when the PrivateKey does not yet have
             // EllipticCurveAlgorithm information
             if (privateKeyChild.getChildren().get(EllipticCurveAlgorithm.class) == null) {
-                privateKeyChild.append(algorithmChild.deepCopy());
+                privateKeyChild.put(algorithmChild.deepCopy());
             }
         }
     }
@@ -317,7 +317,7 @@ public class PythonEnricher implements IEnricher {
                     .forEach(
                             (k, v) -> {
                                 if (algorithmPublicKey.hasChildOfType(k).isEmpty()) {
-                                    algorithmPublicKey.append(v.deepCopy());
+                                    algorithmPublicKey.put(v.deepCopy());
                                 }
                             });
         }
@@ -329,7 +329,7 @@ public class PythonEnricher implements IEnricher {
         if (node instanceof BlockCipher blockCipher
                 && blockCipher.getChildren().get(Padding.class) instanceof Padding padding
                 && padding.getChildren().get(BlockSize.class) instanceof BlockSize blockSize) {
-            blockCipher.append(blockSize);
+            blockCipher.put(blockSize);
             padding.removeChildOfType(BlockSize.class);
         }
     }

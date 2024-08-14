@@ -53,14 +53,14 @@ public final class AuthenticationAlgorithmMapper implements IMapper {
                     Optional.of(new RSA(detectionLocation))
                             .map(
                                     signature -> {
-                                        signature.append(new SHA(detectionLocation));
+                                        signature.put(new SHA(detectionLocation));
                                         return signature;
                                     });
             case "SHA DSS" ->
                     Optional.of(new DSS(detectionLocation))
                             .map(
                                     signature -> {
-                                        signature.append(new SHA(detectionLocation));
+                                        signature.put(new SHA(detectionLocation));
                                         return signature;
                                     });
             case "SHA" -> Optional.of(new SHA(detectionLocation));

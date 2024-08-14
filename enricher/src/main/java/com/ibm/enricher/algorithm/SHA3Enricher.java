@@ -44,29 +44,29 @@ public class SHA3Enricher implements IEnricher {
                         digestSize -> {
                             switch (digestSize.getValue()) {
                                 case 224 -> {
-                                    sha3.append(new BlockSize(1152, sha3.getDetectionContext()));
-                                    sha3.append(
+                                    sha3.put(new BlockSize(1152, sha3.getDetectionContext()));
+                                    sha3.put(
                                             new Oid(
                                                     "2.16.840.1.101.3.4.2.7",
                                                     sha3.getDetectionContext()));
                                 }
                                 case 256 -> {
-                                    sha3.append(new BlockSize(1088, sha3.getDetectionContext()));
-                                    sha3.append(
+                                    sha3.put(new BlockSize(1088, sha3.getDetectionContext()));
+                                    sha3.put(
                                             new Oid(
                                                     "2.16.840.1.101.3.4.2.8",
                                                     sha3.getDetectionContext()));
                                 }
                                 case 384 -> {
-                                    sha3.append(new BlockSize(832, sha3.getDetectionContext()));
-                                    sha3.append(
+                                    sha3.put(new BlockSize(832, sha3.getDetectionContext()));
+                                    sha3.put(
                                             new Oid(
                                                     "2.16.840.1.101.3.4.2.9",
                                                     sha3.getDetectionContext()));
                                 }
                                 case 512 -> {
-                                    sha3.append(new BlockSize(576, sha3.getDetectionContext()));
-                                    sha3.append(
+                                    sha3.put(new BlockSize(576, sha3.getDetectionContext()));
+                                    sha3.put(
                                             new Oid(
                                                     "2.16.840.1.101.3.4.2.10",
                                                     sha3.getDetectionContext()));

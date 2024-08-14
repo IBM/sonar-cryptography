@@ -38,13 +38,13 @@ public final class RC2 extends Algorithm implements BlockCipher {
 
     public RC2(int keyLength, @NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
-        this.append(new KeyLength(keyLength, detectionLocation));
+        this.put(new KeyLength(keyLength, detectionLocation));
     }
 
     public RC2(int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
-        this.append(new KeyLength(keyLength, detectionLocation));
-        this.append(mode);
+        this.put(new KeyLength(keyLength, detectionLocation));
+        this.put(mode);
     }
 
     public RC2(
@@ -53,9 +53,9 @@ public final class RC2 extends Algorithm implements BlockCipher {
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
-        this.append(new KeyLength(keyLength, detectionLocation));
-        this.append(mode);
-        this.append(padding);
+        this.put(new KeyLength(keyLength, detectionLocation));
+        this.put(mode);
+        this.put(padding);
     }
 
     public RC2(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull RC2 rc2) {

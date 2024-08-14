@@ -17,18 +17,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms;
+package com.ibm.enricher.algorithm;
 
-import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.MaskGenerationFunction;
-import com.ibm.mapper.model.Oid;
-import com.ibm.mapper.utils.DetectionLocation;
-import javax.annotation.Nonnull;
+import com.ibm.enricher.IEnricher;
+import com.ibm.mapper.model.IAsset;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Mac;
+import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.functionality.Digest;
+import com.ibm.mapper.model.functionality.Tag;
+import org.jetbrains.annotations.NotNull;
 
-public final class MGF1 extends Algorithm implements MaskGenerationFunction {
+public class MacOrDigestEnricher implements IEnricher {
 
-    public MGF1(@Nonnull DetectionLocation detectionLocation) {
-        super("MGF1", MaskGenerationFunction.class, detectionLocation);
-        this.put(new Oid("1.2.840.113549.1.1.8", detectionLocation));
+    @Override
+    public @NotNull INode enrich(@NotNull INode node) {
+        if (node instanceof IAsset asset) {
+            if (node.is(Mac.class)) {
+                node.put(new Tag(asset.getDetectionContext()));
+                return node;
+            } else if (node.is(MessageDigest.class)) {
+                node.put(new Digest(asset.getDetectionContext()));
+                return node;
+            }
+        }
+        return node;
     }
 }

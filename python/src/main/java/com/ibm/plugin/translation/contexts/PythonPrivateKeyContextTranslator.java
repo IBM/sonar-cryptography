@@ -149,7 +149,7 @@ public final class PythonPrivateKeyContextTranslator {
                                                 detectionLocation))); // According to Wikipedia
                         // (https://en.wikipedia.org/wiki/EdDSA#Ed25519)
                         signature.append(new Sign(detectionLocation));
-                        privateKey.append(signature);
+                        privateKey.put(signature);
                         // TODO: Should I have `Ed25519` appear somewhere?
                         return Optional.of(privateKey);
                     case Ed448:
@@ -164,7 +164,7 @@ public final class PythonPrivateKeyContextTranslator {
                                                 detectionLocation))); // According to Wikipedia
                         // (https://en.wikipedia.org/wiki/EdDSA#Ed25519)
                         signature.append(new Sign(detectionLocation));
-                        privateKey.append(signature);
+                        privateKey.put(signature);
                         // TODO: Should I have `Ed25519` appear somewhere?
                         return Optional.of(privateKey);
                     case EC:

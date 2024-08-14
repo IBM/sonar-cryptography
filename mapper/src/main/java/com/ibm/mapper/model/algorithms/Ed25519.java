@@ -30,7 +30,7 @@ public final class Ed25519 extends Algorithm implements Signature {
 
     public Ed25519(@NotNull DetectionLocation detectionLocation) {
         super(NAME, Signature.class, detectionLocation);
-        this.append(new Curve25519(detectionLocation));
-        this.append(new SHA2(512, detectionLocation));
+        this.put(new Curve25519(detectionLocation));
+        this.put(new SHA2(512, detectionLocation));
     }
 }

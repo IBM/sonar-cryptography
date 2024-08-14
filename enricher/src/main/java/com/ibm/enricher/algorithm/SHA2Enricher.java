@@ -66,25 +66,25 @@ public class SHA2Enricher implements IEnricher {
                                                                                     sha2
                                                                                             .getDetectionContext()))),
                                             () -> {
-                                                sha2.append(
+                                                sha2.put(
                                                         new BlockSize(
                                                                 512, sha2.getDetectionContext()));
-                                                sha2.append(
+                                                sha2.put(
                                                         new Oid(
                                                                 "2.16.840.1.101.3.4.2.1",
                                                                 sha2.getDetectionContext()));
                                             });
                                 }
                                 case 384 -> {
-                                    sha2.append(new BlockSize(1024, sha2.getDetectionContext()));
-                                    sha2.append(
+                                    sha2.put(new BlockSize(1024, sha2.getDetectionContext()));
+                                    sha2.put(
                                             new Oid(
                                                     "2.16.840.1.101.3.4.2.2",
                                                     sha2.getDetectionContext()));
                                 }
                                 case 512 -> {
-                                    sha2.append(new BlockSize(1024, sha2.getDetectionContext()));
-                                    sha2.append(
+                                    sha2.put(new BlockSize(1024, sha2.getDetectionContext()));
+                                    sha2.put(
                                             new Oid(
                                                     "2.16.840.1.101.3.4.2.3",
                                                     sha2.getDetectionContext()));
@@ -108,10 +108,10 @@ public class SHA2Enricher implements IEnricher {
                                                                                     sha2
                                                                                             .getDetectionContext()))),
                                             () -> {
-                                                sha2.append(
+                                                sha2.put(
                                                         new BlockSize(
                                                                 512, sha2.getDetectionContext()));
-                                                sha2.append(
+                                                sha2.put(
                                                         new Oid(
                                                                 "2.16.840.1.101.3.4.2.4",
                                                                 sha2.getDetectionContext()));
@@ -135,7 +135,7 @@ public class SHA2Enricher implements IEnricher {
                     .ifPresent(
                             size -> {
                                 if (size == 512) {
-                                    childNodeSupplier.get().forEach(sha2::append);
+                                    childNodeSupplier.get().forEach(sha2::put);
                                 }
                             });
         }

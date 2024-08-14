@@ -93,7 +93,7 @@ public final class MacReorganizer {
                                         // (only when `cipherParent` does not already have such a
                                         // child)
                                         if (cipherParent.hasChildOfType(kind).isEmpty()) {
-                                            cipherParent.append(child);
+                                            cipherParent.put(child);
                                         }
                                         // Remove the entry from iterator (to avoid concurrency
                                         // issues)

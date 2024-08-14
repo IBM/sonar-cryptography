@@ -45,7 +45,7 @@ public final class JavaDigestContextTranslator extends JavaAbstractLibraryTransl
                     .parse(value.asString(), detectionLocation)
                     .map(
                             algo -> {
-                                algo.append(new Digest(detectionLocation));
+                                algo.put(new Digest(detectionLocation));
                                 return algo;
                             });
         }

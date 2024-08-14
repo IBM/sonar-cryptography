@@ -57,7 +57,7 @@ public final class JavaKeyContextTranslator extends JavaAbstractLibraryTranslato
                     .map(iNode -> (com.ibm.mapper.model.Algorithm) iNode)
                     .map(
                             algorithmNode -> {
-                                algorithmNode.append(new KeyGeneration(detectionLocation));
+                                algorithmNode.put(new KeyGeneration(detectionLocation));
                                 return algorithmNode;
                             })
                     .map(

@@ -38,6 +38,7 @@ import com.ibm.mapper.model.PasswordLength;
 import com.ibm.mapper.model.SaltLength;
 import com.ibm.mapper.model.SecretKey;
 import com.ibm.mapper.model.functionality.KeyGeneration;
+import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -106,24 +107,6 @@ class JcaPBEKeySpecTest extends TestBase {
         assertThat(secretKeyNode.getChildren()).hasSize(4);
         assertThat(secretKeyNode.asString()).isEqualTo("PBKDF2");
 
-        // KeyLength under SecretKey
-        INode keyLengthNode = secretKeyNode.getChildren().get(KeyLength.class);
-        assertThat(keyLengthNode).isNotNull();
-        assertThat(keyLengthNode.getChildren()).isEmpty();
-        assertThat(keyLengthNode.asString()).isEqualTo("1024");
-
-        // SaltLength under SecretKey
-        INode saltLengthNode = secretKeyNode.getChildren().get(SaltLength.class);
-        assertThat(saltLengthNode).isNotNull();
-        assertThat(saltLengthNode.getChildren()).isEmpty();
-        assertThat(saltLengthNode.asString()).isEqualTo("192");
-
-        // PasswordLength under SecretKey
-        INode passwordLengthNode = secretKeyNode.getChildren().get(PasswordLength.class);
-        assertThat(passwordLengthNode).isNotNull();
-        assertThat(passwordLengthNode.getChildren()).isEmpty();
-        assertThat(passwordLengthNode.asString()).isEqualTo("32");
-
         // PasswordBasedKeyDerivationFunction under SecretKey
         INode passwordBasedKeyDerivationFunctionNode =
                 secretKeyNode.getChildren().get(PasswordBasedKeyDerivationFunction.class);
@@ -134,8 +117,14 @@ class JcaPBEKeySpecTest extends TestBase {
         // Mac under PasswordBasedKeyDerivationFunction under SecretKey
         INode macNode = passwordBasedKeyDerivationFunctionNode.getChildren().get(Mac.class);
         assertThat(macNode).isNotNull();
-        assertThat(macNode.getChildren()).isEmpty();
+        assertThat(macNode.getChildren()).hasSize(1);
         assertThat(macNode.asString()).isEqualTo("SHA1");
+
+        // Tag under Mac under PasswordBasedKeyDerivationFunction under SecretKey
+        INode tagNode = macNode.getChildren().get(Tag.class);
+        assertThat(tagNode).isNotNull();
+        assertThat(tagNode.getChildren()).isEmpty();
+        assertThat(tagNode.asString()).isEqualTo("TAG");
 
         // KeyGeneration under PasswordBasedKeyDerivationFunction under SecretKey
         INode keyGenerationNode =
@@ -149,5 +138,23 @@ class JcaPBEKeySpecTest extends TestBase {
         assertThat(oidNode).isNotNull();
         assertThat(oidNode.getChildren()).isEmpty();
         assertThat(oidNode.asString()).isEqualTo("1.2.840.113549.1.5.12");
+
+        // KeyLength under SecretKey
+        INode keyLengthNode = secretKeyNode.getChildren().get(KeyLength.class);
+        assertThat(keyLengthNode).isNotNull();
+        assertThat(keyLengthNode.getChildren()).isEmpty();
+        assertThat(keyLengthNode.asString()).isEqualTo("1024");
+
+        // PasswordLength under SecretKey
+        INode passwordLengthNode = secretKeyNode.getChildren().get(PasswordLength.class);
+        assertThat(passwordLengthNode).isNotNull();
+        assertThat(passwordLengthNode.getChildren()).isEmpty();
+        assertThat(passwordLengthNode.asString()).isEqualTo("32");
+
+        // SaltLength under SecretKey
+        INode saltLengthNode = secretKeyNode.getChildren().get(SaltLength.class);
+        assertThat(saltLengthNode).isNotNull();
+        assertThat(saltLengthNode.getChildren()).isEmpty();
+        assertThat(saltLengthNode.asString()).isEqualTo("192");
     }
 }

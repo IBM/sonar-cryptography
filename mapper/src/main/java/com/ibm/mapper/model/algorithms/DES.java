@@ -39,15 +39,15 @@ public final class DES extends Algorithm implements BlockCipher {
 
     public DES(int keyLength, @NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
-        this.append(new KeyLength(keyLength, detectionLocation));
-        this.append(new BlockSize(64, detectionLocation));
+        this.put(new KeyLength(keyLength, detectionLocation));
+        this.put(new BlockSize(64, detectionLocation));
     }
 
     public DES(int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
-        this.append(new KeyLength(keyLength, detectionLocation));
-        this.append(mode);
-        this.append(new BlockSize(64, detectionLocation));
+        this.put(new KeyLength(keyLength, detectionLocation));
+        this.put(mode);
+        this.put(new BlockSize(64, detectionLocation));
     }
 
     public DES(
@@ -56,16 +56,16 @@ public final class DES extends Algorithm implements BlockCipher {
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
-        this.append(new KeyLength(keyLength, detectionLocation));
-        this.append(mode);
-        this.append(padding);
-        this.append(new BlockSize(64, detectionLocation));
+        this.put(new KeyLength(keyLength, detectionLocation));
+        this.put(mode);
+        this.put(padding);
+        this.put(new BlockSize(64, detectionLocation));
     }
 
     public DES(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
-        this.append(mode);
-        this.append(new BlockSize(64, detectionLocation));
+        this.put(mode);
+        this.put(new BlockSize(64, detectionLocation));
     }
 
     public DES(
@@ -73,9 +73,9 @@ public final class DES extends Algorithm implements BlockCipher {
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
-        this.append(mode);
-        this.append(padding);
-        this.append(new BlockSize(64, detectionLocation));
+        this.put(mode);
+        this.put(padding);
+        this.put(new BlockSize(64, detectionLocation));
     }
 
     public DES(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull DES des) {

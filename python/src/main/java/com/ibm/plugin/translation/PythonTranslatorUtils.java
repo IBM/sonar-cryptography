@@ -51,12 +51,12 @@ public final class PythonTranslatorUtils {
                 new EllipticCurveAlgorithm(baseAlgorithm, ellipticCurve);
 
         resAlgorithm.append(new KeyGeneration(detectionLocation));
-        privateKey.append(resAlgorithm);
+        privateKey.put(resAlgorithm);
 
         PublicKey publicKey = new PublicKey(algorithmName, detectionLocation);
-        publicKey.append(resAlgorithm.deepCopy());
+        publicKey.put(resAlgorithm.deepCopy());
 
-        privateKey.append(publicKey);
+        privateKey.put(publicKey);
 
         return privateKey;
     }
@@ -69,18 +69,18 @@ public final class PythonTranslatorUtils {
         PrivateKey privateKey = new PrivateKey(algorithmName, detectionLocation);
         Algorithm baseAlgorithm = new Algorithm(algorithmName, detectionLocation);
 
-        baseAlgorithm.append(new KeyGeneration(detectionLocation));
-        privateKey.append(baseAlgorithm);
+        baseAlgorithm.put(new KeyGeneration(detectionLocation));
+        privateKey.put(baseAlgorithm);
         if (keyLength.isPresent()) {
-            privateKey.append(new KeyLength(keyLength.get(), detectionLocation));
-            baseAlgorithm.append(new KeyLength(keyLength.get(), detectionLocation));
+            privateKey.put(new KeyLength(keyLength.get(), detectionLocation));
+            baseAlgorithm.put(new KeyLength(keyLength.get(), detectionLocation));
         }
 
         PublicKey publicKey = new PublicKey(algorithmName, detectionLocation);
-        keyLength.ifPresent(integer -> publicKey.append(new KeyLength(integer, detectionLocation)));
-        publicKey.append(baseAlgorithm.deepCopy());
+        keyLength.ifPresent(integer -> publicKey.put(new KeyLength(integer, detectionLocation)));
+        publicKey.put(baseAlgorithm.deepCopy());
 
-        privateKey.append(publicKey);
+        privateKey.put(publicKey);
 
         return privateKey;
     }
@@ -90,8 +90,8 @@ public final class PythonTranslatorUtils {
             @Nonnull String algorithmName, @Nonnull DetectionLocation detectionLocation) {
         PrivateKey privateKey = new PrivateKey(algorithmName, detectionLocation);
         Algorithm baseAlgorithm = new Algorithm(algorithmName, detectionLocation);
-        baseAlgorithm.append(new KeyGeneration(detectionLocation));
-        privateKey.append(baseAlgorithm);
+        baseAlgorithm.put(new KeyGeneration(detectionLocation));
+        privateKey.put(baseAlgorithm);
         return privateKey;
     }
 
@@ -100,8 +100,8 @@ public final class PythonTranslatorUtils {
             @Nonnull String algorithmName, @Nonnull DetectionLocation detectionLocation) {
         PublicKey publicKey = new PublicKey(algorithmName, detectionLocation);
         Algorithm baseAlgorithm = new Algorithm(algorithmName, detectionLocation);
-        baseAlgorithm.append(new KeyGeneration(detectionLocation));
-        publicKey.append(baseAlgorithm);
+        baseAlgorithm.put(new KeyGeneration(detectionLocation));
+        publicKey.put(baseAlgorithm);
         return publicKey;
     }
 
@@ -113,7 +113,7 @@ public final class PythonTranslatorUtils {
         StreamCipher cipher =
                 new StreamCipher(new Algorithm(cipherString, detectionLocation), null, null);
 
-        cipher.append(new Mac(new Algorithm(macString, detectionLocation)));
+        cipher.put(new Mac(new Algorithm(macString, detectionLocation)));
         return cipher;
     }
 
@@ -145,7 +145,7 @@ public final class PythonTranslatorUtils {
 
         String algorithmName = "AES";
         SecretKey secretKey = new SecretKey(algorithmName, detectionLocation);
-        secretKey.append(new KeyLength(keyLength, detectionLocation));
+        secretKey.put(new KeyLength(keyLength, detectionLocation));
 
         AuthenticatedEncryption cipher =
                 new AuthenticatedEncryption(
@@ -153,9 +153,9 @@ public final class PythonTranslatorUtils {
                         new Mode(modeString, detectionLocation),
                         null,
                         null);
-        cipher.append(new KeyLength(keyLength, detectionLocation));
-        cipher.append(new KeyGeneration(detectionLocation));
-        secretKey.append(cipher);
+        cipher.put(new KeyLength(keyLength, detectionLocation));
+        cipher.put(new KeyGeneration(detectionLocation));
+        secretKey.put(cipher);
 
         return secretKey;
     }

@@ -29,7 +29,7 @@ public class RSAssaPSSEnricher implements IEnricher {
     @Override
     public @NotNull INode enrich(@NotNull INode node) {
         if (node instanceof RSAssaPSS rsaSsaPSS) {
-            rsaSsaPSS.append(new Oid("1.2.840.113549.1.1.10", rsaSsaPSS.getDetectionContext()));
+            rsaSsaPSS.put(new Oid("1.2.840.113549.1.1.10", rsaSsaPSS.getDetectionContext()));
             return rsaSsaPSS;
         }
         return node;

@@ -52,7 +52,7 @@ public final class UsualPerformActions {
                     Class<? extends INode> kind = entry.getKey();
                     INode child = entry.getValue();
                     // Append the child to `parent` and remove it from `node`
-                    parent.append(child);
+                    parent.put(child);
                     node.removeChildOfType(kind);
                 }
                 return roots;
@@ -80,7 +80,7 @@ public final class UsualPerformActions {
         // Add all the children to the new node
         for (Map.Entry<Class<? extends INode>, INode> childKeyValue :
                 originalNode.getChildren().entrySet()) {
-            newNode.append(childKeyValue.getValue());
+            newNode.put(childKeyValue.getValue());
         }
 
         if (parent == null) {
@@ -96,7 +96,7 @@ public final class UsualPerformActions {
             return rootsCopy;
         } else {
             // Replace the previous node
-            parent.append(newNode);
+            parent.put(newNode);
             return roots;
         }
     }

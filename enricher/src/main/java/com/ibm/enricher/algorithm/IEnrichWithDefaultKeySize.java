@@ -35,7 +35,7 @@ public interface IEnrichWithDefaultKeySize {
                 case "Jca":
                     {
                         keyLength = new KeyLength(defaultKeySize, asset.getDetectionContext());
-                        asset.append(keyLength);
+                        asset.put(keyLength);
                     }
             }
         }
