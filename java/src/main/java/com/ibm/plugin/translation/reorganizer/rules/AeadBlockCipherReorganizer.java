@@ -65,7 +65,7 @@ public final class AeadBlockCipherReorganizer {
                                 for (Map.Entry<Class<? extends INode>, INode> childKeyValue :
                                         node.getChildren().entrySet()) {
                                     if (!childKeyValue.getKey().equals(BlockCipher.class)) {
-                                        newAuthenticatedEncryption.append(childKeyValue.getValue());
+                                        newAuthenticatedEncryption.put(childKeyValue.getValue());
                                     }
                                 }
 
@@ -82,7 +82,7 @@ public final class AeadBlockCipherReorganizer {
                                     return rootsCopy;
                                 } else {
                                     // Replace the previous AuthenticatedEncryption node
-                                    parent.append(newAuthenticatedEncryption);
+                                    parent.put(newAuthenticatedEncryption);
                                     return roots;
                                 }
                             });

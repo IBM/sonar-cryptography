@@ -31,11 +31,11 @@ public class PhotonBeetleHash extends Algorithm implements MessageDigest {
 
     public PhotonBeetleHash(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, MessageDigest.class, detectionLocation);
-        this.append(new DigestSize(256, detectionLocation));
+        this.put(new DigestSize(256, detectionLocation));
     }
 
     public PhotonBeetleHash(int blockSize, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
-        this.append(new BlockSize(blockSize, detectionLocation));
+        this.put(new BlockSize(blockSize, detectionLocation));
     }
 }

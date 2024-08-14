@@ -30,7 +30,7 @@ public class Grain128AEADv2 extends Grain {
 
     public Grain128AEADv2(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, AuthenticatedEncryption.class, detectionLocation);
-        this.append(new KeyLength(128, detectionLocation));
-        this.append(new ClassicalBitSecurityLevel(128, detectionLocation));
+        this.put(new KeyLength(128, detectionLocation));
+        this.put(new ClassicalBitSecurityLevel(128, detectionLocation));
     }
 }

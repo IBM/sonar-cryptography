@@ -37,8 +37,8 @@ public class Isap extends Algorithm implements AuthenticatedEncryption {
 
     protected Isap(@Nonnull String name, @NotNull DetectionLocation detectionLocation) {
         super(name, AuthenticatedEncryption.class, detectionLocation);
-        this.append(new KeyLength(128, detectionLocation));
-        this.append(new TagLength(128, detectionLocation));
-        this.append(new ClassicalBitSecurityLevel(128, detectionLocation));
+        this.put(new KeyLength(128, detectionLocation));
+        this.put(new TagLength(128, detectionLocation));
+        this.put(new ClassicalBitSecurityLevel(128, detectionLocation));
     }
 }

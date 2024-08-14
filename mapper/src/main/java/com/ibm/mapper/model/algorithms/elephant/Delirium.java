@@ -31,9 +31,9 @@ public class Delirium extends Elephant {
 
     public Delirium(@NotNull DetectionLocation detectionLocation) {
         super(NAME, detectionLocation);
-        this.append(new KeyLength(128, detectionLocation));
-        this.append(new BlockSize(200, detectionLocation));
-        this.append(new TagLength(128, detectionLocation));
-        this.append(new ClassicalBitSecurityLevel(127, detectionLocation));
+        this.put(new KeyLength(128, detectionLocation));
+        this.put(new BlockSize(200, detectionLocation));
+        this.put(new TagLength(128, detectionLocation));
+        this.put(new ClassicalBitSecurityLevel(127, detectionLocation));
     }
 }

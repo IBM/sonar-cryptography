@@ -76,7 +76,7 @@ public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslato
 
                     baseAlgorithm = new Algorithm("BLAKE", detectionLocation);
                     messageDigest = new MessageDigest(baseAlgorithm);
-                    mac.append(messageDigest);
+                    mac.put(messageDigest);
                     break;
                 case "BlockCipherMac", "CBCBlockCipherMac", "ISO9797Alg3Mac":
                     macAlgorithm =
@@ -84,7 +84,7 @@ public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslato
                     mac = new HMAC(macAlgorithm);
 
                     mode = new Mode("CBC", detectionLocation);
-                    mac.append(mode);
+                    mac.put(mode);
                     break;
                 case "CFBBlockCipherMac":
                     macAlgorithm =
@@ -92,7 +92,7 @@ public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslato
                     mac = new HMAC(macAlgorithm);
 
                     mode = new Mode("CFB", detectionLocation);
-                    mac.append(mode);
+                    mac.put(mode);
                     break;
                 case "CMac", "CMacWithIV":
                     macAlgorithm = new Algorithm("CMAC-" + ITranslator.UNKNOWN, detectionLocation);
@@ -104,7 +104,7 @@ public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslato
 
                     baseAlgorithm = new Algorithm("DSTU 7564", detectionLocation);
                     messageDigest = new MessageDigest(baseAlgorithm);
-                    mac.append(messageDigest);
+                    mac.put(messageDigest);
                     break;
                 case "DSTU7624Mac":
                     macAlgorithm = new Algorithm("DSTU 7624:2014-MAC", detectionLocation);
@@ -112,14 +112,14 @@ public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslato
 
                     baseAlgorithm = new Algorithm("DSTU 7624:2014", detectionLocation);
                     blockCipher = new BlockCipher(baseAlgorithm, null, null);
-                    mac.append(blockCipher);
+                    mac.put(blockCipher);
                     break;
                 case "GMac", "KGMac":
                     macAlgorithm = new Algorithm("GMAC-" + ITranslator.UNKNOWN, detectionLocation);
                     mac = new HMAC(macAlgorithm);
 
                     mode = new Mode("GCM", detectionLocation);
-                    mac.append(mode);
+                    mac.put(mode);
                     break;
                 case "GOST28147Mac":
                     macAlgorithm = new Algorithm("GOST 28147-89-MAC", detectionLocation);
@@ -127,7 +127,7 @@ public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslato
 
                     baseAlgorithm = new Algorithm("GOST 28147-89", detectionLocation);
                     blockCipher = new BlockCipher(baseAlgorithm, null, null);
-                    mac.append(blockCipher);
+                    mac.put(blockCipher);
                     break;
                 case "HMac", "OldHMac":
                     macAlgorithm = new Algorithm("HMAC-" + ITranslator.UNKNOWN, detectionLocation);
@@ -139,7 +139,7 @@ public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslato
 
                     baseAlgorithm = new Algorithm("Keccak", detectionLocation);
                     messageDigest = new MessageDigest(baseAlgorithm);
-                    mac.append(messageDigest);
+                    mac.put(messageDigest);
                     break;
                 case "Poly1305":
                     macAlgorithm = new Algorithm("Poly1305", detectionLocation);
@@ -151,7 +151,7 @@ public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslato
 
                     baseAlgorithm = new Algorithm("SipHash", detectionLocation);
                     messageDigest = new MessageDigest(baseAlgorithm);
-                    mac.append(messageDigest);
+                    mac.put(messageDigest);
                     break;
                 case "SipHash128":
                     macAlgorithm = new Algorithm("SipHash", detectionLocation);
@@ -161,9 +161,9 @@ public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslato
                     messageDigest = new MessageDigest(baseAlgorithm);
 
                     DigestSize digestSize = new DigestSize(128, detectionLocation);
-                    messageDigest.append(digestSize);
+                    messageDigest.put(digestSize);
 
-                    mac.append(messageDigest);
+                    mac.put(messageDigest);
                     break;
                 case "SkeinMac":
                     macAlgorithm = new Algorithm("Skein", detectionLocation);
@@ -171,7 +171,7 @@ public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslato
 
                     baseAlgorithm = new Algorithm("Threefish", detectionLocation);
                     blockCipher = new BlockCipher(baseAlgorithm, null, null);
-                    mac.append(blockCipher);
+                    mac.put(blockCipher);
                     break;
                 case "VMPCMac":
                     macAlgorithm = new Algorithm("VMPC", detectionLocation);
@@ -179,7 +179,7 @@ public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslato
 
                     baseAlgorithm = new Algorithm("VMPC", detectionLocation);
                     streamCipher = new StreamCipher(baseAlgorithm, null, null);
-                    mac.append(streamCipher);
+                    mac.put(streamCipher);
                     break;
                 case "Zuc128Mac":
                     macAlgorithm = new Algorithm("ZUC-128", detectionLocation);
@@ -187,7 +187,7 @@ public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslato
 
                     baseAlgorithm = new Algorithm("ZUC-128", detectionLocation);
                     streamCipher = new StreamCipher(baseAlgorithm, null, null);
-                    mac.append(streamCipher);
+                    mac.put(streamCipher);
                     break;
                 case "Zuc256Mac":
                     macAlgorithm = new Algorithm("ZUC-256", detectionLocation);
@@ -195,7 +195,7 @@ public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslato
 
                     baseAlgorithm = new Algorithm("ZUC-256", detectionLocation);
                     streamCipher = new StreamCipher(baseAlgorithm, null, null);
-                    mac.append(streamCipher);
+                    mac.put(streamCipher);
                     break;
                 default:
                     LOGGER.warn("An unknown Mac algorithm was used: its translation may be wrong");
@@ -203,8 +203,8 @@ public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslato
                     macAlgorithm = new Algorithm(valueAction.asString(), detectionLocation);
                     mac = new HMAC(macAlgorithm);
             }
-            mac.append(new Tag(detectionLocation));
-            mac.append(new Digest(detectionLocation));
+            mac.put(new Tag(detectionLocation));
+            mac.put(new Digest(detectionLocation));
             return Optional.of(mac);
         } else if (value instanceof MacSize<Tree> macSize) {
             TagLength tagLength = new TagLength(macSize.getValue(), detectionLocation);

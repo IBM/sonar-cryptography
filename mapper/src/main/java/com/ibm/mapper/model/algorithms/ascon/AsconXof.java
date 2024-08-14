@@ -29,6 +29,6 @@ public final class AsconXof extends Ascon implements MessageDigest {
 
     public AsconXof(@NotNull DetectionLocation detectionLocation) {
         super(NAME, MessageDigest.class, detectionLocation);
-        this.append(new BlockSize(64, detectionLocation));
+        this.put(new BlockSize(64, detectionLocation));
     }
 }

@@ -46,6 +46,6 @@ public class Ascon extends Algorithm implements BlockCipher {
             @Nonnull final Class<? extends IPrimitive> asKind,
             @NotNull DetectionLocation detectionLocation) {
         super(name, asKind, detectionLocation);
-        this.append(new ClassicalBitSecurityLevel(128, detectionLocation));
+        this.put(new ClassicalBitSecurityLevel(128, detectionLocation));
     }
 }

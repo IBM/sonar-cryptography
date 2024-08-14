@@ -31,8 +31,8 @@ public final class Ascon80pq extends Ascon implements AuthenticatedEncryption {
 
     public Ascon80pq(@NotNull DetectionLocation detectionLocation) {
         super(NAME, AuthenticatedEncryption.class, detectionLocation);
-        this.append(new KeyLength(160, detectionLocation));
-        this.append(new TagLength(128, detectionLocation));
-        this.append(new BlockSize(64, detectionLocation));
+        this.put(new KeyLength(160, detectionLocation));
+        this.put(new TagLength(128, detectionLocation));
+        this.put(new BlockSize(64, detectionLocation));
     }
 }

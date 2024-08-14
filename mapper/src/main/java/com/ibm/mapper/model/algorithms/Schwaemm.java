@@ -44,8 +44,8 @@ public class Schwaemm extends Algorithm implements AuthenticatedEncryption {
 
     public Schwaemm(int rate, int capacity, @Nonnull DetectionLocation detectionLocation) {
         this(NAME + rate + "-" + capacity, detectionLocation);
-        this.append(new KeyLength(capacity, detectionLocation));
-        this.append(new TagLength(capacity, detectionLocation));
-        this.append(new ClassicalBitSecurityLevel(capacity - 8, detectionLocation));
+        this.put(new KeyLength(capacity, detectionLocation));
+        this.put(new TagLength(capacity, detectionLocation));
+        this.put(new ClassicalBitSecurityLevel(capacity - 8, detectionLocation));
     }
 }

@@ -28,6 +28,6 @@ public class IsapK128 extends Isap {
 
     public IsapK128(@NotNull DetectionLocation detectionLocation) {
         super(NAME, detectionLocation);
-        this.append(new BlockSize(144, detectionLocation));
+        this.put(new BlockSize(144, detectionLocation));
     }
 }

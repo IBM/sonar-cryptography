@@ -86,14 +86,14 @@ public class BcAeadMapper implements IMapper {
             default -> {
                 final Algorithm algorithm =
                         new Algorithm(cipherAlgorithm, Unknown.class, detectionLocation);
-                algorithm.append(new Unknown(detectionLocation));
+                algorithm.put(new Unknown(detectionLocation));
                 yield Optional.of(algorithm);
             }
         };
     }
 
     private INode cipherWithMode(@Nonnull Algorithm cipher, @Nonnull Mode mode) {
-        cipher.append(mode);
+        cipher.put(mode);
         return cipher;
     }
 

@@ -185,10 +185,10 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                     padding = new Padding(valueAction.asString(), detectionLocation);
                     switch (valueAction.asString()) {
                         case "OAEP":
-                            blockCipher.append(new OAEP(padding));
+                            blockCipher.put(new OAEP(padding));
                             break;
                         default:
-                            blockCipher.append(padding);
+                            blockCipher.put(padding);
                             break;
                     }
 
@@ -202,10 +202,10 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                     padding = new Padding(valueAction.asString(), detectionLocation);
                     switch (valueAction.asString()) {
                         case "OAEP":
-                            pke.append(new OAEP(padding));
+                            pke.put(new OAEP(padding));
                             break;
                         default:
-                            pke.append(padding);
+                            pke.put(padding);
                             break;
                     }
 
@@ -244,7 +244,7 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
 
                     if (valueAction.asString().equals("OpenSSLPBE")) {
                         // Default digest is MD5
-                        pbe.append(
+                        pbe.put(
                                 new MessageDigest(
                                         new com.ibm.mapper.model.Algorithm(
                                                 "MD5", detectionLocation)));

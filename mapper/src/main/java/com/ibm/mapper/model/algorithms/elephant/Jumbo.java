@@ -31,9 +31,9 @@ public class Jumbo extends Elephant {
 
     public Jumbo(@NotNull DetectionLocation detectionLocation) {
         super(NAME, detectionLocation);
-        this.append(new KeyLength(128, detectionLocation));
-        this.append(new BlockSize(176, detectionLocation));
-        this.append(new TagLength(64, detectionLocation));
-        this.append(new ClassicalBitSecurityLevel(127, detectionLocation));
+        this.put(new KeyLength(128, detectionLocation));
+        this.put(new BlockSize(176, detectionLocation));
+        this.put(new TagLength(64, detectionLocation));
+        this.put(new ClassicalBitSecurityLevel(127, detectionLocation));
     }
 }
