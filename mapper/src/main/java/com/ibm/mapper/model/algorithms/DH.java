@@ -34,13 +34,13 @@ public final class DH extends Algorithm implements Signature, KeyAgreement, Publ
 
     public DH(@NotNull DetectionLocation detectionLocation) {
         super(NAME, PublicKeyEncryption.class, detectionLocation);
-        this.append(new Oid("1.2.840.113549.1.3.1", detectionLocation));
+        this.put(new Oid("1.2.840.113549.1.3.1", detectionLocation));
     }
 
     public DH(
             @Nonnull final Class<? extends IPrimitive> asKind,
             @NotNull DetectionLocation detectionLocation) {
         super(NAME, asKind, detectionLocation);
-        this.append(new Oid("1.2.840.113549.1.3.1", detectionLocation));
+        this.put(new Oid("1.2.840.113549.1.3.1", detectionLocation));
     }
 }

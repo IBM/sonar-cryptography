@@ -36,7 +36,7 @@ public final class TLS extends Protocol {
 
     public TLS(@Nonnull Version version) {
         super(new Protocol("TLSv" + version.asString(), version.getDetectionContext()), TLS.class);
-        this.append(version);
+        this.put(version);
     }
 
     @Nonnull

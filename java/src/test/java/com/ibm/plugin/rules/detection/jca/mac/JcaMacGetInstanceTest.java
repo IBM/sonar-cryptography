@@ -30,7 +30,6 @@ import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.Oid;
-import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
 import java.util.List;
@@ -75,7 +74,7 @@ class JcaMacGetInstanceTest extends TestBase {
         // Mac
         INode macNode = nodes.get(0);
         assertThat(macNode.getKind()).isEqualTo(Mac.class);
-        assertThat(macNode.getChildren()).hasSize(5);
+        assertThat(macNode.getChildren()).hasSize(4);
         assertThat(macNode.asString()).isEqualTo("SHA3-384");
 
         // BlockSize under Mac
@@ -91,16 +90,10 @@ class JcaMacGetInstanceTest extends TestBase {
         assertThat(oidNode.asString()).isEqualTo("2.16.840.1.101.3.4.2.9");
 
         // Digest under Mac
-        INode digestNode = macNode.getChildren().get(Digest.class);
+        INode digestNode = macNode.getChildren().get(Tag.class);
         assertThat(digestNode).isNotNull();
         assertThat(digestNode.getChildren()).isEmpty();
-        assertThat(digestNode.asString()).isEqualTo("DIGEST");
-
-        // Tag under Mac
-        INode tagNode = macNode.getChildren().get(Tag.class);
-        assertThat(tagNode).isNotNull();
-        assertThat(tagNode.getChildren()).isEmpty();
-        assertThat(tagNode.asString()).isEqualTo("TAG");
+        assertThat(digestNode.asString()).isEqualTo("TAG");
 
         // DigestSize under Mac
         INode digestSizeNode = macNode.getChildren().get(DigestSize.class);

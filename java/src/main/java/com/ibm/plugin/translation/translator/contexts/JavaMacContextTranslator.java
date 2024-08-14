@@ -26,8 +26,6 @@ import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.mapper.mapper.jca.JcaMacMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.TagLength;
-import com.ibm.mapper.model.functionality.Digest;
-import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
@@ -45,14 +43,7 @@ public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslato
             @NotNull DetectionLocation detectionLocation) {
         if (value instanceof com.ibm.engine.model.Algorithm<Tree>) {
             JcaMacMapper jcaMacMapper = new JcaMacMapper();
-            return jcaMacMapper
-                    .parse(value.asString(), detectionLocation)
-                    .map(
-                            algo -> {
-                                algo.append(new Digest(detectionLocation));
-                                algo.append(new Tag(detectionLocation));
-                                return algo;
-                            });
+            return jcaMacMapper.parse(value.asString(), detectionLocation).map(a -> a);
         } else if (value instanceof MacSize<Tree> macSize) {
             TagLength tagLength = new TagLength(macSize.getValue(), detectionLocation);
             return Optional.of(tagLength);

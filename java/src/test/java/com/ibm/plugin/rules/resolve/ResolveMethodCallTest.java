@@ -63,9 +63,9 @@ class ResolveMethodCallTest extends TestBase {
                 getStoresOfValueType(Curve.class, detectionStore.getChildren());
         assertThat(curves).hasSize(3);
 
-        AtomicBoolean saw_secp256r1 = new AtomicBoolean(false);
-        AtomicBoolean saw_secp384r1 = new AtomicBoolean(false);
-        AtomicBoolean saw_secp521r1 = new AtomicBoolean(false);
+        AtomicBoolean sawSecp256r1 = new AtomicBoolean(false);
+        AtomicBoolean sawSecp384r1 = new AtomicBoolean(false);
+        AtomicBoolean sawSecp521r1 = new AtomicBoolean(false);
         for (DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> curve : curves) {
             assertThat(curve.getDetectionValues()).hasSize(1);
             IValue<Tree> curveValue = curve.getDetectionValues().get(0);
@@ -78,19 +78,28 @@ class ResolveMethodCallTest extends TestBase {
                             str -> {
                                 switch (str) {
                                     case "secp256r1" -> {
-                                        assertThat(saw_secp256r1.get()).isFalse();
-                                        saw_secp256r1.set(true);
+                                        assertThat(sawSecp256r1.get()).isFalse();
+                                        sawSecp256r1.set(true);
                                     }
                                     case "secp384r1" -> {
-                                        assertThat(saw_secp384r1.get()).isFalse();
-                                        saw_secp384r1.set(true);
+                                        assertThat(sawSecp384r1.get()).isFalse();
+                                        sawSecp384r1.set(true);
                                     }
                                     case "secp521r1" -> {
-                                        assertThat(saw_secp521r1.get()).isFalse();
-                                        saw_secp521r1.set(true);
+                                        assertThat(sawSecp521r1.get()).isFalse();
+                                        sawSecp521r1.set(true);
                                     }
+                                    default ->
+                                            throw new IllegalStateException(
+                                                    "Unexpected value: " + str);
                                 }
                             });
         }
+
+        /*
+         * Translation
+         */
+
+        // TODO: write reorganizer
     }
 }

@@ -101,8 +101,8 @@ public final class PythonSecretKeyContextTranslator {
             StreamCipher cipher =
                     PythonTranslatorUtils.generateNewStreamCipher(
                             cipherString, macString, detectionLocation);
-            cipher.append(new KeyGeneration(detectionLocation));
-            secretKey.append(cipher);
+            cipher.put(new KeyGeneration(detectionLocation));
+            secretKey.put(cipher);
             return Optional.of(secretKey);
         }
 

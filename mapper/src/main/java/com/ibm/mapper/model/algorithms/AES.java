@@ -20,6 +20,7 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.IPrimitive;
@@ -30,25 +31,25 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class AES extends Algorithm implements BlockCipher {
+public final class AES extends Algorithm implements BlockCipher, AuthenticatedEncryption {
     private static final String NAME = "AES";
 
     public AES(@NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
-        this.append(new BlockSize(128, detectionLocation));
+        this.put(new BlockSize(128, detectionLocation));
     }
 
     public AES(int keyLength, @NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
-        this.append(new KeyLength(keyLength, detectionLocation));
-        this.append(new BlockSize(128, detectionLocation));
+        this.put(new KeyLength(keyLength, detectionLocation));
+        this.put(new BlockSize(128, detectionLocation));
     }
 
     public AES(int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
-        this.append(new KeyLength(keyLength, detectionLocation));
-        this.append(new BlockSize(128, detectionLocation));
-        this.append(mode);
+        this.put(new KeyLength(keyLength, detectionLocation));
+        this.put(new BlockSize(128, detectionLocation));
+        this.put(mode);
     }
 
     public AES(
@@ -57,10 +58,10 @@ public final class AES extends Algorithm implements BlockCipher {
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
-        this.append(new KeyLength(keyLength, detectionLocation));
-        this.append(new BlockSize(128, detectionLocation));
-        this.append(mode);
-        this.append(padding);
+        this.put(new KeyLength(keyLength, detectionLocation));
+        this.put(new BlockSize(128, detectionLocation));
+        this.put(mode);
+        this.put(padding);
     }
 
     public AES(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull AES aes) {

@@ -52,7 +52,7 @@ public final class JavaPRNGContextTranslator implements IContextTranslationWithK
             return prngOptional.map(
                     prng -> {
                         Seed seed = new Seed(seedSize.getValue(), detectionLocation);
-                        prng.append(seed);
+                        prng.put(seed);
                         return prng;
                     });
         }

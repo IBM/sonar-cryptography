@@ -36,7 +36,7 @@ public class PBKDF2Enricher implements IEnricher {
                     .ifPresent(
                             mac -> {
                                 if (mac instanceof SHA sha) {
-                                    pbkdf2.append(
+                                    pbkdf2.put(
                                             new Oid(
                                                     "1.2.840.113549.1.5.12",
                                                     sha.getDetectionContext()));

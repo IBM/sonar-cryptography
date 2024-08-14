@@ -59,7 +59,7 @@ public class JcaModeMapper implements IMapper {
         return map(modeString, detectionLocation)
                 .map(
                         mode -> {
-                            optionalBlockSize.ifPresent(mode::append);
+                            optionalBlockSize.ifPresent(mode::put);
                             return mode;
                         });
     }

@@ -72,6 +72,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.apache.commons.io.FileUtils;
 import org.cyclonedx.Version;
+import org.cyclonedx.exception.GeneratorException;
 import org.cyclonedx.generators.BomGeneratorFactory;
 import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.model.Bom;
@@ -82,10 +83,13 @@ import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Service;
 import org.cyclonedx.model.component.evidence.Occurrence;
 import org.cyclonedx.model.metadata.ToolInformation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CBOMOutputFile implements IOutputFile {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(CBOMOutputFile.class);
     private static final Version schema = Version.VERSION_16;
+
     @Nonnull private final Map<String, Component> components;
     @Nonnull private final Map<String, Dependency> dependencies;
 
@@ -297,11 +301,13 @@ public class CBOMOutputFile implements IOutputFile {
     public void saveTo(@Nonnull File file) {
         final Bom bom = getBom();
         final BomJsonGenerator bomGenerator = BomGeneratorFactory.createJson(schema, bom);
-        final String bomString = bomGenerator.toJsonString();
         try {
+            final String bomString = bomGenerator.toJsonString();
             FileUtils.write(file, bomString, StandardCharsets.UTF_8, false);
         } catch (IOException e) {
-            // nothing
+            LOGGER.error("Could not write CBOM file: {}", e.getMessage());
+        } catch (GeneratorException e) {
+            LOGGER.error("Could not generate CBOM: {}", e.getMessage());
         }
     }
 

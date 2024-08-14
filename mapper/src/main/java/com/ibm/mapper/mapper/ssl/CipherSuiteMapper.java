@@ -111,7 +111,7 @@ public final class CipherSuiteMapper implements IMapper {
                             return Optional.of(identifiers.stream());
                         })
                 .map(identifierStream -> new IdentifierCollection(identifierStream.toList()))
-                .ifPresent(cipherSuite::append);
+                .ifPresent(cipherSuite::put);
 
         return Optional.of(cipherSuite);
     }

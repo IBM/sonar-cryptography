@@ -36,19 +36,19 @@ public final class RSA extends Algorithm implements KeyAgreement, Signature, Pub
 
     public RSA(@NotNull DetectionLocation detectionLocation) {
         super(NAME, PublicKeyEncryption.class, detectionLocation);
-        this.append(new Oid(OID, detectionLocation));
+        this.put(new Oid(OID, detectionLocation));
     }
 
     public RSA(@Nonnull KeyLength keyLength, @Nonnull DetectionLocation detectionLocation) {
         super(NAME, PublicKeyEncryption.class, detectionLocation);
-        this.append(keyLength);
-        this.append(new Oid(OID, detectionLocation));
+        this.put(keyLength);
+        this.put(new Oid(OID, detectionLocation));
     }
 
     public RSA(
             @Nonnull final Class<? extends IPrimitive> asKind,
             @NotNull DetectionLocation detectionLocation) {
         super(NAME, asKind, detectionLocation);
-        this.append(new Oid(OID, detectionLocation));
+        this.put(new Oid(OID, detectionLocation));
     }
 }

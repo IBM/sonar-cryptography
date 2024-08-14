@@ -38,14 +38,14 @@ public final class DESedeWrap extends Algorithm implements BlockCipher {
 
     public DESedeWrap(int keyLength, @NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
-        this.append(new KeyLength(keyLength, detectionLocation));
+        this.put(new KeyLength(keyLength, detectionLocation));
     }
 
     public DESedeWrap(
             int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
-        this.append(new KeyLength(keyLength, detectionLocation));
-        this.append(mode);
+        this.put(new KeyLength(keyLength, detectionLocation));
+        this.put(mode);
     }
 
     public DESedeWrap(
@@ -54,9 +54,9 @@ public final class DESedeWrap extends Algorithm implements BlockCipher {
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
-        this.append(new KeyLength(keyLength, detectionLocation));
-        this.append(mode);
-        this.append(padding);
+        this.put(new KeyLength(keyLength, detectionLocation));
+        this.put(mode);
+        this.put(padding);
     }
 
     public DESedeWrap(

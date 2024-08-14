@@ -38,7 +38,7 @@ public class Mode extends Property {
             @Nonnull DetectionLocation detectionLocation) {
         super(Mode.class, detectionLocation);
         this.name = name;
-        this.append(blockSize);
+        this.put(blockSize);
     }
 
     private Mode(@Nonnull Mode mode) {

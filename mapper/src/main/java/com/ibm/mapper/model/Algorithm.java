@@ -120,7 +120,7 @@ public class Algorithm implements IAlgorithm {
     }
 
     @Override
-    public void append(@Nonnull INode child) {
+    public void put(@Nonnull INode child) {
         this.children.put(child.getKind(), child);
     }
 

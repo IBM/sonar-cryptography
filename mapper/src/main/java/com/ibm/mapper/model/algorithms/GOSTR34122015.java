@@ -20,6 +20,7 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.Mode;
@@ -27,7 +28,7 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class GOSTR34122015 extends Algorithm implements BlockCipher {
+public final class GOSTR34122015 extends Algorithm implements BlockCipher, AuthenticatedEncryption {
     private static final String NAME = "GOSTR34122015"; // Kuznyechik
 
     public GOSTR34122015(@NotNull DetectionLocation detectionLocation) {
@@ -36,7 +37,7 @@ public final class GOSTR34122015 extends Algorithm implements BlockCipher {
 
     public GOSTR34122015(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
-        this.append(mode);
+        this.put(mode);
     }
 
     public GOSTR34122015(

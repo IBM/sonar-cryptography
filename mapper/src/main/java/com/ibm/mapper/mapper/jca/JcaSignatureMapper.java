@@ -71,9 +71,9 @@ public class JcaSignatureMapper implements IMapper {
         return map(signatureStr, detectionLocation)
                 .map(
                         signature -> {
-                            messageDigestOptional.ifPresent(signature::append);
+                            messageDigestOptional.ifPresent(signature::put);
                             if (format != null) {
-                                signature.append(new OutputFormat(format, detectionLocation));
+                                signature.put(new OutputFormat(format, detectionLocation));
                             }
                             return signature;
                         });

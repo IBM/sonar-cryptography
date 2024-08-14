@@ -67,7 +67,7 @@ public class AESEnricher implements IEnricher, IEnrichWithDefaultKeySize {
         this.applyDefaultKeySize(aes, 128);
         // add oid
         final Oid oid = new Oid(buildOid(keyLength, mode), aes.getDetectionContext());
-        aes.append(oid);
+        aes.put(oid);
 
         // authenticated encryption
         if (mode instanceof GCM || mode instanceof CCM) {

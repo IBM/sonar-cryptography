@@ -59,7 +59,7 @@ public final class CipherParameterReorganizer {
                                 } else {
                                     // Append the KeyLength to the parent and remove it from the
                                     // TagLength node
-                                    parent.append(keyLengthChild);
+                                    parent.put(keyLengthChild);
                                     node.removeChildOfType(KeyLength.class);
                                     return roots;
                                 }

@@ -36,6 +36,6 @@ public final class ECDH extends Algorithm implements KeyAgreement {
     public ECDH(
             @Nonnull EllipticCurve ellipticCurve, @Nonnull DetectionLocation detectionLocation) {
         super(NAME, KeyAgreement.class, detectionLocation);
-        this.append(ellipticCurve);
+        this.put(ellipticCurve);
     }
 }

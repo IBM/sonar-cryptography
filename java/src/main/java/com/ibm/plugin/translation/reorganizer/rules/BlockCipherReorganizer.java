@@ -59,7 +59,7 @@ public final class BlockCipherReorganizer {
                                 for (Map.Entry<Class<? extends INode>, INode> childKeyValue :
                                         node.getChildren().entrySet()) {
                                     if (!childKeyValue.getKey().equals(BlockCipher.class)) {
-                                        newBlockCipher.append(childKeyValue.getValue());
+                                        newBlockCipher.put(childKeyValue.getValue());
                                     }
                                 }
 
@@ -76,7 +76,7 @@ public final class BlockCipherReorganizer {
                                     return rootsCopy;
                                 } else {
                                     // Replace the previous BlockCipher node
-                                    parent.append(newBlockCipher);
+                                    parent.put(newBlockCipher);
                                     return roots;
                                 }
                             });

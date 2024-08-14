@@ -105,7 +105,7 @@ public final class AeadBlockCipherReorganizer {
                                         (TagLength) node.getChildren().get(TagLength.class);
                                 Mac mac = (Mac) node.getChildren().get(Mac.class);
 
-                                mac.append(tagLength);
+                                mac.put(tagLength);
                                 node.removeChildOfType(TagLength.class);
                                 return roots;
                             });

@@ -32,6 +32,7 @@ import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.Signature;
+import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -70,6 +71,7 @@ class JcaSignatureGetInstanceTest extends TestBase {
         /*
          * Translation
          */
+
         assertThat(nodes).hasSize(1);
 
         // Signature
@@ -84,17 +86,23 @@ class JcaSignatureGetInstanceTest extends TestBase {
         assertThat(keyLengthNode.getChildren()).isEmpty();
         assertThat(keyLengthNode.asString()).isEqualTo("2048");
 
+        // Oid under Signature
+        INode oidNode = signatureNode.getChildren().get(Oid.class);
+        assertThat(oidNode).isNotNull();
+        assertThat(oidNode.getChildren()).isEmpty();
+        assertThat(oidNode.asString()).isEqualTo("2.16.840.1.101.3.4.3.3");
+
         // MessageDigest under Signature
         INode messageDigestNode = signatureNode.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode).isNotNull();
-        assertThat(messageDigestNode.getChildren()).hasSize(3);
+        assertThat(messageDigestNode.getChildren()).hasSize(4);
         assertThat(messageDigestNode.asString()).isEqualTo("SHA384");
 
-        // BlockSize under MessageDigest under Signature
-        INode blockSizeNode = messageDigestNode.getChildren().get(BlockSize.class);
-        assertThat(blockSizeNode).isNotNull();
-        assertThat(blockSizeNode.getChildren()).isEmpty();
-        assertThat(blockSizeNode.asString()).isEqualTo("1024");
+        // Oid under MessageDigest under Signature
+        INode oidNode1 = messageDigestNode.getChildren().get(Oid.class);
+        assertThat(oidNode1).isNotNull();
+        assertThat(oidNode1.getChildren()).isEmpty();
+        assertThat(oidNode1.asString()).isEqualTo("2.16.840.1.101.3.4.2.2");
 
         // DigestSize under MessageDigest under Signature
         INode digestSizeNode = messageDigestNode.getChildren().get(DigestSize.class);
@@ -102,16 +110,16 @@ class JcaSignatureGetInstanceTest extends TestBase {
         assertThat(digestSizeNode.getChildren()).isEmpty();
         assertThat(digestSizeNode.asString()).isEqualTo("384");
 
-        // Oid under MessageDigest under Signature
-        INode oidNode = messageDigestNode.getChildren().get(Oid.class);
-        assertThat(oidNode).isNotNull();
-        assertThat(oidNode.getChildren()).isEmpty();
-        assertThat(oidNode.asString()).isEqualTo("2.16.840.1.101.3.4.2.2");
+        // Digest under MessageDigest under Signature
+        INode digestNode = messageDigestNode.getChildren().get(Digest.class);
+        assertThat(digestNode).isNotNull();
+        assertThat(digestNode.getChildren()).isEmpty();
+        assertThat(digestNode.asString()).isEqualTo("DIGEST");
 
-        // Oid under Signature
-        INode oidNode1 = signatureNode.getChildren().get(Oid.class);
-        assertThat(oidNode1).isNotNull();
-        assertThat(oidNode1.getChildren()).isEmpty();
-        assertThat(oidNode1.asString()).isEqualTo("2.16.840.1.101.3.4.3.3");
+        // BlockSize under MessageDigest under Signature
+        INode blockSizeNode = messageDigestNode.getChildren().get(BlockSize.class);
+        assertThat(blockSizeNode).isNotNull();
+        assertThat(blockSizeNode.getChildren()).isEmpty();
+        assertThat(blockSizeNode.asString()).isEqualTo("1024");
     }
 }

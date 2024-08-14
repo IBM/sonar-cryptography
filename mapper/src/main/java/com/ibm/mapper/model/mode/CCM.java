@@ -32,6 +32,6 @@ public final class CCM extends Mode {
 
     public CCM(int tagLength, @NotNull DetectionLocation detectionLocation) {
         super("CCM", detectionLocation);
-        this.append(new TagLength(tagLength, detectionLocation));
+        this.put(new TagLength(tagLength, detectionLocation));
     }
 }

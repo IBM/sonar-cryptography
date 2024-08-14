@@ -28,6 +28,6 @@ public final class PBKDF2 extends Algorithm implements PasswordBasedKeyDerivatio
 
     public PBKDF2(@Nonnull Mac mac) {
         super("PBKDF2", PasswordBasedKeyDerivationFunction.class, mac.getDetectionContext());
-        this.append(mac);
+        this.put(mac);
     }
 }

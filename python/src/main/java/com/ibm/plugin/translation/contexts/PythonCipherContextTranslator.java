@@ -144,17 +144,17 @@ public final class PythonCipherContextTranslator {
                 switch (kind) {
                     case Fernet:
                         algorithm = new Algorithm("Fernet", detectionLocation);
-                        algorithm.append(new Decrypt(detectionLocation));
+                        algorithm.put(new Decrypt(detectionLocation));
                         return Optional.of(algorithm);
                     case RSA:
                         algorithm = new Algorithm("RSA", detectionLocation);
-                        algorithm.append(new Decrypt(detectionLocation));
+                        algorithm.put(new Decrypt(detectionLocation));
                         return Optional.of(algorithm);
                     case CHACHA20POLY1305:
                         cipher =
                                 PythonTranslatorUtils.generateNewStreamCipher(
                                         "ChaCha20", "Poly1305", detectionLocation);
-                        cipher.append(new Decrypt(detectionLocation));
+                        cipher.put(new Decrypt(detectionLocation));
                         return Optional.of(cipher);
                     case NONE:
                         return Optional.of(new Decrypt(detectionLocation));
@@ -163,7 +163,7 @@ public final class PythonCipherContextTranslator {
                             // Cases "AESGCM", "AESGCMIV", "AESOCB3", "AESSIV", "AESCCM"
                             algorithm = new Algorithm("AES", detectionLocation);
                             cipher = new AuthenticatedEncryption(algorithm, null, null, null);
-                            cipher.append(new Decrypt(detectionLocation));
+                            cipher.put(new Decrypt(detectionLocation));
                             return Optional.of(cipher);
                         }
                         break;
@@ -173,17 +173,17 @@ public final class PythonCipherContextTranslator {
                 switch (kind) {
                     case Fernet:
                         algorithm = new Algorithm("Fernet", detectionLocation);
-                        algorithm.append(new Encrypt(detectionLocation));
+                        algorithm.put(new Encrypt(detectionLocation));
                         return Optional.of(algorithm);
                     case RSA:
                         cipher = new Cipher(new Algorithm("RSA", detectionLocation));
-                        cipher.append(new Encrypt(detectionLocation));
+                        cipher.put(new Encrypt(detectionLocation));
                         return Optional.of(cipher);
                     case CHACHA20POLY1305:
                         cipher =
                                 PythonTranslatorUtils.generateNewStreamCipher(
                                         "ChaCha20", "Poly1305", detectionLocation);
-                        cipher.append(new Encrypt(detectionLocation));
+                        cipher.put(new Encrypt(detectionLocation));
                         return Optional.of(cipher);
                     case NONE:
                         return Optional.of(new Encrypt(detectionLocation));
@@ -192,7 +192,7 @@ public final class PythonCipherContextTranslator {
                             // Cases "AESGCM", "AESGCMIV", "AESOCB3", "AESSIV", "AESCCM"
                             algorithm = new Algorithm("AES", detectionLocation);
                             cipher = new AuthenticatedEncryption(algorithm, null, null, null);
-                            cipher.append(new Encrypt(detectionLocation));
+                            cipher.put(new Encrypt(detectionLocation));
                             return Optional.of(cipher);
                         }
                         break;
@@ -210,12 +210,12 @@ public final class PythonCipherContextTranslator {
                 String algorithmName = "AES";
                 Encapsulate encapsulate = new Encapsulate(detectionLocation);
                 SecretKey secretKey = new SecretKey(algorithmName, detectionLocation);
-                encapsulate.append(secretKey);
+                encapsulate.put(secretKey);
                 BlockCipher blockCipher =
                         new BlockCipher(
                                 new Algorithm(algorithmName, detectionLocation), null, null);
-                secretKey.append(blockCipher);
-                blockCipher.append(new KeyGeneration(detectionLocation));
+                secretKey.put(blockCipher);
+                blockCipher.put(new KeyGeneration(detectionLocation));
                 return Optional.of(encapsulate);
             default:
                 break;
@@ -242,7 +242,7 @@ public final class PythonCipherContextTranslator {
             int blockSize,
             @Nonnull DetectionLocation detectionLocation) {
         Padding padding = new Padding(paddingName, detectionLocation, new HashMap<>());
-        padding.append(new BlockSize(blockSize, detectionLocation));
+        padding.put(new BlockSize(blockSize, detectionLocation));
         return padding;
     }
 }

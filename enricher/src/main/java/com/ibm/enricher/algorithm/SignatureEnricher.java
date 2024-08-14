@@ -70,11 +70,11 @@ public class SignatureEnricher implements IEnricher {
 
         final INode digest = possibleDigest.get();
         if (digest instanceof MD2) {
-            rsa.append(new Oid("1.2.840.113549.1.1.2", rsa.getDetectionContext()));
+            rsa.put(new Oid("1.2.840.113549.1.1.2", rsa.getDetectionContext()));
         } else if (digest instanceof MD5) {
-            rsa.append(new Oid("1.2.840.113549.1.1.4", rsa.getDetectionContext()));
+            rsa.put(new Oid("1.2.840.113549.1.1.4", rsa.getDetectionContext()));
         } else if (digest instanceof SHA) {
-            rsa.append(new Oid("1.2.840.113549.1.1.5", rsa.getDetectionContext()));
+            rsa.put(new Oid("1.2.840.113549.1.1.5", rsa.getDetectionContext()));
         } else if (digest instanceof SHA2 sha2) {
             sha2.getDigestSize()
                     .ifPresent(
@@ -96,16 +96,15 @@ public class SignatureEnricher implements IEnricher {
                                                                                                     == 512)
                                                                             .ifPresent(
                                                                                     size ->
-                                                                                            rsa
-                                                                                                    .append(
-                                                                                                            new Oid(
-                                                                                                                    "1.2.840.113549.1.1.15",
-                                                                                                                    rsa
-                                                                                                                            .getDetectionContext())));
+                                                                                            rsa.put(
+                                                                                                    new Oid(
+                                                                                                            "1.2.840.113549.1.1.15",
+                                                                                                            rsa
+                                                                                                                    .getDetectionContext())));
                                                                 }
                                                             },
                                                             () ->
-                                                                    rsa.append(
+                                                                    rsa.put(
                                                                             new Oid(
                                                                                     "1.2.840.113549.1.1.14",
                                                                                     rsa
@@ -126,27 +125,26 @@ public class SignatureEnricher implements IEnricher {
                                                                                                     == 512)
                                                                             .ifPresent(
                                                                                     size ->
-                                                                                            rsa
-                                                                                                    .append(
-                                                                                                            new Oid(
-                                                                                                                    "1.2.840.113549.1.1.15",
-                                                                                                                    rsa
-                                                                                                                            .getDetectionContext())));
+                                                                                            rsa.put(
+                                                                                                    new Oid(
+                                                                                                            "1.2.840.113549.1.1.15",
+                                                                                                            rsa
+                                                                                                                    .getDetectionContext())));
                                                                 }
                                                             },
                                                             () ->
-                                                                    rsa.append(
+                                                                    rsa.put(
                                                                             new Oid(
                                                                                     "1.2.840.113549.1.1.11",
                                                                                     rsa
                                                                                             .getDetectionContext())));
                                     case 384 ->
-                                            rsa.append(
+                                            rsa.put(
                                                     new Oid(
                                                             "1.2.840.113549.1.1.12",
                                                             rsa.getDetectionContext()));
                                     case 512 ->
-                                            rsa.append(
+                                            rsa.put(
                                                     new Oid(
                                                             "1.2.840.113549.1.1.13",
                                                             rsa.getDetectionContext()));
@@ -161,22 +159,22 @@ public class SignatureEnricher implements IEnricher {
                             digestSize -> {
                                 switch (digestSize.getValue()) {
                                     case 224 ->
-                                            rsa.append(
+                                            rsa.put(
                                                     new Oid(
                                                             "2.16.840.1.101.3.4.3.13",
                                                             rsa.getDetectionContext()));
                                     case 256 ->
-                                            rsa.append(
+                                            rsa.put(
                                                     new Oid(
                                                             "2.16.840.1.101.3.4.3.14",
                                                             rsa.getDetectionContext()));
                                     case 384 ->
-                                            rsa.append(
+                                            rsa.put(
                                                     new Oid(
                                                             "2.16.840.1.101.3.4.3.15",
                                                             rsa.getDetectionContext()));
                                     case 512 ->
-                                            rsa.append(
+                                            rsa.put(
                                                     new Oid(
                                                             "2.16.840.1.101.3.4.3.16",
                                                             rsa.getDetectionContext()));
@@ -198,29 +196,29 @@ public class SignatureEnricher implements IEnricher {
 
         final INode digest = possibleDigest.get();
         if (digest instanceof SHA) {
-            ecdsa.append(new Oid("1.2.840.10045.4.1", ecdsa.getDetectionContext()));
+            ecdsa.put(new Oid("1.2.840.10045.4.1", ecdsa.getDetectionContext()));
         } else if (digest instanceof SHA2 sha2) {
             sha2.getDigestSize()
                     .ifPresent(
                             digestSize -> {
                                 switch (digestSize.getValue()) {
                                     case 224 ->
-                                            ecdsa.append(
+                                            ecdsa.put(
                                                     new Oid(
                                                             "1.2.840.10045.4.3.1",
                                                             ecdsa.getDetectionContext()));
                                     case 256 ->
-                                            ecdsa.append(
+                                            ecdsa.put(
                                                     new Oid(
                                                             "1.2.840.10045.4.3.2",
                                                             ecdsa.getDetectionContext()));
                                     case 384 ->
-                                            ecdsa.append(
+                                            ecdsa.put(
                                                     new Oid(
                                                             "1.2.840.10045.4.3.3",
                                                             ecdsa.getDetectionContext()));
                                     case 512 ->
-                                            ecdsa.append(
+                                            ecdsa.put(
                                                     new Oid(
                                                             "1.2.840.10045.4.3.4",
                                                             ecdsa.getDetectionContext()));
@@ -235,22 +233,22 @@ public class SignatureEnricher implements IEnricher {
                             digestSize -> {
                                 switch (digestSize.getValue()) {
                                     case 224 ->
-                                            ecdsa.append(
+                                            ecdsa.put(
                                                     new Oid(
                                                             "2.16.840.1.101.3.4.3.9",
                                                             ecdsa.getDetectionContext()));
                                     case 256 ->
-                                            ecdsa.append(
+                                            ecdsa.put(
                                                     new Oid(
                                                             "2.16.840.1.101.3.4.3.10",
                                                             ecdsa.getDetectionContext()));
                                     case 384 ->
-                                            ecdsa.append(
+                                            ecdsa.put(
                                                     new Oid(
                                                             "2.16.840.1.101.3.4.3.11",
                                                             ecdsa.getDetectionContext()));
                                     case 512 ->
-                                            ecdsa.append(
+                                            ecdsa.put(
                                                     new Oid(
                                                             "2.16.840.1.101.3.4.3.12",
                                                             ecdsa.getDetectionContext()));
@@ -272,29 +270,29 @@ public class SignatureEnricher implements IEnricher {
 
         final INode digest = possibleDigest.get();
         if (digest instanceof SHA) {
-            dsa.append(new Oid("1.2.840.10040.4.3", dsa.getDetectionContext()));
+            dsa.put(new Oid("1.2.840.10040.4.3", dsa.getDetectionContext()));
         } else if (digest instanceof SHA2 sha2) {
             sha2.getDigestSize()
                     .ifPresent(
                             digestSize -> {
                                 switch (digestSize.getValue()) {
                                     case 224 ->
-                                            dsa.append(
+                                            dsa.put(
                                                     new Oid(
                                                             "2.16.840.1.101.3.4.3.1",
                                                             dsa.getDetectionContext()));
                                     case 256 ->
-                                            dsa.append(
+                                            dsa.put(
                                                     new Oid(
                                                             "2.16.840.1.101.3.4.3.2",
                                                             dsa.getDetectionContext()));
                                     case 384 ->
-                                            dsa.append(
+                                            dsa.put(
                                                     new Oid(
                                                             "2.16.840.1.101.3.4.3.3",
                                                             dsa.getDetectionContext()));
                                     case 512 ->
-                                            dsa.append(
+                                            dsa.put(
                                                     new Oid(
                                                             "2.16.840.1.101.3.4.3.4",
                                                             dsa.getDetectionContext()));
@@ -309,22 +307,22 @@ public class SignatureEnricher implements IEnricher {
                             digestSize -> {
                                 switch (digestSize.getValue()) {
                                     case 224 ->
-                                            dsa.append(
+                                            dsa.put(
                                                     new Oid(
                                                             "2.16.840.1.101.3.4.3.5",
                                                             dsa.getDetectionContext()));
                                     case 256 ->
-                                            dsa.append(
+                                            dsa.put(
                                                     new Oid(
                                                             "2.16.840.1.101.3.4.3.6",
                                                             dsa.getDetectionContext()));
                                     case 384 ->
-                                            dsa.append(
+                                            dsa.put(
                                                     new Oid(
                                                             "2.16.840.1.101.3.4.3.7",
                                                             dsa.getDetectionContext()));
                                     case 512 ->
-                                            dsa.append(
+                                            dsa.put(
                                                     new Oid(
                                                             "2.16.840.1.101.3.4.3.8",
                                                             dsa.getDetectionContext()));

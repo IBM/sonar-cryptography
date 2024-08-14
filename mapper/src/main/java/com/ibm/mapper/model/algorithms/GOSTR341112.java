@@ -32,13 +32,13 @@ public final class GOSTR341112 extends Algorithm implements MessageDigest {
 
     public GOSTR341112(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, MessageDigest.class, detectionLocation);
-        this.append(new BlockSize(512, detectionLocation));
+        this.put(new BlockSize(512, detectionLocation));
     }
 
     public GOSTR341112(int digestSize, @Nonnull DetectionLocation detectionLocation) {
         super(NAME, MessageDigest.class, detectionLocation);
-        this.append(new DigestSize(digestSize, detectionLocation));
-        this.append(new BlockSize(512, detectionLocation));
+        this.put(new DigestSize(digestSize, detectionLocation));
+        this.put(new BlockSize(512, detectionLocation));
     }
 
     public GOSTR341112(

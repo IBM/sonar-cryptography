@@ -33,6 +33,7 @@ import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.Signature;
+import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Verify;
 import com.ibm.plugin.TestBase;
 import java.util.List;
@@ -81,6 +82,7 @@ class JcaSignatureActionVerifyTest extends TestBase {
         /*
          * Translation
          */
+
         assertThat(nodes).hasSize(1);
 
         // Signature
@@ -89,10 +91,16 @@ class JcaSignatureActionVerifyTest extends TestBase {
         assertThat(signatureNode.getChildren()).hasSize(4);
         assertThat(signatureNode.asString()).isEqualTo("DSA");
 
+        // KeyLength under Signature
+        INode keyLengthNode = signatureNode.getChildren().get(KeyLength.class);
+        assertThat(keyLengthNode).isNotNull();
+        assertThat(keyLengthNode.getChildren()).isEmpty();
+        assertThat(keyLengthNode.asString()).isEqualTo("2048");
+
         // MessageDigest under Signature
         INode messageDigestNode = signatureNode.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode).isNotNull();
-        assertThat(messageDigestNode.getChildren()).hasSize(3);
+        assertThat(messageDigestNode.getChildren()).hasSize(4);
         assertThat(messageDigestNode.asString()).isEqualTo("SHA384");
 
         // BlockSize under MessageDigest under Signature
@@ -101,11 +109,11 @@ class JcaSignatureActionVerifyTest extends TestBase {
         assertThat(blockSizeNode.getChildren()).isEmpty();
         assertThat(blockSizeNode.asString()).isEqualTo("1024");
 
-        // Oid under MessageDigest under Signature
-        INode oidNode = messageDigestNode.getChildren().get(Oid.class);
-        assertThat(oidNode).isNotNull();
-        assertThat(oidNode.getChildren()).isEmpty();
-        assertThat(oidNode.asString()).isEqualTo("2.16.840.1.101.3.4.2.2");
+        // Digest under MessageDigest under Signature
+        INode digestNode = messageDigestNode.getChildren().get(Digest.class);
+        assertThat(digestNode).isNotNull();
+        assertThat(digestNode.getChildren()).isEmpty();
+        assertThat(digestNode.asString()).isEqualTo("DIGEST");
 
         // DigestSize under MessageDigest under Signature
         INode digestSizeNode = messageDigestNode.getChildren().get(DigestSize.class);
@@ -113,11 +121,11 @@ class JcaSignatureActionVerifyTest extends TestBase {
         assertThat(digestSizeNode.getChildren()).isEmpty();
         assertThat(digestSizeNode.asString()).isEqualTo("384");
 
-        // KeyLength under Signature
-        INode keyLengthNode = signatureNode.getChildren().get(KeyLength.class);
-        assertThat(keyLengthNode).isNotNull();
-        assertThat(keyLengthNode.getChildren()).isEmpty();
-        assertThat(keyLengthNode.asString()).isEqualTo("2048");
+        // Oid under MessageDigest under Signature
+        INode oidNode = messageDigestNode.getChildren().get(Oid.class);
+        assertThat(oidNode).isNotNull();
+        assertThat(oidNode.getChildren()).isEmpty();
+        assertThat(oidNode.asString()).isEqualTo("2.16.840.1.101.3.4.2.2");
 
         // Oid under Signature
         INode oidNode1 = signatureNode.getChildren().get(Oid.class);

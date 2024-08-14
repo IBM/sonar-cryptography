@@ -125,7 +125,7 @@ public class Protocol implements IAsset {
     }
 
     @Override
-    public void append(@Nonnull INode child) {
+    public void put(@Nonnull INode child) {
         this.children.put(child.getKind(), child);
     }
 

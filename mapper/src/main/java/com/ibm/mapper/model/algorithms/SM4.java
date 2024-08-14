@@ -20,6 +20,7 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.Mode;
@@ -27,7 +28,7 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class SM4 extends Algorithm implements BlockCipher {
+public final class SM4 extends Algorithm implements BlockCipher, AuthenticatedEncryption {
     private static final String NAME = "SM4"; // SMS4
 
     public SM4(@NotNull DetectionLocation detectionLocation) {
@@ -36,7 +37,7 @@ public final class SM4 extends Algorithm implements BlockCipher {
 
     public SM4(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
-        this.append(mode);
+        this.put(mode);
     }
 
     public SM4(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull SM4 sm4) {

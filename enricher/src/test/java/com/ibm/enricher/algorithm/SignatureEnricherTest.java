@@ -41,7 +41,7 @@ class SignatureEnricherTest extends TestBase {
         DetectionLocation testDetectionLocation =
                 new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
         final DSA dsa = new DSA(testDetectionLocation);
-        dsa.append(new SHA2(384, testDetectionLocation));
+        dsa.put(new SHA2(384, testDetectionLocation));
         this.logBefore(dsa);
 
         final SignatureEnricher signatureEnricher = new SignatureEnricher();
@@ -58,7 +58,7 @@ class SignatureEnricherTest extends TestBase {
         DetectionLocation testDetectionLocation =
                 new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
         final ECDSA ecdsa = new ECDSA(testDetectionLocation);
-        ecdsa.append(new SHA3(384, testDetectionLocation));
+        ecdsa.put(new SHA3(384, testDetectionLocation));
         this.logBefore(ecdsa);
 
         final SignatureEnricher signatureEnricher = new SignatureEnricher();
@@ -75,7 +75,7 @@ class SignatureEnricherTest extends TestBase {
         DetectionLocation testDetectionLocation =
                 new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
         final RSA rsa = new RSA(Signature.class, testDetectionLocation);
-        rsa.append(new SHA2(224, new SHA2(512, testDetectionLocation), testDetectionLocation));
+        rsa.put(new SHA2(224, new SHA2(512, testDetectionLocation), testDetectionLocation));
         this.logBefore(rsa);
 
         final SignatureEnricher signatureEnricher = new SignatureEnricher();

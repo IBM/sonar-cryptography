@@ -72,8 +72,8 @@ public final class PythonPublicKeyContextTranslator {
                 ellipticCurve = new EllipticCurve(detectedAlgorithm.asString(), detectionLocation);
                 resAlgorithm = new EllipticCurveAlgorithm(baseAlgorithm, ellipticCurve);
 
-                resAlgorithm.append(new KeyGeneration(detectionLocation));
-                publicKey.append(resAlgorithm);
+                resAlgorithm.put(new KeyGeneration(detectionLocation));
+                publicKey.put(resAlgorithm);
 
                 return Optional.of(publicKey);
         }

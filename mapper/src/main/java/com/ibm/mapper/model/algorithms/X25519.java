@@ -30,6 +30,6 @@ public final class X25519 extends Algorithm implements KeyAgreement {
 
     public X25519(@NotNull DetectionLocation detectionLocation) {
         super(NAME, KeyAgreement.class, detectionLocation);
-        this.append(new Curve25519(detectionLocation));
+        this.put(new Curve25519(detectionLocation));
     }
 }

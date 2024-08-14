@@ -121,9 +121,9 @@ class AlgorithmTest {
 
         final Algorithm algorithm = new RSA(detectionLocation);
         final KeyGeneration keyGeneration = new KeyGeneration(detectionLocation);
-        algorithm.append(keyGeneration);
+        algorithm.put(keyGeneration);
         final Encrypt encrypt = new Encrypt(detectionLocation);
-        algorithm.append(encrypt);
+        algorithm.put(encrypt);
 
         outputFile.add(List.of(algorithm));
 
@@ -150,9 +150,9 @@ class AlgorithmTest {
         final SaltLength saltLength = new SaltLength(192, detectionLocation);
         final PasswordLength passwordLength = new PasswordLength(32, detectionLocation);
         final KeyLength keyLength = new KeyLength(1024, detectionLocation);
-        pbkdf.append(saltLength);
-        pbkdf.append(passwordLength);
-        pbkdf.append(keyLength);
+        pbkdf.put(saltLength);
+        pbkdf.put(passwordLength);
+        pbkdf.put(keyLength);
 
         final CBOMOutputFile outputFile = new CBOMOutputFile();
         outputFile.add(List.of(pbkdf));

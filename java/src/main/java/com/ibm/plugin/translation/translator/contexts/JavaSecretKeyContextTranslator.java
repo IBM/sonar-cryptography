@@ -51,7 +51,7 @@ public final class JavaSecretKeyContextTranslator extends JavaAbstractLibraryTra
                     .map(com.ibm.mapper.model.Algorithm.class::cast)
                     .map(
                             algo -> {
-                                algo.append(new KeyGeneration(detectionLocation));
+                                algo.put(new KeyGeneration(detectionLocation));
                                 return algo;
                             })
                     .map(SecretKey::new);
