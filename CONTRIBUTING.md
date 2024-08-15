@@ -46,7 +46,8 @@ The `.jar` file will be stored in the target directory and also copied to
 ## Run the Plugin with SonarQube
 
 ```shell
-UID=${UID} docker-compose up
+# starts a postgres database and a sonarqube instance 
+docker-compose up
 ```
 
 ### Configure SonarQube
