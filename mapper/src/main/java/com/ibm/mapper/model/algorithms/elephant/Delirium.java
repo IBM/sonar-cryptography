@@ -17,28 +17,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms;
+package com.ibm.mapper.model.algorithms.elephant;
 
-import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.AuthenticatedEncryption;
-import com.ibm.mapper.model.BlockCipher;
-import com.ibm.mapper.model.IPrimitive;
-import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.BlockSize;
+import com.ibm.mapper.model.ClassicalBitSecurityLevel;
+import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.utils.DetectionLocation;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class Ascon extends Algorithm
-        implements MessageDigest, BlockCipher, AuthenticatedEncryption {
-    private static final String NAME = "Ascon";
+public class Delirium extends Elephant {
+    private static final String NAME = "Delirium"; // Elephant-Keccak-f[200]
 
-    public Ascon(@NotNull DetectionLocation detectionLocation) {
-        super(NAME, AuthenticatedEncryption.class, detectionLocation);
-    }
-
-    public Ascon(
-            @Nonnull final Class<? extends IPrimitive> asKind,
-            @NotNull DetectionLocation detectionLocation) {
-        super(NAME, asKind, detectionLocation);
+    public Delirium(@NotNull DetectionLocation detectionLocation) {
+        super(NAME, detectionLocation);
+        this.put(new BlockSize(200, detectionLocation));
+        this.put(new TagLength(128, detectionLocation));
+        this.put(new ClassicalBitSecurityLevel(127, detectionLocation));
     }
 }

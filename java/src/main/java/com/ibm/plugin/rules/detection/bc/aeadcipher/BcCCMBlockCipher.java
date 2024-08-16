@@ -35,12 +35,14 @@ public final class BcCCMBlockCipher {
         // nothing
     }
 
+    private static final String MODE = "CCMBlockCipher";
+
     private static final IDetectionRule<Tree> NEW_INSTANCE_1 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.modes.CCMBlockCipher")
+                    .forObjectTypes("org.bouncycastle.crypto.modes." + MODE)
                     .forMethods("newInstance")
-                    .shouldBeDetectedAs(new ValueActionFactory<>("CCM"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(MODE))
                     .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                     .addDependingDetectionRules(BcBlockCipher.all())
                     .buildForContext(new CipherContext(CipherContext.Kind.AEAD_BLOCK_CIPHER))
@@ -50,9 +52,9 @@ public final class BcCCMBlockCipher {
     private static final IDetectionRule<Tree> CONSTRUCTOR_1 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.modes.CCMBlockCipher")
+                    .forObjectTypes("org.bouncycastle.crypto.modes." + MODE)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("CCM"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(MODE))
                     .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                     .addDependingDetectionRules(BcBlockCipher.all())
                     .buildForContext(new CipherContext(CipherContext.Kind.AEAD_BLOCK_CIPHER))

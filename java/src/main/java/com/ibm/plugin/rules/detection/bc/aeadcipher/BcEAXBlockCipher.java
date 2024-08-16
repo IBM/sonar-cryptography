@@ -35,12 +35,14 @@ public final class BcEAXBlockCipher {
         // nothing
     }
 
+    private static final String MODE = "EAXBlockCipher";
+
     private static final IDetectionRule<Tree> CONSTRUCTOR_1 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.modes.EAXBlockCipher")
+                    .forObjectTypes("org.bouncycastle.crypto.modes." + MODE)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("EAX"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(MODE))
                     .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                     .addDependingDetectionRules(BcBlockCipher.all())
                     .buildForContext(new CipherContext(CipherContext.Kind.AEAD_BLOCK_CIPHER))

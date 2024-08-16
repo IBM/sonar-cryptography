@@ -83,9 +83,9 @@ public final class JavaSignatureContextTranslator extends JavaAbstractLibraryTra
                     signature = new Signature(algorithm);
 
                     eca = new EllipticCurveAlgorithm(new Algorithm("EC", detectionLocation));
-                    eca.append(new EllipticCurve(curveName, detectionLocation));
+                    eca.put(new EllipticCurve(curveName, detectionLocation));
 
-                    signature.append(eca);
+                    signature.put(eca);
                     return Optional.of(signature);
                 case ALGORITHM_AND_HASH_WRAPPER, DIGEST_MESSAGE_WRAPPER:
                     // Maybe choose a better way to translate DIGEST_MESSAGE_WRAPPER
@@ -97,7 +97,7 @@ public final class JavaSignatureContextTranslator extends JavaAbstractLibraryTra
                     signature = new Signature(algorithm);
                     PublicKeyEncryption pke =
                             new PublicKeyEncryption(new Algorithm("RSA", detectionLocation));
-                    signature.append(pke);
+                    signature.put(pke);
                     return Optional.of(signature);
                 case SIGNATURE_NAME, DSA:
                     algorithm = new Algorithm(valueAction.asString(), detectionLocation);
@@ -107,7 +107,7 @@ public final class JavaSignatureContextTranslator extends JavaAbstractLibraryTra
                     pss = new ProbabilisticSignatureScheme(detectionLocation);
                     algorithm = new Algorithm(ITranslator.UNKNOWN + "-PSS", detectionLocation);
                     signature = new Signature(algorithm);
-                    signature.append(pss);
+                    signature.put(pss);
                     return Optional.of(signature);
                 default:
                     algorithm = new Algorithm(valueAction.asString(), detectionLocation);

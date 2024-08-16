@@ -158,7 +158,7 @@ public final class MacReorganizer {
                                 // Add all the Mac children to the new Mac node
                                 for (Map.Entry<Class<? extends INode>, INode> childKeyValue :
                                         node.getChildren().entrySet()) {
-                                    newMac.append(childKeyValue.getValue());
+                                    newMac.put(childKeyValue.getValue());
                                 }
 
                                 if (parent == null) {
@@ -174,7 +174,7 @@ public final class MacReorganizer {
                                     return rootsCopy;
                                 } else {
                                     // Replace the previous Mac node
-                                    parent.append(newMac);
+                                    parent.put(newMac);
                                     return roots;
                                 }
                             });*/

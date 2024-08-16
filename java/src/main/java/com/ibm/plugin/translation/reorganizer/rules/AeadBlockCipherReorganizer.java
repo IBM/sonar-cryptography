@@ -19,12 +19,16 @@
  */
 package com.ibm.plugin.translation.reorganizer.rules;
 
+import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
+import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.mapper.reorganizer.builder.ReorganizerRuleBuilder;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -34,9 +38,8 @@ public final class AeadBlockCipherReorganizer {
         // private
     }
 
-    /*
     @Nonnull
-    private static final IReorganizerRule MERGE_AE_AND_BLOCK_CIPHER =
+    private static final IReorganizerRule MERGE_AE_PARENT_AND_CHILD =
             new ReorganizerRuleBuilder()
                     .createReorganizerRule()
                     .forNodeKind(AuthenticatedEncryption.class)
@@ -44,23 +47,27 @@ public final class AeadBlockCipherReorganizer {
                             List.of(
                                     new ReorganizerRuleBuilder()
                                             .createReorganizerRule()
-                                            .forNodeKind(BlockCipher.class)
+                                            .forNodeKind(AuthenticatedEncryption.class)
                                             .noAction()))
                     .perform(
                             (node, parent, roots) -> {
-                                Algorithm blockCipher =
+                                Algorithm authenticatedEncryptionChild =
                                         (Algorithm)
                                                 node.getChildren()
-                                                        .get(BlockCipher.class)
+                                                        .get(AuthenticatedEncryption.class)
                                                         .deepCopy();
 
                                 INode newAuthenticatedEncryption =
-                                        new AuthenticatedEncryption(blockCipher, null, null, null);
+                                        new Algorithm(
+                                                authenticatedEncryptionChild,
+                                                AuthenticatedEncryption.class);
 
                                 for (Map.Entry<Class<? extends INode>, INode> childKeyValue :
                                         node.getChildren().entrySet()) {
-                                    if (!childKeyValue.getKey().equals(BlockCipher.class)) {
-                                        newAuthenticatedEncryption.append(childKeyValue.getValue());
+                                    if (!childKeyValue
+                                            .getKey()
+                                            .equals(AuthenticatedEncryption.class)) {
+                                        newAuthenticatedEncryption.put(childKeyValue.getValue());
                                     }
                                 }
 
@@ -77,12 +84,10 @@ public final class AeadBlockCipherReorganizer {
                                     return rootsCopy;
                                 } else {
                                     // Replace the previous AuthenticatedEncryption node
-                                    parent.append(newAuthenticatedEncryption);
+                                    parent.put(newAuthenticatedEncryption);
                                     return roots;
                                 }
                             });
-
-     */
 
     @Nonnull
     private static final IReorganizerRule MOVE_TAG_LENGTH_UNDER_MAC =
@@ -113,6 +118,6 @@ public final class AeadBlockCipherReorganizer {
     @Unmodifiable
     @Nonnull
     public static List<IReorganizerRule> rules() {
-        return List.of(MOVE_TAG_LENGTH_UNDER_MAC); // MERGE_AE_AND_BLOCK_CIPHER
+        return List.of(MERGE_AE_PARENT_AND_CHILD, MOVE_TAG_LENGTH_UNDER_MAC);
     }
 }

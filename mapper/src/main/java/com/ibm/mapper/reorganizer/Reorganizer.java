@@ -52,7 +52,9 @@ public final class Reorganizer implements IReorganizer {
          */
         List<INode> lastRootNodes = rootNodes;
         Optional<List<INode>> newRootNodes = Optional.of(rootNodes);
-        while (newRootNodes.isPresent()) {
+        int maxIterations = 10;
+        int counter = 0;
+        while (newRootNodes.isPresent() && counter < maxIterations) {
             lastRootNodes = newRootNodes.get();
             newRootNodes =
                     reorganizeRecursive(
@@ -60,6 +62,15 @@ public final class Reorganizer implements IReorganizer {
                                     .map(childNode -> Pair.<INode, INode>of(childNode, null))
                                     .toList(),
                             lastRootNodes);
+            counter += 1;
+        }
+        if (counter == maxIterations) {
+            String message =
+                    String.format(
+                            "The reorganizer stopped because it exceeded the maximum number of iterations (%d). "
+                                    + "Check for a possible infinite loop in your reorganization rules.",
+                            maxIterations);
+            LOGGER.warn(message);
         }
         return lastRootNodes;
     }
@@ -114,10 +125,11 @@ public final class Reorganizer implements IReorganizer {
             @Nonnull INode node, @Nonnull INode parent, @Nonnull final List<INode> rootNodes) {
         for (IReorganizerRule reorganizerRule : this.rules) {
             if (reorganizerRule.match(node, parent, rootNodes)) {
-                LOGGER.debug(
+                String message =
                         String.format(
                                 "[reorganizer] MATCH: Node '%s' & Rule %s",
-                                node.asString(), reorganizerRule.asString()));
+                                node.asString(), reorganizerRule.asString());
+                LOGGER.debug(message);
                 return Optional.of(
                         reorganizerRule.applyReorganization(node, parent, rootNodes)); // new root
             }

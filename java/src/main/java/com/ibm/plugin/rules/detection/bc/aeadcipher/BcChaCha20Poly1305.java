@@ -35,12 +35,14 @@ public final class BcChaCha20Poly1305 {
         // nothing
     }
 
+    private static final String AEAD = "ChaCha20Poly1305";
+
     private static final IDetectionRule<Tree> CONSTRUCTOR_1 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.modes.ChaCha20Poly1305")
+                    .forObjectTypes("org.bouncycastle.crypto.modes." + AEAD)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("ChaCha20Poly1305"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(AEAD))
                     .withoutParameters()
                     .buildForContext(new CipherContext(CipherContext.Kind.CHACHA20POLY1305))
                     .inBundle(() -> "Bc")
@@ -49,9 +51,9 @@ public final class BcChaCha20Poly1305 {
     private static final IDetectionRule<Tree> CONSTRUCTOR_2 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.modes.ChaCha20Poly1305")
+                    .forObjectTypes("org.bouncycastle.crypto.modes." + AEAD)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("ChaCha20Poly1305"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(AEAD))
                     .withMethodParameter("org.bouncycastle.crypto.Mac")
                     .addDependingDetectionRules(BcMac.rules())
                     .buildForContext(new CipherContext(CipherContext.Kind.CHACHA20POLY1305))

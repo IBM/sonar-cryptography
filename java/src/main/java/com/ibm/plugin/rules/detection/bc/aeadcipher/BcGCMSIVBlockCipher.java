@@ -35,12 +35,14 @@ public final class BcGCMSIVBlockCipher {
         // nothing
     }
 
+    private static final String MODE = "GCMSIVBlockCipher";
+
     private static final IDetectionRule<Tree> CONSTRUCTOR_1 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.modes.GCMSIVBlockCipher")
+                    .forObjectTypes("org.bouncycastle.crypto.modes." + MODE)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("GCM-SIV"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(MODE))
                     .withoutParameters()
                     .buildForContext(new CipherContext(CipherContext.Kind.AEAD_BLOCK_CIPHER))
                     .inBundle(() -> "Bc")
@@ -49,9 +51,9 @@ public final class BcGCMSIVBlockCipher {
     private static final IDetectionRule<Tree> CONSTRUCTOR_2 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.modes.GCMSIVBlockCipher")
+                    .forObjectTypes("org.bouncycastle.crypto.modes." + MODE)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("GCM-SIV"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(MODE))
                     .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                     .addDependingDetectionRules(BcBlockCipher.all())
                     .buildForContext(new CipherContext(CipherContext.Kind.AEAD_BLOCK_CIPHER))
@@ -61,9 +63,9 @@ public final class BcGCMSIVBlockCipher {
     private static final IDetectionRule<Tree> CONSTRUCTOR_3 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.modes.GCMSIVBlockCipher")
+                    .forObjectTypes("org.bouncycastle.crypto.modes." + MODE)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("GCM-SIV"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(MODE))
                     .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                     .addDependingDetectionRules(BcBlockCipher.all())
                     .withMethodParameter("org.bouncycastle.crypto.modes.gcm.GCMMultiplier")
