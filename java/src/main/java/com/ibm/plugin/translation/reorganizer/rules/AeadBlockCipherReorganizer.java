@@ -21,7 +21,6 @@ package com.ibm.plugin.translation.reorganizer.rules;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
-import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.TagLength;
@@ -40,7 +39,7 @@ public final class AeadBlockCipherReorganizer {
     }
 
     @Nonnull
-    private static final IReorganizerRule MERGE_AE_AND_BLOCK_CIPHER =
+    private static final IReorganizerRule MERGE_AE_PARENT_AND_CHILD =
             new ReorganizerRuleBuilder()
                     .createReorganizerRule()
                     .forNodeKind(AuthenticatedEncryption.class)
@@ -48,23 +47,26 @@ public final class AeadBlockCipherReorganizer {
                             List.of(
                                     new ReorganizerRuleBuilder()
                                             .createReorganizerRule()
-                                            .forNodeKind(BlockCipher.class)
+                                            .forNodeKind(AuthenticatedEncryption.class)
                                             .noAction()))
                     .perform(
                             (node, parent, roots) -> {
-                                Algorithm blockCipher =
+                                Algorithm authenticatedEncryptionChild =
                                         (Algorithm)
                                                 node.getChildren()
-                                                        .get(BlockCipher.class)
+                                                        .get(AuthenticatedEncryption.class)
                                                         .deepCopy();
 
                                 INode newAuthenticatedEncryption =
-                                        new Algorithm(blockCipher, AuthenticatedEncryption.class);
-                                // new AuthenticatedEncryption(blockCipher, null, null, null);
+                                        new Algorithm(
+                                                authenticatedEncryptionChild,
+                                                AuthenticatedEncryption.class);
 
                                 for (Map.Entry<Class<? extends INode>, INode> childKeyValue :
                                         node.getChildren().entrySet()) {
-                                    if (!childKeyValue.getKey().equals(BlockCipher.class)) {
+                                    if (!childKeyValue
+                                            .getKey()
+                                            .equals(AuthenticatedEncryption.class)) {
                                         newAuthenticatedEncryption.put(childKeyValue.getValue());
                                     }
                                 }
@@ -116,6 +118,6 @@ public final class AeadBlockCipherReorganizer {
     @Unmodifiable
     @Nonnull
     public static List<IReorganizerRule> rules() {
-        return List.of(MERGE_AE_AND_BLOCK_CIPHER, MOVE_TAG_LENGTH_UNDER_MAC);
+        return List.of(MERGE_AE_PARENT_AND_CHILD, MOVE_TAG_LENGTH_UNDER_MAC);
     }
 }

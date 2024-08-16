@@ -74,6 +74,7 @@ public class BcAeadMapper implements IMapper {
             case "EAXBlockCipher" -> Optional.of(unknownWithMode(new EAX(detectionLocation)));
             case "GCMBlockCipher" -> Optional.of(unknownWithMode(new GCM(detectionLocation)));
             case "GCMSIVBlockCipher" ->
+                    /* The default `new GCMSIVBlockCipher()` is instantiated with an `AESEngine` */
                     Optional.of(
                             cipherWithMode(
                                     new AES(detectionLocation), new GCMSIV(detectionLocation)));
