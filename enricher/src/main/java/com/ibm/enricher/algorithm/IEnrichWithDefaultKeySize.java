@@ -30,10 +30,10 @@ public interface IEnrichWithDefaultKeySize {
     default void applyDefaultKeySizeForJca(@Nonnull IAsset asset, int defaultKeySize) {
         @Nullable INode keyLength = asset.hasChildOfType(KeyLength.class).orElse(null);
         // default key length
-        if (keyLength == null && asset.getDetectionContext().bundle().getIdentifier().equals("Jca")) {
-                keyLength = new KeyLength(defaultKeySize, asset.getDetectionContext());
-                asset.put(keyLength);
-            }
-
+        if (keyLength == null
+                && asset.getDetectionContext().bundle().getIdentifier().equals("Jca")) {
+            keyLength = new KeyLength(defaultKeySize, asset.getDetectionContext());
+            asset.put(keyLength);
+        }
     }
 }
