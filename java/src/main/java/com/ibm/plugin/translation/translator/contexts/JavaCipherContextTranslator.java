@@ -30,6 +30,7 @@ import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.mapper.mapper.bc.BcAeadMapper;
 import com.ibm.mapper.mapper.bc.BcAeadParametersMapper;
+import com.ibm.mapper.mapper.bc.BcBlockCipherMapper;
 import com.ibm.mapper.mapper.bc.BcOperationModeEncryptionMapper;
 import com.ibm.mapper.mapper.bc.BcOperationModeWrappingMapper;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
@@ -101,6 +102,11 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
             // PasswordBasedEncryption pbe;
 
             switch (kind) {
+                case BLOCK_CIPHER_ENGINE:
+                    BcBlockCipherMapper bcBlockCipherMapper = new BcBlockCipherMapper();
+                    return bcBlockCipherMapper
+                            .parse(valueAction.asString(), detectionLocation)
+                            .map(f -> f);
                 /*case ASYMMETRIC_CIPHER_ENGINE, BLOCK_CIPHER_ENGINE, WRAP_ENGINE:
                     return Optional.of(
                             new BlockCipher(
