@@ -20,35 +20,37 @@
 package com.ibm.engine.model;
 
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
-public final class ValueAction<T> extends AbstractValue<T> implements IAction<T> {
-
+public class Padding<T> extends AbstractValue<T> {
     @Nonnull private final String value;
     @Nonnull private final T location;
 
-    public ValueAction(@Nonnull String value, @Nonnull T location) {
-        this.location = location;
+    public Padding(@Nonnull String value, @Nonnull T location) {
         this.value = value;
+        this.location = location;
     }
 
     @Override
-    @Nonnull
-    public T getLocation() {
-        return location;
+    public @NotNull T getLocation() {
+        return this.location;
     }
 
-    @Nonnull
     @Override
-    public String asString() {
-        return value;
+    public String toString() {
+        return this.value;
+    }
+
+    @Override
+    public @NotNull String asString() {
+        return this.value;
     }
 
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ValueAction<?> that)) return false;
-
-        return value.equals(that.value) && location.equals(that.location);
+        if (!(o instanceof Padding<?> padding)) return false;
+        return value.equals(padding.value) && location.equals(padding.location);
     }
 
     @Override

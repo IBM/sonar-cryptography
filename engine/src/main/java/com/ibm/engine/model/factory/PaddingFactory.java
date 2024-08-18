@@ -20,32 +20,30 @@
 package com.ibm.engine.model.factory;
 
 import com.ibm.engine.detection.ResolvedValue;
-import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
+import com.ibm.engine.model.Padding;
 import java.util.Optional;
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 
-public class AlgorithmFactory<T> implements IValueFactory<T> {
+public class PaddingFactory<T> implements IValueFactory<T> {
     @Nullable private final String constant;
 
-    public AlgorithmFactory() {
+    public PaddingFactory() {
         this.constant = null;
     }
 
-    public AlgorithmFactory(@Nonnull String constant) {
+    public PaddingFactory(@Nullable String constant) {
         this.constant = constant;
     }
 
-    @Nonnull
     @Override
     public Optional<IValue<T>> apply(@NotNull ResolvedValue<Object, T> objectTResolvedValue) {
         if (constant != null) {
-            return Optional.of(new Algorithm<>(constant, objectTResolvedValue.tree()));
+            return Optional.of(new Padding<>(constant, objectTResolvedValue.tree()));
         }
-        if (objectTResolvedValue.value() instanceof String str) {
-            return Optional.of(new Algorithm<>(str, objectTResolvedValue.tree()));
+        if (objectTResolvedValue.value() instanceof String string) {
+            return Optional.of(new Padding<>(string, objectTResolvedValue.tree()));
         }
         return Optional.empty();
     }

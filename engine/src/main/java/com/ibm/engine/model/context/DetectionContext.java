@@ -17,44 +17,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.engine.model;
+package com.ibm.engine.model.context;
 
+import java.util.Map;
+import java.util.Optional;
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.Unmodifiable;
 
-public final class ValueAction<T> extends AbstractValue<T> implements IAction<T> {
+public abstract class DetectionContext {
+    @Unmodifiable @Nonnull private final Map<String, String> properties;
 
-    @Nonnull private final String value;
-    @Nonnull private final T location;
-
-    public ValueAction(@Nonnull String value, @Nonnull T location) {
-        this.location = location;
-        this.value = value;
+    protected DetectionContext(@Nonnull Map<String, String> properties) {
+        this.properties = properties;
     }
 
-    @Override
-    @Nonnull
-    public T getLocation() {
-        return location;
+    public boolean contains(@Nonnull String key) {
+        return properties.containsKey(key);
     }
 
     @Nonnull
-    @Override
-    public String asString() {
-        return value;
-    }
-
-    @Override
-    public final boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ValueAction<?> that)) return false;
-
-        return value.equals(that.value) && location.equals(that.location);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = value.hashCode();
-        result = 31 * result + location.hashCode();
-        return result;
+    public Optional<String> get(@Nonnull String key) {
+        return Optional.ofNullable(properties.get(key));
     }
 }

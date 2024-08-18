@@ -51,12 +51,12 @@ public final class JavaTranslationProcess
                     DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext>
                             rootDetectionStore) {
         // 1. Translate
-        JavaTranslator javaTranslator = new JavaTranslator();
+        final JavaTranslator javaTranslator = new JavaTranslator();
         final List<INode> translatedValues = javaTranslator.translate(rootDetectionStore);
         Utils.printNodeTree("translated ", translatedValues);
 
         // 2. Reorganize
-        Reorganizer javaReorganizer = new Reorganizer(reorganizerRules);
+        final Reorganizer javaReorganizer = new Reorganizer(reorganizerRules);
         final List<INode> reorganizedValues = javaReorganizer.reorganize(translatedValues);
         Utils.printNodeTree("reorganised", reorganizedValues);
 

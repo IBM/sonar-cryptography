@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.plugin.translation.contexts;
+package com.ibm.plugin.translation.translator.contexts;
 
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.SignatureAction;
@@ -29,7 +29,6 @@ import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.ProbabilisticSignatureScheme;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.utils.DetectionLocation;
-import com.ibm.plugin.translation.PythonEnricher;
 import java.util.HashMap;
 import java.util.Optional;
 import javax.annotation.Nonnull;

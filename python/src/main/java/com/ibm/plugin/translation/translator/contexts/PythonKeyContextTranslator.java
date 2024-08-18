@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.plugin.translation.contexts;
+package com.ibm.plugin.translation.translator.contexts;
 
 import com.ibm.engine.model.AlgorithmParameter;
 import com.ibm.engine.model.IValue;

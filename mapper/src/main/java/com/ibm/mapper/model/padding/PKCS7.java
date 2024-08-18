@@ -17,26 +17,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.plugin.translation;
+package com.ibm.mapper.model.padding;
 
-import com.ibm.mapper.configuration.Configuration;
-import javax.annotation.Nonnull;
+import com.ibm.mapper.model.Padding;
+import com.ibm.mapper.utils.DetectionLocation;
+import org.jetbrains.annotations.NotNull;
 
-public class PythonMapperConfig extends Configuration {
-
-    // TODO: Is there something to change compared to the Java case in this file?
-    @Nonnull
-    @Override
-    public String changeStringValue(@Nonnull String value) {
-
-        if (value.contains("NoPadding")) {
-            return "";
-        }
-
-        if (value.contains("Padding")) {
-            return value.replace("Padding", "");
-        }
-
-        return value;
+public final class PKCS7 extends Padding {
+    public PKCS7(@NotNull DetectionLocation detectionLocation) {
+        super("PKCS7", detectionLocation);
     }
 }

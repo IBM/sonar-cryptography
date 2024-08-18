@@ -19,8 +19,6 @@
  */
 package com.ibm.plugin.rules.detection.asymmetric;
 
-import static com.ibm.engine.detection.MethodMatcher.ANY;
-
 import com.ibm.engine.model.CipherAction;
 import com.ibm.engine.model.KeyAction;
 import com.ibm.engine.model.SignatureAction;
@@ -35,13 +33,18 @@ import com.ibm.engine.model.factory.CipherActionFactory;
 import com.ibm.engine.model.factory.KeyActionFactory;
 import com.ibm.engine.model.factory.KeySizeFactory;
 import com.ibm.engine.model.factory.SignatureActionFactory;
+import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import com.ibm.plugin.rules.detection.hash.CryptographyHash;
-import java.util.List;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.python.api.tree.Tree;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Map;
+
+import static com.ibm.engine.detection.MethodMatcher.ANY;
 
 @SuppressWarnings("java:S1192")
 public final class CryptographyRSA {
@@ -98,7 +101,7 @@ public final class CryptographyRSA {
                     .createDetectionRule()
                     .forObjectTypes(PADDING_TYPE)
                     .forMethods("OAEP")
-                    .shouldBeDetectedAs(new CipherActionFactory<>(CipherAction.Action.PADDING))
+                    .shouldBeDetectedAs(new ValueActionFactory<>("OAEP"))
                     .withMethodParameter(ANY)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .addDependingDetectionRules(List.of(MGF1))
@@ -109,7 +112,9 @@ public final class CryptographyRSA {
                                     .rules()) // The parameter of sign can either be an immediate
                     // hash, or a hash enclosed in the pre-hash
                     .withMethodParameter(ANY)
-                    .buildForContext(new CipherContext(CipherContext.Kind.OAEP))
+                    .buildForContext(new CipherContext(Map.of(
+                            "kind", "padding"
+                    )))
                     .inBundle(() -> "CryptographyRSATypes")
                     .withoutDependingDetectionRules();
 
@@ -136,36 +141,33 @@ public final class CryptographyRSA {
                     .inBundle(() -> "CryptographyRSAOperation")
                     .withoutDependingDetectionRules();
 
-    private static final IDetectionRule<Tree> DECRYPT_RSA =
-            new DetectionRuleBuilder<Tree>()
-                    .createDetectionRule()
-                    .forObjectTypes(
-                            "cryptography.hazmat.primitives.asymmetric.rsa.generate_private_key")
-                    .forMethods("decrypt")
-                    .shouldBeDetectedAs(new CipherActionFactory<>(CipherAction.Action.DECRYPT))
-                    .withMethodParameter(ANY)
-                    .withMethodParameter("cryptography.hazmat.primitives.asymmetric.padding.*")
-                    .addDependingDetectionRules(
-                            List.of(
-                                    OAEP,
-                                    PKCS1v15)) // For encryption/decryption, padding can only be
-                    // OAEP or PKCSv15
-                    .buildForContext(new CipherContext(CipherContext.Kind.RSA))
-                    .inBundle(() -> "CryptographyRSAOperation")
-                    .withoutDependingDetectionRules();
+    private final static IDetectionRule<Tree> DECRYPT_RSA = new DetectionRuleBuilder<Tree>()
+                .createDetectionRule()
+                .forObjectTypes(
+                        "cryptography.hazmat.primitives.asymmetric.rsa.generate_private_key")
+                .forMethods("decrypt")
+                .shouldBeDetectedAs(new CipherActionFactory<>(CipherAction.Action.DECRYPT))
+                .withMethodParameter(ANY)
+                .withMethodParameter("cryptography.hazmat.primitives.asymmetric.padding.*")
+                .addDependingDetectionRules(
+                        List.of(OAEP, PKCS1v15)) // For encryption/decryption, padding can only be OAEP or PKCSv15
+                .buildForContext(new CipherContext(Map.of("algorithm", "RSA")))
+                .inBundle(() -> "Pyca")
+                .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> GENERATION_RSA =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
                     .forObjectTypes(RSA_TYPE)
                     .forMethods("generate_private_key")
-                    .withMethodParameter(
-                            ANY) // TODO: Should I resolve the value of `public_exponent`?
+                    .withMethodParameter(ANY)
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
-                    .buildForContext(new PrivateKeyContext(KeyContext.Kind.RSA))
-                    .inBundle(() -> "CryptographyRSA")
-                    .withDependingDetectionRules(List.of(SIGN_RSA /*, VERIFY_RSA*/, DECRYPT_RSA));
+                    .buildForContext(new PrivateKeyContext(Map.of("algorithm", "RSA")))
+                    .inBundle(() -> "Pyca")
+                    .withDependingDetectionRules(
+                            List.of(
+                                    SIGN_RSA /*,VERIFY_RSA*/, DECRYPT_RSA));
 
     private static final IDetectionRule<Tree> PUBLIC_NUMBERS_RSA =
             new DetectionRuleBuilder<Tree>()

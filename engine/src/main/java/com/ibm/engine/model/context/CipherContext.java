@@ -19,9 +19,12 @@
  */
 package com.ibm.engine.model.context;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.Nonnull;
 
-public class CipherContext implements IDetectionContext, ISupportKind<CipherContext.Kind> {
+public class CipherContext extends DetectionContext
+        implements IDetectionContext, ISupportKind<CipherContext.Kind> {
 
     public enum Kind {
         PKE,
@@ -29,13 +32,6 @@ public class CipherContext implements IDetectionContext, ISupportKind<CipherCont
         Fernet,
         OAEP,
         CHACHA20POLY1305,
-        AESGCM,
-        AESGCMIV,
-        AESOCB3,
-        AESSIV,
-        AESCCM,
-        PKCS7,
-        ANSIX923,
         AES_WRAP,
         AES_WRAP_WITH_PADDING,
         ENCRYPTION_STATUS,
@@ -61,14 +57,33 @@ public class CipherContext implements IDetectionContext, ISupportKind<CipherCont
 
     @Nonnull private final Kind kind;
 
+    /**
+     * use a property map instead
+     *
+     * @deprecated
+     */
+    @Deprecated(since = "1.3.0")
     public CipherContext(@Nonnull Kind kind) {
+        super(new HashMap<>());
         this.kind = kind;
     }
 
     public CipherContext() {
+        super(new HashMap<>());
         this.kind = Kind.NONE;
     }
 
+    public CipherContext(@Nonnull Map<String, String> properties) {
+        super(properties);
+        this.kind = Kind.NONE;
+    }
+
+    /**
+     * use a property map instead
+     *
+     * @deprecated
+     */
+    @Deprecated(since = "1.3.0")
     @Nonnull
     public Kind kind() {
         return kind;

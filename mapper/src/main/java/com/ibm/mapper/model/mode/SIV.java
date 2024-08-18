@@ -17,26 +17,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.plugin;
+package com.ibm.mapper.model.mode;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.sonar.plugins.python.api.PythonCustomRuleRepository;
-import org.sonarsource.api.sonarlint.SonarLintSide;
+import com.ibm.mapper.model.Mode;
+import com.ibm.mapper.utils.DetectionLocation;
+import org.jetbrains.annotations.NotNull;
 
-@SonarLintSide
-public class PythonCheckRegistrar implements PythonCustomRuleRepository {
-
-    @Override
-    public String repositoryKey() {
-        return PythonScannerRuleDefinition.REPOSITORY_KEY;
-    }
-
-    @SuppressWarnings({"rawtypes"})
-    @Override
-    public List<Class> checkClasses() {
-        // Creating a new list is necessary to return a type
-        // List<Class> from the type List<Class<? extends PythonCheck>>
-        return new ArrayList<>(PythonRuleList.getPythonChecks());
+public final class SIV extends Mode {
+    public SIV(@NotNull DetectionLocation detectionLocation) {
+        super("SIV", detectionLocation);
     }
 }

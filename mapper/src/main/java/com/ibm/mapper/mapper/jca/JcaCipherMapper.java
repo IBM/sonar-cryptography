@@ -40,11 +40,7 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class JcaCipherMapper implements IMapper {
-
-    public JcaCipherMapper() {
-        // nothing
-    }
+public final class JcaCipherMapper implements IMapper {
 
     @Nonnull
     @Override

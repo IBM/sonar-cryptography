@@ -24,7 +24,10 @@ import com.ibm.enricher.Enricher;
 import com.ibm.mapper.ITranslationProcess;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
+import com.ibm.mapper.reorganizer.Reorganizer;
 import com.ibm.mapper.utils.Utils;
+import com.ibm.plugin.translation.translator.PythonTranslator;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -46,17 +49,19 @@ public final class PythonTranslationProcess
             @NotNull DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext>
                             rootDetectionStore) {
         // 1. Translate
-        PythonTranslator pythonTranslator = new PythonTranslator();
-        List<INode> translatedValues = pythonTranslator.translate(rootDetectionStore);
-        Utils.printNodeTree("translation", translatedValues);
+        final PythonTranslator pythonTranslator = new PythonTranslator();
+        final List<INode> translatedValues = pythonTranslator.translate(rootDetectionStore);
+        Utils.printNodeTree("translated ", translatedValues);
 
         // 2. Reorganize
-        // not implemented
+        final Reorganizer javaReorganizer = new Reorganizer(reorganizerRules);
+        final List<INode> reorganizedValues = javaReorganizer.reorganize(translatedValues);
+        Utils.printNodeTree("reorganised", reorganizedValues);
 
         // 3. Enrich
-        Enricher.enrich(translatedValues);
-        Utils.printNodeTree("enrichment", translatedValues);
+        final Collection<INode> enrichedValues = Enricher.enrich(reorganizedValues);
+        Utils.printNodeTree("enriched   ", reorganizedValues);
 
-        return Collections.unmodifiableList(translatedValues);
+        return Collections.unmodifiableCollection(enrichedValues).stream().toList();
     }
 }
