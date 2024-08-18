@@ -31,6 +31,7 @@ import com.ibm.engine.model.context.PublicKeyContext;
 import com.ibm.engine.model.context.SecretKeyContext;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.mapper.jca.JcaCurveMapper;
+import com.ibm.mapper.model.IAlgorithm;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Key;
 import com.ibm.mapper.model.KeyLength;
@@ -54,15 +55,12 @@ public final class JavaKeyContextTranslator extends JavaAbstractLibraryTranslato
             JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
             return jcaAlgorithmMapper
                     .parse(algorithm.asString(), detectionLocation)
-                    .map(iNode -> (com.ibm.mapper.model.Algorithm) iNode)
-                    .map(
-                            algorithmNode -> {
-                                algorithmNode.put(new KeyGeneration(detectionLocation));
-                                return algorithmNode;
-                            })
                     .map(
                             algo -> {
-                                final Key key = new Key(algo);
+                                // key gen
+                                algo.put(new KeyGeneration(detectionLocation));
+                                // put key
+                                final Key key = new Key((IAlgorithm) algo);
                                 if (detectionContext.is(PrivateKeyContext.class)) {
                                     return new PrivateKey(key);
                                 } else if (detectionContext.is(PublicKeyContext.class)) {
@@ -81,15 +79,9 @@ public final class JavaKeyContextTranslator extends JavaAbstractLibraryTranslato
                     .parse(curve.asString(), detectionLocation)
                     .map(
                             algo -> {
-                                final Key key = new Key(algo);
-                                if (detectionContext.is(PrivateKeyContext.class)) {
-                                    return new PrivateKey(key);
-                                } else if (detectionContext.is(PublicKeyContext.class)) {
-                                    return new PublicKey(key);
-                                } else if (detectionContext.is(SecretKeyContext.class)) {
-                                    return new SecretKey(key);
-                                }
-                                return key;
+                                // key gen
+                                algo.put(new KeyGeneration(detectionLocation));
+                                return algo;
                             });
         }
         return Optional.empty();
