@@ -19,10 +19,9 @@
  */
 package com.ibm.plugin.rules.detection.hash;
 
-import com.ibm.engine.model.CipherAction;
 import com.ibm.engine.model.context.DigestContext;
 import com.ibm.engine.model.context.SignatureContext;
-import com.ibm.engine.model.factory.CipherActionFactory;
+import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.Arrays;
@@ -61,27 +60,24 @@ public final class CryptographyHash {
                     "BLAKE2s",
                     "SM3");
 
-    // This function returns a list of rules for each possible `DigestContext.Kind` hash.
-    // TODO: This implies that language-agnostic enum names in `DigestContext.Kind` should be
-    //  exactly the Python hashes names.
     private static @NotNull List<IDetectionRule<Tree>> hashesRules() {
         LinkedList<IDetectionRule<Tree>> rules = new LinkedList<>();
-        for (DigestContext.Kind digestKind : DigestContext.Kind.values()) {
+        for (final String hash : CryptographyHash.hashes) {
             rules.add(
                     new DetectionRuleBuilder<Tree>()
                             .createDetectionRule()
                             .forObjectTypes("cryptography.hazmat.primitives.hashes")
-                            .forMethods(digestKind.name())
-                            .shouldBeDetectedAs(new CipherActionFactory<>(CipherAction.Action.HASH))
+                            .forMethods(hash)
+                            .shouldBeDetectedAs(new ValueActionFactory<>(hash))
                             .withAnyParameters()
-                            .buildForContext(new DigestContext(digestKind))
-                            .inBundle(() -> "CryptographyHash")
+                            .buildForContext(new DigestContext())
+                            .inBundle(() -> "Pyca")
                             .withoutDependingDetectionRules());
         }
         return rules;
     }
 
-    private static final IDetectionRule<Tree> PREHASHED =
+    private static final IDetectionRule<Tree> PRE_HASH =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
                     .forObjectTypes("cryptography.hazmat.primitives.asymmetric.utils")
@@ -89,14 +85,14 @@ public final class CryptographyHash {
                     .withMethodParameter("cryptography.hazmat.primitives.hashes.*")
                     .addDependingDetectionRules(hashesRules())
                     .buildForContext(new SignatureContext())
-                    .inBundle(() -> "CryptographyHash")
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         final List<IDetectionRule<Tree>> hashAndPrehashRules = new LinkedList<>(hashesRules());
-        hashAndPrehashRules.add(PREHASHED);
+        hashAndPrehashRules.add(PRE_HASH);
         return hashAndPrehashRules;
     }
 }

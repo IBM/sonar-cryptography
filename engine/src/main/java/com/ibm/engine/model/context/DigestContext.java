@@ -19,50 +19,50 @@
  */
 package com.ibm.engine.model.context;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.Nonnull;
 
-public class DigestContext implements IDetectionContext, ISupportKind<DigestContext.Kind> {
+public class DigestContext extends DetectionContext
+        implements IDetectionContext, ISupportKind<DigestContext.Kind> {
 
-    // Currently, Kind contain all the types of hashes in Python's cryptography library.
-    // This means that Kind is library sepcific, which is not optimal.
-    // TODO: If at some point Kind would have to be used for another language/library, Kind would
-    // have to be changed to contain library-independent values. Additionally, a new mapping layer
-    // would have to be built between each library hash values and these library-independent values.
     public enum Kind {
         NONE,
         MGF1,
         MGF,
         CRAMER_SHOUP,
         NTRU,
-        SHA1,
-        SHA512_224,
-        SHA512_256,
-        SHA224,
-        SHA256,
-        SHA384,
-        SHA512,
-        SHA3_224,
-        SHA3_256,
-        SHA3_384,
-        SHA3_512,
-        SHAKE128,
-        SHAKE256,
-        MD5,
-        BLAKE2b,
-        BLAKE2s,
-        SM3
     }
 
     @Nonnull private final Kind kind;
 
     public DigestContext() {
+        super(new HashMap<>());
         this.kind = Kind.NONE;
     }
 
+    /**
+     * use a property map instead
+     *
+     * @deprecated
+     */
+    @Deprecated(since = "1.3.0")
     public DigestContext(@Nonnull Kind kind) {
+        super(new HashMap<>());
         this.kind = kind;
     }
 
+    public DigestContext(@Nonnull Map<String, String> properties) {
+        super(properties);
+        this.kind = Kind.NONE;
+    }
+
+    /**
+     * use a property map instead
+     *
+     * @deprecated
+     */
+    @Deprecated(since = "1.3.0")
     @Nonnull
     public Kind kind() {
         return kind;

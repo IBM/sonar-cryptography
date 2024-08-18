@@ -41,10 +41,9 @@ import com.ibm.mapper.model.padding.ANSIX923;
 import com.ibm.mapper.model.padding.OAEP;
 import com.ibm.mapper.model.padding.PKCS7;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.sonar.plugins.python.api.tree.Tree;
-
-import javax.annotation.Nonnull;
 import java.util.Optional;
+import javax.annotation.Nonnull;
+import org.sonar.plugins.python.api.tree.Tree;
 
 @SuppressWarnings("java:S1301")
 public final class PythonCipherContextTranslator {

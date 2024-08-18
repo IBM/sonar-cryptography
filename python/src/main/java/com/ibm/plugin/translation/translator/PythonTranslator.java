@@ -94,10 +94,9 @@ public class PythonTranslator extends ITranslator<PythonCheck, Tree, Symbol, Pyt
                     value, detectionValueContextKind, detectionLocation);
 
         } else if (detectionValueContext.is(DigestContext.class)) {
-            DigestContext.Kind detectionValueContextKind =
-                    ((DigestContext) detectionValueContext).kind();
+            final DigestContext context = ((DigestContext) detectionValueContext);
             return PythonDigestContextTranslator.translateForDigestContext(
-                    value, detectionValueContextKind, detectionLocation);
+                    value, context, detectionLocation);
 
         } else if (detectionValueContext.is(SignatureContext.class)) {
             SignatureContext.Kind detectionValueContextKind =
