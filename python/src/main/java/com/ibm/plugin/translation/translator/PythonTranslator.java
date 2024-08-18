@@ -74,14 +74,14 @@ public class PythonTranslator extends ITranslator<PythonCheck, Tree, Symbol, Pyt
         }
 
         if (detectionValueContext.is(KeyContext.class)) {
-            KeyContext.Kind detectionValueContextKind = ((KeyContext) detectionValueContext).kind();
+            final KeyContext context = ((KeyContext) detectionValueContext);
             return PythonKeyContextTranslator.translateForKeyContext(
-                    value, detectionValueContextKind, detectionLocation);
+                    value, context, detectionLocation);
         }
         if (detectionValueContext.is(PrivateKeyContext.class)) {
-            KeyContext.Kind detectionValueContextKind = ((KeyContext) detectionValueContext).kind();
+            final KeyContext context = ((KeyContext) detectionValueContext);
             return PythonPrivateKeyContextTranslator.translateForPrivateKeyContext(
-                    value, detectionValueContextKind, detectionLocation);
+                    value, context, detectionLocation);
 
         } else if (detectionValueContext.is(SecretKeyContext.class)) {
             KeyContext.Kind detectionValueContextKind = ((KeyContext) detectionValueContext).kind();
@@ -89,9 +89,9 @@ public class PythonTranslator extends ITranslator<PythonCheck, Tree, Symbol, Pyt
                     value, detectionValueContextKind, detectionLocation);
 
         } else if (detectionValueContext.is(PublicKeyContext.class)) {
-            KeyContext.Kind detectionValueContextKind = ((KeyContext) detectionValueContext).kind();
+            final KeyContext context = ((KeyContext) detectionValueContext);
             return PythonPublicKeyContextTranslator.translateForPublicKeyContext(
-                    value, detectionValueContextKind, detectionLocation);
+                    value, context, detectionLocation);
 
         } else if (detectionValueContext.is(DigestContext.class)) {
             final DigestContext context = ((DigestContext) detectionValueContext);

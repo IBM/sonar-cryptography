@@ -25,8 +25,13 @@ import com.ibm.engine.model.KeySize;
 import com.ibm.engine.model.context.KeyContext;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PrivateKey;
+import com.ibm.mapper.model.algorithms.DH;
+import com.ibm.mapper.model.algorithms.DSA;
+import com.ibm.mapper.model.algorithms.RSA;
+import com.ibm.mapper.model.functionality.Generate;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.plugin.translation.PythonTranslatorUtils;
@@ -44,14 +49,32 @@ public final class PythonPrivateKeyContextTranslator {
     @Nonnull
     public static Optional<INode> translateForPrivateKeyContext(
             @Nonnull final IValue<Tree> value,
-            @Nonnull KeyContext.Kind kind,
+            @Nonnull KeyContext context,
             @Nonnull DetectionLocation detectionLocation) {
-        if (value instanceof com.ibm.engine.model.Algorithm<Tree> detectedAlgorithm) {
-            return translatePrivateKeyContextAlgorithm(detectedAlgorithm, kind, detectionLocation);
+        if (value instanceof KeyAction<Tree>) {
+            return context.get("algorithm")
+                    .map(
+                            algorithm ->
+                                    switch (algorithm.toUpperCase().trim()) {
+                                        case "DH" -> new DH(detectionLocation);
+                                        case "FERNET" -> null; // TODO
+                                        case "RSA" -> new RSA(detectionLocation);
+                                        case "DSA" -> new DSA(detectionLocation);
+
+                                        default -> null;
+                                    })
+                    .map(
+                            algorithm -> {
+                                PrivateKey privateKey = new PrivateKey(algorithm);
+                                privateKey.put(
+                                        new Generate(
+                                                detectionLocation)); // currently only GENERATE is
+                                // used as key action is this
+                                // context
+                                return privateKey;
+                            });
         } else if (value instanceof KeySize<Tree> keySize) {
-            return translatePrivateKeyContextKeySize(keySize, kind, detectionLocation);
-        } else if (value instanceof KeyAction<Tree> keyAction) {
-            return translatePrivateKeyContextKeyAction(keyAction, kind, detectionLocation);
+            return Optional.of(new KeyLength(keySize.getValue(), detectionLocation));
         }
         return Optional.empty();
     }

@@ -26,6 +26,10 @@ public final class PublicKey extends Key {
         super(publicKeyEncryption, PublicKey.class);
     }
 
+    public PublicKey(@Nonnull Signature signature) {
+        super(signature, PublicKey.class);
+    }
+
     public PublicKey(@Nonnull Key key) {
         super(key, key.detectionLocation, PublicKey.class);
     }

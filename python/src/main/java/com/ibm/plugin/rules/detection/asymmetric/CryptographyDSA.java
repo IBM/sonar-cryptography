@@ -24,7 +24,6 @@ import static com.ibm.engine.detection.MethodMatcher.ANY;
 import com.ibm.engine.model.KeyAction;
 import com.ibm.engine.model.SignatureAction;
 import com.ibm.engine.model.Size;
-import com.ibm.engine.model.context.KeyContext;
 import com.ibm.engine.model.context.PrivateKeyContext;
 import com.ibm.engine.model.context.PublicKeyContext;
 import com.ibm.engine.model.context.SignatureContext;
@@ -35,6 +34,7 @@ import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import com.ibm.plugin.rules.detection.hash.CryptographyHash;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.python.api.tree.Tree;
@@ -63,7 +63,7 @@ public final class CryptographyDSA {
                                     .rules()) // The parameter of sign can either be an immediate
                     // hash, or a hash enclosed in the pre-hash
                     .buildForContext(new SignatureContext())
-                    .inBundle(() -> "CryptographyDSASign")
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> GENERATION_DSA =
@@ -73,8 +73,8 @@ public final class CryptographyDSA {
                     .forMethods("generate_private_key")
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
-                    .buildForContext(new PrivateKeyContext(KeyContext.Kind.DSA))
-                    .inBundle(() -> "CryptographyDSA")
+                    .buildForContext(new PrivateKeyContext(Map.of("algorithm", "DSA")))
+                    .inBundle(() -> "Pyca")
                     .withDependingDetectionRules(List.of(SIGN_DSA));
 
     private static final IDetectionRule<Tree> PUBLIC_NUMBERS_DSA =
@@ -84,8 +84,8 @@ public final class CryptographyDSA {
                     .forMethods("DSAPublicNumbers")
                     .shouldBeDetectedAs(new KeyActionFactory<>(KeyAction.Action.GENERATION))
                     .withAnyParameters()
-                    .buildForContext(new PublicKeyContext(KeyContext.Kind.DSA))
-                    .inBundle(() -> "CryptographyDSA")
+                    .buildForContext(new PublicKeyContext(Map.of("algorithm", "DSA")))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> PRIVATE_NUMBERS_DSA =
@@ -95,8 +95,8 @@ public final class CryptographyDSA {
                     .forMethods("DSAPrivateNumbers")
                     .shouldBeDetectedAs(new KeyActionFactory<>(KeyAction.Action.GENERATION))
                     .withAnyParameters()
-                    .buildForContext(new PrivateKeyContext(KeyContext.Kind.DSA))
-                    .inBundle(() -> "CryptographyDSA")
+                    .buildForContext(new PrivateKeyContext(Map.of("algorithm", "DSA")))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     @Unmodifiable

@@ -19,11 +19,22 @@
  */
 package com.ibm.engine.model.context;
 
+import java.util.Map;
 import javax.annotation.Nonnull;
 
 public class PublicKeyContext extends KeyContext implements IDetectionContext {
+    /**
+     * use a property map instead
+     *
+     * @deprecated
+     */
+    @Deprecated(since = "1.3.0")
     public PublicKeyContext(@Nonnull Kind kind) {
         super(kind);
+    }
+
+    public PublicKeyContext(@Nonnull Map<String, String> properties) {
+        super(properties);
     }
 
     @Nonnull

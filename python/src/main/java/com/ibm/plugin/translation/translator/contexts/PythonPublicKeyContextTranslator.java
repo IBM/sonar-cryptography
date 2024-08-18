@@ -26,9 +26,12 @@ import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.EllipticCurve;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.PublicKey;
+import com.ibm.mapper.model.algorithms.DH;
+import com.ibm.mapper.model.algorithms.DSA;
+import com.ibm.mapper.model.algorithms.RSA;
+import com.ibm.mapper.model.functionality.Generate;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
-import com.ibm.plugin.translation.PythonTranslatorUtils;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import org.sonar.plugins.python.api.tree.Tree;
@@ -43,13 +46,28 @@ public final class PythonPublicKeyContextTranslator {
     @Nonnull
     public static Optional<INode> translateForPublicKeyContext(
             @Nonnull final IValue<Tree> value,
-            @Nonnull KeyContext.Kind kind,
+            @Nonnull KeyContext context,
             @Nonnull DetectionLocation detectionLocation) {
-
-        if (value instanceof com.ibm.engine.model.Algorithm<Tree> detectedAlgorithm) {
-            return translatePublicKeyContextAlgorithm(detectedAlgorithm, kind, detectionLocation);
-        } else if (value instanceof KeyAction<Tree> keyAction) {
-            return translatePublicKeyContextKeyAction(keyAction, kind, detectionLocation);
+        if (value instanceof KeyAction<Tree>) {
+            return context.get("algorithm")
+                    .map(
+                            algorithm ->
+                                    switch (algorithm.toUpperCase().trim()) {
+                                        case "DH" -> new DH(detectionLocation);
+                                        case "RSA" -> new RSA(detectionLocation);
+                                        case "DSA" -> new DSA(detectionLocation);
+                                        default -> null;
+                                    })
+                    .map(
+                            algorithm -> {
+                                PublicKey publicKey = new PublicKey(algorithm);
+                                publicKey.put(
+                                        new Generate(
+                                                detectionLocation)); // currently only GENERATE is
+                                // used as key action is this
+                                // context
+                                return publicKey;
+                            });
         }
         return Optional.empty();
     }
@@ -77,35 +95,5 @@ public final class PythonPublicKeyContextTranslator {
 
                 return Optional.of(publicKey);
         }
-    }
-
-    @Nonnull
-    private static Optional<INode> translatePublicKeyContextKeyAction(
-            @Nonnull final KeyAction<Tree> keyAction,
-            @Nonnull KeyContext.Kind kind,
-            @Nonnull DetectionLocation detectionLocation) {
-        switch (keyAction.getAction()) {
-            case GENERATION:
-                switch (kind) {
-                    case RSA:
-                        return Optional.of(
-                                PythonTranslatorUtils.generateOnlyPublicKeyTranslation(
-                                        "RSA", detectionLocation));
-                    case DSA:
-                        return Optional.of(
-                                PythonTranslatorUtils.generateOnlyPublicKeyTranslation(
-                                        "DSA", detectionLocation));
-                    case DH:
-                        return Optional.of(
-                                PythonTranslatorUtils.generateOnlyPublicKeyTranslation(
-                                        "DH", detectionLocation));
-                    default:
-                        break;
-                }
-                break;
-            default:
-                break;
-        }
-        return Optional.empty();
     }
 }

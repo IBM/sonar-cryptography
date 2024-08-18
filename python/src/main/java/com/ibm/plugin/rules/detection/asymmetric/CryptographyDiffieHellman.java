@@ -23,7 +23,6 @@ import static com.ibm.engine.detection.MethodMatcher.ANY;
 
 import com.ibm.engine.model.KeyAction;
 import com.ibm.engine.model.Size;
-import com.ibm.engine.model.context.KeyContext;
 import com.ibm.engine.model.context.PrivateKeyContext;
 import com.ibm.engine.model.context.PublicKeyContext;
 import com.ibm.engine.model.factory.KeyActionFactory;
@@ -31,6 +30,7 @@ import com.ibm.engine.model.factory.KeySizeFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.python.api.tree.Tree;
@@ -54,8 +54,8 @@ public final class CryptographyDiffieHellman {
                     .withMethodParameter(ANY)
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
-                    .buildForContext(new PrivateKeyContext(KeyContext.Kind.DH))
-                    .inBundle(() -> "CryptographyDiffieHellmanGenerationParam")
+                    .buildForContext(new PrivateKeyContext(Map.of("algorithm", "DH")))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> GENERATION_DH =
@@ -69,8 +69,12 @@ public final class CryptographyDiffieHellman {
                     // `generate_private_key` that creates both Private and Public keys
                     // It distinguishes this case from the DH context used in Public/PrivateNumbers,
                     // where only the Public or Private key is created
-                    .buildForContext(new PrivateKeyContext(KeyContext.Kind.DH_FULL))
-                    .inBundle(() -> "CryptographyDiffieHellman")
+                    .buildForContext(
+                            new PrivateKeyContext(
+                                    Map.of(
+                                            "algorithm", "DH",
+                                            "includePK", "true")))
+                    .inBundle(() -> "Pyca")
                     .withDependingDetectionRules(List.of(GENERATE_PARAMETERS_DH));
 
     private static final IDetectionRule<Tree> PUBLIC_NUMBERS_DH =
@@ -80,8 +84,8 @@ public final class CryptographyDiffieHellman {
                     .forMethods("DHPublicNumbers")
                     .shouldBeDetectedAs(new KeyActionFactory<>(KeyAction.Action.GENERATION))
                     .withAnyParameters()
-                    .buildForContext(new PublicKeyContext(KeyContext.Kind.DH))
-                    .inBundle(() -> "CryptographyDiffieHellman")
+                    .buildForContext(new PublicKeyContext(Map.of("algorithm", "DH")))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> PRIVATE_NUMBERS_DH =
@@ -91,7 +95,7 @@ public final class CryptographyDiffieHellman {
                     .forMethods("DHPrivateNumbers")
                     .shouldBeDetectedAs(new KeyActionFactory<>(KeyAction.Action.GENERATION))
                     .withAnyParameters()
-                    .buildForContext(new PrivateKeyContext(KeyContext.Kind.DH))
+                    .buildForContext(new PublicKeyContext(Map.of("algorithm", "DH")))
                     .inBundle(() -> "CryptographyDiffieHellman")
                     .withoutDependingDetectionRules();
 

@@ -44,19 +44,19 @@ import org.sonar.plugins.python.api.tree.Tree;
 
 @SuppressWarnings("java:S1301")
 public final class PythonKeyContextTranslator {
+    private static final Logger LOGGER = LoggerFactory.getLogger(PythonKeyContextTranslator.class);
 
     private PythonKeyContextTranslator() {
         // private
     }
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PythonKeyContextTranslator.class);
-
     @Nonnull
     public static Optional<INode> translateForKeyContext(
             @Nonnull final IValue<Tree> value,
-            @Nonnull KeyContext.Kind kind,
+            @Nonnull KeyContext context,
             @Nonnull DetectionLocation detectionLocation) {
-        if (value instanceof com.ibm.engine.model.Algorithm<Tree> detectedAlgorithm) {
+
+        /*if (value instanceof com.ibm.engine.model.Algorithm<Tree> detectedAlgorithm) {
             return translateKeyContextAlgorithm(detectedAlgorithm, kind, detectionLocation);
         } else if (value instanceof KeySize<Tree> keySize) {
             return translateKeyContextKeySize(keySize, kind, detectionLocation);
@@ -65,7 +65,7 @@ public final class PythonKeyContextTranslator {
         } else if (value instanceof AlgorithmParameter<Tree> algorithmParameter) {
             return translateKeyContextAlgorithmParameter(
                     algorithmParameter, kind, detectionLocation);
-        }
+        }*/
         return Optional.empty();
     }
 
