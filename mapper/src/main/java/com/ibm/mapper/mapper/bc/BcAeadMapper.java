@@ -86,7 +86,8 @@ public class BcAeadMapper implements IMapper {
 
             default -> {
                 final Algorithm algorithm =
-                        new Algorithm(cipherAlgorithm, AuthenticatedEncryption.class, detectionLocation);
+                        new Algorithm(
+                                cipherAlgorithm, AuthenticatedEncryption.class, detectionLocation);
                 algorithm.put(new Unknown(detectionLocation));
                 yield Optional.of(algorithm);
             }

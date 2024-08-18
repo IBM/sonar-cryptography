@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -58,71 +59,9 @@ public abstract class ITranslator<R, T, S, P> {
      */
     @Nonnull
     public List<INode> translate(@Nonnull DetectionStore<R, T, S, P> rootDetectionStore) {
-        final Map<Integer, List<INode>> rootNodes = translateStore(rootDetectionStore);
-        travers(rootDetectionStore, rootNodes);
-        return rootNodes.values().stream().flatMap(List::stream).toList();
-    }
-
-    private void travers(
-            @Nonnull DetectionStore<R, T, S, P> store,
-            @Nonnull Map<Integer, List<INode>> parentNodes) {
-        store.getChildrenForMethod().forEach(child -> translateAndAppend(-1, child, parentNodes));
-        store.childrenForEachParameter(
-                (id, children) -> {
-                    for (DetectionStore<R, T, S, P> child : children) {
-                        translateAndAppend(id, child, parentNodes);
-                    }
-                });
-    }
-
-    private void translateAndAppend(
-            int id,
-            @Nonnull DetectionStore<R, T, S, P> child,
-            @Nonnull Map<Integer, List<INode>> mapOfParentNodes) {
-
-        Map<Integer, List<INode>> nodes = translateStore(child);
-        // collect nodes and add to parent
-        final List<INode> newNodesCollection =
-                nodes.values().stream().flatMap(List::stream).toList();
-
-        Optional.ofNullable(mapOfParentNodes.get(id))
-                .ifPresentOrElse(
-                        parentNodes -> this.append(parentNodes, newNodesCollection),
-                        () -> {
-                            // no parent node with related id
-                            if (mapOfParentNodes.isEmpty()) {
-                                mapOfParentNodes.put(-1, newNodesCollection); // add node as main
-                            } else {
-                                mapOfParentNodes.values().stream()
-                                        .findFirst()
-                                        .ifPresent(
-                                                parentNodes ->
-                                                        this.append(
-                                                                parentNodes, newNodesCollection));
-                            }
-                        });
-        if (nodes.isEmpty()) {
-            nodes = mapOfParentNodes;
-        }
-        // next iteration
-        travers(child, nodes);
-    }
-
-    private void append(@Nonnull List<INode> parentNodes, @Nonnull List<INode> newNodesCollection) {
-        @Unmodifiable
-        final List<INode> copyParentNodes = List.copyOf(parentNodes); // copy of references
-        for (INode parentNode : copyParentNodes) {
-            newNodesCollection.forEach(
-                    childNode -> {
-                        if (parentNode.hasChildOfType(childNode.getKind()).isPresent()) {
-                            final INode newParent = parentNode.deepCopy();
-                            newParent.put(childNode);
-                            parentNodes.add(newParent);
-                        } else {
-                            parentNode.put(childNode);
-                        }
-                    });
-        }
+        final Traverser<R, T, S, P> traverser =
+                new Traverser<>(rootDetectionStore, this::translateStore);
+        return traverser.translate();
     }
 
     @Nonnull
@@ -168,4 +107,101 @@ public abstract class ITranslator<R, T, S, P> {
 
     @Nullable protected abstract DetectionLocation getDetectionContextFrom(
             @Nonnull T location, @Nonnull final IBundle bundle, @Nonnull String filePath);
+
+    /*
+     * private traverser
+     */
+    static class Traverser<R, T, S, P> {
+        @Nonnull final DetectionStore<R, T, S, P> rootDetectionStore;
+        @Nonnull final List<INode> newParents = new ArrayList<>();
+        @Nonnull final Function<DetectionStore<R, T, S, P>, Map<Integer, List<INode>>> translator;
+
+        public Traverser(
+                @Nonnull DetectionStore<R, T, S, P> rootDetectionStore,
+                @Nonnull
+                        Function<DetectionStore<R, T, S, P>, Map<Integer, List<INode>>>
+                                translator) {
+            this.rootDetectionStore = rootDetectionStore;
+            this.translator = translator;
+        }
+
+        @Nonnull
+        public List<INode> translate() {
+            final Map<Integer, List<INode>> rootNodes = translator.apply(rootDetectionStore);
+            travers(rootDetectionStore, rootNodes);
+            final List<INode> translatedRootNodes =
+                    new ArrayList<>(rootNodes.values().stream().flatMap(List::stream).toList());
+            translatedRootNodes.addAll(newParents);
+            return translatedRootNodes;
+        }
+
+        private void travers(
+                @Nonnull DetectionStore<R, T, S, P> store,
+                @Nonnull Map<Integer, List<INode>> parentNodes) {
+            store.getChildrenForMethod()
+                    .forEach(child -> translateAndAppend(-1, child, parentNodes));
+            store.childrenForEachParameter(
+                    (id, children) -> {
+                        for (DetectionStore<R, T, S, P> child : children) {
+                            translateAndAppend(id, child, parentNodes);
+                        }
+                    });
+        }
+
+        private void translateAndAppend(
+                int id,
+                @Nonnull DetectionStore<R, T, S, P> child,
+                @Nonnull Map<Integer, List<INode>> mapOfParentNodes) {
+
+            Map<Integer, List<INode>> nodes = translator.apply(child);
+            // collect nodes and add to parent
+            final List<INode> newNodesCollection =
+                    nodes.values().stream().flatMap(List::stream).toList();
+
+            if (!newNodesCollection.isEmpty()) {
+                Optional.ofNullable(mapOfParentNodes.get(id))
+                        .ifPresentOrElse(
+                                parentNodes -> this.append(parentNodes, newNodesCollection),
+                                () -> {
+                                    // no parent node with related id
+                                    if (mapOfParentNodes.isEmpty()) {
+                                        mapOfParentNodes.put(
+                                                -1, newNodesCollection); // add node as main
+                                    } else {
+                                        mapOfParentNodes.values().stream()
+                                                .findFirst()
+                                                .ifPresent(
+                                                        parentNodes ->
+                                                                this.append(
+                                                                        parentNodes,
+                                                                        newNodesCollection));
+                                    }
+                                });
+            }
+
+            if (nodes.isEmpty()) {
+                nodes = mapOfParentNodes;
+            }
+            // next iteration
+            travers(child, nodes);
+        }
+
+        private void append(
+                @Nonnull List<INode> parentNodes, @Nonnull List<INode> newNodesCollection) {
+            @Unmodifiable
+            final List<INode> copyParentNodes = List.copyOf(parentNodes); // copy of references
+            for (INode parentNode : copyParentNodes) {
+                newNodesCollection.forEach(
+                        childNode -> {
+                            if (parentNode.hasChildOfType(childNode.getKind()).isPresent()) {
+                                final INode newParent = parentNode.deepCopy();
+                                newParent.put(childNode);
+                                newParents.add(newParent);
+                            } else {
+                                parentNode.put(childNode);
+                            }
+                        });
+            }
+        }
+    }
 }
