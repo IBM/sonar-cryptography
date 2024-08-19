@@ -19,15 +19,15 @@
  */
 package com.ibm.plugin.rules.detection.bc.blockcipher;
 
+import com.ibm.engine.model.Size;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.IDetectionContext;
+import com.ibm.engine.model.factory.BlockSizeFactory;
 import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
-import com.ibm.plugin.rules.detection.bc.BouncyCastleInfoMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -39,45 +39,44 @@ public final class BcBlockCipherEngine {
         // nothing
     }
 
-    private static BouncyCastleInfoMap infoMap = new BouncyCastleInfoMap();
+    public static final List<String> enginesEmptyConstructors =
+            List.of(
+                    "AESEngine",
+                    "AESFastEngine",
+                    "AESLightEngine",
+                    "ARIAEngine",
+                    "BlowfishEngine",
+                    "CamelliaEngine",
+                    "CamelliaLightEngine",
+                    "CAST5Engine",
+                    "CAST6Engine",
+                    "DESedeEngine",
+                    "DESEngine",
+                    "GOST28147Engine",
+                    "GOST3412_2015Engine",
+                    "IDEAEngine",
+                    "LEAEngine",
+                    "NoekeonEngine",
+                    "NullEngine",
+                    "RC2Engine",
+                    "RC532Engine",
+                    "RC564Engine",
+                    "RC6Engine",
+                    "RijndaelEngine",
+                    "SEEDEngine",
+                    "SerpentEngine",
+                    "Shacal2Engine",
+                    "SkipjackEngine",
+                    "SM4Engine",
+                    "TEAEngine",
+                    "TnepresEngine",
+                    "TwofishEngine",
+                    "XTEAEngine");
 
-    static {
-        infoMap.putKey("AESEngine").putName("AES");
-        infoMap.putKey("AESFastEngine").putName("AES");
-        infoMap.putKey("AESLightEngine").putName("AES");
-        infoMap.putKey("ARIAEngine").putName("ARIA");
-        infoMap.putKey("BlowfishEngine").putName("Blowfish");
-        infoMap.putKey("CamelliaEngine").putName("Camellia");
-        infoMap.putKey("CamelliaLightEngine").putName("Camellia");
-        infoMap.putKey("CAST5Engine").putName("CAST5");
-        infoMap.putKey("CAST6Engine").putName("CAST5");
-        infoMap.putKey("DESedeEngine").putName("DESede");
-        infoMap.putKey("DESEngine").putName("DES");
-        infoMap.putKey("DSTU7624Engine").putName("DSTU 7624:2014");
-        infoMap.putKey("GOST28147Engine").putName("GOST 28147-89");
-        infoMap.putKey("GOST3412_2015Engine").putName("GOST R 34.12-2015");
-        infoMap.putKey("IDEAEngine").putName("IDEA");
-        infoMap.putKey("LEAEngine").putName("LEA");
-        infoMap.putKey("NoekeonEngine").putName("Noekeon");
-        infoMap.putKey("NullEngine").putName("Null");
-        infoMap.putKey("RC2Engine").putName("RC2");
-        infoMap.putKey("RC532Engine").putName("RC532");
-        infoMap.putKey("RC564Engine").putName("RC564");
-        infoMap.putKey("RC6Engine").putName("RC6");
-        infoMap.putKey("RijndaelEngine").putName("Rijndael");
-        infoMap.putKey("SEEDEngine").putName("SEED");
-        infoMap.putKey("SerpentEngine").putName("Serpent");
-        infoMap.putKey("Shacal2Engine").putName("Shacal2");
-        infoMap.putKey("SkipjackEngine").putName("Skipjack");
-        infoMap.putKey("SM4Engine").putName("SM4");
-        infoMap.putKey("TEAEngine").putName("TEA");
-        infoMap.putKey("ThreefishEngine").putName("Threefish");
-        infoMap.putKey("TnepresEngine").putName("Tnepres");
-        infoMap.putKey("TwofishEngine").putName("Twofish");
-        infoMap.putKey("XTEAEngine").putName("XTEA");
-    }
+    public static final List<String> enginesBlockSizeConstructors =
+            List.of("DSTU7624Engine", "NullEngine", "RijndaelEngine", "ThreefishEngine");
 
-    private static final List<IDetectionRule<Tree>> constructors(
+    private static final List<IDetectionRule<Tree>> simpleConstructors(
             @Nullable IDetectionContext detectionValueContext) {
         List<IDetectionRule<Tree>> constructorsList = new LinkedList<>();
         IDetectionContext context =
@@ -85,33 +84,48 @@ public final class BcBlockCipherEngine {
                         ? detectionValueContext
                         : new CipherContext(CipherContext.Kind.BLOCK_CIPHER_ENGINE);
 
-        for (Map.Entry<String, BouncyCastleInfoMap.Info> entry : infoMap.entrySet()) {
-            String engine = entry.getKey();
-            String engineName = infoMap.getDisplayName(engine);
+        // Simple empty constructors
+        for (String engine : enginesEmptyConstructors) {
             constructorsList.add(
                     new DetectionRuleBuilder<Tree>()
                             .createDetectionRule()
                             .forObjectTypes("org.bouncycastle.crypto.engines." + engine)
                             .forConstructor()
-                            .shouldBeDetectedAs(new ValueActionFactory<>(engineName))
-                            // We want to capture all possible constructors (some have arguments)
-                            .withAnyParameters()
-                            .buildForContext(context)
-                            .inBundle(() -> "Bc")
-                            .withDependingDetectionRules(BcBlockCipherInit.rules()));
-
-            constructorsList.add(
-                    new DetectionRuleBuilder<Tree>()
-                            .createDetectionRule()
-                            .forObjectTypes("org.bouncycastle.crypto.engines." + engine)
-                            .forMethods("newInstance")
-                            .shouldBeDetectedAs(new ValueActionFactory<>(engineName))
-                            // We want to capture all possible constructors (some have arguments)
-                            .withAnyParameters()
+                            .shouldBeDetectedAs(new ValueActionFactory<>(engine))
+                            .withoutParameters()
                             .buildForContext(context)
                             .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcBlockCipherInit.rules()));
         }
+
+        // Constructors with the block size
+        for (String engine : enginesBlockSizeConstructors) {
+            constructorsList.add(
+                    new DetectionRuleBuilder<Tree>()
+                            .createDetectionRule()
+                            .forObjectTypes("org.bouncycastle.crypto.engines." + engine)
+                            .forConstructor()
+                            .shouldBeDetectedAs(new ValueActionFactory<>(engine))
+                            .withMethodParameter("int")
+                            .shouldBeDetectedAs(new BlockSizeFactory<>(Size.UnitType.BIT))
+                            .asChildOfParameterWithId(-1)
+                            .buildForContext(context)
+                            .inBundle(() -> "Bc")
+                            .withDependingDetectionRules(BcBlockCipherInit.rules()));
+        }
+
+        // `newInstance` for AESEngine
+        String engine = "AESEngine";
+        constructorsList.add(
+                new DetectionRuleBuilder<Tree>()
+                        .createDetectionRule()
+                        .forObjectTypes("org.bouncycastle.crypto.engines." + engine)
+                        .forMethods("newInstance")
+                        .shouldBeDetectedAs(new ValueActionFactory<>(engine))
+                        .withoutParameters()
+                        .buildForContext(context)
+                        .inBundle(() -> "Bc")
+                        .withDependingDetectionRules(BcBlockCipherInit.rules()));
 
         return constructorsList;
     }
@@ -126,6 +140,6 @@ public final class BcBlockCipherEngine {
     @Nonnull
     public static List<IDetectionRule<Tree>> rules(
             @Nullable IDetectionContext detectionValueContext) {
-        return constructors(detectionValueContext);
+        return simpleConstructors(detectionValueContext);
     }
 }
