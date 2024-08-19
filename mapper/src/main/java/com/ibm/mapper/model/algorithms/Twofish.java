@@ -30,32 +30,29 @@ import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public final class Serpent extends Algorithm implements BlockCipher, AuthenticatedEncryption {
-    // https://en.wikipedia.org/wiki/Serpent_(cipher)
+public final class Twofish extends Algorithm implements BlockCipher, AuthenticatedEncryption {
+    // https://en.wikipedia.org/wiki/Twofish
 
-    private static final String NAME = "Serpent"; // Tnepres
+    private static final String NAME = "Twofish";
 
-    // Tnepres is a byte swapped version of Serpent:
-    // https://downloads.bouncycastle.org/java/docs/bcprov-jdk18on-javadoc/org/bouncycastle/crypto/engines/TnepresEngine.html
-
-    public Serpent(@Nonnull DetectionLocation detectionLocation) {
+    public Twofish(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
         this.put(new BlockSize(128, detectionLocation));
     }
 
-    public Serpent(int keyLength, @Nonnull DetectionLocation detectionLocation) {
+    public Twofish(int keyLength, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
     }
 
-    public Serpent(
+    public Twofish(
             int keyLength, @Nonnull Mode mode, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
     }
 
-    public Serpent(
+    public Twofish(
             int keyLength,
             @Nonnull Mode mode,
             @Nonnull Padding padding,
@@ -66,7 +63,7 @@ public final class Serpent extends Algorithm implements BlockCipher, Authenticat
         this.put(padding);
     }
 
-    public Serpent(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull Serpent serpent) {
-        super(serpent, asKind);
+    public Twofish(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull Twofish twofish) {
+        super(twofish, asKind);
     }
 }

@@ -41,12 +41,15 @@ import com.ibm.mapper.model.algorithms.SEED;
 import com.ibm.mapper.model.algorithms.SM4;
 import com.ibm.mapper.model.algorithms.Serpent;
 import com.ibm.mapper.model.algorithms.Skipjack;
-import com.ibm.mapper.model.algorithms.TEA;
+import com.ibm.mapper.model.algorithms.Threefish;
+import com.ibm.mapper.model.algorithms.Twofish;
 import com.ibm.mapper.model.algorithms.cast.CAST128;
 import com.ibm.mapper.model.algorithms.cast.CAST256;
 import com.ibm.mapper.model.algorithms.gost.GOST28147;
 import com.ibm.mapper.model.algorithms.gost.GOSTR34122015;
 import com.ibm.mapper.model.algorithms.shacal.SHACAL2;
+import com.ibm.mapper.model.algorithms.tea.TEA;
+import com.ibm.mapper.model.algorithms.tea.XTEA;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -98,10 +101,10 @@ public class BcBlockCipherMapper implements IMapper {
             case "SkipjackEngine" -> Optional.of(new Skipjack(detectionLocation));
             case "SM4Engine" -> Optional.of(new SM4(detectionLocation));
             case "TEAEngine" -> Optional.of(new TEA(detectionLocation));
-            case "ThreefishEngine" -> Optional.empty();
-            case "TnepresEngine" -> Optional.empty();
-            case "TwofishEngine" -> Optional.empty();
-            case "XTEAEngine" -> Optional.empty();
+            case "ThreefishEngine" -> Optional.of(new Threefish(detectionLocation));
+            case "TnepresEngine" -> Optional.of(new Serpent(detectionLocation));
+            case "TwofishEngine" -> Optional.of(new Twofish(detectionLocation));
+            case "XTEAEngine" -> Optional.of(new XTEA(detectionLocation));
 
             default -> {
                 final Algorithm algorithm =

@@ -17,10 +17,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms;
+package com.ibm.mapper.model.algorithms.tea;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.IPrimitive;
@@ -29,44 +28,34 @@ import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
-public final class Serpent extends Algorithm implements BlockCipher, AuthenticatedEncryption {
-    // https://en.wikipedia.org/wiki/Serpent_(cipher)
+public final class XTEA extends Algorithm implements BlockCipher {
+    // https://en.wikipedia.org/wiki/XTEA
 
-    private static final String NAME = "Serpent"; // Tnepres
+    private static final String NAME = "XTEA"; // Tiny Encryption Algorithm
 
-    // Tnepres is a byte swapped version of Serpent:
-    // https://downloads.bouncycastle.org/java/docs/bcprov-jdk18on-javadoc/org/bouncycastle/crypto/engines/TnepresEngine.html
-
-    public Serpent(@Nonnull DetectionLocation detectionLocation) {
+    public XTEA(@NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
-        this.put(new BlockSize(128, detectionLocation));
+        this.put(new BlockSize(64, detectionLocation));
+        this.put(new KeyLength(128, detectionLocation));
     }
 
-    public Serpent(int keyLength, @Nonnull DetectionLocation detectionLocation) {
+    public XTEA(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
         this(detectionLocation);
-        this.put(new KeyLength(keyLength, detectionLocation));
-    }
-
-    public Serpent(
-            int keyLength, @Nonnull Mode mode, @Nonnull DetectionLocation detectionLocation) {
-        this(detectionLocation);
-        this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
     }
 
-    public Serpent(
-            int keyLength,
+    public XTEA(
             @Nonnull Mode mode,
             @Nonnull Padding padding,
-            @Nonnull DetectionLocation detectionLocation) {
+            @NotNull DetectionLocation detectionLocation) {
         this(detectionLocation);
-        this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
         this.put(padding);
     }
 
-    public Serpent(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull Serpent serpent) {
-        super(serpent, asKind);
+    public XTEA(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull XTEA xtea) {
+        super(xtea, asKind);
     }
 }

@@ -22,7 +22,6 @@ package com.ibm.mapper.model.algorithms;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
-import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mode;
@@ -30,32 +29,28 @@ import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public final class Serpent extends Algorithm implements BlockCipher, AuthenticatedEncryption {
-    // https://en.wikipedia.org/wiki/Serpent_(cipher)
+public final class Threefish extends Algorithm implements BlockCipher, AuthenticatedEncryption {
+    // https://en.wikipedia.org/wiki/Threefish
 
-    private static final String NAME = "Serpent"; // Tnepres
+    private static final String NAME = "Threefish";
 
-    // Tnepres is a byte swapped version of Serpent:
-    // https://downloads.bouncycastle.org/java/docs/bcprov-jdk18on-javadoc/org/bouncycastle/crypto/engines/TnepresEngine.html
-
-    public Serpent(@Nonnull DetectionLocation detectionLocation) {
+    public Threefish(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
-        this.put(new BlockSize(128, detectionLocation));
     }
 
-    public Serpent(int keyLength, @Nonnull DetectionLocation detectionLocation) {
+    public Threefish(int keyLength, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
     }
 
-    public Serpent(
+    public Threefish(
             int keyLength, @Nonnull Mode mode, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
     }
 
-    public Serpent(
+    public Threefish(
             int keyLength,
             @Nonnull Mode mode,
             @Nonnull Padding padding,
@@ -66,7 +61,8 @@ public final class Serpent extends Algorithm implements BlockCipher, Authenticat
         this.put(padding);
     }
 
-    public Serpent(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull Serpent serpent) {
-        super(serpent, asKind);
+    public Threefish(
+            @Nonnull final Class<? extends IPrimitive> asKind, @Nonnull Threefish threefish) {
+        super(threefish, asKind);
     }
 }
