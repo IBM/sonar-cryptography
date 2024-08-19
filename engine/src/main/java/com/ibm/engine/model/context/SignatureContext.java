@@ -19,11 +19,12 @@
  */
 package com.ibm.engine.model.context;
 
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.Nonnull;
 
-public class SignatureContext extends DetectionContext implements IDetectionContext, ISupportKind<SignatureContext.Kind> {
+public class SignatureContext extends DetectionContext
+        implements IDetectionContext, ISupportKind<SignatureContext.Kind> {
     public enum Kind {
         PSS,
         MGF1,

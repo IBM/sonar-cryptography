@@ -24,12 +24,11 @@ import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.factory.CipherActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
-import org.jetbrains.annotations.Unmodifiable;
-import org.sonar.plugins.python.api.tree.Tree;
-
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nonnull;
+import org.jetbrains.annotations.Unmodifiable;
+import org.sonar.plugins.python.api.tree.Tree;
 
 @SuppressWarnings("java:S1192")
 public final class CryptographyWrapping {

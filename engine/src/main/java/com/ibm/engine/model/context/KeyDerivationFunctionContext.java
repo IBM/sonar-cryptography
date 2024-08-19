@@ -19,28 +19,22 @@
  */
 package com.ibm.engine.model.context;
 
+import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
-public class SecretKeyContext extends KeyContext implements IDetectionContext {
+public class KeyDerivationFunctionContext extends DetectionContext implements IDetectionContext {
 
-    /**
-     * use a property map instead
-     *
-     * @deprecated
-     */
-    @Deprecated(since = "1.3.0")
-    public SecretKeyContext(@Nonnull Kind kind) {
-        super(kind);
+    public KeyDerivationFunctionContext() {
+        super(new HashMap<>());
     }
 
-    public SecretKeyContext(@Nonnull Map<String, String> properties) {
+    public KeyDerivationFunctionContext(@NotNull Map<String, String> properties) {
         super(properties);
     }
 
-    @Nonnull
     @Override
-    public Class<? extends IDetectionContext> type() {
-        return SecretKeyContext.class;
+    public @NotNull Class<? extends IDetectionContext> type() {
+        return KeyDerivationFunctionContext.class;
     }
 }

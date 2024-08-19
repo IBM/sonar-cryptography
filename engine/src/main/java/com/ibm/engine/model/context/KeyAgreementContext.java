@@ -19,9 +19,8 @@
  */
 package com.ibm.engine.model.context;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
 public class KeyAgreementContext extends DetectionContext implements IDetectionContext {
 

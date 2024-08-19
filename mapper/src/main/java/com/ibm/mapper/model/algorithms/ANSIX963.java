@@ -17,28 +17,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model;
+package com.ibm.mapper.model.algorithms;
 
+import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.KeyDerivationFunction;
 import com.ibm.mapper.utils.DetectionLocation;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
-public class EllipticCurveAlgorithm extends Algorithm
-        implements PublicKeyEncryption, Signature, KeyAgreement {
+public class ANSIX963 extends Algorithm implements KeyDerivationFunction {
+    private static final String NAME = "ANSI X9.63";
 
-    public EllipticCurveAlgorithm(@Nonnull EllipticCurve curve) {
-        super("EC-" + curve.asString(), PublicKeyEncryption.class, curve.detectionLocation);
-        this.put(curve);
-        this.put(new Oid("1.2.840.10045.2.1", curve.detectionLocation));
-    }
-
-    public EllipticCurveAlgorithm(@Nonnull DetectionLocation detectionLocation) {
-        super("EC", PublicKeyEncryption.class, detectionLocation);
-        this.put(new Oid("1.2.840.10045.2.1", detectionLocation));
-    }
-
-    public EllipticCurveAlgorithm(
-            @Nonnull final Class<? extends IPrimitive> asKind,
-            @Nonnull EllipticCurveAlgorithm ellipticCurveAlgorithm) {
-        super(ellipticCurveAlgorithm, asKind);
+    public ANSIX963(@NotNull DetectionLocation detectionLocation) {
+        super(NAME, KeyDerivationFunction.class, detectionLocation);
     }
 }
