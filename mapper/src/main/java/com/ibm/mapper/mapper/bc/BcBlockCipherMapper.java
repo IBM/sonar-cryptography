@@ -38,6 +38,7 @@ import com.ibm.mapper.model.algorithms.RC2;
 import com.ibm.mapper.model.algorithms.RC5;
 import com.ibm.mapper.model.algorithms.RC6;
 import com.ibm.mapper.model.algorithms.SEED;
+import com.ibm.mapper.model.algorithms.Serpent;
 import com.ibm.mapper.model.algorithms.cast.CAST128;
 import com.ibm.mapper.model.algorithms.cast.CAST256;
 import com.ibm.mapper.model.algorithms.gost.Kuznyechik;
@@ -88,7 +89,7 @@ public class BcBlockCipherMapper implements IMapper {
             case "RC6Engine" -> Optional.of(new RC6(detectionLocation));
             case "RijndaelEngine" -> Optional.of(new AES(detectionLocation));
             case "SEEDEngine" -> Optional.of(new SEED(detectionLocation));
-            case "SerpentEngine" -> Optional.empty();
+            case "SerpentEngine" -> Optional.of(new Serpent(detectionLocation));
             case "Shacal2Engine" -> Optional.empty();
             case "SkipjackEngine" -> Optional.empty();
             case "SM4Engine" -> Optional.empty();
