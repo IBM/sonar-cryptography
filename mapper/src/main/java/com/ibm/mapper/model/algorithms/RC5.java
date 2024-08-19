@@ -22,28 +22,31 @@ package com.ibm.mapper.model.algorithms;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public final class RC5 extends Algorithm implements BlockCipher, AuthenticatedEncryption {
-    private static final String NAME = "RC5"; // ARC2
+    // https://en.wikipedia.org/wiki/RC5
 
-    public RC5(@NotNull DetectionLocation detectionLocation) {
+    private static final String NAME = "RC5";
+
+    public RC5(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
     }
 
-    public RC5(int keyLength, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
-        this.put(new KeyLength(keyLength, detectionLocation));
+    public RC5(int blockSize, @Nonnull DetectionLocation detectionLocation) {
+        // The block size is twice the word size
+        this(detectionLocation);
+        this.put(new BlockSize(blockSize, detectionLocation));
     }
 
-    public RC5(int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+    public RC5(int keyLength, @Nonnull Mode mode, @Nonnull DetectionLocation detectionLocation) {
+        this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
     }
@@ -52,14 +55,14 @@ public final class RC5 extends Algorithm implements BlockCipher, AuthenticatedEn
             int keyLength,
             @Nonnull Mode mode,
             @Nonnull Padding padding,
-            @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+            @Nonnull DetectionLocation detectionLocation) {
+        this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
         this.put(padding);
     }
 
-    public RC5(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull RC5 rc5) {
+    public RC5(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull RC5 rc5) {
         super(rc5, asKind);
     }
 }

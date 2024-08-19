@@ -21,6 +21,7 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mode;
@@ -30,14 +31,18 @@ import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
 public final class SEED extends Algorithm implements BlockCipher {
+    // https://en.wikipedia.org/wiki/SEED
+
     private static final String NAME = "SEED";
 
     public SEED(@NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
+        this.put(new BlockSize(128, detectionLocation));
+        this.put(new KeyLength(128, detectionLocation));
     }
 
     public SEED(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+        this(detectionLocation);
         this.put(mode);
     }
 
@@ -45,29 +50,7 @@ public final class SEED extends Algorithm implements BlockCipher {
             @Nonnull Mode mode,
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
-        this.put(mode);
-        this.put(padding);
-    }
-
-    public SEED(int keyLength, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
-        this.put(new KeyLength(keyLength, detectionLocation));
-    }
-
-    public SEED(int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
-        this.put(new KeyLength(keyLength, detectionLocation));
-        this.put(mode);
-    }
-
-    public SEED(
-            int keyLength,
-            @Nonnull Mode mode,
-            @Nonnull Padding padding,
-            @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
-        this.put(new KeyLength(keyLength, detectionLocation));
+        this(detectionLocation);
         this.put(mode);
         this.put(padding);
     }

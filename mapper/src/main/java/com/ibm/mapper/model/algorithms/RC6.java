@@ -29,54 +29,40 @@ import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
-public final class AES extends Algorithm implements BlockCipher, AuthenticatedEncryption {
-    private static final String NAME = "AES"; // Rijndael
+public final class RC6 extends Algorithm implements BlockCipher, AuthenticatedEncryption {
+    // https://en.wikipedia.org/wiki/RC6
 
-    public AES(@NotNull DetectionLocation detectionLocation) {
+    private static final String NAME = "RC6";
+
+    public RC6(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
         this.put(new BlockSize(128, detectionLocation));
     }
 
-    public AES(int keyLength, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+    public RC6(int keyLength, @Nonnull DetectionLocation detectionLocation) {
+        this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
-        this.put(new BlockSize(128, detectionLocation));
     }
 
-    public AES(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
-        this.put(new BlockSize(128, detectionLocation));
+    public RC6(int keyLength, @Nonnull Mode mode, @Nonnull DetectionLocation detectionLocation) {
+        this(detectionLocation);
+        this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
     }
 
-    public AES(int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
-        this.put(new KeyLength(keyLength, detectionLocation));
-        this.put(new BlockSize(128, detectionLocation));
-        this.put(mode);
-    }
-
-    public AES(
+    public RC6(
             int keyLength,
             @Nonnull Mode mode,
             @Nonnull Padding padding,
-            @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+            @Nonnull DetectionLocation detectionLocation) {
+        this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
-        this.put(new BlockSize(128, detectionLocation));
         this.put(mode);
         this.put(padding);
     }
 
-    public AES(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull AES aes) {
-        super(aes, asKind);
-    }
-
-    public AES(
-            @Nonnull final Class<? extends IPrimitive> asKind,
-            @NotNull DetectionLocation detectionLocation) {
-        super(NAME, asKind, detectionLocation);
+    public RC6(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull RC6 rc6) {
+        super(rc6, asKind);
     }
 }

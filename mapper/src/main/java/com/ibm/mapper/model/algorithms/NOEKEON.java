@@ -20,7 +20,6 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.IPrimitive;
@@ -31,52 +30,41 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class AES extends Algorithm implements BlockCipher, AuthenticatedEncryption {
-    private static final String NAME = "AES"; // Rijndael
+public final class NOEKEON extends Algorithm implements BlockCipher {
+    // https://en.wikipedia.org/wiki/NOEKEON
 
-    public AES(@NotNull DetectionLocation detectionLocation) {
+    private static final String NAME = "NOEKEON";
+
+    public NOEKEON(@NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
         this.put(new BlockSize(128, detectionLocation));
+        this.put(new KeyLength(128, detectionLocation));
     }
 
-    public AES(int keyLength, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+    public NOEKEON(int keyLength, @NotNull DetectionLocation detectionLocation) {
+        this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
-        this.put(new BlockSize(128, detectionLocation));
     }
 
-    public AES(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
-        this.put(new BlockSize(128, detectionLocation));
+    public NOEKEON(
+            int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+        this(detectionLocation);
+        this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
     }
 
-    public AES(int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
-        this.put(new KeyLength(keyLength, detectionLocation));
-        this.put(new BlockSize(128, detectionLocation));
-        this.put(mode);
-    }
-
-    public AES(
+    public NOEKEON(
             int keyLength,
             @Nonnull Mode mode,
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+        this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
-        this.put(new BlockSize(128, detectionLocation));
         this.put(mode);
         this.put(padding);
     }
 
-    public AES(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull AES aes) {
-        super(aes, asKind);
-    }
-
-    public AES(
-            @Nonnull final Class<? extends IPrimitive> asKind,
-            @NotNull DetectionLocation detectionLocation) {
-        super(NAME, asKind, detectionLocation);
+    public NOEKEON(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull NOEKEON noekeon) {
+        super(noekeon, asKind);
     }
 }
