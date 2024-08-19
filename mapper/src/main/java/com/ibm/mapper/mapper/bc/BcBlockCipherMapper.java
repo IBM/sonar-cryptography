@@ -29,6 +29,7 @@ import com.ibm.mapper.model.algorithms.Blowfish;
 import com.ibm.mapper.model.algorithms.Camellia;
 import com.ibm.mapper.model.algorithms.DES;
 import com.ibm.mapper.model.algorithms.DESede;
+import com.ibm.mapper.model.algorithms.Kalyna;
 import com.ibm.mapper.model.algorithms.cast.CAST128;
 import com.ibm.mapper.model.algorithms.cast.CAST256;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -63,7 +64,7 @@ public class BcBlockCipherMapper implements IMapper {
             case "CAST6Engine" -> Optional.of(new CAST256(detectionLocation));
             case "DESedeEngine" -> Optional.of(new DESede(detectionLocation));
             case "DESEngine" -> Optional.of(new DES(detectionLocation));
-            case "DSTU7624Engine" -> Optional.empty();
+            case "DSTU7624Engine" -> Optional.of(new Kalyna(detectionLocation));
             case "GOST28147Engine" -> Optional.empty();
             case "GOST3412_2015Engine" -> Optional.empty();
             case "IDEAEngine" -> Optional.empty();
