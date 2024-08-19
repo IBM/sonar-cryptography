@@ -28,6 +28,7 @@ import javax.annotation.Nonnull;
 
 public class Kalyna extends Algorithm implements BlockCipher {
     // https://en.wikipedia.org/wiki/Kalyna_(cipher)
+    // https://eprint.iacr.org/2015/650.pdf
 
     private static final String NAME = "Kalyna"; // DSTU 7624:2014
 
