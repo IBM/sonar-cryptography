@@ -30,6 +30,8 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
 public final class CAST128 extends Algorithm implements BlockCipher {
+    // https://en.wikipedia.org/wiki/CAST-128
+
     private static final String NAME = "CAST-128"; // CAST5
 
     // "128" refers to the maximum size of the key

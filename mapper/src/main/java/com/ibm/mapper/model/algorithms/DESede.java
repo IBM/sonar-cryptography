@@ -31,6 +31,8 @@ import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
 public final class DESede extends Algorithm implements BlockCipher {
+    // https://en.wikipedia.org/wiki/Triple_DES
+
     private static final String NAME = "DESede"; // TripleDES, 3DES, TDES
 
     public DESede(@NotNull DetectionLocation detectionLocation) {

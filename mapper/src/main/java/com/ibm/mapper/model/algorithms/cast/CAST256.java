@@ -30,6 +30,8 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
 public final class CAST256 extends Algorithm implements BlockCipher {
+    // https://en.wikipedia.org/wiki/CAST-256
+
     private static final String NAME = "CAST-256"; // CAST6
 
     // "256" refers to the maximum size of the key
