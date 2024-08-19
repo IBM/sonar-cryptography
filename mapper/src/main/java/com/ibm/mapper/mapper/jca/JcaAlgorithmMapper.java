@@ -23,6 +23,7 @@ import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.PasswordBasedEncryption;
+import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.algorithms.DH;
 import com.ibm.mapper.model.algorithms.RSA;
@@ -67,6 +68,8 @@ public class JcaAlgorithmMapper implements IMapper {
             case "PBE", "PBES2" -> Optional.of(new PasswordBasedEncryption(detectionLocation));
             case "DH", "DIFFIEHELLMAN" -> Optional.of(new DH(detectionLocation));
             case "RSA" -> Optional.of(new RSA(detectionLocation));
+            case "EC" ->
+                    Optional.of(new Algorithm(str, PublicKeyEncryption.class, detectionLocation));
             default -> {
                 final Algorithm algorithm = new Algorithm(str, Unknown.class, detectionLocation);
                 algorithm.put(new Unknown(detectionLocation));

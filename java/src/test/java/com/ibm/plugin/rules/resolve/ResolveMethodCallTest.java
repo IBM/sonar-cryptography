@@ -26,7 +26,12 @@ import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.Curve;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.context.KeyContext;
+import com.ibm.mapper.model.EllipticCurve;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Key;
+import com.ibm.mapper.model.Oid;
+import com.ibm.mapper.model.PublicKeyEncryption;
+import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -100,6 +105,114 @@ class ResolveMethodCallTest extends TestBase {
          * Translation
          */
 
-        // TODO: write reorganizer
+        assertThat(nodes).hasSize(4);
+
+        // Key
+        INode keyNode = nodes.get(0);
+        assertThat(keyNode.getKind()).isEqualTo(Key.class);
+        assertThat(keyNode.getChildren()).hasSize(1);
+        assertThat(keyNode.asString()).isEqualTo("EC");
+
+        // PublicKeyEncryption under Key
+        INode publicKeyEncryptionNode = keyNode.getChildren().get(PublicKeyEncryption.class);
+        assertThat(publicKeyEncryptionNode).isNotNull();
+        assertThat(publicKeyEncryptionNode.getChildren()).hasSize(1);
+        assertThat(publicKeyEncryptionNode.asString()).isEqualTo("EC");
+
+        // KeyGeneration under PublicKeyEncryption under Key
+        INode keyGenerationNode = publicKeyEncryptionNode.getChildren().get(KeyGeneration.class);
+        assertThat(keyGenerationNode).isNotNull();
+        assertThat(keyGenerationNode.getChildren()).isEmpty();
+        assertThat(keyGenerationNode.asString()).isEqualTo("KEYGENERATION");
+
+        // Key
+        INode keyNode1 = nodes.get(1);
+        assertThat(keyNode1.getKind()).isEqualTo(Key.class);
+        assertThat(keyNode1.getChildren()).hasSize(1);
+        assertThat(keyNode1.asString()).isEqualTo("EC");
+
+        // PublicKeyEncryption under Key
+        INode publicKeyEncryptionNode1 = keyNode1.getChildren().get(PublicKeyEncryption.class);
+        assertThat(publicKeyEncryptionNode1).isNotNull();
+        assertThat(publicKeyEncryptionNode1.getChildren()).hasSize(3);
+        assertThat(publicKeyEncryptionNode1.asString()).isEqualTo("EC-secp256r1");
+
+        // Oid under PublicKeyEncryption under Key
+        INode oidNode = publicKeyEncryptionNode1.getChildren().get(Oid.class);
+        assertThat(oidNode).isNotNull();
+        assertThat(oidNode.getChildren()).isEmpty();
+        assertThat(oidNode.asString()).isEqualTo("1.2.840.10045.2.1");
+
+        // KeyGeneration under PublicKeyEncryption under Key
+        INode keyGenerationNode1 = publicKeyEncryptionNode1.getChildren().get(KeyGeneration.class);
+        assertThat(keyGenerationNode1).isNotNull();
+        assertThat(keyGenerationNode1.getChildren()).isEmpty();
+        assertThat(keyGenerationNode1.asString()).isEqualTo("KEYGENERATION");
+
+        // EllipticCurve under PublicKeyEncryption under Key
+        INode ellipticCurveNode = publicKeyEncryptionNode1.getChildren().get(EllipticCurve.class);
+        assertThat(ellipticCurveNode).isNotNull();
+        assertThat(ellipticCurveNode.getChildren()).isEmpty();
+        assertThat(ellipticCurveNode.asString()).isEqualTo("secp256r1");
+
+        // Key
+        INode keyNode2 = nodes.get(2);
+        assertThat(keyNode2.getKind()).isEqualTo(Key.class);
+        assertThat(keyNode2.getChildren()).hasSize(1);
+        assertThat(keyNode2.asString()).isEqualTo("EC");
+
+        // PublicKeyEncryption under Key
+        INode publicKeyEncryptionNode2 = keyNode2.getChildren().get(PublicKeyEncryption.class);
+        assertThat(publicKeyEncryptionNode2).isNotNull();
+        assertThat(publicKeyEncryptionNode2.getChildren()).hasSize(3);
+        assertThat(publicKeyEncryptionNode2.asString()).isEqualTo("EC-secp384r1");
+
+        // Oid under PublicKeyEncryption under Key
+        INode oidNode1 = publicKeyEncryptionNode2.getChildren().get(Oid.class);
+        assertThat(oidNode1).isNotNull();
+        assertThat(oidNode1.getChildren()).isEmpty();
+        assertThat(oidNode1.asString()).isEqualTo("1.2.840.10045.2.1");
+
+        // KeyGeneration under PublicKeyEncryption under Key
+        INode keyGenerationNode2 = publicKeyEncryptionNode2.getChildren().get(KeyGeneration.class);
+        assertThat(keyGenerationNode2).isNotNull();
+        assertThat(keyGenerationNode2.getChildren()).isEmpty();
+        assertThat(keyGenerationNode2.asString()).isEqualTo("KEYGENERATION");
+
+        // EllipticCurve under PublicKeyEncryption under Key
+        INode ellipticCurveNode1 = publicKeyEncryptionNode2.getChildren().get(EllipticCurve.class);
+        assertThat(ellipticCurveNode1).isNotNull();
+        assertThat(ellipticCurveNode1.getChildren()).isEmpty();
+        assertThat(ellipticCurveNode1.asString()).isEqualTo("secp384r1");
+
+        // Key
+        INode keyNode3 = nodes.get(3);
+        assertThat(keyNode3.getKind()).isEqualTo(Key.class);
+        assertThat(keyNode3.getChildren()).hasSize(1);
+        assertThat(keyNode3.asString()).isEqualTo("EC");
+
+        // PublicKeyEncryption under Key
+        INode publicKeyEncryptionNode3 = keyNode3.getChildren().get(PublicKeyEncryption.class);
+        assertThat(publicKeyEncryptionNode3).isNotNull();
+        assertThat(publicKeyEncryptionNode3.getChildren()).hasSize(3);
+        assertThat(publicKeyEncryptionNode3.asString()).isEqualTo("EC-secp521r1");
+
+        // Oid under PublicKeyEncryption under Key
+        INode oidNode2 = publicKeyEncryptionNode3.getChildren().get(Oid.class);
+        assertThat(oidNode2).isNotNull();
+        assertThat(oidNode2.getChildren()).isEmpty();
+        assertThat(oidNode2.asString()).isEqualTo("1.2.840.10045.2.1");
+
+        // KeyGeneration under PublicKeyEncryption under Key
+        INode keyGenerationNode3 = publicKeyEncryptionNode3.getChildren().get(KeyGeneration.class);
+        assertThat(keyGenerationNode3).isNotNull();
+        assertThat(keyGenerationNode3.getChildren()).isEmpty();
+        assertThat(keyGenerationNode3.asString()).isEqualTo("KEYGENERATION");
+
+        // EllipticCurve under PublicKeyEncryption under Key
+        INode ellipticCurveNode2 = publicKeyEncryptionNode3.getChildren().get(EllipticCurve.class);
+        assertThat(ellipticCurveNode2).isNotNull();
+        assertThat(ellipticCurveNode2.getChildren()).isEmpty();
+        assertThat(ellipticCurveNode2.asString()).isEqualTo("secp521r1");
     }
 }

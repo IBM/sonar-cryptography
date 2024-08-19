@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This class contains public static {@code Function3} implementing usual reorganization actions,
@@ -67,16 +68,20 @@ public final class UsualPerformActions {
      * @return The {@code Function3} returning the updated list of root nodes
      */
     @Nonnull
-    public static final Function3<INode, INode, List<INode>, List<INode>> performReplacingNode(
-            Function3<INode, INode, List<INode>, INode> perform) {
+    public static Function3<INode, INode, List<INode>, List<INode>> performReplacingNode(
+            @Nonnull Function3<INode, INode, List<INode>, INode> perform) {
         return (node, parent, roots) -> {
             INode newNode = perform.apply(node, parent, roots);
             return replaceNode(newNode, node, parent, roots);
         };
     }
 
-    private static final List<INode> replaceNode(
-            INode newNode, INode originalNode, INode parent, List<INode> roots) {
+    @Nonnull
+    private static List<INode> replaceNode(
+            @Nonnull INode newNode,
+            @NotNull INode originalNode,
+            INode parent,
+            @Nonnull List<INode> roots) {
         // Add all the children to the new node
         for (Map.Entry<Class<? extends INode>, INode> childKeyValue :
                 originalNode.getChildren().entrySet()) {
@@ -85,7 +90,7 @@ public final class UsualPerformActions {
 
         if (parent == null) {
             // `node` is a root node
-            // Create a copy of the roots list
+            // Create a copy of the root nodes
             List<INode> rootsCopy = new ArrayList<>(roots);
             for (int i = 0; i < rootsCopy.size(); i++) {
                 if (rootsCopy.get(i).equals(originalNode)) {
