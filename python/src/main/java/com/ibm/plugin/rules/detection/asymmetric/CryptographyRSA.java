@@ -19,8 +19,6 @@
  */
 package com.ibm.plugin.rules.detection.asymmetric;
 
-import static com.ibm.engine.detection.MethodMatcher.ANY;
-
 import com.ibm.engine.model.CipherAction;
 import com.ibm.engine.model.KeyAction;
 import com.ibm.engine.model.SignatureAction;
@@ -39,11 +37,14 @@ import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import com.ibm.plugin.rules.detection.hash.CryptographyHash;
-import java.util.List;
-import java.util.Map;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.python.api.tree.Tree;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Map;
+
+import static com.ibm.engine.detection.MethodMatcher.ANY;
 
 @SuppressWarnings("java:S1192")
 public final class CryptographyRSA {
@@ -88,11 +89,12 @@ public final class CryptographyRSA {
                     .createDetectionRule()
                     .forObjectTypes(PADDING_TYPE)
                     .forMethods("PKCS1v15")
-                    .shouldBeDetectedAs(
-                            new SignatureActionFactory<>(SignatureAction.Action.PADDING))
+                    .shouldBeDetectedAs(new ValueActionFactory<>("padding")) // this is nessecary to capture something to trigger the translation
                     .withAnyParameters()
-                    .buildForContext(new SignatureContext(SignatureContext.Kind.PKCS1v15))
-                    .inBundle(() -> "CryptographyRSATypes")
+                    .buildForContext(new SignatureContext(Map.of(
+                            "kind", "PKCS1v15"
+                    )))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> OAEP =

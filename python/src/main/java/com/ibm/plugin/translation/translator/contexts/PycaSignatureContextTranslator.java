@@ -21,6 +21,8 @@ package com.ibm.plugin.translation.translator.contexts;
 
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.SignatureAction;
+import com.ibm.engine.model.ValueAction;
+import com.ibm.engine.model.context.DetectionContext;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.model.context.SignatureContext;
 import com.ibm.engine.rule.IBundle;
@@ -63,8 +65,11 @@ public final class PycaSignatureContextTranslator implements IContextTranslation
             return switch (signatureAction.getAction()) {
                 case SIGN -> Optional.of(new Sign(detectionLocation));
                 case VERIFY -> Optional.of(new Verify(detectionLocation));
-                default -> Optional.empty();
             };
+        } else if (value instanceof ValueAction<Tree>) {
+            if (detectionContext instanceof DetectionContext context) {
+                context.get("padding")
+            }
         }
         return Optional.empty();
     }
