@@ -30,23 +30,23 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class SEED extends Algorithm implements BlockCipher {
-    // https://en.wikipedia.org/wiki/SEED
+public final class TEA extends Algorithm implements BlockCipher {
+    // https://en.wikipedia.org/wiki/Tiny_Encryption_Algorithm
 
-    private static final String NAME = "SEED";
+    private static final String NAME = "TEA"; // Tiny Encryption Algorithm
 
-    public SEED(@NotNull DetectionLocation detectionLocation) {
+    public TEA(@NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
-        this.put(new BlockSize(128, detectionLocation));
+        this.put(new BlockSize(64, detectionLocation));
         this.put(new KeyLength(128, detectionLocation));
     }
 
-    public SEED(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+    public TEA(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(mode);
     }
 
-    public SEED(
+    public TEA(
             @Nonnull Mode mode,
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
@@ -55,7 +55,7 @@ public final class SEED extends Algorithm implements BlockCipher {
         this.put(padding);
     }
 
-    public SEED(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull Skipjack seed) {
-        super(seed, asKind);
+    public TEA(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull TEA tea) {
+        super(tea, asKind);
     }
 }

@@ -17,9 +17,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms;
+package com.ibm.mapper.model.algorithms.shacal;
 
 import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.IPrimitive;
@@ -28,34 +29,41 @@ import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
-public final class SEED extends Algorithm implements BlockCipher {
-    // https://en.wikipedia.org/wiki/SEED
+public final class SHACAL1 extends Algorithm implements BlockCipher, AuthenticatedEncryption {
+    // https://en.wikipedia.org/wiki/SHACAL
 
-    private static final String NAME = "SEED";
+    private static final String NAME = "SHACAL-1"; // or originally just SHACAL
 
-    public SEED(@NotNull DetectionLocation detectionLocation) {
+    public SHACAL1(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
-        this.put(new BlockSize(128, detectionLocation));
-        this.put(new KeyLength(128, detectionLocation));
+        this.put(new BlockSize(160, detectionLocation));
     }
 
-    public SEED(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+    public SHACAL1(int keyLength, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
+        this.put(new KeyLength(keyLength, detectionLocation));
+    }
+
+    public SHACAL1(
+            int keyLength, @Nonnull Mode mode, @Nonnull DetectionLocation detectionLocation) {
+        this(detectionLocation);
+        this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
     }
 
-    public SEED(
+    public SHACAL1(
+            int keyLength,
             @Nonnull Mode mode,
             @Nonnull Padding padding,
-            @NotNull DetectionLocation detectionLocation) {
+            @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
+        this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
         this.put(padding);
     }
 
-    public SEED(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull Skipjack seed) {
-        super(seed, asKind);
+    public SHACAL1(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull SHACAL2 shacal1) {
+        super(shacal1, asKind);
     }
 }
