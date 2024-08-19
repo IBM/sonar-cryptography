@@ -103,6 +103,7 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
 
             switch (kind) {
                 case BLOCK_CIPHER_ENGINE:
+                    // TODO: note that this mapper should also be used with other contexts
                     BcBlockCipherMapper bcBlockCipherMapper = new BcBlockCipherMapper();
                     return bcBlockCipherMapper
                             .parse(valueAction.asString(), detectionLocation)
