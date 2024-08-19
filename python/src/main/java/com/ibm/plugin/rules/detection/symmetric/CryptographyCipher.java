@@ -26,13 +26,14 @@ import com.ibm.engine.model.factory.CipherActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import com.ibm.plugin.rules.detection.padding.CryptographyPadding;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.python.api.tree.Tree;
+
+import javax.annotation.Nonnull;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 @SuppressWarnings({"java:S2386", "java:S1192"})
 public final class CryptographyCipher {
@@ -66,7 +67,7 @@ public final class CryptographyCipher {
                     .shouldBeDetectedAs(new CipherActionFactory<>(CipherAction.Action.ENCRYPT))
                     .withAnyParameters()
                     .buildForContext(new CipherContext())
-                    .inBundle(() -> "CryptographyCipherOperation")
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> DECRYPT_CIPHER =
@@ -77,7 +78,7 @@ public final class CryptographyCipher {
                     .shouldBeDetectedAs(new CipherActionFactory<>(CipherAction.Action.DECRYPT))
                     .withAnyParameters()
                     .buildForContext(new CipherContext())
-                    .inBundle(() -> "CryptographyCipherOperation")
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static @NotNull List<IDetectionRule<Tree>> followingNewCipherRules() {
@@ -100,7 +101,7 @@ public final class CryptographyCipher {
                     .withMethodParameter("cryptography.hazmat.primitives.ciphers.modes.*")
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .buildForContext(new CipherContext())
-                    .inBundle(() -> "CryptographyCipher")
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     @Unmodifiable

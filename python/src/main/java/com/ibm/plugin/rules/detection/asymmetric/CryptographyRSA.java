@@ -73,13 +73,13 @@ public final class CryptographyRSA {
                     .createDetectionRule()
                     .forObjectTypes(PADDING_TYPE)
                     .forMethods("PSS")
-                    .shouldBeDetectedAs(
-                            new SignatureActionFactory<>(SignatureAction.Action.PADDING))
                     .withMethodParameter(ANY)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .addDependingDetectionRules(List.of(MGF1))
                     .withMethodParameter(ANY)
-                    .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
+                    .buildForContext(new SignatureContext(Map.of(
+                            "kind", "PSS"
+                    )))
                     .inBundle(() -> "CryptographyRSATypes")
                     .withoutDependingDetectionRules();
 

@@ -26,7 +26,6 @@ public class SignatureAction<T> extends AbstractValue<T> implements IAction<T> {
     public enum Action {
         SIGN,
         VERIFY,
-        PADDING
     }
 
     @Nonnull private final Action action;

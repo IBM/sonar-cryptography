@@ -24,6 +24,7 @@ import com.ibm.engine.model.KeyAction;
 import com.ibm.engine.model.KeySize;
 import com.ibm.engine.model.context.KeyContext;
 import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.EllipticCurveAlgorithm;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.MessageDigest;
@@ -60,7 +61,7 @@ public final class PythonPrivateKeyContextTranslator {
                                         case "FERNET" -> null; // TODO
                                         case "RSA" -> new RSA(detectionLocation);
                                         case "DSA" -> new DSA(detectionLocation);
-
+                                        case "EC" -> new EllipticCurveAlgorithm(detectionLocation);
                                         default -> null;
                                     })
                     .map(

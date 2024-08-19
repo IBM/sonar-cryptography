@@ -19,14 +19,11 @@
  */
 package com.ibm.plugin.rules.detection.asymmetric;
 
-import static com.ibm.engine.detection.MethodMatcher.ANY;
-
 import com.ibm.engine.model.KeyAction;
 import com.ibm.engine.model.SignatureAction;
-import com.ibm.engine.model.context.KeyContext;
+import com.ibm.engine.model.context.KeyAgreementContext;
 import com.ibm.engine.model.context.PrivateKeyContext;
 import com.ibm.engine.model.context.PublicKeyContext;
-import com.ibm.engine.model.context.SecretKeyContext;
 import com.ibm.engine.model.context.SignatureContext;
 import com.ibm.engine.model.factory.AlgorithmFactory;
 import com.ibm.engine.model.factory.KeyActionFactory;
@@ -34,10 +31,14 @@ import com.ibm.engine.model.factory.SignatureActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import com.ibm.plugin.rules.detection.hash.CryptographyHash;
-import java.util.List;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.python.api.tree.Tree;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Map;
+
+import static com.ibm.engine.detection.MethodMatcher.ANY;
 
 @SuppressWarnings("java:S1192")
 public final class CryptographyEllipticCurve {
@@ -63,8 +64,10 @@ public final class CryptographyEllipticCurve {
                             CryptographyHash
                                     .rules()) // The parameter of ECDSA can either be an immediate
                     // hash, or a hash enclosed in the pre-hash function
-                    .buildForContext(new SignatureContext())
-                    .inBundle(() -> "CryptographyEllipticCurveParameter")
+                    .buildForContext(new SignatureContext(Map.of(
+                            "algorithm", "ECDSA"
+                    )))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> KEY_EXCHANGE_EC =
@@ -75,8 +78,10 @@ public final class CryptographyEllipticCurve {
                     .withMethodParameter(TYPE + ".*")
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .withMethodParameter(ANY)
-                    .buildForContext(new SecretKeyContext(KeyContext.Kind.EC))
-                    .inBundle(() -> "CryptographyEllipticCurveAction")
+                    .buildForContext(new KeyAgreementContext(Map.of(
+                            "algorithm", "EC"
+                    )))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> SIGN_EC =
@@ -89,8 +94,10 @@ public final class CryptographyEllipticCurve {
                     .withMethodParameter(TYPE + ".*")
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .addDependingDetectionRules(List.of(ECDSA_EC))
-                    .buildForContext(new SignatureContext())
-                    .inBundle(() -> "CryptographyEllipticCurveAction")
+                    .buildForContext(new SignatureContext(Map.of(
+                            "algorithm", "EC"
+                    )))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> GENERATION_EC =
@@ -100,8 +107,10 @@ public final class CryptographyEllipticCurve {
                     .forMethods(GENERATE_METHOD)
                     .withMethodParameter(ANY)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
-                    .buildForContext(new PrivateKeyContext(KeyContext.Kind.EC))
-                    .inBundle(() -> "CryptographyEllipticCurve")
+                    .buildForContext(new PrivateKeyContext(Map.of(
+                            "algorithm", "EC"
+                    )))
+                    .inBundle(() -> "Pyca")
                     .withDependingDetectionRules(List.of(SIGN_EC, KEY_EXCHANGE_EC));
 
     private static final IDetectionRule<Tree> DERIVATION_EC =
@@ -112,12 +121,14 @@ public final class CryptographyEllipticCurve {
                     .withMethodParameter(ANY)
                     .withMethodParameter(ANY)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
-                    .buildForContext(new PrivateKeyContext(KeyContext.Kind.EC))
-                    .inBundle(() -> "CryptographyEllipticCurve")
+                    .buildForContext(new PrivateKeyContext(Map.of(
+                            "algorithm", "EC"
+                    )))
+                    .inBundle(() -> "Pyca")
                     .withDependingDetectionRules(List.of(SIGN_EC, KEY_EXCHANGE_EC));
 
     // Private numbers relies on information (the curve) given by the public key
-    // For now, we only use it as a depending detection rule of PRIVATE_NUMBERS_EC
+    // For now; we only use it as a depending detection rule of PRIVATE_NUMBERS_EC
     private static final IDetectionRule<Tree> PRIVATE_NUMBERS_EC =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
@@ -126,8 +137,10 @@ public final class CryptographyEllipticCurve {
                     .shouldBeDetectedAs(new KeyActionFactory<>(KeyAction.Action.GENERATION))
                     .withMethodParameter(ANY)
                     .withMethodParameter(ANY)
-                    .buildForContext(new PrivateKeyContext(KeyContext.Kind.EC))
-                    .inBundle(() -> "CryptographyEllipticCurvePrivateNumbers")
+                    .buildForContext(new PrivateKeyContext(Map.of(
+                            "algorithm", "EC"
+                    )))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> PUBLIC_NUMBERS_EC =
@@ -139,8 +152,10 @@ public final class CryptographyEllipticCurve {
                     .withMethodParameter(ANY)
                     .withMethodParameter(ANY)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
-                    .buildForContext(new PublicKeyContext(KeyContext.Kind.EC))
-                    .inBundle(() -> "CryptographyEllipticCurvePublicNumbers")
+                    .buildForContext(new PublicKeyContext(Map.of(
+                            "algorithm", "EC"
+                    )))
+                    .inBundle(() -> "Pyca")
                     .withDependingDetectionRules(List.of(PRIVATE_NUMBERS_EC));
 
     @Unmodifiable

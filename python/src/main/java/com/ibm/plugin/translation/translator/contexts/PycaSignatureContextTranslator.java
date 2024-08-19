@@ -21,24 +21,52 @@ package com.ibm.plugin.translation.translator.contexts;
 
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.SignatureAction;
+import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.model.context.SignatureContext;
+import com.ibm.engine.rule.IBundle;
+import com.ibm.mapper.IContextTranslation;
 import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.EllipticCurveAlgorithm;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MaskGenerationFunction;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.ProbabilisticSignatureScheme;
+import com.ibm.mapper.model.Signature;
+import com.ibm.mapper.model.algorithms.ECDSA;
+import com.ibm.mapper.model.algorithms.MGF1;
 import com.ibm.mapper.model.functionality.Sign;
+import com.ibm.mapper.model.functionality.Verify;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.HashMap;
-import java.util.Optional;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.python.api.tree.Tree;
 
-@SuppressWarnings("java:S1301")
-public final class PythonSignatureContextTranslator {
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Optional;
 
-    private PythonSignatureContextTranslator() {
-        // private
+@SuppressWarnings("java:S1301")
+public final class PycaSignatureContextTranslator implements IContextTranslation<Tree> {
+
+    @Override
+    public @NotNull Optional<INode> translate(@NotNull IBundle bundleIdentifier,
+                                              @NotNull IValue<Tree> value,
+                                              @NotNull IDetectionContext detectionContext,
+                                              @NotNull DetectionLocation detectionLocation) {
+        if (value instanceof com.ibm.engine.model.Algorithm<Tree> algorithm) {
+            return switch (algorithm.asString().toUpperCase().trim()) {
+                case "EC" -> Optional.of(new EllipticCurveAlgorithm(Signature.class, new EllipticCurveAlgorithm(detectionLocation)));
+                case "ECDSA" -> Optional.of(new ECDSA(detectionLocation));
+                case "MGF1" -> Optional.of(new MGF1(detectionLocation)); // TODO: to verify
+                default -> Optional.empty();
+            };
+        } else if (value instanceof SignatureAction<Tree> signatureAction) {
+            return switch (signatureAction.getAction()) {
+                case SIGN -> Optional.of(new Sign(detectionLocation));
+                case VERIFY -> Optional.of(new Verify(detectionLocation));
+                default -> Optional.empty();
+            };
+        }
+        return Optional.empty();
     }
 
     @Nonnull

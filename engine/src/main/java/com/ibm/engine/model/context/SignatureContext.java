@@ -20,8 +20,10 @@
 package com.ibm.engine.model.context;
 
 import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 
-public class SignatureContext implements IDetectionContext, ISupportKind<SignatureContext.Kind> {
+public class SignatureContext extends DetectionContext implements IDetectionContext, ISupportKind<SignatureContext.Kind> {
     public enum Kind {
         PSS,
         MGF1,
@@ -38,14 +40,33 @@ public class SignatureContext implements IDetectionContext, ISupportKind<Signatu
 
     @Nonnull private final Kind kind;
 
+    /**
+     * use a property map instead
+     *
+     * @deprecated
+     */
+    @Deprecated(since = "1.3.0")
     public SignatureContext(@Nonnull Kind kind) {
+        super(new HashMap<>());
         this.kind = kind;
     }
 
     public SignatureContext() {
+        super(new HashMap<>());
         this.kind = Kind.NONE;
     }
 
+    public SignatureContext(@Nonnull Map<String, String> properties) {
+        super(properties);
+        this.kind = Kind.NONE;
+    }
+
+    /**
+     * use a property map instead
+     *
+     * @deprecated
+     */
+    @Deprecated(since = "1.3.0")
     @Nonnull
     public Kind kind() {
         return kind;
