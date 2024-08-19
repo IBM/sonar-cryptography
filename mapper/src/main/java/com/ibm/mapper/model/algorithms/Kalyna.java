@@ -22,8 +22,10 @@ package com.ibm.mapper.model.algorithms;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.BlockSize;
+import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.utils.DetectionLocation;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 
 public class Kalyna extends Algorithm implements BlockCipher {
@@ -32,21 +34,40 @@ public class Kalyna extends Algorithm implements BlockCipher {
 
     private static final String NAME = "Kalyna"; // DSTU 7624:2014
 
+    /**
+     * Returns a name of the form "Kalyna-XXX/YYY" where XXX is the block size and YYY is the key
+     * length
+     */
+    @Override
+    @Nonnull
+    public String getName() {
+        StringBuilder builtName = new StringBuilder(this.name);
+
+        Optional<INode> blockSize = this.hasChildOfType(BlockSize.class);
+        Optional<INode> keyLength = this.hasChildOfType(KeyLength.class);
+
+        if (blockSize.isPresent() && keyLength.isPresent()) {
+            builtName
+                    .append("-")
+                    .append(blockSize.get().asString())
+                    .append("/")
+                    .append(keyLength.get().asString());
+        }
+
+        return builtName.toString();
+    }
+
     public Kalyna(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
     }
 
-    private Kalyna(@Nonnull String name, @Nonnull DetectionLocation detectionLocation) {
-        super(name, BlockCipher.class, detectionLocation);
-    }
-
     public Kalyna(int blockSize, @Nonnull DetectionLocation detectionLocation) {
-        this(NAME + "-" + blockSize, detectionLocation);
+        this(detectionLocation);
         this.put(new BlockSize(blockSize, detectionLocation));
     }
 
     public Kalyna(int blockSize, int keyLength, @Nonnull DetectionLocation detectionLocation) {
-        this(NAME + "-" + blockSize + "/" + keyLength, detectionLocation);
+        this(detectionLocation);
         this.put(new BlockSize(blockSize, detectionLocation));
         this.put(new KeyLength(keyLength, detectionLocation));
     }

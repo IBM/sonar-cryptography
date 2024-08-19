@@ -23,10 +23,12 @@ import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.ClassicalBitSecurityLevel;
+import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.NonceLength;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.utils.DetectionLocation;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 
 public class Schwaemm extends Algorithm implements AuthenticatedEncryption, BlockCipher {
@@ -34,21 +36,38 @@ public class Schwaemm extends Algorithm implements AuthenticatedEncryption, Bloc
 
     private static final String NAME = "Schwaemm";
 
+    /**
+     * Returns a name of the form "SchwaemmXXX-YYY" where XXX is the rate and YYY is the capacity
+     */
+    @Override
+    @Nonnull
+    public String getName() {
+        StringBuilder builtName = new StringBuilder(this.name);
+
+        Optional<INode> nonceLength /* rate */ = this.hasChildOfType(NonceLength.class);
+        Optional<INode> keyLength /* capacity */ = this.hasChildOfType(KeyLength.class);
+
+        if (nonceLength.isPresent() && keyLength.isPresent()) {
+            builtName
+                    .append(nonceLength.get().asString())
+                    .append("-")
+                    .append(keyLength.get().asString());
+        }
+
+        return builtName.toString();
+    }
+
     public Schwaemm(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, AuthenticatedEncryption.class, detectionLocation);
     }
 
-    private Schwaemm(@Nonnull String name, @Nonnull DetectionLocation detectionLocation) {
-        super(name, AuthenticatedEncryption.class, detectionLocation);
-    }
-
     public Schwaemm(int rate, @Nonnull DetectionLocation detectionLocation) {
-        this(NAME + rate, detectionLocation);
+        this(detectionLocation);
         this.put(new NonceLength(rate, detectionLocation));
     }
 
     public Schwaemm(int rate, int capacity, @Nonnull DetectionLocation detectionLocation) {
-        this(NAME + rate + "-" + capacity, detectionLocation);
+        this(detectionLocation);
         this.put(new KeyLength(capacity, detectionLocation));
         this.put(new TagLength(capacity, detectionLocation));
         this.put(new NonceLength(rate, detectionLocation));
