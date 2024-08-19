@@ -25,6 +25,7 @@ import com.ibm.engine.model.context.DigestContext;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.model.context.KeyAgreementContext;
 import com.ibm.engine.model.context.KeyContext;
+import com.ibm.engine.model.context.KeyDerivationFunctionContext;
 import com.ibm.engine.model.context.MacContext;
 import com.ibm.engine.model.context.PrivateKeyContext;
 import com.ibm.engine.model.context.PublicKeyContext;
@@ -36,6 +37,7 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.plugin.translation.translator.contexts.PycaKeyAgreementContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.PycaKeyContextTranslator;
+import com.ibm.plugin.translation.translator.contexts.PycaKeyDerivationContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.PycaPrivateKeyContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.PycaSignatureContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.PythonCipherContextTranslator;
@@ -84,6 +86,11 @@ public class PythonTranslator extends ITranslator<PythonCheck, Tree, Symbol, Pyt
             final PycaKeyAgreementContextTranslator pycaKeyAgreementContextTranslator =
                     new PycaKeyAgreementContextTranslator();
             return pycaKeyAgreementContextTranslator.translate(
+                    bundleIdentifier, value, detectionValueContext, detectionLocation);
+        } else if (detectionValueContext.is(KeyDerivationFunctionContext.class)) {
+            final PycaKeyDerivationContextTranslator pycaKeyDerivationContextTranslator =
+                    new PycaKeyDerivationContextTranslator();
+            return pycaKeyDerivationContextTranslator.translate(
                     bundleIdentifier, value, detectionValueContext, detectionLocation);
         } else if (detectionValueContext.is(PrivateKeyContext.class)) {
             final PycaPrivateKeyContextTranslator pycaPrivateKeyContextTranslator =

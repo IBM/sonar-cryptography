@@ -22,13 +22,8 @@ package com.ibm.plugin.translation.translator.contexts;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.DigestContext;
+import com.ibm.mapper.mapper.pyca.PycaDigestMapper;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.algorithms.MD5;
-import com.ibm.mapper.model.algorithms.SHA;
-import com.ibm.mapper.model.algorithms.SHA2;
-import com.ibm.mapper.model.algorithms.SHA3;
-import com.ibm.mapper.model.algorithms.SHAKE;
-import com.ibm.mapper.model.algorithms.SM3;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -47,30 +42,8 @@ public final class PythonDigestContextTranslator {
             @Nonnull DigestContext context,
             @Nonnull DetectionLocation detectionLocation) {
         if (value instanceof ValueAction<Tree>) {
-            return switch (value.asString().toUpperCase().trim()) {
-                case "SHA1" -> Optional.of(new SHA(detectionLocation));
-                case "SHA512_224" ->
-                        Optional.of(
-                                new SHA2(224, new SHA2(512, detectionLocation), detectionLocation));
-                case "SHA512_256" ->
-                        Optional.of(
-                                new SHA2(256, new SHA2(512, detectionLocation), detectionLocation));
-                case "SHA224" -> Optional.of(new SHA2(224, detectionLocation));
-                case "SHA256" -> Optional.of(new SHA2(256, detectionLocation));
-                case "SHA384" -> Optional.of(new SHA2(384, detectionLocation));
-                case "SHA512" -> Optional.of(new SHA2(512, detectionLocation));
-                case "SHA3_224" -> Optional.of(new SHA3(224, detectionLocation));
-                case "SHA3_256" -> Optional.of(new SHA3(256, detectionLocation));
-                case "SHA3_384" -> Optional.of(new SHA3(384, detectionLocation));
-                case "SHA3_512" -> Optional.of(new SHA3(512, detectionLocation));
-                case "SHAKE128" -> Optional.of(new SHAKE(128, detectionLocation));
-                case "SHAKE256" -> Optional.of(new SHAKE(256, detectionLocation));
-                case "MD5" -> Optional.of(new MD5(detectionLocation));
-                case "BLAKE2B" -> Optional.empty(); // TODO
-                case "BLAKE2S" -> Optional.empty(); // TODO
-                case "SM3" -> Optional.of(new SM3(detectionLocation));
-                default -> Optional.empty();
-            };
+            final PycaDigestMapper pycaDigestMapper = new PycaDigestMapper();
+            return pycaDigestMapper.parse(value.asString(), detectionLocation).map(i -> i);
         }
         return Optional.empty();
     }

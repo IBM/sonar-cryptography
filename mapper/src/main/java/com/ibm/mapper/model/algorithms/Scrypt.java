@@ -20,19 +20,14 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
 import com.ibm.mapper.utils.DetectionLocation;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
-public final class PBKDF2 extends Algorithm implements PasswordBasedKeyDerivationFunction {
+public final class Scrypt extends Algorithm implements PasswordBasedKeyDerivationFunction {
+    private static final String NAME = "SCRYPT";
 
-    public PBKDF2(@Nonnull Mac mac) {
-        super("PBKDF2", PasswordBasedKeyDerivationFunction.class, mac.getDetectionContext());
-        this.put(mac);
-    }
-
-    public PBKDF2(@Nonnull DetectionLocation detectionLocation) {
-        super("PBKDF2", PasswordBasedKeyDerivationFunction.class, detectionLocation);
+    public Scrypt(@NotNull DetectionLocation detectionLocation) {
+        super(NAME, PasswordBasedKeyDerivationFunction.class, detectionLocation);
     }
 }
