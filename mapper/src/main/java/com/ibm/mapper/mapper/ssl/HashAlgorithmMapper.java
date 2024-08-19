@@ -21,11 +21,11 @@ package com.ibm.mapper.mapper.ssl;
 
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.MessageDigest;
-import com.ibm.mapper.model.algorithms.GOSTR341112;
 import com.ibm.mapper.model.algorithms.MD5;
 import com.ibm.mapper.model.algorithms.SHA;
 import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.model.algorithms.SM3;
+import com.ibm.mapper.model.algorithms.gost.GOSTR341112;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;

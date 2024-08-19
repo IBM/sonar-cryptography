@@ -17,31 +17,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms;
+package com.ibm.mapper.model.algorithms.gost;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.AuthenticatedEncryption;
-import com.ibm.mapper.model.BlockCipher;
-import com.ibm.mapper.model.IPrimitive;
-import com.ibm.mapper.model.Mode;
+import com.ibm.mapper.model.BlockSize;
+import com.ibm.mapper.model.DigestSize;
+import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
-public final class GOST28147 extends Algorithm implements BlockCipher, AuthenticatedEncryption {
-    private static final String NAME = "GOST28147"; // Magma, GOST 28147-89 (RFC 5830)
+// Streebog
+public final class GOSTR341112 extends Algorithm implements MessageDigest {
+    private static final String NAME = "GOSTR341112";
 
-    public GOST28147(@NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+    public GOSTR341112(@Nonnull DetectionLocation detectionLocation) {
+        super(NAME, MessageDigest.class, detectionLocation);
+        this.put(new BlockSize(512, detectionLocation));
     }
 
-    public GOST28147(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
-        this.put(mode);
+    public GOSTR341112(int digestSize, @Nonnull DetectionLocation detectionLocation) {
+        super(NAME, MessageDigest.class, detectionLocation);
+        this.put(new DigestSize(digestSize, detectionLocation));
+        this.put(new BlockSize(512, detectionLocation));
     }
 
-    public GOST28147(
-            @Nonnull final Class<? extends IPrimitive> asKind, @NotNull GOST28147 gost28147) {
-        super(gost28147, asKind);
+    public GOSTR341112(
+            @Nonnull final Class<? extends MessageDigest> asKind,
+            @Nonnull GOSTR341112 gostr341112) {
+        super(gostr341112, asKind);
     }
 }

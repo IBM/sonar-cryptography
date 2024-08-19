@@ -20,52 +20,33 @@
 package com.ibm.mapper.model.algorithms.gost;
 
 import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mode;
-import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class Kuznyechik extends Algorithm implements BlockCipher {
-    // https://en.wikipedia.org/wiki/Kuznyechik
+public final class GOSTR34122015 extends Algorithm implements BlockCipher, AuthenticatedEncryption {
+    private static final String NAME = "GOSTR34122015"; // Kuznyechik
 
-    private static final String NAME = "Kuznyechik"; // GOST R 34.12-2015
-
-    public Kuznyechik(@NotNull DetectionLocation detectionLocation) {
+    public GOSTR34122015(@NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
         this.put(new BlockSize(128, detectionLocation));
         this.put(new KeyLength(256, detectionLocation));
     }
 
-    public Kuznyechik(int keyLength, @NotNull DetectionLocation detectionLocation) {
+    public GOSTR34122015(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
         this(detectionLocation);
-        this.put(new KeyLength(keyLength, detectionLocation));
-    }
-
-    public Kuznyechik(
-            int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        this(detectionLocation);
-        this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
     }
 
-    public Kuznyechik(
-            int keyLength,
-            @Nonnull Mode mode,
-            @Nonnull Padding padding,
-            @NotNull DetectionLocation detectionLocation) {
-        this(detectionLocation);
-        this.put(new KeyLength(keyLength, detectionLocation));
-        this.put(mode);
-        this.put(padding);
-    }
-
-    public Kuznyechik(
-            @Nonnull final Class<? extends IPrimitive> asKind, @NotNull Kuznyechik kuznyechik) {
-        super(kuznyechik, asKind);
+    public GOSTR34122015(
+            @Nonnull final Class<? extends IPrimitive> asKind,
+            @NotNull GOSTR34122015 gostr34122015) {
+        super(gostr34122015, asKind);
     }
 }

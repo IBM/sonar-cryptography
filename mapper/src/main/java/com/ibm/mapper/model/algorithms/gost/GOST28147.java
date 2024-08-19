@@ -20,50 +20,32 @@
 package com.ibm.mapper.model.algorithms.gost;
 
 import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mode;
-import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class Magma extends Algorithm implements BlockCipher {
-    // https://en.wikipedia.org/wiki/GOST_(block_cipher)
+public final class GOST28147 extends Algorithm implements BlockCipher, AuthenticatedEncryption {
+    private static final String NAME = "GOST28147"; // Magma, GOST 28147-89 (RFC 5830)
 
-    private static final String NAME = "Magma"; // GOST 28147-89
-
-    public Magma(@NotNull DetectionLocation detectionLocation) {
+    public GOST28147(@NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
         this.put(new BlockSize(64, detectionLocation));
         this.put(new KeyLength(256, detectionLocation));
     }
 
-    public Magma(int keyLength, @NotNull DetectionLocation detectionLocation) {
+    public GOST28147(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
         this(detectionLocation);
-        this.put(new KeyLength(keyLength, detectionLocation));
-    }
-
-    public Magma(int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        this(detectionLocation);
-        this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
     }
 
-    public Magma(
-            int keyLength,
-            @Nonnull Mode mode,
-            @Nonnull Padding padding,
-            @NotNull DetectionLocation detectionLocation) {
-        this(detectionLocation);
-        this.put(new KeyLength(keyLength, detectionLocation));
-        this.put(mode);
-        this.put(padding);
-    }
-
-    public Magma(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull Magma magma) {
-        super(magma, asKind);
+    public GOST28147(
+            @Nonnull final Class<? extends IPrimitive> asKind, @NotNull GOST28147 gost28147) {
+        super(gost28147, asKind);
     }
 }
