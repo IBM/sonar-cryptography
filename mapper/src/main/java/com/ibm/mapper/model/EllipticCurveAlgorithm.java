@@ -19,6 +19,7 @@
  */
 package com.ibm.mapper.model;
 
+import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
 public class EllipticCurveAlgorithm extends Algorithm
@@ -28,5 +29,16 @@ public class EllipticCurveAlgorithm extends Algorithm
         super("EC-" + curve.asString(), PublicKeyEncryption.class, curve.detectionLocation);
         this.put(curve);
         this.put(new Oid("1.2.840.10045.2.1", curve.detectionLocation));
+    }
+
+    public EllipticCurveAlgorithm(@Nonnull DetectionLocation detectionLocation) {
+        super("EC", PublicKeyEncryption.class, detectionLocation);
+        this.put(new Oid("1.2.840.10045.2.1", detectionLocation));
+    }
+
+    public EllipticCurveAlgorithm(
+            @Nonnull final Class<? extends IPrimitive> asKind,
+            @Nonnull EllipticCurveAlgorithm ellipticCurveAlgorithm) {
+        super(ellipticCurveAlgorithm, asKind);
     }
 }

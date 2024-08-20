@@ -22,13 +22,12 @@ package com.ibm.plugin.rules.detection.aead;
 import com.ibm.engine.model.CipherAction;
 import com.ibm.engine.model.KeyAction;
 import com.ibm.engine.model.context.CipherContext;
-import com.ibm.engine.model.context.KeyContext;
-import com.ibm.engine.model.context.SecretKeyContext;
 import com.ibm.engine.model.factory.CipherActionFactory;
 import com.ibm.engine.model.factory.KeyActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.python.api.tree.Tree;
@@ -50,8 +49,8 @@ public final class CryptographyAEAD {
                     .forMethods("decrypt")
                     .shouldBeDetectedAs(new CipherActionFactory<>(CipherAction.Action.ENCRYPT))
                     .withAnyParameters()
-                    .buildForContext(new CipherContext(CipherContext.Kind.CHACHA20POLY1305))
-                    .inBundle(() -> "CryptographyAEADOperation")
+                    .buildForContext(new CipherContext(Map.of("algorithm", "ChaCha20Poly1305")))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> DECRYPT_CHACHA20POLY1305 =
@@ -61,8 +60,8 @@ public final class CryptographyAEAD {
                     .forMethods("decrypt")
                     .shouldBeDetectedAs(new CipherActionFactory<>(CipherAction.Action.DECRYPT))
                     .withAnyParameters()
-                    .buildForContext(new CipherContext(CipherContext.Kind.CHACHA20POLY1305))
-                    .inBundle(() -> "CryptographyAEADOperation")
+                    .buildForContext(new CipherContext(Map.of("algorithm", "ChaCha20Poly1305")))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> GENERATION_CHACHA20POLY1305 =
@@ -72,8 +71,8 @@ public final class CryptographyAEAD {
                     .forMethods("generate_key")
                     .shouldBeDetectedAs(new KeyActionFactory<>(KeyAction.Action.GENERATION))
                     .withAnyParameters()
-                    .buildForContext(new SecretKeyContext(KeyContext.Kind.CHACHA20POLY1305))
-                    .inBundle(() -> "CryptographyAEAD")
+                    .buildForContext(new CipherContext(Map.of("algorithm", "ChaCha20Poly1305")))
+                    .inBundle(() -> "Pyca")
                     .withDependingDetectionRules(
                             List.of(ENCRYPT_CHACHA20POLY1305, DECRYPT_CHACHA20POLY1305));
 

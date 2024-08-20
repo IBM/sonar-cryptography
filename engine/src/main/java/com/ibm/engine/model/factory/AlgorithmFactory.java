@@ -28,7 +28,6 @@ import javax.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 public class AlgorithmFactory<T> implements IValueFactory<T> {
-
     @Nullable private final String constant;
 
     public AlgorithmFactory() {

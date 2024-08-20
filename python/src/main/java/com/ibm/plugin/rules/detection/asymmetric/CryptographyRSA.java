@@ -26,7 +26,6 @@ import com.ibm.engine.model.KeyAction;
 import com.ibm.engine.model.SignatureAction;
 import com.ibm.engine.model.Size;
 import com.ibm.engine.model.context.CipherContext;
-import com.ibm.engine.model.context.KeyContext;
 import com.ibm.engine.model.context.PrivateKeyContext;
 import com.ibm.engine.model.context.PublicKeyContext;
 import com.ibm.engine.model.context.SignatureContext;
@@ -35,10 +34,12 @@ import com.ibm.engine.model.factory.CipherActionFactory;
 import com.ibm.engine.model.factory.KeyActionFactory;
 import com.ibm.engine.model.factory.KeySizeFactory;
 import com.ibm.engine.model.factory.SignatureActionFactory;
+import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import com.ibm.plugin.rules.detection.hash.CryptographyHash;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.python.api.tree.Tree;
@@ -63,7 +64,7 @@ public final class CryptographyRSA {
                     // and pre-hashes
                     .addDependingDetectionRules(CryptographyHash.rules())
                     .buildForContext(new SignatureContext())
-                    .inBundle(() -> "CryptographyRSAMGF1")
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> PSS =
@@ -71,14 +72,12 @@ public final class CryptographyRSA {
                     .createDetectionRule()
                     .forObjectTypes(PADDING_TYPE)
                     .forMethods("PSS")
-                    .shouldBeDetectedAs(
-                            new SignatureActionFactory<>(SignatureAction.Action.PADDING))
                     .withMethodParameter(ANY)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .addDependingDetectionRules(List.of(MGF1))
                     .withMethodParameter(ANY)
-                    .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
-                    .inBundle(() -> "CryptographyRSATypes")
+                    .buildForContext(new SignatureContext(Map.of("kind", "PSS")))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> PKCS1v15 =
@@ -87,10 +86,12 @@ public final class CryptographyRSA {
                     .forObjectTypes(PADDING_TYPE)
                     .forMethods("PKCS1v15")
                     .shouldBeDetectedAs(
-                            new SignatureActionFactory<>(SignatureAction.Action.PADDING))
+                            new ValueActionFactory<>(
+                                    "PKCS1v15")) // this is nessecary to capture something to
+                    // trigger the translation
                     .withAnyParameters()
-                    .buildForContext(new SignatureContext(SignatureContext.Kind.PKCS1v15))
-                    .inBundle(() -> "CryptographyRSATypes")
+                    .buildForContext(new SignatureContext(Map.of("kind", "padding")))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> OAEP =
@@ -98,7 +99,7 @@ public final class CryptographyRSA {
                     .createDetectionRule()
                     .forObjectTypes(PADDING_TYPE)
                     .forMethods("OAEP")
-                    .shouldBeDetectedAs(new CipherActionFactory<>(CipherAction.Action.PADDING))
+                    .shouldBeDetectedAs(new ValueActionFactory<>("OAEP"))
                     .withMethodParameter(ANY)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .addDependingDetectionRules(List.of(MGF1))
@@ -109,8 +110,8 @@ public final class CryptographyRSA {
                                     .rules()) // The parameter of sign can either be an immediate
                     // hash, or a hash enclosed in the pre-hash
                     .withMethodParameter(ANY)
-                    .buildForContext(new CipherContext(CipherContext.Kind.OAEP))
-                    .inBundle(() -> "CryptographyRSATypes")
+                    .buildForContext(new CipherContext(Map.of("kind", "padding")))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> SIGN_RSA =
@@ -133,7 +134,7 @@ public final class CryptographyRSA {
                                     .rules()) // The parameter of sign can either be an immediate
                     // hash, or a hash enclosed in the pre-hash
                     .buildForContext(new SignatureContext())
-                    .inBundle(() -> "CryptographyRSAOperation")
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> DECRYPT_RSA =
@@ -150,8 +151,8 @@ public final class CryptographyRSA {
                                     OAEP,
                                     PKCS1v15)) // For encryption/decryption, padding can only be
                     // OAEP or PKCSv15
-                    .buildForContext(new CipherContext(CipherContext.Kind.RSA))
-                    .inBundle(() -> "CryptographyRSAOperation")
+                    .buildForContext(new CipherContext(Map.of("algorithm", "RSA")))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> GENERATION_RSA =
@@ -159,13 +160,12 @@ public final class CryptographyRSA {
                     .createDetectionRule()
                     .forObjectTypes(RSA_TYPE)
                     .forMethods("generate_private_key")
-                    .withMethodParameter(
-                            ANY) // TODO: Should I resolve the value of `public_exponent`?
+                    .withMethodParameter(ANY)
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
-                    .buildForContext(new PrivateKeyContext(KeyContext.Kind.RSA))
-                    .inBundle(() -> "CryptographyRSA")
-                    .withDependingDetectionRules(List.of(SIGN_RSA /*, VERIFY_RSA*/, DECRYPT_RSA));
+                    .buildForContext(new PrivateKeyContext(Map.of("algorithm", "RSA")))
+                    .inBundle(() -> "Pyca")
+                    .withDependingDetectionRules(List.of(SIGN_RSA /*,VERIFY_RSA*/, DECRYPT_RSA));
 
     private static final IDetectionRule<Tree> PUBLIC_NUMBERS_RSA =
             new DetectionRuleBuilder<Tree>()
@@ -174,8 +174,8 @@ public final class CryptographyRSA {
                     .forMethods("RSAPublicNumbers")
                     .shouldBeDetectedAs(new KeyActionFactory<>(KeyAction.Action.GENERATION))
                     .withAnyParameters()
-                    .buildForContext(new PublicKeyContext(KeyContext.Kind.RSA))
-                    .inBundle(() -> "CryptographyRSA")
+                    .buildForContext(new PublicKeyContext(Map.of("algorithm", "RSA")))
+                    .inBundle(() -> "Pyca")
                     .withDependingDetectionRules(List.of(SIGN_RSA /*, VERIFY_RSA*/, DECRYPT_RSA));
 
     private static final IDetectionRule<Tree> PRIVATE_NUMBERS_RSA =
@@ -185,8 +185,8 @@ public final class CryptographyRSA {
                     .forMethods("RSAPrivateNumbers")
                     .shouldBeDetectedAs(new KeyActionFactory<>(KeyAction.Action.GENERATION))
                     .withAnyParameters()
-                    .buildForContext(new PrivateKeyContext(KeyContext.Kind.RSA))
-                    .inBundle(() -> "CryptographyRSA")
+                    .buildForContext(new PrivateKeyContext(Map.of("algorithm", "RSA")))
+                    .inBundle(() -> "Pyca")
                     .withDependingDetectionRules(List.of(SIGN_RSA /*, VERIFY_RSA*/, DECRYPT_RSA));
 
     @Unmodifiable

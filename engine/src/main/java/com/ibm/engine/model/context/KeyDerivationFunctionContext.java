@@ -21,56 +21,20 @@ package com.ibm.engine.model.context;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
-public class DigestContext extends DetectionContext
-        implements IDetectionContext, ISupportKind<DigestContext.Kind> {
+public class KeyDerivationFunctionContext extends DetectionContext implements IDetectionContext {
 
-    public enum Kind {
-        NONE,
-        MGF1,
-        MGF,
-        CRAMER_SHOUP,
-        NTRU,
-    }
-
-    @Nonnull private final Kind kind;
-
-    public DigestContext() {
+    public KeyDerivationFunctionContext() {
         super(new HashMap<>());
-        this.kind = Kind.NONE;
     }
 
-    /**
-     * use a property map instead
-     *
-     * @deprecated
-     */
-    @Deprecated(since = "1.3.0")
-    public DigestContext(@Nonnull Kind kind) {
-        super(new HashMap<>());
-        this.kind = kind;
-    }
-
-    public DigestContext(@Nonnull Map<String, String> properties) {
+    public KeyDerivationFunctionContext(@NotNull Map<String, String> properties) {
         super(properties);
-        this.kind = Kind.NONE;
     }
 
-    /**
-     * use a property map instead
-     *
-     * @deprecated
-     */
-    @Deprecated(since = "1.3.0")
-    @Nonnull
-    public Kind kind() {
-        return kind;
-    }
-
-    @Nonnull
     @Override
-    public Class<? extends IDetectionContext> type() {
-        return DigestContext.class;
+    public @NotNull Class<? extends IDetectionContext> type() {
+        return KeyDerivationFunctionContext.class;
     }
 }

@@ -24,7 +24,7 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.model.context.ProtocolContext;
 import com.ibm.engine.rule.IBundle;
-import com.ibm.mapper.IContextTranslationWithKind;
+import com.ibm.mapper.IContextTranslation;
 import com.ibm.mapper.mapper.ssl.CipherSuiteMapper;
 import com.ibm.mapper.mapper.ssl.SSLVersionMapper;
 import com.ibm.mapper.model.INode;
@@ -36,7 +36,7 @@ import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
 
-public final class JavaProtocolContextTranslator implements IContextTranslationWithKind<Tree> {
+public final class JavaProtocolContextTranslator implements IContextTranslation<Tree> {
 
     @NotNull @Override
     public Optional<INode> translate(

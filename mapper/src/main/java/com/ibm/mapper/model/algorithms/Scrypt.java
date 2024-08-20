@@ -17,26 +17,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.plugin.translation;
+package com.ibm.mapper.model.algorithms;
 
-import com.ibm.mapper.configuration.Configuration;
-import javax.annotation.Nonnull;
+import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
+import com.ibm.mapper.utils.DetectionLocation;
+import org.jetbrains.annotations.NotNull;
 
-public class PythonMapperConfig extends Configuration {
+public final class Scrypt extends Algorithm implements PasswordBasedKeyDerivationFunction {
+    private static final String NAME = "SCRYPT";
 
-    // TODO: Is there something to change compared to the Java case in this file?
-    @Nonnull
-    @Override
-    public String changeStringValue(@Nonnull String value) {
-
-        if (value.contains("NoPadding")) {
-            return "";
-        }
-
-        if (value.contains("Padding")) {
-            return value.replace("Padding", "");
-        }
-
-        return value;
+    public Scrypt(@NotNull DetectionLocation detectionLocation) {
+        super(NAME, PasswordBasedKeyDerivationFunction.class, detectionLocation);
     }
 }

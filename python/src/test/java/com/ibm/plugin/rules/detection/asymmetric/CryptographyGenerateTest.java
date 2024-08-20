@@ -26,6 +26,7 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.KeyAction;
 import com.ibm.engine.model.context.PrivateKeyContext;
 import com.ibm.mapper.model.EllipticCurve;
+import com.ibm.mapper.model.EllipticCurveAlgorithm;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Key;
 import com.ibm.mapper.model.PrivateKey;

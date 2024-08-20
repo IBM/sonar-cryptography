@@ -47,7 +47,6 @@ public final class JavaSignatureContextTranslator extends JavaAbstractLibraryTra
             return switch (signatureAction.getAction()) {
                 case SIGN -> Optional.of(new Sign(detectionLocation));
                 case VERIFY -> Optional.of(new Verify(detectionLocation));
-                case PADDING -> Optional.empty();
             };
         } else if (value instanceof SaltSize<Tree> saltSize) {
             return Optional.of(new SaltLength(saltSize.getValue(), detectionLocation));

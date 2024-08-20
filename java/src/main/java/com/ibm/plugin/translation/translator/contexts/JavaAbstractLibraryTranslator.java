@@ -22,7 +22,7 @@ package com.ibm.plugin.translation.translator.contexts;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.rule.IBundle;
-import com.ibm.mapper.IContextTranslationWithKind;
+import com.ibm.mapper.IContextTranslation;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -30,7 +30,7 @@ import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
 
-public abstract class JavaAbstractLibraryTranslator implements IContextTranslationWithKind<Tree> {
+public abstract class JavaAbstractLibraryTranslator implements IContextTranslation<Tree> {
 
     @NotNull @Override
     public Optional<INode> translate(

@@ -17,13 +17,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.plugin.translation.contexts;
+package com.ibm.plugin.translation.translator.contexts;
 
 import com.ibm.engine.model.AlgorithmParameter;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.KeyAction;
 import com.ibm.engine.model.KeySize;
+import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.model.context.KeyContext;
+import com.ibm.engine.rule.IBundle;
+import com.ibm.mapper.IContextTranslation;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.Cipher;
@@ -38,34 +41,20 @@ import com.ibm.plugin.rules.detection.hash.CryptographyHash;
 import com.ibm.plugin.rules.detection.symmetric.CryptographyCipher;
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.plugins.python.api.tree.Tree;
 
-@SuppressWarnings("java:S1301")
-public final class PythonKeyContextTranslator {
+public final class PycaKeyContextTranslator implements IContextTranslation<Tree> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(PycaKeyContextTranslator.class);
 
-    private PythonKeyContextTranslator() {
-        // private
-    }
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(PythonKeyContextTranslator.class);
-
-    @Nonnull
-    public static Optional<INode> translateForKeyContext(
-            @Nonnull final IValue<Tree> value,
-            @Nonnull KeyContext.Kind kind,
-            @Nonnull DetectionLocation detectionLocation) {
-        if (value instanceof com.ibm.engine.model.Algorithm<Tree> detectedAlgorithm) {
-            return translateKeyContextAlgorithm(detectedAlgorithm, kind, detectionLocation);
-        } else if (value instanceof KeySize<Tree> keySize) {
-            return translateKeyContextKeySize(keySize, kind, detectionLocation);
-        } else if (value instanceof KeyAction<Tree> keyAction) {
-            return translateKeyContextKeyAction(keyAction, kind, detectionLocation);
-        } else if (value instanceof AlgorithmParameter<Tree> algorithmParameter) {
-            return translateKeyContextAlgorithmParameter(
-                    algorithmParameter, kind, detectionLocation);
-        }
+    @Override
+    public @NotNull Optional<INode> translate(
+            @NotNull IBundle bundleIdentifier,
+            @NotNull IValue<Tree> value,
+            @NotNull IDetectionContext detectionContext,
+            @NotNull DetectionLocation detectionLocation) {
         return Optional.empty();
     }
 

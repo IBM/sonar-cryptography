@@ -31,6 +31,7 @@ import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -55,8 +56,9 @@ public final class CryptographyAES {
                 .forMethods("encrypt")
                 .shouldBeDetectedAs(new CipherActionFactory<>(CipherAction.Action.ENCRYPT))
                 .withAnyParameters()
-                .buildForContext(new CipherContext(CipherContext.Kind.valueOf(aesAlgorithm)))
-                .inBundle(() -> "CryptographyAESOperation")
+                .buildForContext(
+                        new CipherContext(Map.of("algorithm", aesAlgorithm, "kind", "AEAD")))
+                .inBundle(() -> "Pyca")
                 .withoutDependingDetectionRules();
     }
 
@@ -67,8 +69,9 @@ public final class CryptographyAES {
                 .forMethods("decrypt")
                 .shouldBeDetectedAs(new CipherActionFactory<>(CipherAction.Action.DECRYPT))
                 .withAnyParameters()
-                .buildForContext(new CipherContext(CipherContext.Kind.valueOf(aesAlgorithm)))
-                .inBundle(() -> "CryptographyAESOperation")
+                .buildForContext(
+                        new CipherContext(Map.of("algorithm", aesAlgorithm, "kind", "AEAD")))
+                .inBundle(() -> "Pyca")
                 .withoutDependingDetectionRules();
     }
 
@@ -83,8 +86,9 @@ public final class CryptographyAES {
                             .withMethodParameter("int")
                             .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
                             .buildForContext(
-                                    new SecretKeyContext(KeyContext.Kind.valueOf(aesAlgorithm)))
-                            .inBundle(() -> "CryptographyAES")
+                                    new SecretKeyContext(
+                                            KeyContext.Kind.valueOf(aesAlgorithm))) // TODO
+                            .inBundle(() -> "Pyca")
                             .withDependingDetectionRules(
                                     List.of(decryptAES(aesAlgorithm), encryptAES(aesAlgorithm))));
         }

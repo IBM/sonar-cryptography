@@ -19,10 +19,13 @@
  */
 package com.ibm.engine.model.context;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.Nonnull;
 
 @SuppressWarnings("java:S115")
-public class KeyContext implements IDetectionContext, ISupportKind<KeyContext.Kind> {
+public class KeyContext extends DetectionContext
+        implements IDetectionContext, ISupportKind<KeyContext.Kind> {
     public enum Kind {
         KDF,
         KEM,
@@ -60,14 +63,33 @@ public class KeyContext implements IDetectionContext, ISupportKind<KeyContext.Ki
 
     @Nonnull private final Kind kind;
 
+    /**
+     * use a property map instead
+     *
+     * @deprecated
+     */
+    @Deprecated(since = "1.3.0")
     public KeyContext(@Nonnull Kind kind) {
+        super(new HashMap<>());
         this.kind = kind;
     }
 
     public KeyContext() {
+        super(new HashMap<>());
         this.kind = Kind.NONE;
     }
 
+    public KeyContext(@Nonnull Map<String, String> properties) {
+        super(properties);
+        this.kind = Kind.NONE;
+    }
+
+    /**
+     * use a property map instead
+     *
+     * @deprecated
+     */
+    @Deprecated(since = "1.3.0")
     @Nonnull
     public Kind kind() {
         return kind;

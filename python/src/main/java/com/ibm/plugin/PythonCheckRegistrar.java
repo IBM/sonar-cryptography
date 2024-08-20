@@ -37,10 +37,6 @@ public class PythonCheckRegistrar implements PythonCustomRuleRepository {
     public List<Class> checkClasses() {
         // Creating a new list is necessary to return a type
         // List<Class> from the type List<Class<? extends PythonCheck>>
-        List<Class> classes = new ArrayList<>();
-        for (Class clazz : PythonRuleList.getPythonChecks()) {
-            classes.add(clazz);
-        }
-        return classes;
+        return new ArrayList<>(PythonRuleList.getPythonChecks());
     }
 }

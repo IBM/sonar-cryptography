@@ -17,22 +17,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper;
+package com.ibm.engine.model.factory;
 
+import com.ibm.engine.detection.ResolvedValue;
 import com.ibm.engine.model.IValue;
-import com.ibm.engine.model.context.IDetectionContext;
-import com.ibm.engine.rule.IBundle;
-import com.ibm.mapper.model.INode;
-import com.ibm.mapper.utils.DetectionLocation;
+import com.ibm.engine.model.Padding;
 import java.util.Optional;
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
-public interface IContextTranslationWithKind<T> {
+public class PaddingFactory<T> implements IValueFactory<T> {
+    @Nullable private final String constant;
 
-    @Nonnull
-    public Optional<INode> translate(
-            @Nonnull final IBundle bundleIdentifier,
-            @Nonnull final IValue<T> value,
-            @Nonnull final IDetectionContext detectionContext,
-            @Nonnull final DetectionLocation detectionLocation);
+    public PaddingFactory() {
+        this.constant = null;
+    }
+
+    public PaddingFactory(@Nullable String constant) {
+        this.constant = constant;
+    }
+
+    @Override
+    public Optional<IValue<T>> apply(@NotNull ResolvedValue<Object, T> objectTResolvedValue) {
+        if (constant != null) {
+            return Optional.of(new Padding<>(constant, objectTResolvedValue.tree()));
+        }
+        if (objectTResolvedValue.value() instanceof String string) {
+            return Optional.of(new Padding<>(string, objectTResolvedValue.tree()));
+        }
+        return Optional.empty();
+    }
 }

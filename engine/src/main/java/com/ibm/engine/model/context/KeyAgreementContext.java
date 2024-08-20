@@ -19,9 +19,25 @@
  */
 package com.ibm.engine.model.context;
 
+import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 
-public class KeyAgreementContext implements IDetectionContext {
+public class KeyAgreementContext extends DetectionContext implements IDetectionContext {
+
+    public KeyAgreementContext(@NotNull Map<String, String> properties) {
+        super(properties);
+    }
+
+    /**
+     * use a property map instead
+     *
+     * @deprecated
+     */
+    @Deprecated(since = "1.3.0")
+    public KeyAgreementContext() {
+        super(Map.of());
+    }
+
     @NotNull @Override
     public Class<? extends IDetectionContext> type() {
         return KeyAgreementContext.class;

@@ -22,13 +22,15 @@ package com.ibm.plugin.rules.detection.padding;
 import com.ibm.engine.model.Size;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.factory.AlgorithmFactory;
-import com.ibm.engine.model.factory.KeySizeFactory;
+import com.ibm.engine.model.factory.BlockSizeFactory;
+import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import com.ibm.plugin.rules.detection.symmetric.CryptographyCipher;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -45,6 +47,12 @@ public final class CryptographyPadding {
 
     private static @NotNull List<IDetectionRule<Tree>> newPadding() {
         final LinkedList<IDetectionRule<Tree>> rules = new LinkedList<>();
+
+        /*
+         * TODO: Set the block size as child of the detected padding?
+         * Or remove the padding detection to include it in the context instead?
+         */
+
         // When the block size is specified using an integer
         for (String padding : paddings) {
             rules.add(
@@ -52,10 +60,11 @@ public final class CryptographyPadding {
                             .createDetectionRule()
                             .forObjectTypes("cryptography.hazmat.primitives.padding")
                             .forMethods(padding)
+                            .shouldBeDetectedAs(new ValueActionFactory<>(padding))
                             .withMethodParameter("int")
-                            .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
-                            .buildForContext(new CipherContext(CipherContext.Kind.valueOf(padding)))
-                            .inBundle(() -> "CryptographyPadding")
+                            .shouldBeDetectedAs(new BlockSizeFactory<>(Size.UnitType.BIT))
+                            .buildForContext(new CipherContext(Map.of("kind", "padding")))
+                            .inBundle(() -> "Pyca")
                             .withoutDependingDetectionRules());
         }
         // When the block size is specified using a `block_size` attribute
@@ -66,14 +75,14 @@ public final class CryptographyPadding {
                                 .createDetectionRule()
                                 .forObjectTypes("cryptography.hazmat.primitives.padding")
                                 .forMethods(padding)
+                                .shouldBeDetectedAs(new ValueActionFactory<>(padding))
                                 .withMethodParameter(
                                         "cryptography.hazmat.primitives.ciphers.algorithms."
                                                 + cipherAlgorithm
                                                 + ".block_size")
                                 .shouldBeDetectedAs(new AlgorithmFactory<>(cipherAlgorithm))
-                                .buildForContext(
-                                        new CipherContext(CipherContext.Kind.valueOf(padding)))
-                                .inBundle(() -> "CryptographyPadding")
+                                .buildForContext(new CipherContext(Map.of("kind", "padding")))
+                                .inBundle(() -> "Pyca")
                                 .withoutDependingDetectionRules());
             }
         }

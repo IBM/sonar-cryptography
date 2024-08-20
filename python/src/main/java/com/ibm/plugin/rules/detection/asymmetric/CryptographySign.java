@@ -20,12 +20,12 @@
 package com.ibm.plugin.rules.detection.asymmetric;
 
 import com.ibm.engine.model.KeyAction;
-import com.ibm.engine.model.context.KeyContext;
 import com.ibm.engine.model.context.PrivateKeyContext;
 import com.ibm.engine.model.factory.KeyActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.python.api.tree.Tree;
@@ -45,8 +45,8 @@ public final class CryptographySign {
                     .forMethods("generate")
                     .shouldBeDetectedAs(new KeyActionFactory<>(KeyAction.Action.GENERATION))
                     .withAnyParameters()
-                    .buildForContext(new PrivateKeyContext(KeyContext.Kind.Ed25519))
-                    .inBundle(() -> "CryptographySign")
+                    .buildForContext(new PrivateKeyContext(Map.of("algorithm", "Ed25519")))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> SIGN_ED448 =
@@ -57,8 +57,8 @@ public final class CryptographySign {
                     .forMethods("generate")
                     .shouldBeDetectedAs(new KeyActionFactory<>(KeyAction.Action.GENERATION))
                     .withAnyParameters()
-                    .buildForContext(new PrivateKeyContext(KeyContext.Kind.Ed448))
-                    .inBundle(() -> "CryptographySign")
+                    .buildForContext(new PrivateKeyContext(Map.of("algorithm", "Ed448")))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     @Unmodifiable

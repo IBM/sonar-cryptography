@@ -38,6 +38,7 @@ import org.sonar.plugins.python.api.tree.Tree;
 public class PythonInventoryRule extends PythonBaseDetectionRule {
 
     public PythonInventoryRule() {
+        // TODO: add Python reorganizer rules here if necessary
         super(PythonDetectionRules.rules(), List.of());
     }
 

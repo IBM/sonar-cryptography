@@ -25,6 +25,7 @@ import com.ibm.engine.model.factory.CipherActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.python.api.tree.Tree;
@@ -43,8 +44,8 @@ public final class CryptographyWrapping {
                     .forMethods("aes_key_wrap")
                     .shouldBeDetectedAs(new CipherActionFactory<>(CipherAction.Action.WRAP))
                     .withAnyParameters()
-                    .buildForContext(new CipherContext(CipherContext.Kind.AES_WRAP))
-                    .inBundle(() -> "CryptographyWrapping")
+                    .buildForContext(new CipherContext(Map.of("algorithm", "AES")))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> AES_KEY_WRAP_WITH_PADDING =
@@ -54,8 +55,8 @@ public final class CryptographyWrapping {
                     .forMethods("aes_key_wrap_with_padding")
                     .shouldBeDetectedAs(new CipherActionFactory<>(CipherAction.Action.WRAP))
                     .withAnyParameters()
-                    .buildForContext(new CipherContext(CipherContext.Kind.AES_WRAP_WITH_PADDING))
-                    .inBundle(() -> "CryptographyWrapping")
+                    .buildForContext(new CipherContext(Map.of("algorithm", "AES")))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     @Unmodifiable

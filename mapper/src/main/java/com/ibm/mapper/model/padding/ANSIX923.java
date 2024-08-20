@@ -17,20 +17,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model;
+package com.ibm.mapper.model.padding;
 
-import javax.annotation.Nonnull;
+import com.ibm.mapper.model.Padding;
+import com.ibm.mapper.utils.DetectionLocation;
+import org.jetbrains.annotations.NotNull;
 
-public final class PublicKey extends Key {
-    public PublicKey(@Nonnull PublicKeyEncryption publicKeyEncryption) {
-        super(publicKeyEncryption, PublicKey.class);
-    }
-
-    public PublicKey(@Nonnull Signature signature) {
-        super(signature, PublicKey.class);
-    }
-
-    public PublicKey(@Nonnull Key key) {
-        super(key, key.detectionLocation, PublicKey.class);
+public final class ANSIX923 extends Padding {
+    public ANSIX923(@NotNull DetectionLocation detectionLocation) {
+        super("ANSIX923", detectionLocation);
     }
 }

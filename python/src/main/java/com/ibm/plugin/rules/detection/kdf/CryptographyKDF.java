@@ -24,7 +24,7 @@ import static com.ibm.engine.detection.MethodMatcher.ANY;
 import com.ibm.engine.model.AlgorithmParameter;
 import com.ibm.engine.model.KeyAction;
 import com.ibm.engine.model.Size;
-import com.ibm.engine.model.context.KeyContext;
+import com.ibm.engine.model.context.KeyDerivationFunctionContext;
 import com.ibm.engine.model.factory.AlgorithmFactory;
 import com.ibm.engine.model.factory.AlgorithmParameterFactory;
 import com.ibm.engine.model.factory.KeyActionFactory;
@@ -32,6 +32,7 @@ import com.ibm.engine.model.factory.KeySizeFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.python.api.tree.Tree;
@@ -57,8 +58,8 @@ public final class CryptographyKDF {
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
                     .withMethodParameter(ANY)
-                    .buildForContext(new KeyContext(KeyContext.Kind.X963KDF))
-                    .inBundle(() -> "CryptographyKDF")
+                    .buildForContext(new KeyDerivationFunctionContext(Map.of("algorithm", "x963")))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> KBKDFCMAC =
@@ -78,8 +79,8 @@ public final class CryptographyKDF {
                     .withMethodParameter(ANY)
                     .withMethodParameter(ANY)
                     .withMethodParameter(ANY)
-                    .buildForContext(new KeyContext(KeyContext.Kind.KBKDFCMAC))
-                    .inBundle(() -> "CryptographyKDF")
+                    .buildForContext(new KeyDerivationFunctionContext(Map.of("kind", "cmac")))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> KBKDFHMAC =
@@ -99,8 +100,8 @@ public final class CryptographyKDF {
                     .withMethodParameter(ANY)
                     .withMethodParameter(ANY)
                     .withMethodParameter(ANY)
-                    .buildForContext(new KeyContext(KeyContext.Kind.KBKDFHMAC))
-                    .inBundle(() -> "CryptographyKDF")
+                    .buildForContext(new KeyDerivationFunctionContext(Map.of("kind", "hmac")))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> HKDF_EXPAND =
@@ -114,8 +115,8 @@ public final class CryptographyKDF {
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
                     .withMethodParameter(ANY)
-                    .buildForContext(new KeyContext(KeyContext.Kind.HKDFExpand))
-                    .inBundle(() -> "CryptographyKDF")
+                    .buildForContext(new KeyDerivationFunctionContext(Map.of("kind", "hash")))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> HKDF =
@@ -130,8 +131,8 @@ public final class CryptographyKDF {
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
                     .withMethodParameter(ANY)
                     .withMethodParameter(ANY)
-                    .buildForContext(new KeyContext(KeyContext.Kind.HKDF))
-                    .inBundle(() -> "CryptographyKDF")
+                    .buildForContext(new KeyDerivationFunctionContext(Map.of("kind", "hash")))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> CONCAT_KDF_HMAC =
@@ -146,8 +147,12 @@ public final class CryptographyKDF {
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
                     .withMethodParameter(ANY)
                     .withMethodParameter(ANY)
-                    .buildForContext(new KeyContext(KeyContext.Kind.ConcatKDFHMAC))
-                    .inBundle(() -> "CryptographyKDF")
+                    .buildForContext(
+                            new KeyDerivationFunctionContext(
+                                    Map.of(
+                                            "kind", "mac",
+                                            "spec", "concat")))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> CONCAT_KDF =
@@ -161,8 +166,12 @@ public final class CryptographyKDF {
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
                     .withMethodParameter(ANY)
-                    .buildForContext(new KeyContext(KeyContext.Kind.ConcatKDFHash))
-                    .inBundle(() -> "CryptographyKDF")
+                    .buildForContext(
+                            new KeyDerivationFunctionContext(
+                                    Map.of(
+                                            "kind", "hash",
+                                            "spec", "concat")))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> SCRYPT =
@@ -177,8 +186,9 @@ public final class CryptographyKDF {
                     .withMethodParameter("int")
                     .withMethodParameter("int")
                     .withMethodParameter("int")
-                    .buildForContext(new KeyContext(KeyContext.Kind.SCRYPT))
-                    .inBundle(() -> "CryptographyKDF")
+                    .buildForContext(
+                            new KeyDerivationFunctionContext(Map.of("algorithm", "scrypt")))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> PBKDF2 =
@@ -195,8 +205,9 @@ public final class CryptographyKDF {
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(
                             new AlgorithmParameterFactory<>(AlgorithmParameter.Kind.ITERATIONS))
-                    .buildForContext(new KeyContext(KeyContext.Kind.PBKDF2HMAC))
-                    .inBundle(() -> "CryptographyKDF")
+                    .buildForContext(
+                            new KeyDerivationFunctionContext(Map.of("algorithm", "pbkdf2")))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     @Unmodifiable

@@ -19,27 +19,12 @@
  */
 package com.ibm.plugin.translation;
 
-import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.AuthenticatedEncryption;
-import com.ibm.mapper.model.EllipticCurve;
-import com.ibm.mapper.model.KeyLength;
-import com.ibm.mapper.model.Mac;
-import com.ibm.mapper.model.Mode;
-import com.ibm.mapper.model.PrivateKey;
-import com.ibm.mapper.model.PublicKey;
-import com.ibm.mapper.model.SecretKey;
-import com.ibm.mapper.model.StreamCipher;
-import com.ibm.mapper.model.functionality.KeyGeneration;
-import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
-import javax.annotation.Nonnull;
-
 public final class PythonTranslatorUtils {
     private PythonTranslatorUtils() {
         // private
     }
 
-    @Nonnull
+    /*     @Nonnull
     public static PrivateKey generateEcPrivateKeyTranslation(
             @Nonnull String algorithmName,
             @Nonnull String curveName,
@@ -158,5 +143,5 @@ public final class PythonTranslatorUtils {
         secretKey.put(cipher);
 
         return secretKey;
-    }
+    } */
 }

@@ -30,6 +30,7 @@ import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -61,8 +62,8 @@ public final class CryptographyFernet {
                                                         ? CipherAction.Action.ENCRYPT
                                                         : CipherAction.Action.DECRYPT))
                                 .withAnyParameters()
-                                .buildForContext(new CipherContext(CipherContext.Kind.Fernet))
-                                .inBundle(() -> "CryptographyFernetOperation")
+                                .buildForContext(new CipherContext(Map.of("algorithm", "Fernet")))
+                                .inBundle(() -> "Pyca")
                                 .withoutDependingDetectionRules());
             }
         }
@@ -77,7 +78,7 @@ public final class CryptographyFernet {
                     .shouldBeDetectedAs(new KeyActionFactory<>(KeyAction.Action.GENERATION))
                     .withAnyParameters()
                     .buildForContext(new PrivateKeyContext(KeyContext.Kind.Fernet))
-                    .inBundle(() -> "CryptographyFernet")
+                    .inBundle(() -> "Pyca")
                     .withDependingDetectionRules(encryptDecryptFernet());
 
     @Unmodifiable

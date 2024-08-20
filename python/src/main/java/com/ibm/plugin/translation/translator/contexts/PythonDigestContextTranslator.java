@@ -17,14 +17,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.plugin.translation.contexts;
+package com.ibm.plugin.translation.translator.contexts;
 
-import com.ibm.engine.model.CipherAction;
 import com.ibm.engine.model.IValue;
+import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.DigestContext;
-import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.mapper.pyca.PycaDigestMapper;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -40,32 +39,11 @@ public final class PythonDigestContextTranslator {
     @Nonnull
     public static Optional<INode> translateForDigestContext(
             @Nonnull final IValue<Tree> value,
-            @Nonnull DigestContext.Kind kind,
+            @Nonnull DigestContext context,
             @Nonnull DetectionLocation detectionLocation) {
-        if (value instanceof CipherAction<Tree> cipherAction) {
-            return translateDigestContextCipherAction(cipherAction, kind, detectionLocation);
-        }
-
-        return Optional.empty();
-    }
-
-    @Nonnull
-    private static Optional<INode> translateDigestContextCipherAction(
-            @Nonnull final CipherAction<Tree> cipherAction,
-            @Nonnull DigestContext.Kind kind,
-            @Nonnull DetectionLocation detectionLocation) {
-        switch (cipherAction.getAction()) {
-            case HASH:
-                // No need to switch over kind here
-                String hashName =
-                        kind.name()
-                                .replace(
-                                        '_',
-                                        '-'); // Python uses "_" (SHA3_384) but the standard way
-                // is with "-" (SHA3-384)
-                return Optional.of(new MessageDigest(new Algorithm(hashName, detectionLocation)));
-            default:
-                break;
+        if (value instanceof ValueAction<Tree>) {
+            final PycaDigestMapper pycaDigestMapper = new PycaDigestMapper();
+            return pycaDigestMapper.parse(value.asString(), detectionLocation).map(i -> i);
         }
         return Optional.empty();
     }

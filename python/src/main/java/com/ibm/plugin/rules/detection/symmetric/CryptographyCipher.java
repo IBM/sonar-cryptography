@@ -55,12 +55,6 @@ public final class CryptographyCipher {
                     "IDEA");
     public static final List<String> streamCiphers = Arrays.asList("ChaCha20", "ARC4");
 
-    public static @NotNull List<String> cipherAlgorithms() {
-        List<String> cipherAlgorithms = new LinkedList<>(blockCiphers);
-        cipherAlgorithms.addAll(streamCiphers);
-        return cipherAlgorithms;
-    }
-
     public static final List<String> modes =
             Arrays.asList("CBC", "CTR", "OFB", "CFB", "CFB8", "GCM", "XTS", "ECB");
 
@@ -72,7 +66,7 @@ public final class CryptographyCipher {
                     .shouldBeDetectedAs(new CipherActionFactory<>(CipherAction.Action.ENCRYPT))
                     .withAnyParameters()
                     .buildForContext(new CipherContext())
-                    .inBundle(() -> "CryptographyCipherOperation")
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> DECRYPT_CIPHER =
@@ -83,7 +77,7 @@ public final class CryptographyCipher {
                     .shouldBeDetectedAs(new CipherActionFactory<>(CipherAction.Action.DECRYPT))
                     .withAnyParameters()
                     .buildForContext(new CipherContext())
-                    .inBundle(() -> "CryptographyCipherOperation")
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static @NotNull List<IDetectionRule<Tree>> followingNewCipherRules() {
@@ -106,13 +100,8 @@ public final class CryptographyCipher {
                     .withMethodParameter("cryptography.hazmat.primitives.ciphers.modes.*")
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .buildForContext(new CipherContext())
-                    .inBundle(() -> "CryptographyCipher")
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
-
-    // TODO: writting
-    //  `followingNewCipherRules` will duplicate them because we have two parameter detections. This
-    //  is probably a bug I should create an issue for. In the meantime, an easy fix is to add the
-    //  depending detection rules to only one parameter instead of the method detection.
 
     @Unmodifiable
     @Nonnull
