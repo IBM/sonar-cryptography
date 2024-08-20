@@ -38,6 +38,7 @@ import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PrivateKey;
 import com.ibm.mapper.model.ProbabilisticSignatureScheme;
 import com.ibm.mapper.model.PublicKey;
+import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.plugin.TestBase;

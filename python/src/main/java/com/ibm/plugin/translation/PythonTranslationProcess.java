@@ -54,8 +54,8 @@ public final class PythonTranslationProcess
         Utils.printNodeTree("translated ", translatedValues);
 
         // 2. Reorganize
-        final Reorganizer javaReorganizer = new Reorganizer(reorganizerRules);
-        final List<INode> reorganizedValues = javaReorganizer.reorganize(translatedValues);
+        final Reorganizer pythonReorganizer = new Reorganizer(reorganizerRules);
+        final List<INode> reorganizedValues = pythonReorganizer.reorganize(translatedValues);
         Utils.printNodeTree("reorganised", reorganizedValues);
 
         // 3. Enrich

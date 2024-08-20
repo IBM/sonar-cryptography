@@ -23,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.mapper.model.Key;
 import com.ibm.mapper.model.PublicKey;
+import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.output.cyclondx.CBOMOutputFile;
@@ -42,7 +43,7 @@ class KeyTest {
 
         final CBOMOutputFile outputFile = new CBOMOutputFile();
 
-        final Key key = new PublicKey(new RSA(detectionLocation));
+        final Key key = new PublicKey((PublicKeyEncryption) new RSA(detectionLocation));
         outputFile.add(List.of(key));
 
         final Bom bom = outputFile.getBom();

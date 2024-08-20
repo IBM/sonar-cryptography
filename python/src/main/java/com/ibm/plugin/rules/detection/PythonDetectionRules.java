@@ -20,8 +20,8 @@
 package com.ibm.plugin.rules.detection;
 
 import com.ibm.engine.rule.IDetectionRule;
+import com.ibm.plugin.rules.detection.aead.CryptographyAEAD;
 import com.ibm.plugin.rules.detection.aead.CryptographyAES;
-import com.ibm.plugin.rules.detection.aead.CryptographyChaCha20Poly1305;
 import com.ibm.plugin.rules.detection.asymmetric.CryptographyDSA;
 import com.ibm.plugin.rules.detection.asymmetric.CryptographyDiffieHellman;
 import com.ibm.plugin.rules.detection.asymmetric.CryptographyEllipticCurve;
@@ -53,7 +53,7 @@ public final class PythonDetectionRules {
                         CryptographyRSA.rules().stream(),
                         CryptographyDiffieHellman.rules().stream(),
                         CryptographyDSA.rules().stream(),
-                        CryptographyChaCha20Poly1305.rules().stream(),
+                        CryptographyAEAD.rules().stream(),
                         CryptographyAES.rules().stream(),
                         CryptographyCipher.rules().stream(),
                         CryptographyMAC.rules().stream(),
