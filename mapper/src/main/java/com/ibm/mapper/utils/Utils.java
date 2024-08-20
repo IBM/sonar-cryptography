@@ -19,7 +19,11 @@
  */
 package com.ibm.mapper.utils;
 
+import com.ibm.mapper.ITranslator;
+import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.IPrimitive;
+import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.collections.IAssetCollection;
 import java.util.Collection;
 import java.util.List;
@@ -91,5 +95,16 @@ public final class Utils {
         }
 
         return Optional.empty();
+    }
+
+    public static INode cipherWithMode(@Nonnull Algorithm cipher, @Nonnull Mode mode) {
+        cipher.put(mode);
+        return cipher;
+    }
+
+    public static INode unknownWithMode(
+            @Nonnull Mode mode, @Nonnull final Class<? extends IPrimitive> asKind) {
+        Algorithm cipher = new Algorithm(ITranslator.UNKNOWN, asKind, mode.getDetectionContext());
+        return cipherWithMode(cipher, mode);
     }
 }

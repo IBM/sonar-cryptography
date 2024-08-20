@@ -120,7 +120,7 @@ public class BcBlockCipherEngineMapper implements IMapper {
 
             default -> {
                 final Algorithm algorithm =
-                        new Algorithm(blockCipherString, Unknown.class, detectionLocation);
+                        new Algorithm(blockCipherString, BlockCipher.class, detectionLocation);
                 algorithm.put(new Unknown(detectionLocation));
                 yield Optional.of(algorithm);
             }

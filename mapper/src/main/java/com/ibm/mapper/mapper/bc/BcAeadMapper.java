@@ -19,12 +19,10 @@
  */
 package com.ibm.mapper.mapper.bc;
 
-import com.ibm.mapper.ITranslator;
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.algorithms.AES;
 import com.ibm.mapper.model.algorithms.ChaCha20Poly1305;
@@ -41,6 +39,7 @@ import com.ibm.mapper.model.mode.GCM;
 import com.ibm.mapper.model.mode.GCMSIV;
 import com.ibm.mapper.model.mode.OCB;
 import com.ibm.mapper.utils.DetectionLocation;
+import com.ibm.mapper.utils.Utils;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -70,20 +69,38 @@ public class BcAeadMapper implements IMapper {
             case "XoodyakEngine" ->
                     Optional.of(new Xoodyak(AuthenticatedEncryption.class, detectionLocation));
 
-            case "CCMBlockCipher" -> Optional.of(unknownWithMode(new CCM(detectionLocation)));
-            case "EAXBlockCipher" -> Optional.of(unknownWithMode(new EAX(detectionLocation)));
-            case "GCMBlockCipher" -> Optional.of(unknownWithMode(new GCM(detectionLocation)));
+            case "CCMBlockCipher" ->
+                    Optional.of(
+                            Utils.unknownWithMode(
+                                    new CCM(detectionLocation), AuthenticatedEncryption.class));
+            case "EAXBlockCipher" ->
+                    Optional.of(
+                            Utils.unknownWithMode(
+                                    new EAX(detectionLocation), AuthenticatedEncryption.class));
+            case "GCMBlockCipher" ->
+                    Optional.of(
+                            Utils.unknownWithMode(
+                                    new GCM(detectionLocation), AuthenticatedEncryption.class));
             case "GCMSIVBlockCipher" ->
                     /* The default `new GCMSIVBlockCipher()` is instantiated with an `AESEngine` */
                     Optional.of(
-                            cipherWithMode(
+                            Utils.cipherWithMode(
                                     new AES(
                                             AuthenticatedEncryption.class,
                                             new AES(detectionLocation)),
                                     new GCMSIV(detectionLocation)));
-            case "KCCMBlockCipher" -> Optional.of(unknownWithMode(new CCM(detectionLocation)));
-            case "KGCMBlockCipher" -> Optional.of(unknownWithMode(new GCM(detectionLocation)));
-            case "OCBBlockCipher" -> Optional.of(unknownWithMode(new OCB(detectionLocation)));
+            case "KCCMBlockCipher" ->
+                    Optional.of(
+                            Utils.unknownWithMode(
+                                    new CCM(detectionLocation), AuthenticatedEncryption.class));
+            case "KGCMBlockCipher" ->
+                    Optional.of(
+                            Utils.unknownWithMode(
+                                    new GCM(detectionLocation), AuthenticatedEncryption.class));
+            case "OCBBlockCipher" ->
+                    Optional.of(
+                            Utils.unknownWithMode(
+                                    new OCB(detectionLocation), AuthenticatedEncryption.class));
 
             case "ChaCha20Poly1305" -> Optional.of(new ChaCha20Poly1305(detectionLocation));
 
@@ -94,19 +111,5 @@ public class BcAeadMapper implements IMapper {
                 yield Optional.of(algorithm);
             }
         };
-    }
-
-    private INode cipherWithMode(@Nonnull Algorithm cipher, @Nonnull Mode mode) {
-        cipher.put(mode);
-        return cipher;
-    }
-
-    private INode unknownWithMode(@Nonnull Mode mode) {
-        Algorithm cipher =
-                new Algorithm(
-                        ITranslator.UNKNOWN,
-                        AuthenticatedEncryption.class,
-                        mode.getDetectionContext());
-        return cipherWithMode(cipher, mode);
     }
 }

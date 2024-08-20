@@ -24,8 +24,11 @@ import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
 public final class CTR extends Mode {
+    // https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Counter_(CTR)
+
+    private static final String NAME = "CTR"; // ICM, SIC
 
     public CTR(@NotNull DetectionLocation detectionLocation) {
-        super("CTR", detectionLocation);
+        super(NAME, detectionLocation);
     }
 }
