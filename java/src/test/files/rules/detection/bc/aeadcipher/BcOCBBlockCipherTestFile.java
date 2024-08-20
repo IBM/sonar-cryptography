@@ -15,14 +15,14 @@ public class BcOCBBlockCipherTestFile {
         secureRandom.nextBytes(keyBytes);
 
         // Create a block cipher hash engine
-        BlockCipher aesEngine = new AESEngine(); // Noncompliant {{AES}}
+        BlockCipher aesEngine = new AESEngine(); // Noncompliant {{AESEngine}}
 
         // Create a block cipher main engine
-        BlockCipher rc6Engine = new RC6Engine(); // Noncompliant {{RC6}}
+        BlockCipher rc6Engine = new RC6Engine(); // Noncompliant {{RC6Engine}}
 
         // Instantiate OCBBlockCipher with constructor
         OCBBlockCipher constructor =
-                new OCBBlockCipher(aesEngine, rc6Engine); // Noncompliant {{OCB}}
+                new OCBBlockCipher(aesEngine, rc6Engine); // Noncompliant {{OCBBlockCipher}}
 
         // Initialize cipher with key and parameters
         KeyParameter keyParameter = new KeyParameter(keyBytes);

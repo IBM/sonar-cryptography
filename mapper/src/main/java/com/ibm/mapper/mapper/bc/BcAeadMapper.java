@@ -77,7 +77,10 @@ public class BcAeadMapper implements IMapper {
                     /* The default `new GCMSIVBlockCipher()` is instantiated with an `AESEngine` */
                     Optional.of(
                             cipherWithMode(
-                                    new AES(detectionLocation), new GCMSIV(detectionLocation)));
+                                    new AES(
+                                            AuthenticatedEncryption.class,
+                                            new AES(detectionLocation)),
+                                    new GCMSIV(detectionLocation)));
             case "KCCMBlockCipher" -> Optional.of(unknownWithMode(new CCM(detectionLocation)));
             case "KGCMBlockCipher" -> Optional.of(unknownWithMode(new GCM(detectionLocation)));
             case "OCBBlockCipher" -> Optional.of(unknownWithMode(new OCB(detectionLocation)));
