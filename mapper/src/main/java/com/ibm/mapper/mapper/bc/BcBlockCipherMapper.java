@@ -22,7 +22,9 @@ package com.ibm.mapper.mapper.bc;
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.IAlgorithm;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.algorithms.AES;
 import com.ibm.mapper.model.algorithms.Aria;
@@ -57,6 +59,12 @@ import javax.annotation.Nullable;
 
 public class BcBlockCipherMapper implements IMapper {
 
+    private final Class<? extends IPrimitive> asKind;
+
+    public BcBlockCipherMapper(Class<? extends IPrimitive> asKind) {
+        this.asKind = asKind;
+    }
+
     @Override
     @Nonnull
     public Optional<? extends INode> parse(
@@ -64,7 +72,11 @@ public class BcBlockCipherMapper implements IMapper {
         if (str == null) {
             return Optional.empty();
         }
-        return map(str, detectionLocation);
+        Optional<? extends INode> node = map(str, detectionLocation);
+        if (node.isPresent()) {
+            return Optional.of(new Algorithm((IAlgorithm) node.get(), asKind));
+        }
+        return Optional.empty();
     }
 
     @Nonnull

@@ -42,6 +42,7 @@ public class CipherContext extends DetectionContext
         WRAP_RFC,
         BLOCK_CIPHER,
         BLOCK_CIPHER_ENGINE,
+        BLOCK_CIPHER_ENGINE_FOR_AEAD,
         STREAM_CIPHER_ENGINE,
         ASYMMETRIC_CIPHER_ENGINE,
         ASYMMETRIC_CIPHER_ENGINE_SIGNATURE,
