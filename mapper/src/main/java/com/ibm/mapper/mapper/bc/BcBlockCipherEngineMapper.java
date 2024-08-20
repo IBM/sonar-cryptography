@@ -57,11 +57,11 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class BcBlockCipherMapper implements IMapper {
+public class BcBlockCipherEngineMapper implements IMapper {
 
     private final Class<? extends IPrimitive> asKind;
 
-    public BcBlockCipherMapper(Class<? extends IPrimitive> asKind) {
+    public BcBlockCipherEngineMapper(Class<? extends IPrimitive> asKind) {
         this.asKind = asKind;
     }
 
@@ -81,8 +81,8 @@ public class BcBlockCipherMapper implements IMapper {
 
     @Nonnull
     private Optional<? extends INode> map(
-            @Nonnull String cipherAlgorithm, @Nonnull DetectionLocation detectionLocation) {
-        return switch (cipherAlgorithm) {
+            @Nonnull String blockCipherString, @Nonnull DetectionLocation detectionLocation) {
+        return switch (blockCipherString) {
             case "AESEngine" -> Optional.of(new AES(detectionLocation));
             case "AESFastEngine" -> Optional.of(new AES(detectionLocation));
             case "AESLightEngine" -> Optional.of(new AES(detectionLocation));
@@ -120,7 +120,7 @@ public class BcBlockCipherMapper implements IMapper {
 
             default -> {
                 final Algorithm algorithm =
-                        new Algorithm(cipherAlgorithm, Unknown.class, detectionLocation);
+                        new Algorithm(blockCipherString, Unknown.class, detectionLocation);
                 algorithm.put(new Unknown(detectionLocation));
                 yield Optional.of(algorithm);
             }

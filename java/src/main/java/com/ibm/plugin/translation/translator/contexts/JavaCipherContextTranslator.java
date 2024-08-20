@@ -30,7 +30,7 @@ import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.mapper.mapper.bc.BcAeadMapper;
 import com.ibm.mapper.mapper.bc.BcAeadParametersMapper;
-import com.ibm.mapper.mapper.bc.BcBlockCipherMapper;
+import com.ibm.mapper.mapper.bc.BcBlockCipherEngineMapper;
 import com.ibm.mapper.mapper.bc.BcOperationModeEncryptionMapper;
 import com.ibm.mapper.mapper.bc.BcOperationModeWrappingMapper;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
@@ -106,14 +106,14 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
             switch (kind) {
                 case BLOCK_CIPHER_ENGINE, /* AEAD_BLOCK_CIPHER_ENGINE, */ HASH:
                     /* TODO: better handle the HASH case (used in `BcOCBBlockCipher`): use asKind MessageDigest? */
-                    BcBlockCipherMapper bcBlockCipherMapper =
-                            new BcBlockCipherMapper(BlockCipher.class);
+                    BcBlockCipherEngineMapper bcBlockCipherMapper =
+                            new BcBlockCipherEngineMapper(BlockCipher.class);
                     return bcBlockCipherMapper
                             .parse(valueAction.asString(), detectionLocation)
                             .map(f -> f);
                 case BLOCK_CIPHER_ENGINE_FOR_AEAD:
-                    BcBlockCipherMapper bcBlockCipherForAeadMapper =
-                            new BcBlockCipherMapper(AuthenticatedEncryption.class);
+                    BcBlockCipherEngineMapper bcBlockCipherForAeadMapper =
+                            new BcBlockCipherEngineMapper(AuthenticatedEncryption.class);
                     return bcBlockCipherForAeadMapper
                             .parse(valueAction.asString(), detectionLocation)
                             .map(f -> f);

@@ -59,8 +59,8 @@ public class BcAeadMapper implements IMapper {
 
     @Nonnull
     private Optional<? extends INode> map(
-            @Nonnull String cipherAlgorithm, @Nonnull DetectionLocation detectionLocation) {
-        return switch (cipherAlgorithm) {
+            @Nonnull String aeadString, @Nonnull DetectionLocation detectionLocation) {
+        return switch (aeadString) {
             case "AsconEngine" -> Optional.of(new Ascon(detectionLocation));
             case "ElephantEngine" -> Optional.of(new Elephant(detectionLocation));
             case "Grain128AEADEngine" -> Optional.of(new Grain128AEAD(detectionLocation));
@@ -89,8 +89,7 @@ public class BcAeadMapper implements IMapper {
 
             default -> {
                 final Algorithm algorithm =
-                        new Algorithm(
-                                cipherAlgorithm, AuthenticatedEncryption.class, detectionLocation);
+                        new Algorithm(aeadString, AuthenticatedEncryption.class, detectionLocation);
                 algorithm.put(new Unknown(detectionLocation));
                 yield Optional.of(algorithm);
             }
