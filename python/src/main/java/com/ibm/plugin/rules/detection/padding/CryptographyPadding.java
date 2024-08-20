@@ -47,6 +47,12 @@ public final class CryptographyPadding {
 
     private static @NotNull List<IDetectionRule<Tree>> newPadding() {
         final LinkedList<IDetectionRule<Tree>> rules = new LinkedList<>();
+
+        /*
+         * TODO: Set the block size as child of the detected padding?
+         * Or remove the padding detection to include it in the context instead?
+         */
+
         // When the block size is specified using an integer
         for (String padding : paddings) {
             rules.add(
