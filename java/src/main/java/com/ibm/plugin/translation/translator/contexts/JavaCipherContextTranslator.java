@@ -102,8 +102,8 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
             // PasswordBasedEncryption pbe;
 
             switch (kind) {
-                case BLOCK_CIPHER_ENGINE:
-                    // TODO: note that this mapper should also be used with other contexts
+                case BLOCK_CIPHER_ENGINE, HASH:
+                    /* TODO: better handle the HASH case (used in `BcOCBBlockCipher`): use asKind MessageDigest? */
                     BcBlockCipherMapper bcBlockCipherMapper = new BcBlockCipherMapper();
                     return bcBlockCipherMapper
                             .parse(valueAction.asString(), detectionLocation)
@@ -127,11 +127,6 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                 case STREAM_CIPHER_ENGINE:
                     return Optional.of(
                             new StreamCipher(
-                                    new com.ibm.mapper.model.Algorithm(
-                                            valueAction.asString(), detectionLocation)));
-                case HASH:
-                    return Optional.of(
-                            new MessageDigest(
                                     new com.ibm.mapper.model.Algorithm(
                                             valueAction.asString(), detectionLocation)));
                 case BLOCK_CIPHER, BUFFERED_BLOCK_CIPHER:
