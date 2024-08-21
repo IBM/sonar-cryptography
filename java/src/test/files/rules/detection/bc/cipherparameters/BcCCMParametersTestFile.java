@@ -8,7 +8,7 @@ public class BcCCMParametersTestFile {
 
     public static void testCCMParameters() {
         // Create a block cipher engine
-        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AES}}
+        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
 
         // Generate a random key (for demonstration purposes)
         byte[] keyBytes = new byte[16];
