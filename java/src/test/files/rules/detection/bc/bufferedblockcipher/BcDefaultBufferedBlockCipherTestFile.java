@@ -9,7 +9,7 @@ public class BcDefaultBufferedBlockCipherTestFile {
 
     public static void test1() {
         // Create a block cipher (AES in this case)
-        BlockCipher cipher = AESEngine.newInstance(); // Noncompliant {{AES}}
+        BlockCipher cipher = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
 
         // Initialize the cipher with the key
         byte[] keyData = "0123456789abcdef".getBytes(StandardCharsets.UTF_8); // 128-bit key
@@ -20,7 +20,7 @@ public class BcDefaultBufferedBlockCipherTestFile {
         ParametersWithIV parametersWithIV = new ParametersWithIV(key, ivData);
 
         // Wrap the block cipher with DefaultBufferedBlockCipher
-        DefaultBufferedBlockCipher bufferedCipher = new DefaultBufferedBlockCipher(cipher); // Noncompliant {{DefaultBuffered}}
+        DefaultBufferedBlockCipher bufferedCipher = new DefaultBufferedBlockCipher(cipher); // Noncompliant {{DefaultBufferedBlockCipher}}
 
         // Initialize the DefaultBufferedBlockCipher with the parameters
         bufferedCipher.init(true, parametersWithIV); // true for encryption, false for decryption

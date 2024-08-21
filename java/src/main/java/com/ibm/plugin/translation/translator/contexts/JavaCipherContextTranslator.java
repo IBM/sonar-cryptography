@@ -35,6 +35,7 @@ import com.ibm.mapper.mapper.bc.BcAsymCipherEncodingMapper;
 import com.ibm.mapper.mapper.bc.BcAsymCipherEngineMapper;
 import com.ibm.mapper.mapper.bc.BcBlockCipherEngineMapper;
 import com.ibm.mapper.mapper.bc.BcBlockCipherModeMapper;
+import com.ibm.mapper.mapper.bc.BcBufferedBlockCipherMapper;
 import com.ibm.mapper.mapper.bc.BcOperationModeEncryptionMapper;
 import com.ibm.mapper.mapper.bc.BcOperationModeWrappingMapper;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
@@ -132,6 +133,12 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                     BcAsymCipherEngineMapper bcAsymCipherEngineMapper =
                             new BcAsymCipherEngineMapper(PublicKeyEncryption.class);
                     return bcAsymCipherEngineMapper
+                            .parse(valueAction.asString(), detectionLocation)
+                            .map(f -> f);
+                case BUFFERED_BLOCK_CIPHER:
+                    BcBufferedBlockCipherMapper bcBufferedBlockCipherMapper =
+                            new BcBufferedBlockCipherMapper();
+                    return bcBufferedBlockCipherMapper
                             .parse(valueAction.asString(), detectionLocation)
                             .map(f -> f);
 

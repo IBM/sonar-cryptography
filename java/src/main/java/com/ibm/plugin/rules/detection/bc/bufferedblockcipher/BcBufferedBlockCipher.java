@@ -57,14 +57,13 @@ public final class BcBufferedBlockCipher {
         List<IDetectionRule<Tree>> constructorsList = new LinkedList<>();
         for (Map.Entry<String, BouncyCastleInfoMap.Info> entry : infoMap.entrySet()) {
             String blockCipher = entry.getKey();
-            String blockCipherName = infoMap.getDisplayName(blockCipher, "BlockCipher");
             String type = entry.getValue().getType();
             constructorsList.add(
                     new DetectionRuleBuilder<Tree>()
                             .createDetectionRule()
                             .forObjectExactTypes(type + blockCipher)
                             .forConstructor()
-                            .shouldBeDetectedAs(new ValueActionFactory<>(blockCipherName))
+                            .shouldBeDetectedAs(new ValueActionFactory<>(blockCipher))
                             .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                             .addDependingDetectionRules(BcBlockCipher.all())
                             .buildForContext(
