@@ -13,7 +13,7 @@ public class BcAsymmetricBlockCipherTestFile {
     public byte[] encryptCEK(final RSAPublicKey pub, final SecretKey cek)
     throws RuntimeException {
         try {
-            AsymmetricBlockCipher cipher = new RSAEngine(); // Noncompliant {{RSA}}
+            AsymmetricBlockCipher cipher = new RSAEngine(); // Noncompliant {{RSAEngine}}
 
             BigInteger mod = pub.getModulus();
             BigInteger exp = pub.getPublicExponent();

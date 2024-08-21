@@ -12,9 +12,9 @@ public class BcPKCS1EncodingTestFile {
     public byte[] encryptCEK(final RSAPublicKey pub, final SecretKey cek)
     throws RuntimeException {
         try {
-            AsymmetricBlockCipher engine = new RSAEngine(); // Noncompliant {{RSA}}
+            AsymmetricBlockCipher engine = new RSAEngine(); // Noncompliant {{RSAEngine}}
 
-            PKCS1Encoding cipher = new PKCS1Encoding(engine); // Noncompliant {{PKCS1}}
+            PKCS1Encoding cipher = new PKCS1Encoding(engine); // Noncompliant {{PKCS1Encoding}}
 
             BigInteger mod = pub.getModulus();
             BigInteger exp = pub.getPublicExponent();

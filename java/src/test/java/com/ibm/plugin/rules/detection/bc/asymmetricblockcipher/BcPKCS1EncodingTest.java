@@ -26,9 +26,9 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.OperationMode;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.CipherContext;
-import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Padding;
+import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.functionality.Encrypt;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
@@ -74,7 +74,7 @@ class BcPKCS1EncodingTest extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("PKCS1");
+        assertThat(value0.asString()).isEqualTo("PKCS1Encoding");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
                 getStoreOfValueType(OperationMode.class, detectionStore.getChildren());
@@ -90,7 +90,7 @@ class BcPKCS1EncodingTest extends TestBase {
         assertThat(store_2.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0_2 = store_2.getDetectionValues().get(0);
         assertThat(value0_2).isInstanceOf(ValueAction.class);
-        assertThat(value0_2.asString()).isEqualTo("RSA");
+        assertThat(value0_2.asString()).isEqualTo("RSAEngine");
 
         /* TODO: optimally, this shouldn't be detected */
         /* DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_2_1 =
@@ -109,7 +109,7 @@ class BcPKCS1EncodingTest extends TestBase {
 
         // BlockCipher
         INode blockCipherNode = nodes.get(0);
-        assertThat(blockCipherNode.getKind()).isEqualTo(BlockCipher.class);
+        assertThat(blockCipherNode.getKind()).isEqualTo(PublicKeyEncryption.class);
         assertThat(blockCipherNode.getChildren()).hasSize(3);
         assertThat(blockCipherNode.asString()).isEqualTo("RSA");
 

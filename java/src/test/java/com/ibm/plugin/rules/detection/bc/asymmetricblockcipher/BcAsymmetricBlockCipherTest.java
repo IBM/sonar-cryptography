@@ -26,8 +26,8 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.OperationMode;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.CipherContext;
-import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.functionality.Encrypt;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
@@ -65,7 +65,7 @@ class BcAsymmetricBlockCipherTest extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("RSA");
+        assertThat(value0.asString()).isEqualTo("RSAEngine");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
                 getStoreOfValueType(OperationMode.class, detectionStore.getChildren());
@@ -83,7 +83,7 @@ class BcAsymmetricBlockCipherTest extends TestBase {
 
         // BlockCipher
         INode blockCipherNode = nodes.get(0);
-        assertThat(blockCipherNode.getKind()).isEqualTo(BlockCipher.class);
+        assertThat(blockCipherNode.getKind()).isEqualTo(PublicKeyEncryption.class);
         assertThat(blockCipherNode.getChildren()).hasSize(2);
         assertThat(blockCipherNode.asString()).isEqualTo("RSA");
 
