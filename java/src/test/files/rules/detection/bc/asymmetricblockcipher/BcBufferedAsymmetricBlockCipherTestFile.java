@@ -30,8 +30,8 @@ public class BcBufferedAsymmetricBlockCipherTestFile {
 
     public static void main(String[] args) {
         // Initialize your asymmetric block cipher, for example RSA
-        AsymmetricBlockCipher engine = new RSAEngine(); // Noncompliant {{RSA}}
-        OAEPEncoding cipher = new OAEPEncoding(engine, new SHA3Digest()); // Noncompliant {{OAEP}}
+        AsymmetricBlockCipher engine = new RSAEngine(); // Noncompliant {{RSAEngine}}
+        OAEPEncoding cipher = new OAEPEncoding(engine, new SHA3Digest()); // Noncompliant {{OAEPEncoding}}
 
         // Initialize a key for encryption/decryption
         AsymmetricKeyParameter key = null; // Initialize your asymmetric key (e.g., RSA key)

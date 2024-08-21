@@ -28,6 +28,7 @@ import com.ibm.engine.model.OperationMode;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.IDetectionContext;
+import com.ibm.mapper.ITranslator;
 import com.ibm.mapper.mapper.bc.BcAeadMapper;
 import com.ibm.mapper.mapper.bc.BcAeadParametersMapper;
 import com.ibm.mapper.mapper.bc.BcAsymCipherEncodingMapper;
@@ -245,14 +246,15 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                             break;
                     }
 
-                    return Optional.of(pke);
+                    return Optional.of(pke); */
                 case ASYMMETRIC_BUFFERED_BLOCK_CIPHER:
-                    blockCipher =
-                            new BlockCipher(
-                                    new com.ibm.mapper.model.Algorithm(
-                                            ITranslator.UNKNOWN, detectionLocation));
+                    com.ibm.mapper.model.Algorithm blockCipher =
+                            new com.ibm.mapper.model.Algorithm(
+                                    ITranslator.UNKNOWN,
+                                    PublicKeyEncryption.class,
+                                    detectionLocation);
                     return Optional.of(blockCipher);
-                case PADDING:
+                /* case PADDING:
                     padding = new Padding(valueAction.asString(), detectionLocation);
                     return Optional.of(padding);
                 case PBE:
