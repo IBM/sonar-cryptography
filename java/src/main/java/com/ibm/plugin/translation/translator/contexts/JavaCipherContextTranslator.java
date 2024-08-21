@@ -30,6 +30,7 @@ import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.mapper.mapper.bc.BcAeadMapper;
 import com.ibm.mapper.mapper.bc.BcAeadParametersMapper;
+import com.ibm.mapper.mapper.bc.BcAsymCipherEncodingMapper;
 import com.ibm.mapper.mapper.bc.BcAsymCipherEngineMapper;
 import com.ibm.mapper.mapper.bc.BcBlockCipherEngineMapper;
 import com.ibm.mapper.mapper.bc.BcBlockCipherModeMapper;
@@ -203,6 +204,14 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                     return bcAeadMapper
                             .parse(valueAction.asString(), detectionLocation)
                             .map(f -> f);
+                case ENCODING, ENCODING_SIGNATURE:
+                    /* TODO: the Signature distinction does not seem necessary */
+                    BcAsymCipherEncodingMapper bcAsymCipherEncodingMapper =
+                            new BcAsymCipherEncodingMapper();
+                    return bcAsymCipherEncodingMapper
+                            .parse(valueAction.asString(), detectionLocation)
+                            .map(f -> f);
+
                 /* case ENCODING:
                     blockCipher =
                             new BlockCipher(

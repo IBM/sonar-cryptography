@@ -24,6 +24,7 @@ import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.Mode;
+import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.collections.IAssetCollection;
 import java.util.Collection;
 import java.util.List;
@@ -106,5 +107,17 @@ public final class Utils {
             @Nonnull Mode mode, @Nonnull final Class<? extends IPrimitive> asKind) {
         Algorithm cipher = new Algorithm(ITranslator.UNKNOWN, asKind, mode.getDetectionContext());
         return cipherWithMode(cipher, mode);
+    }
+
+    public static INode cipherWithPadding(@Nonnull Algorithm cipher, @Nonnull Padding padding) {
+        cipher.put(padding);
+        return cipher;
+    }
+
+    public static INode unknownWithPadding(
+            @Nonnull Padding padding, @Nonnull final Class<? extends IPrimitive> asKind) {
+        Algorithm cipher =
+                new Algorithm(ITranslator.UNKNOWN, asKind, padding.getDetectionContext());
+        return cipherWithPadding(cipher, padding);
     }
 }

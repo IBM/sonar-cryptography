@@ -55,7 +55,7 @@ public final class BcOAEPEncoding {
                         .createDetectionRule()
                         .forObjectTypes("org.bouncycastle.crypto.encodings.OAEPEncoding")
                         .forConstructor()
-                        .shouldBeDetectedAs(new ValueActionFactory<>("OAEP"))
+                        .shouldBeDetectedAs(new ValueActionFactory<>("OAEPEncoding"))
                         .withMethodParameter("org.bouncycastle.crypto.AsymmetricBlockCipher")
                         .addDependingDetectionRules(
                                 BcAsymCipherEngine.rules(engineDetectionValueContext))
@@ -68,7 +68,7 @@ public final class BcOAEPEncoding {
                         .createDetectionRule()
                         .forObjectTypes("org.bouncycastle.crypto.encodings.OAEPEncoding")
                         .forConstructor()
-                        .shouldBeDetectedAs(new ValueActionFactory<>("OAEP"))
+                        .shouldBeDetectedAs(new ValueActionFactory<>("OAEPEncoding"))
                         .withMethodParameter("org.bouncycastle.crypto.AsymmetricBlockCipher")
                         .addDependingDetectionRules(
                                 BcAsymCipherEngine.rules(engineDetectionValueContext))
@@ -83,7 +83,7 @@ public final class BcOAEPEncoding {
                         .createDetectionRule()
                         .forObjectTypes("org.bouncycastle.crypto.encodings.OAEPEncoding")
                         .forConstructor()
-                        .shouldBeDetectedAs(new ValueActionFactory<>("OAEP"))
+                        .shouldBeDetectedAs(new ValueActionFactory<>("OAEPEncoding"))
                         .withMethodParameter("org.bouncycastle.crypto.AsymmetricBlockCipher")
                         .addDependingDetectionRules(
                                 BcAsymCipherEngine.rules(engineDetectionValueContext))
@@ -99,7 +99,7 @@ public final class BcOAEPEncoding {
                         .createDetectionRule()
                         .forObjectTypes("org.bouncycastle.crypto.encodings.OAEPEncoding")
                         .forConstructor()
-                        .shouldBeDetectedAs(new ValueActionFactory<>("OAEP"))
+                        .shouldBeDetectedAs(new ValueActionFactory<>("OAEPEncoding"))
                         .withMethodParameter("org.bouncycastle.crypto.AsymmetricBlockCipher")
                         .addDependingDetectionRules(
                                 BcAsymCipherEngine.rules(engineDetectionValueContext))
