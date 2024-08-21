@@ -28,7 +28,6 @@ import com.ibm.engine.model.OperationMode;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.IDetectionContext;
-import com.ibm.mapper.ITranslator;
 import com.ibm.mapper.mapper.bc.BcAeadMapper;
 import com.ibm.mapper.mapper.bc.BcAeadParametersMapper;
 import com.ibm.mapper.mapper.bc.BcAsymCipherEncodingMapper;
@@ -38,6 +37,7 @@ import com.ibm.mapper.mapper.bc.BcBlockCipherModeMapper;
 import com.ibm.mapper.mapper.bc.BcBufferedBlockCipherMapper;
 import com.ibm.mapper.mapper.bc.BcOperationModeEncryptionMapper;
 import com.ibm.mapper.mapper.bc.BcOperationModeWrappingMapper;
+import com.ibm.mapper.mapper.bc.BcPaddingMapper;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.mapper.jca.JcaCipherOperationModeMapper;
 import com.ibm.mapper.model.AuthenticatedEncryption;
@@ -46,6 +46,7 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.functionality.Encapsulate;
 import com.ibm.mapper.utils.DetectionLocation;
+import com.ibm.mapper.utils.Utils;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
@@ -255,12 +256,15 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
 
                     return Optional.of(pke); */
                 case ASYMMETRIC_BUFFERED_BLOCK_CIPHER:
+                    /* TODO: this case seems useless */
                     com.ibm.mapper.model.Algorithm blockCipher =
-                            new com.ibm.mapper.model.Algorithm(
-                                    ITranslator.UNKNOWN,
-                                    PublicKeyEncryption.class,
-                                    detectionLocation);
+                            Utils.unknown(PublicKeyEncryption.class, detectionLocation);
                     return Optional.of(blockCipher);
+                case PADDING:
+                    BcPaddingMapper bcPaddingMapper = new BcPaddingMapper();
+                    return bcPaddingMapper
+                            .parse(valueAction.asString(), detectionLocation)
+                            .map(f -> f);
                 /* case PADDING:
                     padding = new Padding(valueAction.asString(), detectionLocation);
                     return Optional.of(padding);

@@ -24,7 +24,10 @@ import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
 public final class ANSIX923 extends Padding {
+
+    private static final String NAME = "ANSI X9.23"; // ANSIX923, X9.23
+
     public ANSIX923(@NotNull DetectionLocation detectionLocation) {
-        super("ANSIX923", detectionLocation);
+        super(NAME, detectionLocation);
     }
 }

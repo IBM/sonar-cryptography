@@ -23,9 +23,11 @@ import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
-public final class ISO9796d1 extends Padding {
+public final class TBC extends Padding {
 
-    public ISO9796d1(@NotNull DetectionLocation detectionLocation) {
-        super("ISO 9796-1", detectionLocation);
+    private static final String NAME = "TBC"; // Trailing Bit Complement
+
+    public TBC(@NotNull DetectionLocation detectionLocation) {
+        super(NAME, detectionLocation);
     }
 }

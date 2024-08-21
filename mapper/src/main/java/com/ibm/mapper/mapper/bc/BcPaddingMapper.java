@@ -22,18 +22,19 @@ package com.ibm.mapper.mapper.bc;
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Padding;
-import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.Unknown;
-import com.ibm.mapper.model.padding.ISO9796;
-import com.ibm.mapper.model.padding.OAEP;
-import com.ibm.mapper.model.padding.PKCS1;
+import com.ibm.mapper.model.padding.ANSIX923;
+import com.ibm.mapper.model.padding.ISO10126;
+import com.ibm.mapper.model.padding.ISO7816;
+import com.ibm.mapper.model.padding.PKCS7;
+import com.ibm.mapper.model.padding.TBC;
+import com.ibm.mapper.model.padding.Zero;
 import com.ibm.mapper.utils.DetectionLocation;
-import com.ibm.mapper.utils.Utils;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class BcAsymCipherEncodingMapper implements IMapper {
+public class BcPaddingMapper implements IMapper {
 
     @Override
     @Nonnull
@@ -49,22 +50,16 @@ public class BcAsymCipherEncodingMapper implements IMapper {
     private Optional<? extends INode> map(
             @Nonnull String blockCipherString, @Nonnull DetectionLocation detectionLocation) {
         return switch (blockCipherString) {
-            case "ISO9796d1Encoding" ->
-                    Optional.of(
-                            Utils.unknownWithPadding(
-                                    new ISO9796(detectionLocation), PublicKeyEncryption.class));
-            case "OAEPEncoding" ->
-                    Optional.of(
-                            Utils.unknownWithPadding(
-                                    new OAEP(detectionLocation), PublicKeyEncryption.class));
-            case "PKCS1Encoding" ->
-                    Optional.of(
-                            Utils.unknownWithPadding(
-                                    new PKCS1(detectionLocation), PublicKeyEncryption.class));
+            case "ISO10126d2Padding" -> Optional.of(new ISO10126(detectionLocation));
+            case "ISO7816d4Padding" -> Optional.of(new ISO7816(detectionLocation));
+            case "PKCS7Padding" -> Optional.of(new PKCS7(detectionLocation));
+            case "TBCPadding" -> Optional.of(new TBC(detectionLocation));
+            case "X923Padding" -> Optional.of(new ANSIX923(detectionLocation));
+            case "ZeroBytePadding" -> Optional.of(new Zero(detectionLocation));
             default -> {
                 Padding padding = new Padding(blockCipherString, detectionLocation);
                 padding.put(new Unknown(detectionLocation));
-                yield Optional.of(Utils.unknownWithPadding(padding, PublicKeyEncryption.class));
+                yield Optional.of(padding);
             }
         };
     }
