@@ -20,9 +20,9 @@
 package com.ibm.mapper.mapper.bc;
 
 import com.ibm.mapper.mapper.IMapper;
-import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.algorithms.Kalyna;
 import com.ibm.mapper.model.algorithms.gost.GOST28147;
@@ -95,10 +95,9 @@ public class BcBlockCipherModeMapper implements IMapper {
                     Optional.of(
                             Utils.unknownWithMode(new CTR(detectionLocation), BlockCipher.class));
             default -> {
-                final Algorithm algorithm =
-                        new Algorithm(blockCipherString, BlockCipher.class, detectionLocation);
-                algorithm.put(new Unknown(detectionLocation));
-                yield Optional.of(algorithm);
+                Mode mode = new Mode(blockCipherString, detectionLocation);
+                mode.put(new Unknown(detectionLocation));
+                yield Optional.of(Utils.unknownWithMode(mode, BlockCipher.class));
             }
         };
     }

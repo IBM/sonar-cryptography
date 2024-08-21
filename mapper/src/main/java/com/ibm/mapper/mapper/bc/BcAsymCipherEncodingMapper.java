@@ -20,8 +20,8 @@
 package com.ibm.mapper.mapper.bc;
 
 import com.ibm.mapper.mapper.IMapper;
-import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.padding.ISO9796d1;
@@ -62,11 +62,9 @@ public class BcAsymCipherEncodingMapper implements IMapper {
                             Utils.unknownWithPadding(
                                     new PKCS1(detectionLocation), PublicKeyEncryption.class));
             default -> {
-                final Algorithm algorithm =
-                        new Algorithm(
-                                blockCipherString, PublicKeyEncryption.class, detectionLocation);
-                algorithm.put(new Unknown(detectionLocation));
-                yield Optional.of(algorithm);
+                Padding padding = new Padding(blockCipherString, detectionLocation);
+                padding.put(new Unknown(detectionLocation));
+                yield Optional.of(Utils.unknownWithPadding(padding, PublicKeyEncryption.class));
             }
         };
     }
