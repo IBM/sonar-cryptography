@@ -29,6 +29,7 @@ import com.ibm.engine.model.context.KeyContext;
 import com.ibm.engine.model.context.PrivateKeyContext;
 import com.ibm.engine.model.context.PublicKeyContext;
 import com.ibm.engine.model.context.SecretKeyContext;
+import com.ibm.mapper.mapper.bc.BcAgreementMapper;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.mapper.jca.JcaCurveMapper;
 import com.ibm.mapper.model.IAlgorithm;
@@ -93,9 +94,14 @@ public final class JavaKeyContextTranslator extends JavaAbstractLibraryTranslato
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
         if (value instanceof ValueAction<Tree> valueAction) {
-            final KeyContext.Kind kind = ((SecretKeyContext) detectionContext).kind();
+            final KeyContext.Kind kind = ((KeyContext) detectionContext).kind();
             com.ibm.mapper.model.Algorithm algorithm;
             switch (kind) {
+                case DH:
+                    BcAgreementMapper bcAgreementMapper = new BcAgreementMapper();
+                    return bcAgreementMapper
+                            .parse(valueAction.asString(), detectionLocation)
+                            .map(f -> f);
                 /*case KDF:
                     algorithm =
                             new com.ibm.mapper.model.Algorithm(

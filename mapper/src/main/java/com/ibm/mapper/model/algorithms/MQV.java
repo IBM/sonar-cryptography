@@ -24,10 +24,12 @@ import com.ibm.mapper.model.KeyAgreement;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public final class XDH extends Algorithm implements KeyAgreement {
-    private static final String NAME = "XDH";
+public final class MQV extends Algorithm implements KeyAgreement {
+    // https://en.wikipedia.org/wiki/MQV
 
-    public XDH(@Nonnull DetectionLocation detectionLocation) {
+    private static final String NAME = "MQV"; // Menezes-Qu-Vanstone
+
+    public MQV(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, KeyAgreement.class, detectionLocation);
     }
 }

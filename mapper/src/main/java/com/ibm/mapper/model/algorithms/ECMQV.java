@@ -20,14 +20,23 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.EllipticCurve;
 import com.ibm.mapper.model.KeyAgreement;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public final class XDH extends Algorithm implements KeyAgreement {
-    private static final String NAME = "XDH";
+public final class ECMQV extends Algorithm implements KeyAgreement {
+    // https://en.wikipedia.org/wiki/MQV
 
-    public XDH(@Nonnull DetectionLocation detectionLocation) {
+    private static final String NAME = "ECMQV"; // elliptic curve MQV
+
+    public ECMQV(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, KeyAgreement.class, detectionLocation);
+    }
+
+    public ECMQV(
+            @Nonnull EllipticCurve ellipticCurve, @Nonnull DetectionLocation detectionLocation) {
+        this(detectionLocation);
+        this.put(ellipticCurve);
     }
 }
