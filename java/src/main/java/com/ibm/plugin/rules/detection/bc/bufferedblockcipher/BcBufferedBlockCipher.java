@@ -48,14 +48,9 @@ public final class BcBufferedBlockCipher {
         infoMap.putKey("BufferedBlockCipher").putType(typePrefix); // <–– parent class
         infoMap.putKey("DefaultBufferedBlockCipher").putType(typePrefix); // <–– parent class
         infoMap.putKey("CTSBlockCipher").putType(typePrefix + "modes.");
-        infoMap.putKey("KXTSBlockCipher")
-                .putName("DSTU 7624:2014|XTS")
-                .putType(typePrefix + "modes.");
+        infoMap.putKey("KXTSBlockCipher").putType(typePrefix + "modes.");
         infoMap.putKey("OldCTSBlockCipher").putName("CTS").putType(typePrefix + "modes.");
         infoMap.putKey("PaddedBlockCipher").putType(typePrefix + "modes.");
-        infoMap.putKey("PaddedBufferedBlockCipher")
-                .putName("PaddedBuffered(PKCS7)") /* the simple constructor uses PKCS7 padding */
-                .putType(typePrefix + "paddings.");
     }
 
     private static @NotNull List<IDetectionRule<Tree>> simpleConstructors() {
@@ -88,9 +83,25 @@ public final class BcBufferedBlockCipher {
                         .createDetectionRule()
                         .forObjectExactTypes("org.bouncycastle.crypto.modes.NISTCTSBlockCipher")
                         .forConstructor()
-                        .shouldBeDetectedAs(new ValueActionFactory<>("CTS"))
+                        .shouldBeDetectedAs(new ValueActionFactory<>("NISTCTSBlockCipher"))
                         .withMethodParameter("int")
                         // TODO: "Type": should it be detected?
+                        .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
+                        .addDependingDetectionRules(BcBlockCipher.all())
+                        .buildForContext(
+                                new CipherContext(CipherContext.Kind.BUFFERED_BLOCK_CIPHER))
+                        .inBundle(() -> "Bc")
+                        .withDependingDetectionRules(BcBufferedBlockCipherInit.rules()));
+
+        // This PaddedBufferedBlockCipher constructor has a PKCS7 default padding
+        constructorsList.add(
+                new DetectionRuleBuilder<Tree>()
+                        .createDetectionRule()
+                        .forObjectExactTypes(
+                                "org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher")
+                        .forConstructor()
+                        .shouldBeDetectedAs(
+                                new ValueActionFactory<>("PaddedBufferedBlockCipher[PKCS7]"))
                         .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                         .addDependingDetectionRules(BcBlockCipher.all())
                         .buildForContext(
@@ -101,10 +112,10 @@ public final class BcBufferedBlockCipher {
         constructorsList.add(
                 new DetectionRuleBuilder<Tree>()
                         .createDetectionRule()
-                        .forObjectTypes( // TODO: change for forObjectExactTypes
+                        .forObjectExactTypes(
                                 "org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher")
                         .forConstructor()
-                        .shouldBeDetectedAs(new ValueActionFactory<>("PaddedBuffered"))
+                        .shouldBeDetectedAs(new ValueActionFactory<>("PaddedBufferedBlockCipher"))
                         .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                         .addDependingDetectionRules(BcBlockCipher.all())
                         .withMethodParameter("org.bouncycastle.crypto.paddings.BlockCipherPadding")

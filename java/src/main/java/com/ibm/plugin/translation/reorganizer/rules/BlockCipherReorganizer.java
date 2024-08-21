@@ -24,7 +24,6 @@ import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.mapper.reorganizer.builder.ReorganizerRuleBuilder;
-import com.ibm.plugin.translation.translator.JavaTranslator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,11 +36,10 @@ public final class BlockCipherReorganizer {
         // private
     }
 
-    private static final IReorganizerRule MERGE_BLOCK_CIPHER =
+    private static final IReorganizerRule MERGE_BLOCK_CIPHER_PARENT_AND_CHILD =
             new ReorganizerRuleBuilder()
                     .createReorganizerRule()
                     .forNodeKind(BlockCipher.class)
-                    .forNodeValue(JavaTranslator.UNKNOWN)
                     .includingChildren(
                             List.of(
                                     new ReorganizerRuleBuilder()
@@ -84,6 +82,6 @@ public final class BlockCipherReorganizer {
     @Unmodifiable
     @Nonnull
     public static List<IReorganizerRule> rules() {
-        return List.of(MERGE_BLOCK_CIPHER);
+        return List.of(MERGE_BLOCK_CIPHER_PARENT_AND_CHILD);
     }
 }

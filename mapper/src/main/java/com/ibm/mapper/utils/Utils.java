@@ -98,26 +98,31 @@ public final class Utils {
         return Optional.empty();
     }
 
-    public static INode cipherWithMode(@Nonnull Algorithm cipher, @Nonnull Mode mode) {
+    public static Algorithm unknown(
+            @Nonnull final Class<? extends IPrimitive> asKind,
+            DetectionLocation detectionLocation) {
+        return new Algorithm(ITranslator.UNKNOWN, asKind, detectionLocation);
+    }
+
+    public static Algorithm cipherWithMode(@Nonnull Algorithm cipher, @Nonnull Mode mode) {
         cipher.put(mode);
         return cipher;
     }
 
-    public static INode unknownWithMode(
+    public static Algorithm unknownWithMode(
             @Nonnull Mode mode, @Nonnull final Class<? extends IPrimitive> asKind) {
-        Algorithm cipher = new Algorithm(ITranslator.UNKNOWN, asKind, mode.getDetectionContext());
+        Algorithm cipher = unknown(asKind, mode.getDetectionContext());
         return cipherWithMode(cipher, mode);
     }
 
-    public static INode cipherWithPadding(@Nonnull Algorithm cipher, @Nonnull Padding padding) {
+    public static Algorithm cipherWithPadding(@Nonnull Algorithm cipher, @Nonnull Padding padding) {
         cipher.put(padding);
         return cipher;
     }
 
-    public static INode unknownWithPadding(
+    public static Algorithm unknownWithPadding(
             @Nonnull Padding padding, @Nonnull final Class<? extends IPrimitive> asKind) {
-        Algorithm cipher =
-                new Algorithm(ITranslator.UNKNOWN, asKind, padding.getDetectionContext());
+        Algorithm cipher = unknown(asKind, padding.getDetectionContext());
         return cipherWithPadding(cipher, padding);
     }
 }
