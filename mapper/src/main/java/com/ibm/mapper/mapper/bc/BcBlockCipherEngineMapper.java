@@ -100,8 +100,8 @@ public class BcBlockCipherEngineMapper implements IMapper {
             case "IDEAEngine" -> Optional.of(new IDEA(detectionLocation));
             case "LEAEngine" -> Optional.of(new LEA(detectionLocation));
             case "NoekeonEngine" -> Optional.of(new NOEKEON(detectionLocation));
-            case "NullEngine" ->
-                    Optional.of(new Algorithm("Null", BlockCipher.class, detectionLocation));
+            case "NullEngine" -> /* this block cipher is simply defined by output = input (identity function) */
+                    Optional.of(new Algorithm("Identity", BlockCipher.class, detectionLocation));
             case "RC2Engine" -> Optional.of(new RC2(detectionLocation));
             case "RC532Engine" -> Optional.of(new RC5(64, detectionLocation));
             case "RC564Engine" -> Optional.of(new RC5(128, detectionLocation));
