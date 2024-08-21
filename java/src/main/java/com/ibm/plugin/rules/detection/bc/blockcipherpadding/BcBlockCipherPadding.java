@@ -23,10 +23,8 @@ import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
-import com.ibm.plugin.rules.detection.bc.BouncyCastleInfoMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -37,29 +35,25 @@ public final class BcBlockCipherPadding {
         // nothing
     }
 
-    private static BouncyCastleInfoMap infoMap = new BouncyCastleInfoMap();
-
-    static {
-        infoMap.putKey("ISO10126d2Padding").putName("ISO 10126-2:1991");
-        infoMap.putKey("ISO7816d4Padding").putName("ISO 7816-4:2020");
-        infoMap.putKey("PKCS7Padding");
-        infoMap.putKey("TBCPadding");
-        infoMap.putKey("X923Padding").putName("X.923");
-        infoMap.putKey("ZeroBytePadding").putName("Zero byte");
-    }
+    public static final List<String> paddings =
+            List.of(
+                    "ISO10126d2Padding",
+                    "ISO7816d4Padding",
+                    "PKCS7Padding",
+                    "TBCPadding",
+                    "X923Padding",
+                    "ZeroBytePadding");
 
     private static @NotNull List<IDetectionRule<Tree>> simpleConstructors() {
         List<IDetectionRule<Tree>> constructorsList = new LinkedList<>();
 
-        for (Map.Entry<String, BouncyCastleInfoMap.Info> entry : infoMap.entrySet()) {
-            String padding = entry.getKey();
-            String paddingName = infoMap.getDisplayName(padding, "Padding");
+        for (String padding : paddings) {
             constructorsList.add(
                     new DetectionRuleBuilder<Tree>()
                             .createDetectionRule()
                             .forObjectTypes("org.bouncycastle.crypto.paddings." + padding)
                             .forConstructor()
-                            .shouldBeDetectedAs(new ValueActionFactory<>(paddingName))
+                            .shouldBeDetectedAs(new ValueActionFactory<>(padding))
                             .withoutParameters()
                             .buildForContext(new CipherContext(CipherContext.Kind.PADDING))
                             .inBundle(() -> "Bc")
