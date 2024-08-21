@@ -24,10 +24,8 @@ import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
-import com.ibm.plugin.rules.detection.bc.BouncyCastleInfoMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
@@ -40,16 +38,14 @@ public final class BcAsymCipherEngine {
         // nothing
     }
 
-    private static BouncyCastleInfoMap infoMap = new BouncyCastleInfoMap();
-
-    static {
-        infoMap.putKey("ElGamalEngine");
-        infoMap.putKey("NaccacheSternEngine").putName("Naccache-Stern");
-        infoMap.putKey("NTRUEngine");
-        infoMap.putKey("RSABlindedEngine").putName("RSA");
-        infoMap.putKey("RSABlindingEngine").putName("RSA");
-        infoMap.putKey("RSAEngine").putName("RSA");
-    }
+    public static final List<String> blockCiphers =
+            List.of(
+                    "ElGamalEngine",
+                    "NaccacheSternEngine",
+                    "NTRUEngine",
+                    "RSABlindedEngine",
+                    "RSABlindingEngine",
+                    "RSAEngine");
 
     private static @NotNull List<IDetectionRule<Tree>> constructors(
             @Nullable IDetectionContext detectionValueContext) {
@@ -59,15 +55,13 @@ public final class BcAsymCipherEngine {
                         ? detectionValueContext
                         : new CipherContext(CipherContext.Kind.ASYMMETRIC_CIPHER_ENGINE);
 
-        for (Map.Entry<String, BouncyCastleInfoMap.Info> entry : infoMap.entrySet()) {
-            String engine = entry.getKey();
-            String engineName = infoMap.getDisplayName(engine, "Engine");
+        for (String engine : blockCiphers) {
             constructorsList.add(
                     new DetectionRuleBuilder<Tree>()
                             .createDetectionRule()
                             .forObjectTypes("org.bouncycastle.crypto.engines." + engine)
                             .forConstructor()
-                            .shouldBeDetectedAs(new ValueActionFactory<>(engineName))
+                            .shouldBeDetectedAs(new ValueActionFactory<>(engine))
                             .withoutParameters()
                             .buildForContext(context)
                             .inBundle(() -> "Bc")

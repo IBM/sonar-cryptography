@@ -30,6 +30,7 @@ import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.mapper.mapper.bc.BcAeadMapper;
 import com.ibm.mapper.mapper.bc.BcAeadParametersMapper;
+import com.ibm.mapper.mapper.bc.BcAsymCipherEngineMapper;
 import com.ibm.mapper.mapper.bc.BcBlockCipherEngineMapper;
 import com.ibm.mapper.mapper.bc.BcBlockCipherModeMapper;
 import com.ibm.mapper.mapper.bc.BcOperationModeEncryptionMapper;
@@ -39,6 +40,7 @@ import com.ibm.mapper.mapper.jca.JcaCipherOperationModeMapper;
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.functionality.Encapsulate;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
@@ -123,6 +125,14 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                     return bcBlockCipherModeMapper
                             .parse(valueAction.asString(), detectionLocation)
                             .map(f -> f);
+                case ASYMMETRIC_CIPHER_ENGINE, ASYMMETRIC_CIPHER_ENGINE_SIGNATURE:
+                    /* TODO: the Signature distinction (and therefore the asKind parameter of the mapper) does not seem necessary */
+                    BcAsymCipherEngineMapper bcAsymCipherEngineMapper =
+                            new BcAsymCipherEngineMapper(PublicKeyEncryption.class);
+                    return bcAsymCipherEngineMapper
+                            .parse(valueAction.asString(), detectionLocation)
+                            .map(f -> f);
+
                 /*case ASYMMETRIC_CIPHER_ENGINE, BLOCK_CIPHER_ENGINE, WRAP_ENGINE:
                     return Optional.of(
                             new BlockCipher(
