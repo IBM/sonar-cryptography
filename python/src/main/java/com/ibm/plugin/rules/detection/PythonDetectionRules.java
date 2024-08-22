@@ -20,19 +20,19 @@
 package com.ibm.plugin.rules.detection;
 
 import com.ibm.engine.rule.IDetectionRule;
-import com.ibm.plugin.rules.detection.aead.CryptographyAEAD;
-import com.ibm.plugin.rules.detection.aead.CryptographyAES;
-import com.ibm.plugin.rules.detection.asymmetric.CryptographyDSA;
-import com.ibm.plugin.rules.detection.asymmetric.CryptographyDiffieHellman;
-import com.ibm.plugin.rules.detection.asymmetric.CryptographyEllipticCurve;
-import com.ibm.plugin.rules.detection.asymmetric.CryptographyGenerate;
-import com.ibm.plugin.rules.detection.asymmetric.CryptographyRSA;
-import com.ibm.plugin.rules.detection.asymmetric.CryptographySign;
-import com.ibm.plugin.rules.detection.fernet.CryptographyFernet;
-import com.ibm.plugin.rules.detection.kdf.CryptographyKDF;
-import com.ibm.plugin.rules.detection.mac.CryptographyMAC;
-import com.ibm.plugin.rules.detection.symmetric.CryptographyCipher;
-import com.ibm.plugin.rules.detection.wrapping.CryptographyWrapping;
+import com.ibm.plugin.rules.detection.aead.PycaAEAD;
+import com.ibm.plugin.rules.detection.aead.PycaAES;
+import com.ibm.plugin.rules.detection.asymmetric.PycaDSA;
+import com.ibm.plugin.rules.detection.asymmetric.PycaDiffieHellman;
+import com.ibm.plugin.rules.detection.asymmetric.PycaEllipticCurve;
+import com.ibm.plugin.rules.detection.asymmetric.PycaGenerate;
+import com.ibm.plugin.rules.detection.asymmetric.PycaRSA;
+import com.ibm.plugin.rules.detection.asymmetric.PycaSign;
+import com.ibm.plugin.rules.detection.fernet.PycaFernet;
+import com.ibm.plugin.rules.detection.kdf.PycaKDF;
+import com.ibm.plugin.rules.detection.mac.PycaMAC;
+import com.ibm.plugin.rules.detection.symmetric.PycaCipher;
+import com.ibm.plugin.rules.detection.wrapping.PycaWrapping;
 import java.util.List;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
@@ -47,19 +47,19 @@ public final class PythonDetectionRules {
     public static List<IDetectionRule<Tree>> rules() {
         return Stream.of(
                         // rules
-                        CryptographyGenerate.rules().stream(),
-                        CryptographySign.rules().stream(),
-                        CryptographyEllipticCurve.rules().stream(),
-                        CryptographyRSA.rules().stream(),
-                        CryptographyDiffieHellman.rules().stream(),
-                        CryptographyDSA.rules().stream(),
-                        CryptographyAEAD.rules().stream(),
-                        CryptographyAES.rules().stream(),
-                        CryptographyCipher.rules().stream(),
-                        CryptographyMAC.rules().stream(),
-                        CryptographyWrapping.rules().stream(),
-                        CryptographyKDF.rules().stream(),
-                        CryptographyFernet.rules().stream())
+                        PycaGenerate.rules().stream(),
+                        PycaSign.rules().stream(),
+                        PycaEllipticCurve.rules().stream(),
+                        PycaRSA.rules().stream(),
+                        PycaDiffieHellman.rules().stream(),
+                        PycaDSA.rules().stream(),
+                        PycaAEAD.rules().stream(),
+                        PycaAES.rules().stream(),
+                        PycaCipher.rules().stream(),
+                        PycaMAC.rules().stream(),
+                        PycaWrapping.rules().stream(),
+                        PycaKDF.rules().stream(),
+                        PycaFernet.rules().stream())
                 .flatMap(i -> i)
                 .toList();
     }

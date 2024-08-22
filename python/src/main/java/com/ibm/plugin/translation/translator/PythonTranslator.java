@@ -24,7 +24,6 @@ import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.DigestContext;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.model.context.KeyAgreementContext;
-import com.ibm.engine.model.context.KeyContext;
 import com.ibm.engine.model.context.KeyDerivationFunctionContext;
 import com.ibm.engine.model.context.MacContext;
 import com.ibm.engine.model.context.PrivateKeyContext;
@@ -38,13 +37,16 @@ import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.plugin.translation.translator.contexts.PycaCipherContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.PycaDigestContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.PycaKeyAgreementContextTranslator;
-import com.ibm.plugin.translation.translator.contexts.PycaKeyContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.PycaKeyDerivationContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.PycaMacContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.PycaPrivateKeyContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.PycaPublicKeyContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.PycaSecretKeyContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.PycaSignatureContextTranslator;
+import java.util.List;
+import java.util.Optional;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
@@ -53,11 +55,6 @@ import org.sonar.plugins.python.api.tree.CallExpression;
 import org.sonar.plugins.python.api.tree.Name;
 import org.sonar.plugins.python.api.tree.Token;
 import org.sonar.plugins.python.api.tree.Tree;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Optional;
 
 public class PythonTranslator extends ITranslator<PythonCheck, Tree, Symbol, PythonVisitorContext> {
 
@@ -78,12 +75,7 @@ public class PythonTranslator extends ITranslator<PythonCheck, Tree, Symbol, Pyt
             return Optional.empty();
         }
 
-        if (detectionValueContext.is(KeyContext.class)) {
-            final PycaKeyContextTranslator pycaKeyContextTranslator =
-                    new PycaKeyContextTranslator();
-            return pycaKeyContextTranslator.translate(
-                    bundleIdentifier, value, detectionValueContext, detectionLocation);
-        } else if (detectionValueContext.is(KeyAgreementContext.class)) {
+        if (detectionValueContext.is(KeyAgreementContext.class)) {
             final PycaKeyAgreementContextTranslator pycaKeyAgreementContextTranslator =
                     new PycaKeyAgreementContextTranslator();
             return pycaKeyAgreementContextTranslator.translate(

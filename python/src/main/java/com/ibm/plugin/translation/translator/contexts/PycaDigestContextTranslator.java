@@ -27,10 +27,9 @@ import com.ibm.mapper.IContextTranslation;
 import com.ibm.mapper.mapper.pyca.PycaDigestMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.python.api.tree.Tree;
-
-import java.util.Optional;
 
 @SuppressWarnings("java:S1301")
 public final class PycaDigestContextTranslator implements IContextTranslation<Tree> {

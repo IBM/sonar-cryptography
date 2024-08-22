@@ -86,25 +86,13 @@ public final class PycaCipherContextTranslator implements IContextTranslation<Tr
                 case "OAEP" -> Optional.of(new OAEP(detectionLocation));
                 default -> Optional.empty();
             };
-        } else if (value instanceof CipherAction<Tree> cipherAction
-                && detectionContext instanceof DetectionContext context) {
-            final Optional<String> algorithmStr = context.get("algorithm");
-            if (algorithmStr.isPresent()) {
-                return pycaCipherMapper
-                        .parse(algorithmStr.get(), detectionLocation)
-                        .map(
-                                algo -> {
-                                    switch (cipherAction.getAction()) {
-                                        case DECRYPT -> algo.put(new Decrypt(detectionLocation));
-                                        case ENCRYPT -> algo.put(new Encrypt(detectionLocation));
-                                        case WRAP -> algo.put(new Encapsulate(detectionLocation));
-                                        default -> {
-                                            // nothing
-                                        }
-                                    }
-                                    return algo;
-                                });
-            }
+        } else if (value instanceof CipherAction<Tree> cipherAction) {
+            return switch (cipherAction.getAction()) {
+                case DECRYPT -> Optional.of(new Decrypt(detectionLocation));
+                case ENCRYPT -> Optional.of(new Encrypt(detectionLocation));
+                case WRAP -> Optional.of(new Encapsulate(detectionLocation));
+                default -> Optional.empty();
+            };
         } else if (value instanceof com.ibm.engine.model.BlockSize<Tree> blockSize) {
             return Optional.of(new BlockSize(blockSize.getValue(), detectionLocation));
         } else if (value instanceof KeySize<Tree> keySize) {
