@@ -41,6 +41,7 @@ Make sure to use the right version of the Docker image (we advise using `sonarqu
 
 > [!IMPORTANT]
 > At this point, with any kind of installation, if SonarQube has correctly started with our Cryptography Plugin, you should see this confirmation of the plugin installation after logging in the SonarQube UI:
+> 
 > <img src="images/plugin-confirmation.png" width="500"/>
 
 ## Configurating a Quality Profile
