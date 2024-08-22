@@ -56,6 +56,9 @@ public class BcBlockCipherModeMapper implements IMapper {
             case "CBCBlockCipher" ->
                     Optional.of(
                             Utils.unknownWithMode(new CBC(detectionLocation), BlockCipher.class));
+            case "CFBBlockCipher" ->
+                    Optional.of(
+                            Utils.unknownWithMode(new CFB(detectionLocation), BlockCipher.class));
             case "G3413CBCBlockCipher" ->
                     Optional.of(
                             Utils.cipherWithMode(
@@ -84,11 +87,14 @@ public class BcBlockCipherModeMapper implements IMapper {
                     Optional.of(
                             Utils.cipherWithMode(
                                     new GOST28147(detectionLocation), new OFB(detectionLocation)));
+            case "OFBBlockCipher" ->
+                    Optional.of(
+                            Utils.unknownWithMode(new OFB(detectionLocation), BlockCipher.class));
             case "KCTRBlockCipher" ->
                     Optional.of(
                             Utils.cipherWithMode(
                                     new Kalyna(detectionLocation), new CTR(detectionLocation)));
-            case "OpenPGPCFBBlockCipher" ->
+            case "OpenPGPCFBBlockCipher", "PGPCFBBlockCipher" ->
                     Optional.of(
                             Utils.unknownWithMode(new CFB(detectionLocation), BlockCipher.class));
             case "SICBlockCipher" ->

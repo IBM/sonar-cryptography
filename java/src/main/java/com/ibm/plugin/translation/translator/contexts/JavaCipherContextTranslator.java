@@ -256,7 +256,6 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
 
                     return Optional.of(pke); */
                 case ASYMMETRIC_BUFFERED_BLOCK_CIPHER:
-                    /* TODO: this case seems useless */
                     com.ibm.mapper.model.Algorithm blockCipher =
                             Utils.unknown(PublicKeyEncryption.class, detectionLocation);
                     return Optional.of(blockCipher);
