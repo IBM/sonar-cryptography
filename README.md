@@ -75,6 +75,10 @@ Once you have scanned your source code with the plugin, and obtained a `cbom.jso
 It provides you with general insights about the cryptography used in your source code and its compliance with post-quantum safety.
 It also allows you to explore precisely each cryptography asset and its detailed specification, and displays where it appears in your code.
 
+## Help and troubleshooting
+
+If you encounter difficulties or unexpected results while installing the plugin with SonarQube, or when trying to scan a repository, please check out our guide [*Testing your configuration and troubleshooting*](docs/TROUBLESHOOTING.md) to run our plugin with step-by-step instructions.
+
 ## Contribution Guidelines
 
 If you'd like to contribute to Sonar Cryptography Plugin, please take a look at our
