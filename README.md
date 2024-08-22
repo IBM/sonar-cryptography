@@ -14,7 +14,7 @@ in source code and generates [CBOM](https://cyclonedx.org/capabilities/cbom/).
 | 1.2.0 and up   | SonarQube 9.8 and up              |      
 
 > [!WARNING]
-> There is an issue with SonarQube versions `10.5.0` and above that affects the functionality of our plugin. Specifically, our custom rules are not being executed correctly, resulting in no detections. This problem is due to an issue on the SonarQube side and is being tracked on [this discussion](https://community.sonarsource.com/t/custom-java-rules-are-not-executed-after-sonar-api-upgrade-from-9-x-to-10-x/119621) of the Sonar Community forum.
+> SonarQube versions `10.5.0` and above affects the functionality of our plugin. Specifically, our custom rules are not being executed correctly, resulting in no detections. This problem is due to a change on the SonarQube side ([see](https://community.sonarsource.com/t/custom-java-rules-are-not-executed-after-sonar-api-upgrade-from-9-x-to-10-x/119621)).
 
 ## Supported languages and libraries
 
