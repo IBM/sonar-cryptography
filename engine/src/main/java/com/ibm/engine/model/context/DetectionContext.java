@@ -21,6 +21,7 @@ package com.ibm.engine.model.context;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -38,5 +39,12 @@ public abstract class DetectionContext {
     @Nonnull
     public Optional<String> get(@Nonnull String key) {
         return Optional.ofNullable(properties.get(key));
+    }
+
+    @Override
+    public String toString() {
+        return properties.keySet().stream()
+                .map(key -> key + "=" + properties.get(key))
+                .collect(Collectors.joining(", ", "{", "}"));
     }
 }
