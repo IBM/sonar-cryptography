@@ -19,9 +19,12 @@
  */
 package com.ibm.engine.model.context;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.Nonnull;
 
-public class MacContext implements IDetectionContext, ISupportKind<MacContext.Kind> {
+public class MacContext extends DetectionContext
+        implements IDetectionContext, ISupportKind<MacContext.Kind> {
 
     public enum Kind {
         CMAC,
@@ -32,14 +35,33 @@ public class MacContext implements IDetectionContext, ISupportKind<MacContext.Ki
 
     @Nonnull private final Kind kind;
 
+    /**
+     * use a property map instead
+     *
+     * @deprecated
+     */
+    @Deprecated(since = "1.3.0")
     public MacContext(@Nonnull Kind kind) {
+        super(new HashMap<>());
         this.kind = kind;
     }
 
     public MacContext() {
+        super(new HashMap<>());
         this.kind = Kind.NONE;
     }
 
+    public MacContext(@Nonnull Map<String, String> properties) {
+        super(properties);
+        this.kind = Kind.NONE;
+    }
+
+    /**
+     * use a property map instead
+     *
+     * @deprecated
+     */
+    @Deprecated(since = "1.3.0")
     @Nonnull
     public Kind kind() {
         return kind;

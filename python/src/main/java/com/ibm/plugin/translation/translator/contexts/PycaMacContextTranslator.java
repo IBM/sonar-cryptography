@@ -21,29 +21,29 @@ package com.ibm.plugin.translation.translator.contexts;
 
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.ValueAction;
-import com.ibm.engine.model.context.DigestContext;
-import com.ibm.mapper.mapper.pyca.PycaDigestMapper;
+import com.ibm.engine.model.context.IDetectionContext;
+import com.ibm.engine.rule.IBundle;
+import com.ibm.mapper.IContextTranslation;
+import com.ibm.mapper.mapper.pyca.PycaMacMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.python.api.tree.Tree;
 
 @SuppressWarnings("java:S1301")
-public final class PythonDigestContextTranslator {
+public final class PycaMacContextTranslator implements IContextTranslation<Tree> {
 
-    private PythonDigestContextTranslator() {
-        // private
-    }
-
-    @Nonnull
-    public static Optional<INode> translateForDigestContext(
-            @Nonnull final IValue<Tree> value,
-            @Nonnull DigestContext context,
-            @Nonnull DetectionLocation detectionLocation) {
-        if (value instanceof ValueAction<Tree>) {
-            final PycaDigestMapper pycaDigestMapper = new PycaDigestMapper();
-            return pycaDigestMapper.parse(value.asString(), detectionLocation).map(i -> i);
+    @Override
+    public @NotNull Optional<INode> translate(
+            @NotNull IBundle bundleIdentifier,
+            @NotNull IValue<Tree> value,
+            @NotNull IDetectionContext detectionContext,
+            @NotNull DetectionLocation detectionLocation) {
+        final PycaMacMapper pycaMacMapper = new PycaMacMapper();
+        if (value instanceof com.ibm.engine.model.Algorithm<Tree>
+                || value instanceof ValueAction<Tree>) {
+            return pycaMacMapper.parse(value.asString(), detectionLocation).map(i -> i);
         }
         return Optional.empty();
     }

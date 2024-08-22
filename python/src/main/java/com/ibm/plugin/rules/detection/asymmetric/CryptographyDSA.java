@@ -62,7 +62,7 @@ public final class CryptographyDSA {
                             CryptographyHash
                                     .rules()) // The parameter of sign can either be an immediate
                     // hash, or a hash enclosed in the pre-hash
-                    .buildForContext(new SignatureContext())
+                    .buildForContext(new SignatureContext(Map.of("algorithm", "DSA")))
                     .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 

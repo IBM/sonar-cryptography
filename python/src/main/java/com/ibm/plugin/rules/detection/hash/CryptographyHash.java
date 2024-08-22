@@ -20,7 +20,6 @@
 package com.ibm.plugin.rules.detection.hash;
 
 import com.ibm.engine.model.context.DigestContext;
-import com.ibm.engine.model.context.SignatureContext;
 import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
@@ -84,7 +83,7 @@ public final class CryptographyHash {
                     .forMethods("Prehashed")
                     .withMethodParameter("cryptography.hazmat.primitives.hashes.*")
                     .addDependingDetectionRules(hashesRules())
-                    .buildForContext(new SignatureContext())
+                    .buildForContext(new DigestContext())
                     .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 

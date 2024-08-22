@@ -22,7 +22,6 @@ package com.ibm.plugin.rules.detection.aead;
 import com.ibm.engine.model.CipherAction;
 import com.ibm.engine.model.Size;
 import com.ibm.engine.model.context.CipherContext;
-import com.ibm.engine.model.context.KeyContext;
 import com.ibm.engine.model.context.SecretKeyContext;
 import com.ibm.engine.model.factory.CipherActionFactory;
 import com.ibm.engine.model.factory.KeySizeFactory;
@@ -87,7 +86,7 @@ public final class CryptographyAES {
                             .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
                             .buildForContext(
                                     new SecretKeyContext(
-                                            KeyContext.Kind.valueOf(aesAlgorithm))) // TODO
+                                            Map.of("algorithm", aesAlgorithm, "kind", "AEAD")))
                             .inBundle(() -> "Pyca")
                             .withDependingDetectionRules(
                                     List.of(decryptAES(aesAlgorithm), encryptAES(aesAlgorithm))));

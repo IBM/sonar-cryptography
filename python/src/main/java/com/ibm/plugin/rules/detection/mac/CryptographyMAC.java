@@ -21,13 +21,13 @@ package com.ibm.plugin.rules.detection.mac;
 
 import static com.ibm.engine.detection.MethodMatcher.ANY;
 
-import com.ibm.engine.model.CipherAction;
 import com.ibm.engine.model.context.MacContext;
 import com.ibm.engine.model.factory.AlgorithmFactory;
-import com.ibm.engine.model.factory.CipherActionFactory;
+import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.python.api.tree.Tree;
@@ -46,8 +46,8 @@ public final class CryptographyMAC {
                     .forMethods("CMAC")
                     .withMethodParameter("cryptography.hazmat.primitives.ciphers.algorithms.*")
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
-                    .buildForContext(new MacContext(MacContext.Kind.CMAC))
-                    .inBundle(() -> "CryptographyMAC")
+                    .buildForContext(new MacContext(Map.of("kind", "cmac")))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     private static final IDetectionRule<Tree> NEW_HMAC =
@@ -60,25 +60,25 @@ public final class CryptographyMAC {
                             "cryptography.hazmat.primitives.hashes.*") // Accepts only hashes (not
                     // pre-hashes)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
-                    .buildForContext(new MacContext(MacContext.Kind.HMAC))
-                    .inBundle(() -> "CryptographyMAC")
+                    .buildForContext(new MacContext(Map.of("kind", "hmac")))
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
-    // TODO: Here, the hash is simply detected with a `AlgorithmFactory()`, and then the check of
-    //  whether it is an acceptable value is done in the translation. I should probably do it like
-    //  this in RSA/DSA/EC. Challenge: they also can use a `Preshashed` containing a hash. In this
-    //  case, one should create two duplicate rules (one capturing an immediate hash with
-    //  `AlgorithmFactory()`) and the other a `Prehashed`.
-
+    // Here, the hash is simply detected with a `AlgorithmFactory()`, and then the check of
+    // whether it is an acceptable value is done in the translation. I should probably do it like
+    // this in RSA/DSA/EC. Challenge: they also can use a `Preshashed` containing a hash. In this
+    // case, one should create two duplicate rules (one capturing an immediate hash with
+    // `AlgorithmFactory()`)
+    // and the other a `Prehashed`.
     private static final IDetectionRule<Tree> NEW_POLY1305 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
                     .forObjectTypes("cryptography.hazmat.primitives.poly1305")
                     .forMethods("Poly1305")
-                    .shouldBeDetectedAs(new CipherActionFactory<>(CipherAction.Action.MAC))
+                    .shouldBeDetectedAs(new ValueActionFactory<>("Poly1305"))
                     .withAnyParameters()
-                    .buildForContext(new MacContext(MacContext.Kind.Poly1305))
-                    .inBundle(() -> "CryptographyMAC")
+                    .buildForContext(new MacContext())
+                    .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
     @Unmodifiable

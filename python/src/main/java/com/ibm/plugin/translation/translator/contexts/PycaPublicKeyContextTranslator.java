@@ -21,34 +21,32 @@ package com.ibm.plugin.translation.translator.contexts;
 
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.KeyAction;
-import com.ibm.engine.model.context.KeyContext;
-import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.EllipticCurve;
+import com.ibm.engine.model.context.DetectionContext;
+import com.ibm.engine.model.context.IDetectionContext;
+import com.ibm.engine.rule.IBundle;
+import com.ibm.mapper.IContextTranslation;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.PublicKey;
 import com.ibm.mapper.model.algorithms.DH;
 import com.ibm.mapper.model.algorithms.DSA;
 import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.functionality.Generate;
-import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.python.api.tree.Tree;
 
 @SuppressWarnings("java:S1301")
-public final class PythonPublicKeyContextTranslator {
+public final class PycaPublicKeyContextTranslator implements IContextTranslation<Tree> {
 
-    private PythonPublicKeyContextTranslator() {
-        // private
-    }
-
-    @Nonnull
-    public static Optional<INode> translateForPublicKeyContext(
-            @Nonnull final IValue<Tree> value,
-            @Nonnull KeyContext context,
-            @Nonnull DetectionLocation detectionLocation) {
-        if (value instanceof KeyAction<Tree>) {
+    @Override
+    public @NotNull Optional<INode> translate(
+            @NotNull IBundle bundleIdentifier,
+            @NotNull IValue<Tree> value,
+            @NotNull IDetectionContext detectionContext,
+            @NotNull DetectionLocation detectionLocation) {
+        if (value instanceof KeyAction<Tree>
+                && detectionContext instanceof DetectionContext context) {
             return context.get("algorithm")
                     .map(
                             algorithm ->
@@ -70,30 +68,5 @@ public final class PythonPublicKeyContextTranslator {
                             });
         }
         return Optional.empty();
-    }
-
-    @Nonnull
-    private static Optional<INode> translatePublicKeyContextAlgorithm(
-            @Nonnull final com.ibm.engine.model.Algorithm<Tree> detectedAlgorithm,
-            @Nonnull KeyContext.Kind kind,
-            @Nonnull DetectionLocation detectionLocation) {
-        String algorithmName;
-        Algorithm baseAlgorithm;
-        EllipticCurve ellipticCurve;
-        Algorithm resAlgorithm;
-        PublicKey publicKey;
-        switch (detectedAlgorithm.asString()) {
-            default:
-                algorithmName = "EC";
-                publicKey = new PublicKey(algorithmName, detectionLocation);
-                baseAlgorithm = new Algorithm(algorithmName, detectionLocation);
-                ellipticCurve = new EllipticCurve(detectedAlgorithm.asString(), detectionLocation);
-                resAlgorithm = new EllipticCurveAlgorithm(baseAlgorithm, ellipticCurve);
-
-                resAlgorithm.put(new KeyGeneration(detectionLocation));
-                publicKey.put(resAlgorithm);
-
-                return Optional.of(publicKey);
-        }
     }
 }

@@ -23,7 +23,10 @@ import com.ibm.engine.model.CipherAction;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.KeySize;
 import com.ibm.engine.model.ValueAction;
-import com.ibm.engine.model.context.CipherContext;
+import com.ibm.engine.model.context.DetectionContext;
+import com.ibm.engine.model.context.IDetectionContext;
+import com.ibm.engine.rule.IBundle;
+import com.ibm.mapper.IContextTranslation;
 import com.ibm.mapper.mapper.pyca.PycaCipherMapper;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.INode;
@@ -42,24 +45,21 @@ import com.ibm.mapper.model.padding.OAEP;
 import com.ibm.mapper.model.padding.PKCS7;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.python.api.tree.Tree;
 
 @SuppressWarnings("java:S1301")
-public final class PythonCipherContextTranslator {
+public final class PycaCipherContextTranslator implements IContextTranslation<Tree> {
 
-    private PythonCipherContextTranslator() {
-        // private static
-    }
-
-    @Nonnull
-    public static Optional<INode> translateForCipherContext(
-            @Nonnull final IValue<Tree> value,
-            @Nonnull CipherContext context,
-            @Nonnull DetectionLocation detectionLocation) {
+    @Override
+    public @NotNull Optional<INode> translate(
+            @NotNull IBundle bundleIdentifier,
+            @NotNull IValue<Tree> value,
+            @NotNull IDetectionContext detectionContext,
+            @NotNull DetectionLocation detectionLocation) {
         final PycaCipherMapper pycaCipherMapper = new PycaCipherMapper();
-
-        if (value instanceof com.ibm.engine.model.Algorithm<Tree>) {
+        if (value instanceof com.ibm.engine.model.Algorithm<Tree>
+                && detectionContext instanceof DetectionContext context) {
             if (context.get("kind").map(k -> k.equals("AEAD")).orElse(false)) {
                 return switch (value.asString().toUpperCase().trim()) {
                     case "AESGCM" ->
@@ -77,6 +77,7 @@ public final class PythonCipherContextTranslator {
             }
             return pycaCipherMapper.parse(value.asString(), detectionLocation).map(i -> i);
         } else if (value instanceof ValueAction<Tree>
+                && detectionContext instanceof DetectionContext context
                 && context.get("kind").map(k -> k.equals("padding")).orElse(false) // padding case
         ) {
             return switch (value.asString().toUpperCase().trim()) {
@@ -85,7 +86,8 @@ public final class PythonCipherContextTranslator {
                 case "OAEP" -> Optional.of(new OAEP(detectionLocation));
                 default -> Optional.empty();
             };
-        } else if (value instanceof CipherAction<Tree> cipherAction) {
+        } else if (value instanceof CipherAction<Tree> cipherAction
+                && detectionContext instanceof DetectionContext context) {
             final Optional<String> algorithmStr = context.get("algorithm");
             if (algorithmStr.isPresent()) {
                 return pycaCipherMapper

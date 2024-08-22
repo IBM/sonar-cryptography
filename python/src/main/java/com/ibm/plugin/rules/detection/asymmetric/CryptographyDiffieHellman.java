@@ -73,7 +73,7 @@ public final class CryptographyDiffieHellman {
                             new PrivateKeyContext(
                                     Map.of(
                                             "algorithm", "DH",
-                                            "includePK", "true")))
+                                            "includePublicKey", "true"))) // TODO
                     .inBundle(() -> "Pyca")
                     .withDependingDetectionRules(List.of(GENERATE_PARAMETERS_DH));
 

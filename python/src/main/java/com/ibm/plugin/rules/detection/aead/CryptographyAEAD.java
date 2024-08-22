@@ -22,6 +22,7 @@ package com.ibm.plugin.rules.detection.aead;
 import com.ibm.engine.model.CipherAction;
 import com.ibm.engine.model.KeyAction;
 import com.ibm.engine.model.context.CipherContext;
+import com.ibm.engine.model.context.SecretKeyContext;
 import com.ibm.engine.model.factory.CipherActionFactory;
 import com.ibm.engine.model.factory.KeyActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
@@ -71,7 +72,9 @@ public final class CryptographyAEAD {
                     .forMethods("generate_key")
                     .shouldBeDetectedAs(new KeyActionFactory<>(KeyAction.Action.GENERATION))
                     .withAnyParameters()
-                    .buildForContext(new CipherContext(Map.of("algorithm", "ChaCha20Poly1305")))
+                    .buildForContext(
+                            new SecretKeyContext(
+                                    Map.of("algorithm", "ChaCha20Poly1305", "kind", "AEAD")))
                     .inBundle(() -> "Pyca")
                     .withDependingDetectionRules(
                             List.of(ENCRYPT_CHACHA20POLY1305, DECRYPT_CHACHA20POLY1305));

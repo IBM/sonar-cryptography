@@ -48,12 +48,6 @@ public final class CryptographyPadding {
     private static @NotNull List<IDetectionRule<Tree>> newPadding() {
         final LinkedList<IDetectionRule<Tree>> rules = new LinkedList<>();
 
-        /*
-         * TODO: Set the block size as child of the detected padding?
-         * Or remove the padding detection to include it in the context instead?
-         */
-
-        // When the block size is specified using an integer
         for (String padding : paddings) {
             rules.add(
                     new DetectionRuleBuilder<Tree>()
@@ -89,11 +83,9 @@ public final class CryptographyPadding {
         return rules;
     }
 
-    // TODO: It should be better to only detect Padding when it actually gets implied (i.e. there is
-    //  `padder.update` function call). However, it does not bring much, and creates problems
-    // because
-    //  the type handler may not distinguish an `encryptor.update` from `padder.update`.
-
+    // It should be better to only detect Padding when it actually gets implied (i.e. there is
+    // `padder.update` function call). However, it does not bring much, and creates problems
+    // because the type handler may not distinguish an `encryptor.update` from `padder.update`.
     @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
