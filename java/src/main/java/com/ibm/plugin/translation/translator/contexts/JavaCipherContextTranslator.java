@@ -28,8 +28,8 @@ import com.ibm.engine.model.OperationMode;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.IDetectionContext;
+import com.ibm.mapper.mapper.bc.BcAeadEnumsMapper;
 import com.ibm.mapper.mapper.bc.BcAeadMapper;
-import com.ibm.mapper.mapper.bc.BcAeadParametersMapper;
 import com.ibm.mapper.mapper.bc.BcAsymCipherEncodingMapper;
 import com.ibm.mapper.mapper.bc.BcAsymCipherEngineMapper;
 import com.ibm.mapper.mapper.bc.BcBlockCipherEngineMapper;
@@ -303,7 +303,7 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                     return Optional.empty(); // TODO
             }
         } else if (value instanceof AlgorithmParameter<Tree> algorithmParameter) {
-            BcAeadParametersMapper bcAeadParametersMapper = new BcAeadParametersMapper();
+            BcAeadEnumsMapper bcAeadParametersMapper = new BcAeadEnumsMapper();
             return bcAeadParametersMapper
                     .parse(algorithmParameter.asString(), detectionLocation)
                     .map(f -> f);

@@ -39,7 +39,7 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class BcAeadParametersMapper implements IMapper {
+public class BcAeadEnumsMapper implements IMapper {
 
     @Override
     @Nonnull
