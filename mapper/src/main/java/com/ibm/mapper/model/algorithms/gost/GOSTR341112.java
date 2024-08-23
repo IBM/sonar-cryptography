@@ -26,9 +26,8 @@ import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-// Streebog
 public final class GOSTR341112 extends Algorithm implements MessageDigest {
-    private static final String NAME = "GOSTR341112";
+    private static final String NAME = "GOSTR341112"; // Streebog
 
     public GOSTR341112(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, MessageDigest.class, detectionLocation);

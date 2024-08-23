@@ -73,7 +73,6 @@ public final class BcDigests {
         infoMap.putKey("DSTU7564Digest").putName("DSTU 7564");
         infoMap.putKey("GOST3411_2012_256Digest"); // Contains size -> handled in translation
         infoMap.putKey("GOST3411_2012_512Digest"); // Contains size -> handled in translation
-        infoMap.putKey("GOST3411_2012Digest").putName("GOST R 34.11-2012"); // Parent class
         infoMap.putKey("GOST3411Digest").putName("GOST R 34.11");
         infoMap.putKey("Haraka256Digest"); // Contains size -> handled in translation
         infoMap.putKey("Haraka512Digest"); // Contains size -> handled in translation
