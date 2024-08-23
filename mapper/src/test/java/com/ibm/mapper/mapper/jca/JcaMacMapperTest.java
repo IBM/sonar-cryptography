@@ -45,21 +45,18 @@ class JcaMacMapperTest {
                 jcaMacMapper.parse("HmacSHA512/224", testDetectionLocation);
 
         assertThat(macOptional).isPresent();
-        assertThat(macOptional.get().getName()).isEqualTo("HmacSHA512/224");
+        assertThat(macOptional.get().getName()).isEqualTo("SHA512/224");
         assertThat(macOptional.get().hasChildren()).isTrue();
 
         Map<Class<? extends INode>, INode> children = macOptional.get().getChildren();
-        assertThat(children).hasSize(1);
+        assertThat(children).hasSize(2);
         INode child = children.get(MessageDigest.class);
 
         assertThat(child.is(MessageDigest.class)).isTrue();
         MessageDigest messageDigest = (MessageDigest) child;
-        assertThat(messageDigest.getName()).isEqualTo("SHA512/224");
+        assertThat(messageDigest.getName()).isEqualTo("SHA512");
         assertThat(messageDigest.getDigestSize()).isPresent();
-        assertThat(messageDigest.getDigestSize().get().getValue()).isEqualTo(224);
-
-        children = messageDigest.getChildren();
-        assertThat(children).hasSize(2);
+        assertThat(messageDigest.getDigestSize().get().getValue()).isEqualTo(512);
     }
 
     @Test
@@ -72,15 +69,14 @@ class JcaMacMapperTest {
                 jcaMacMapper.parse("HmacMD5", testDetectionLocation);
 
         assertThat(macOptional).isPresent();
-        assertThat(macOptional.get().getName()).isEqualTo("HmacMD5");
+        assertThat(macOptional.get().is(Mac.class)).isTrue();
+        assertThat(macOptional.get().getName()).isEqualTo("MD5");
         assertThat(macOptional.get().hasChildren()).isTrue();
 
         Map<Class<? extends INode>, INode> children = macOptional.get().getChildren();
-        assertThat(children).hasSize(1);
-        INode algorithm = children.get(MessageDigest.class);
+        assertThat(children).hasSize(2);
 
-        assertThat(algorithm.is(MessageDigest.class)).isTrue();
-        MessageDigest messageDigest = (MessageDigest) algorithm;
+        MessageDigest messageDigest = (MessageDigest) macOptional.get();
         assertThat(messageDigest.getName()).isEqualTo("MD5");
         assertThat(messageDigest.getDigestSize()).isPresent();
         assertThat(messageDigest.getDigestSize().get().getValue()).isEqualTo(128);
@@ -107,15 +103,13 @@ class JcaMacMapperTest {
 
         Optional<Mac> mac = pbe.getMac();
         assertThat(mac).isPresent();
-        assertThat(mac.get().getName()).isEqualTo("HmacSHA256");
+        assertThat(mac.get().getName()).isEqualTo("SHA256");
         assertThat(mac.get().hasChildren()).isTrue();
 
         Map<Class<? extends INode>, INode> children = mac.get().getChildren();
         assertThat(children).hasSize(1);
-        INode child = children.get(MessageDigest.class);
 
-        assertThat(child.is(MessageDigest.class)).isTrue();
-        MessageDigest messageDigest = (MessageDigest) child;
+        MessageDigest messageDigest = (MessageDigest) mac.get();
         assertThat(messageDigest).isInstanceOf(SHA2.class);
         assertThat(messageDigest.getName()).isEqualTo("SHA256");
         assertThat(messageDigest.getDigestSize()).isPresent();

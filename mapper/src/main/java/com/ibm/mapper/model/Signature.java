@@ -41,8 +41,4 @@ public interface Signature extends IPrimitive {
         }
         return Optional.of((MessageDigest) node);
     }
-
-    default boolean isProbabilisticSignatureScheme() {
-        return this.getChildren().containsKey(ProbabilisticSignatureScheme.class);
-    }
 }

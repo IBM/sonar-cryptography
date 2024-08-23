@@ -40,9 +40,7 @@ public final class MD2 extends Algorithm implements MessageDigest {
             @Nonnull final Class<? extends IPrimitive> asKind,
             @Nonnull DetectionLocation detectionLocation) {
         super(NAME, asKind, detectionLocation);
-    }
-
-    public MD2(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull MD2 md2) {
-        super(md2, asKind);
+        this.put(new BlockSize(128, detectionLocation));
+        this.put(new DigestSize(128, detectionLocation));
     }
 }

@@ -22,6 +22,7 @@ package com.ibm.mapper.mapper.jca;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.ProbabilisticSignatureScheme;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.algorithms.DSA;
 import com.ibm.mapper.model.algorithms.ECDSA;
@@ -126,9 +127,8 @@ class JcaSignatureMapperTest {
 
         assertThat(signatureOptional).isPresent();
         assertThat(signatureOptional.get()).isInstanceOf(RSAssaPSS.class);
+        assertThat(signatureOptional.get().is(ProbabilisticSignatureScheme.class)).isTrue();
         assertThat(signatureOptional.get().getName()).isEqualTo("RSASSA-PSS");
         assertThat(signatureOptional.get().getFormat()).isEmpty();
-
-        assertThat(signatureOptional.get().isProbabilisticSignatureScheme()).isTrue();
     }
 }

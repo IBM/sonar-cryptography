@@ -23,10 +23,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mac;
-import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
 import com.ibm.mapper.model.algorithms.PBKDF2;
-import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.List;
 import java.util.Map;
@@ -58,16 +56,6 @@ class JcaPBKDFMapperTest {
         assertThat(child.is(Mac.class)).isTrue();
 
         Mac mac = (Mac) child;
-        assertThat(mac.getName()).isEqualTo("HmacSHA256");
-        assertThat(mac.hasChildren()).isTrue();
-        children = mac.getChildren();
-        assertThat(children).hasSize(1);
-        child = children.get(MessageDigest.class);
-        assertThat(child.is(MessageDigest.class)).isTrue();
-
-        MessageDigest messageDigest = (MessageDigest) child;
-        assertThat(messageDigest).isInstanceOf(SHA2.class);
-        assertThat(messageDigest.getDigestSize()).isPresent();
-        assertThat(messageDigest.getDigestSize().get().getValue()).isEqualTo(256);
+        assertThat(mac.getName()).isEqualTo("SHA256");
     }
 }

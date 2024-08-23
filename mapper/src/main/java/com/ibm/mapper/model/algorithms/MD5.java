@@ -40,9 +40,7 @@ public final class MD5 extends Algorithm implements MessageDigest {
             @Nonnull final Class<? extends IPrimitive> asKind,
             @Nonnull DetectionLocation detectionLocation) {
         super(NAME, asKind, detectionLocation);
-    }
-
-    public MD5(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull MD5 md5) {
-        super(md5, asKind);
+        this.put(new BlockSize(512, detectionLocation));
+        this.put(new DigestSize(128, detectionLocation));
     }
 }
