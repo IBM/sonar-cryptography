@@ -22,6 +22,7 @@ package com.ibm.mapper.model.algorithms;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.BlockSize;
+import com.ibm.mapper.model.ClassicalBitSecurityLevel;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mode;
@@ -31,20 +32,25 @@ import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
 public final class DES extends Algorithm implements BlockCipher {
+    // https://en.wikipedia.org/wiki/Data_Encryption_Standard
+
     private static final String NAME = "DES";
 
     public DES(@NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
+        this.put(new KeyLength(56, detectionLocation));
+        this.put(new BlockSize(64, detectionLocation));
+        this.put(new ClassicalBitSecurityLevel(56, detectionLocation));
     }
 
     public DES(int keyLength, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+        this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(new BlockSize(64, detectionLocation));
     }
 
     public DES(int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+        this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
         this.put(new BlockSize(64, detectionLocation));
@@ -55,7 +61,7 @@ public final class DES extends Algorithm implements BlockCipher {
             @Nonnull Mode mode,
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+        this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
         this.put(padding);
@@ -63,7 +69,7 @@ public final class DES extends Algorithm implements BlockCipher {
     }
 
     public DES(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+        this(detectionLocation);
         this.put(mode);
         this.put(new BlockSize(64, detectionLocation));
     }
@@ -72,7 +78,7 @@ public final class DES extends Algorithm implements BlockCipher {
             @Nonnull Mode mode,
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+        this(detectionLocation);
         this.put(mode);
         this.put(padding);
         this.put(new BlockSize(64, detectionLocation));

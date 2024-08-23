@@ -76,7 +76,7 @@ class BcGCMBlockCipherTest extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("GCM");
+        assertThat(value0.asString()).isEqualTo("GCMBlockCipher");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
                 getStoreOfValueType(OperationMode.class, detectionStore.getChildren());
@@ -101,7 +101,11 @@ class BcGCMBlockCipherTest extends TestBase {
         assertThat(store_2.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0_2 = store_2.getDetectionValues().get(0);
         assertThat(value0_2).isInstanceOf(ValueAction.class);
-        assertThat(value0_2.asString()).isEqualTo("AES");
+        if (findingId == 1 || findingId == 5) {
+            assertThat(value0_2.asString()).isEqualTo("AESFastEngine");
+        } else {
+            assertThat(value0_2.asString()).isEqualTo("AESEngine");
+        }
 
         /*
          * Translation

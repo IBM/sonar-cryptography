@@ -20,29 +20,49 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.IPrimitive;
+import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mode;
+import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class GOSTR34122015 extends Algorithm implements BlockCipher, AuthenticatedEncryption {
-    private static final String NAME = "GOSTR34122015"; // Kuznyechik
+public final class LEA extends Algorithm implements BlockCipher {
+    // https://en.wikipedia.org/wiki/LEA_(cipher)
 
-    public GOSTR34122015(@NotNull DetectionLocation detectionLocation) {
+    private static final String NAME = "LEA";
+
+    public LEA(@NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
+        this.put(new BlockSize(128, detectionLocation));
     }
 
-    public GOSTR34122015(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+    public LEA(int keyLength, @NotNull DetectionLocation detectionLocation) {
+        this(detectionLocation);
+        this.put(new KeyLength(keyLength, detectionLocation));
+    }
+
+    public LEA(int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+        this(detectionLocation);
+        this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
     }
 
-    public GOSTR34122015(
-            @Nonnull final Class<? extends IPrimitive> asKind,
-            @NotNull GOSTR34122015 gostr34122015) {
-        super(gostr34122015, asKind);
+    public LEA(
+            int keyLength,
+            @Nonnull Mode mode,
+            @Nonnull Padding padding,
+            @NotNull DetectionLocation detectionLocation) {
+        this(detectionLocation);
+        this.put(new KeyLength(keyLength, detectionLocation));
+        this.put(mode);
+        this.put(padding);
+    }
+
+    public LEA(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull LEA lea) {
+        super(lea, asKind);
     }
 }

@@ -26,10 +26,8 @@ import com.ibm.engine.model.factory.BlockSizeFactory;
 import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
-import com.ibm.plugin.rules.detection.bc.BouncyCastleInfoMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,25 +39,18 @@ public final class BcBlockCipher {
         // nothing
     }
 
-    /*
-     * Classes implementing BlockCipher having a simple constructor
-     * taking a BlockCipher as only argument.
-     * "|" is used as a separator between the block cipher and the mode.
-     */
-    private static BouncyCastleInfoMap infoMap = new BouncyCastleInfoMap();
-
-    static {
-        infoMap.putKey("CBCBlockCipher");
-        infoMap.putKey("G3413CBCBlockCipher").putName("GOST R 34.12-2015|CBC");
-        infoMap.putKey("G3413CFBBlockCipher").putName("GOST R 34.12-2015|CFB");
-        infoMap.putKey("G3413CTRBlockCipher").putName("GOST R 34.12-2015|CTR");
-        infoMap.putKey("G3413OFBBlockCipher").putName("GOST R 34.12-2015|OFB");
-        infoMap.putKey("GCFBBlockCipher").putName("GOST 28147-89|CFB");
-        infoMap.putKey("GOFBBlockCipher").putName("GOST 28147-89|OFB");
-        infoMap.putKey("KCTRBlockCipher").putName("DSTU 7624:2014|CTR");
-        infoMap.putKey("OpenPGPCFBBlockCipher").putName("CFB");
-        infoMap.putKey("SICBlockCipher");
-    }
+    public static final List<String> blockCiphers =
+            List.of(
+                    "CBCBlockCipher",
+                    "G3413CBCBlockCipher",
+                    "G3413CFBBlockCipher",
+                    "G3413CTRBlockCipher",
+                    "G3413OFBBlockCipher",
+                    "GCFBBlockCipher",
+                    "GOFBBlockCipher",
+                    "KCTRBlockCipher",
+                    "OpenPGPCFBBlockCipher",
+                    "SICBlockCipher");
 
     private static final List<IDetectionRule<Tree>> simpleConstructors(
             @Nullable IDetectionContext detectionValueContext) {
@@ -69,15 +60,13 @@ public final class BcBlockCipher {
                         ? detectionValueContext
                         : new CipherContext(CipherContext.Kind.BLOCK_CIPHER);
 
-        for (Map.Entry<String, BouncyCastleInfoMap.Info> entry : infoMap.entrySet()) {
-            String blockCipher = entry.getKey();
-            String blockCipherName = infoMap.getDisplayName(blockCipher, "BlockCipher");
+        for (String blockCipher : blockCiphers) {
             constructorsList.add(
                     new DetectionRuleBuilder<Tree>()
                             .createDetectionRule()
                             .forObjectTypes("org.bouncycastle.crypto.modes." + blockCipher)
                             .forConstructor()
-                            .shouldBeDetectedAs(new ValueActionFactory<>(blockCipherName))
+                            .shouldBeDetectedAs(new ValueActionFactory<>(blockCipher))
                             .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                             .addDependingDetectionRules(BcBlockCipherEngine.rules())
                             .buildForContext(context)
@@ -100,7 +89,7 @@ public final class BcBlockCipher {
                         .createDetectionRule()
                         .forObjectTypes("org.bouncycastle.crypto.modes.CBCBlockCipher")
                         .forMethods("newInstance")
-                        .shouldBeDetectedAs(new ValueActionFactory<>("CBC"))
+                        .shouldBeDetectedAs(new ValueActionFactory<>("CBCBlockCipher"))
                         .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                         .addDependingDetectionRules(BcBlockCipherEngine.rules())
                         .buildForContext(context)
@@ -112,7 +101,7 @@ public final class BcBlockCipher {
                         .createDetectionRule()
                         .forObjectTypes("org.bouncycastle.crypto.modes.SICBlockCipher")
                         .forMethods("newInstance")
-                        .shouldBeDetectedAs(new ValueActionFactory<>("SIC"))
+                        .shouldBeDetectedAs(new ValueActionFactory<>("SICBlockCipher"))
                         .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                         .addDependingDetectionRules(BcBlockCipherEngine.rules())
                         .buildForContext(context)
@@ -124,7 +113,7 @@ public final class BcBlockCipher {
                         .createDetectionRule()
                         .forObjectTypes("org.bouncycastle.crypto.modes.CFBBlockCipher")
                         .forConstructor()
-                        .shouldBeDetectedAs(new ValueActionFactory<>("CFB"))
+                        .shouldBeDetectedAs(new ValueActionFactory<>("CFBBlockCipher"))
                         .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                         .addDependingDetectionRules(BcBlockCipherEngine.rules())
                         .withMethodParameter("int")
@@ -139,7 +128,7 @@ public final class BcBlockCipher {
                         .createDetectionRule()
                         .forObjectTypes("org.bouncycastle.crypto.modes.CFBBlockCipher")
                         .forMethods("newInstance")
-                        .shouldBeDetectedAs(new ValueActionFactory<>("CFB"))
+                        .shouldBeDetectedAs(new ValueActionFactory<>("CFBBlockCipher"))
                         .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                         .addDependingDetectionRules(BcBlockCipherEngine.rules())
                         .withMethodParameter("int")
@@ -154,9 +143,7 @@ public final class BcBlockCipher {
                         .createDetectionRule()
                         .forObjectTypes("org.bouncycastle.crypto.modes.G3413CFBBlockCipher")
                         .forConstructor()
-                        .shouldBeDetectedAs(
-                                new ValueActionFactory<>(
-                                        infoMap.getDisplayName("G3413CFBBlockCipher")))
+                        .shouldBeDetectedAs(new ValueActionFactory<>("G3413CFBBlockCipher"))
                         .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                         .addDependingDetectionRules(BcBlockCipherEngine.rules())
                         .withMethodParameter("int")
@@ -171,9 +158,7 @@ public final class BcBlockCipher {
                         .createDetectionRule()
                         .forObjectTypes("org.bouncycastle.crypto.modes.G3413CTRBlockCipher")
                         .forConstructor()
-                        .shouldBeDetectedAs(
-                                new ValueActionFactory<>(
-                                        infoMap.getDisplayName("G3413CTRBlockCipher")))
+                        .shouldBeDetectedAs(new ValueActionFactory<>("G3413CTRBlockCipher"))
                         .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                         .addDependingDetectionRules(BcBlockCipherEngine.rules())
                         .withMethodParameter("int")
@@ -188,7 +173,7 @@ public final class BcBlockCipher {
                         .createDetectionRule()
                         .forObjectTypes("org.bouncycastle.crypto.modes.OFBBlockCipher")
                         .forConstructor()
-                        .shouldBeDetectedAs(new ValueActionFactory<>("OFB"))
+                        .shouldBeDetectedAs(new ValueActionFactory<>("OFBBlockCipher"))
                         .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                         .addDependingDetectionRules(BcBlockCipherEngine.rules())
                         .withMethodParameter("int")
@@ -204,7 +189,7 @@ public final class BcBlockCipher {
                         // TODO: forExactObjectTypes(...)
                         .forObjectTypes("org.bouncycastle.crypto.modes.PGPCFBBlockCipher")
                         .forConstructor()
-                        .shouldBeDetectedAs(new ValueActionFactory<>("CFB"))
+                        .shouldBeDetectedAs(new ValueActionFactory<>("PGPCFBBlockCipher"))
                         .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                         .addDependingDetectionRules(BcBlockCipherEngine.rules())
                         .withMethodParameter("boolean")

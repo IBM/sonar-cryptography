@@ -73,7 +73,7 @@ class BcCBCBlockCipherTest extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("CBC");
+        assertThat(value0.asString()).isEqualTo("CBCBlockCipher");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
                 getStoreOfValueType(OperationMode.class, detectionStore.getChildren());
@@ -91,7 +91,7 @@ class BcCBCBlockCipherTest extends TestBase {
         assertThat(store_2.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0_2 = store_2.getDetectionValues().get(0);
         assertThat(value0_2).isInstanceOf(ValueAction.class);
-        assertThat(value0_2.asString()).isEqualTo("AES");
+        assertThat(value0_2.asString()).isEqualTo(findingId == 1 ? "AESFastEngine" : "AESEngine");
 
         // Optimally, this shouldn't be detected
         //

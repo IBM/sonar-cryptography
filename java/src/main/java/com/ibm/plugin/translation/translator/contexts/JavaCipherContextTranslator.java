@@ -28,15 +28,25 @@ import com.ibm.engine.model.OperationMode;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.IDetectionContext;
+import com.ibm.mapper.mapper.bc.BcAeadEnumsMapper;
 import com.ibm.mapper.mapper.bc.BcAeadMapper;
-import com.ibm.mapper.mapper.bc.BcAeadParametersMapper;
+import com.ibm.mapper.mapper.bc.BcAsymCipherEncodingMapper;
+import com.ibm.mapper.mapper.bc.BcAsymCipherEngineMapper;
+import com.ibm.mapper.mapper.bc.BcBlockCipherEngineMapper;
+import com.ibm.mapper.mapper.bc.BcBlockCipherModeMapper;
+import com.ibm.mapper.mapper.bc.BcBufferedBlockCipherMapper;
 import com.ibm.mapper.mapper.bc.BcOperationModeEncryptionMapper;
 import com.ibm.mapper.mapper.bc.BcOperationModeWrappingMapper;
+import com.ibm.mapper.mapper.bc.BcPaddingMapper;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.mapper.jca.JcaCipherOperationModeMapper;
+import com.ibm.mapper.model.AuthenticatedEncryption;
+import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.functionality.Encapsulate;
 import com.ibm.mapper.utils.DetectionLocation;
+import com.ibm.mapper.utils.Utils;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
@@ -101,6 +111,38 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
             // PasswordBasedEncryption pbe;
 
             switch (kind) {
+                case BLOCK_CIPHER_ENGINE, /* AEAD_BLOCK_CIPHER_ENGINE, */ HASH:
+                    /* TODO: better handle the HASH case (used in `BcOCBBlockCipher`): use asKind MessageDigest? */
+                    BcBlockCipherEngineMapper bcBlockCipherMapper =
+                            new BcBlockCipherEngineMapper(BlockCipher.class);
+                    return bcBlockCipherMapper
+                            .parse(valueAction.asString(), detectionLocation)
+                            .map(f -> f);
+                case BLOCK_CIPHER_ENGINE_FOR_AEAD:
+                    BcBlockCipherEngineMapper bcBlockCipherForAeadMapper =
+                            new BcBlockCipherEngineMapper(AuthenticatedEncryption.class);
+                    return bcBlockCipherForAeadMapper
+                            .parse(valueAction.asString(), detectionLocation)
+                            .map(f -> f);
+                case BLOCK_CIPHER:
+                    BcBlockCipherModeMapper bcBlockCipherModeMapper = new BcBlockCipherModeMapper();
+                    return bcBlockCipherModeMapper
+                            .parse(valueAction.asString(), detectionLocation)
+                            .map(f -> f);
+                case ASYMMETRIC_CIPHER_ENGINE, ASYMMETRIC_CIPHER_ENGINE_SIGNATURE:
+                    /* TODO: the Signature distinction (and therefore the asKind parameter of the mapper) does not seem necessary */
+                    BcAsymCipherEngineMapper bcAsymCipherEngineMapper =
+                            new BcAsymCipherEngineMapper(PublicKeyEncryption.class);
+                    return bcAsymCipherEngineMapper
+                            .parse(valueAction.asString(), detectionLocation)
+                            .map(f -> f);
+                case BUFFERED_BLOCK_CIPHER:
+                    BcBufferedBlockCipherMapper bcBufferedBlockCipherMapper =
+                            new BcBufferedBlockCipherMapper();
+                    return bcBufferedBlockCipherMapper
+                            .parse(valueAction.asString(), detectionLocation)
+                            .map(f -> f);
+
                 /*case ASYMMETRIC_CIPHER_ENGINE, BLOCK_CIPHER_ENGINE, WRAP_ENGINE:
                     return Optional.of(
                             new BlockCipher(
@@ -120,11 +162,6 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                 case STREAM_CIPHER_ENGINE:
                     return Optional.of(
                             new StreamCipher(
-                                    new com.ibm.mapper.model.Algorithm(
-                                            valueAction.asString(), detectionLocation)));
-                case HASH:
-                    return Optional.of(
-                            new MessageDigest(
                                     new com.ibm.mapper.model.Algorithm(
                                             valueAction.asString(), detectionLocation)));
                 case BLOCK_CIPHER, BUFFERED_BLOCK_CIPHER:
@@ -176,6 +213,14 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                     return bcAeadMapper
                             .parse(valueAction.asString(), detectionLocation)
                             .map(f -> f);
+                case ENCODING, ENCODING_SIGNATURE:
+                    /* TODO: the Signature distinction does not seem necessary */
+                    BcAsymCipherEncodingMapper bcAsymCipherEncodingMapper =
+                            new BcAsymCipherEncodingMapper();
+                    return bcAsymCipherEncodingMapper
+                            .parse(valueAction.asString(), detectionLocation)
+                            .map(f -> f);
+
                 /* case ENCODING:
                     blockCipher =
                             new BlockCipher(
@@ -209,14 +254,17 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                             break;
                     }
 
-                    return Optional.of(pke);
+                    return Optional.of(pke); */
                 case ASYMMETRIC_BUFFERED_BLOCK_CIPHER:
-                    blockCipher =
-                            new BlockCipher(
-                                    new com.ibm.mapper.model.Algorithm(
-                                            ITranslator.UNKNOWN, detectionLocation));
+                    com.ibm.mapper.model.Algorithm blockCipher =
+                            Utils.unknown(PublicKeyEncryption.class, detectionLocation);
                     return Optional.of(blockCipher);
                 case PADDING:
+                    BcPaddingMapper bcPaddingMapper = new BcPaddingMapper();
+                    return bcPaddingMapper
+                            .parse(valueAction.asString(), detectionLocation)
+                            .map(f -> f);
+                /* case PADDING:
                     padding = new Padding(valueAction.asString(), detectionLocation);
                     return Optional.of(padding);
                 case PBE:
@@ -255,7 +303,7 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                     return Optional.empty(); // TODO
             }
         } else if (value instanceof AlgorithmParameter<Tree> algorithmParameter) {
-            BcAeadParametersMapper bcAeadParametersMapper = new BcAeadParametersMapper();
+            BcAeadEnumsMapper bcAeadParametersMapper = new BcAeadEnumsMapper();
             return bcAeadParametersMapper
                     .parse(algorithmParameter.asString(), detectionLocation)
                     .map(f -> f);

@@ -53,7 +53,7 @@ public final class BcPKCS1Encoding {
                         .createDetectionRule()
                         .forObjectTypes("org.bouncycastle.crypto.encodings.PKCS1Encoding")
                         .forConstructor()
-                        .shouldBeDetectedAs(new ValueActionFactory<>("PKCS1"))
+                        .shouldBeDetectedAs(new ValueActionFactory<>("PKCS1Encoding"))
                         .withMethodParameter("org.bouncycastle.crypto.AsymmetricBlockCipher")
                         .addDependingDetectionRules(
                                 BcAsymCipherEngine.rules(engineDetectionValueContext))
@@ -66,7 +66,7 @@ public final class BcPKCS1Encoding {
                         .createDetectionRule()
                         .forObjectTypes("org.bouncycastle.crypto.encodings.PKCS1Encoding")
                         .forConstructor()
-                        .shouldBeDetectedAs(new ValueActionFactory<>("PKCS1"))
+                        .shouldBeDetectedAs(new ValueActionFactory<>("PKCS1Encoding"))
                         .withMethodParameter("org.bouncycastle.crypto.AsymmetricBlockCipher")
                         .addDependingDetectionRules(
                                 BcAsymCipherEngine.rules(engineDetectionValueContext))
@@ -80,7 +80,7 @@ public final class BcPKCS1Encoding {
                         .createDetectionRule()
                         .forObjectTypes("org.bouncycastle.crypto.encodings.PKCS1Encoding")
                         .forConstructor()
-                        .shouldBeDetectedAs(new ValueActionFactory<>("PKCS1"))
+                        .shouldBeDetectedAs(new ValueActionFactory<>("PKCS1Encoding"))
                         .withMethodParameter("org.bouncycastle.crypto.AsymmetricBlockCipher")
                         .addDependingDetectionRules(
                                 BcAsymCipherEngine.rules(engineDetectionValueContext))

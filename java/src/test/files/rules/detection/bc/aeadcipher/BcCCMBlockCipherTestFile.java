@@ -14,11 +14,11 @@ public class BcCCMBlockCipherTestFile {
         secureRandom.nextBytes(keyBytes);
 
         // Create a block cipher engine
-        BlockCipher aesEngine = new AESEngine(); // Noncompliant {{AES}}
+        BlockCipher aesEngine = new AESEngine(); // Noncompliant {{AESEngine}}
 
         // Instantiate CCMBlockCipher with constructor
         CCMBlockCipher constructor =
-                new CCMBlockCipher(aesEngine); // Noncompliant {{CCM}}
+                new CCMBlockCipher(aesEngine); // Noncompliant {{CCMBlockCipher}}
 
         // Initialize cipher with key and parameters
         KeyParameter keyParameter = new KeyParameter(keyBytes);
@@ -33,12 +33,12 @@ public class BcCCMBlockCipherTestFile {
         secureRandom.nextBytes(keyBytes);
 
         // Create a block cipher engine
-        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AES}}
+        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
 
         // Instantiate CCMBlockCipher with newInstance() method
         CCMBlockCipher newInstance =
                 (CCMBlockCipher)
-                        CCMBlockCipher.newInstance(aesEngine); // Noncompliant {{CCM}}
+                        CCMBlockCipher.newInstance(aesEngine); // Noncompliant {{CCMBlockCipher}}
 
         // Initialize cipher with key and parameters
         KeyParameter keyParameter = new KeyParameter(keyBytes);

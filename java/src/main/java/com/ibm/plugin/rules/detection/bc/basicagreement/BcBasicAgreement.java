@@ -56,9 +56,7 @@ public final class BcBasicAgreement {
                             .createDetectionRule()
                             .forObjectTypes("org.bouncycastle.crypto.agreement." + agreement)
                             .forConstructor()
-                            .shouldBeDetectedAs(
-                                    new ValueActionFactory<>(
-                                            agreement.replace("BasicAgreement", "")))
+                            .shouldBeDetectedAs(new ValueActionFactory<>(agreement))
                             .withoutParameters()
                             .buildForContext(new KeyContext(KeyContext.Kind.DH))
                             .inBundle(() -> "Bc")

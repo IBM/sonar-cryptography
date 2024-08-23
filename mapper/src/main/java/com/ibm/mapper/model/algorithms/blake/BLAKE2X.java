@@ -17,17 +17,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms;
+package com.ibm.mapper.model.algorithms.blake;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.Signature;
+import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public final class GOSTR341012 extends Algorithm implements Signature {
-    private static final String NAME = "GOSTR341012";
+public final class BLAKE2X extends Algorithm implements MessageDigest {
+    // https://en.wikipedia.org/wiki/BLAKE_(hash_function)#BLAKE2
 
-    public GOSTR341012(@Nonnull DetectionLocation detectionLocation) {
-        super(NAME, Signature.class, detectionLocation);
+    private static final String NAME = "BLAKE2X";
+
+    public BLAKE2X(@Nonnull MessageDigest blake2, @Nonnull DetectionLocation detectionLocation) {
+        super(NAME, MessageDigest.class, detectionLocation);
+        this.put(blake2);
     }
 }

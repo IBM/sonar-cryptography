@@ -26,7 +26,6 @@ import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import com.ibm.plugin.rules.detection.bc.cipherparameters.BcCipherParameters;
 import java.util.List;
-import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
@@ -37,16 +36,6 @@ public final class BcBufferedAsymmetricBlockCipher {
 
     private BcBufferedAsymmetricBlockCipher() {
         // nothing
-    }
-
-    private static List<IDetectionRule<Tree>> asymmetricBlockCipherRules() {
-        return Stream.of(
-                        BcAsymCipherEngine.rules().stream(),
-                        BcISO9796d1Encoding.rules().stream(),
-                        BcOAEPEncoding.rules().stream(),
-                        BcPKCS1Encoding.rules().stream())
-                .flatMap(i -> i)
-                .toList();
     }
 
     private static final IDetectionRule<Tree> INIT =
@@ -69,7 +58,7 @@ public final class BcBufferedAsymmetricBlockCipher {
                     .forConstructor()
                     .shouldBeDetectedAs(new ValueActionFactory<>("BufferedAsymmetricBlockCipher"))
                     .withMethodParameter("org.bouncycastle.crypto.AsymmetricBlockCipher")
-                    .addDependingDetectionRules(asymmetricBlockCipherRules())
+                    .addDependingDetectionRules(BcAsymmetricBlockCipher.rules())
                     .buildForContext(
                             new CipherContext(CipherContext.Kind.ASYMMETRIC_BUFFERED_BLOCK_CIPHER))
                     .inBundle(() -> "Bc")

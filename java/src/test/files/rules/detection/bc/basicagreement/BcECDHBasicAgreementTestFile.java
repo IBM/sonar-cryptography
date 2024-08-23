@@ -34,7 +34,7 @@ public class BcECDHBasicAgreementTestFile {
                 new ECDomainParameters(
                         ecSpec.getCurve(), ecSpec.getG(), ecSpec.getN(), ecSpec.getH());
         // Initialize agreement with private key
-        final ECDHBasicAgreement agreement = new ECDHBasicAgreement(); // Noncompliant {{ECDH}}
+        final ECDHBasicAgreement agreement = new ECDHBasicAgreement(); // Noncompliant {{ECDHBasicAgreement}}
         agreement.init(new ECPrivateKeyParameters(privKey.getD(), CURVE));
 
         // Initialize the ECPoint (use inifinity here for simpler demo code)

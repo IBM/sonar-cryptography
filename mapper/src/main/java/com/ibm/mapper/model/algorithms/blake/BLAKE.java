@@ -17,33 +17,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms;
+package com.ibm.mapper.model.algorithms.blake;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.DigestSize;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-// Streebog
-public final class GOSTR341112 extends Algorithm implements MessageDigest {
-    private static final String NAME = "GOSTR341112";
+public final class BLAKE extends Algorithm implements MessageDigest {
+    private static final String NAME = "BLAKE";
 
-    public GOSTR341112(@Nonnull DetectionLocation detectionLocation) {
-        super(NAME, MessageDigest.class, detectionLocation);
-        this.put(new BlockSize(512, detectionLocation));
-    }
-
-    public GOSTR341112(int digestSize, @Nonnull DetectionLocation detectionLocation) {
-        super(NAME, MessageDigest.class, detectionLocation);
+    public BLAKE(int digestSize, @Nonnull DetectionLocation detectionLocation) {
+        super(NAME + "-" + digestSize, MessageDigest.class, detectionLocation);
         this.put(new DigestSize(digestSize, detectionLocation));
-        this.put(new BlockSize(512, detectionLocation));
     }
 
-    public GOSTR341112(
-            @Nonnull final Class<? extends MessageDigest> asKind,
-            @Nonnull GOSTR341112 gostr341112) {
-        super(gostr341112, asKind);
+    public BLAKE(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull BLAKE blake) {
+        super(blake, asKind);
     }
 }

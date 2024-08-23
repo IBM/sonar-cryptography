@@ -17,31 +17,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms;
+package com.ibm.mapper.model.algorithms.gost;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.IPrimitive;
+import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class GOST28147 extends Algorithm implements BlockCipher, AuthenticatedEncryption {
-    private static final String NAME = "GOST28147"; // Magma, GOST 28147-89 (RFC 5830)
+public final class GOSTR34122015 extends Algorithm implements BlockCipher, AuthenticatedEncryption {
+    private static final String NAME = "GOSTR34122015"; // Kuznyechik
 
-    public GOST28147(@NotNull DetectionLocation detectionLocation) {
+    public GOSTR34122015(@NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
+        this.put(new BlockSize(128, detectionLocation));
+        this.put(new KeyLength(256, detectionLocation));
     }
 
-    public GOST28147(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+    public GOSTR34122015(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+        this(detectionLocation);
         this.put(mode);
     }
 
-    public GOST28147(
-            @Nonnull final Class<? extends IPrimitive> asKind, @NotNull GOST28147 gost28147) {
-        super(gost28147, asKind);
+    public GOSTR34122015(
+            @Nonnull final Class<? extends IPrimitive> asKind,
+            @NotNull GOSTR34122015 gostr34122015) {
+        super(gostr34122015, asKind);
     }
 }

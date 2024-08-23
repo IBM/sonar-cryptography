@@ -26,6 +26,6 @@ import org.jetbrains.annotations.NotNull;
 public final class ISO10126 extends Padding {
 
     public ISO10126(@NotNull DetectionLocation detectionLocation) {
-        super("ISO10126", detectionLocation);
+        super("ISO 10126", detectionLocation);
     }
 }

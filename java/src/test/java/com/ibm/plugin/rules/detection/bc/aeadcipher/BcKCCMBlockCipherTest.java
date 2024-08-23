@@ -76,7 +76,7 @@ class BcKCCMBlockCipherTest extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("KCCM");
+        assertThat(value0.asString()).isEqualTo("KCCMBlockCipher");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
                 getStoreOfValueType(OperationMode.class, detectionStore.getChildren());
@@ -101,7 +101,7 @@ class BcKCCMBlockCipherTest extends TestBase {
         assertThat(store_2.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0_2 = store_2.getDetectionValues().get(0);
         assertThat(value0_2).isInstanceOf(ValueAction.class);
-        assertThat(value0_2.asString()).isEqualTo("AES");
+        assertThat(value0_2.asString()).isEqualTo("AESEngine");
 
         /*
          * Translation
@@ -119,7 +119,7 @@ class BcKCCMBlockCipherTest extends TestBase {
         INode modeNode1 = authenticatedEncryptionNode1.getChildren().get(Mode.class);
         assertThat(modeNode1).isNotNull();
         assertThat(modeNode1.getChildren()).isEmpty();
-        assertThat(modeNode1.asString()).isEqualTo("KCCM");
+        assertThat(modeNode1.asString()).isEqualTo("CCM");
 
         // TagLength under AuthenticatedEncryption
         INode tagLengthNode1 = authenticatedEncryptionNode1.getChildren().get(TagLength.class);

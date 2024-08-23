@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
 public final class AES extends Algorithm implements BlockCipher, AuthenticatedEncryption {
-    private static final String NAME = "AES";
+    private static final String NAME = "AES"; // Rijndael
 
     public AES(@NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);

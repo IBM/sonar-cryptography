@@ -39,7 +39,7 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class BcAeadParametersMapper implements IMapper {
+public class BcAeadEnumsMapper implements IMapper {
 
     @Override
     @Nonnull
@@ -53,8 +53,8 @@ public class BcAeadParametersMapper implements IMapper {
 
     @Nonnull
     private Optional<? extends Algorithm> map(
-            @Nonnull String cipherAlgorithm, @Nonnull DetectionLocation detectionLocation) {
-        return switch (cipherAlgorithm) {
+            @Nonnull String aeadString, @Nonnull DetectionLocation detectionLocation) {
+        return switch (aeadString) {
             case "ascon128" -> Optional.of(new Ascon128(detectionLocation));
             case "ascon128a" -> Optional.of(new Ascon128a(detectionLocation));
             case "ascon80pq" -> Optional.of(new Ascon80pq(detectionLocation));

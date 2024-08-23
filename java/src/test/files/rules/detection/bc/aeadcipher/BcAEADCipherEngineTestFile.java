@@ -17,7 +17,7 @@ public class BcAEADCipherEngineTestFile {
 
         // Initialize the AsconEngine
         AsconEngine asconEngine =
-                new AsconEngine(AsconEngine.AsconParameters.ascon128); // Noncompliant {{Ascon}}
+                new AsconEngine(AsconEngine.AsconParameters.ascon128); // Noncompliant {{AsconEngine}}
 
         // Initialize the key parameter with the provided key
         CipherParameters keyParam = new KeyParameter(key);
@@ -39,7 +39,7 @@ public class BcAEADCipherEngineTestFile {
 
         // Initialize the Grain128AEADEngine
         Grain128AEADEngine engine =
-                new Grain128AEADEngine(); // Noncompliant {{Grain-128AEAD}}
+                new Grain128AEADEngine(); // Noncompliant {{Grain128AEADEngine}}
 
         // Initialize the key parameter with the provided key
         CipherParameters keyParam = new KeyParameter(key);

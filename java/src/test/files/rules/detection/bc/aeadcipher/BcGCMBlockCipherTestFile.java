@@ -17,10 +17,10 @@ public class BcGCMBlockCipherTestFile {
         secureRandom.nextBytes(keyBytes);
 
         // Create a block cipher engine
-        BlockCipher aesEngine = new AESFastEngine(); // Noncompliant {{AES}}
+        BlockCipher aesEngine = new AESFastEngine(); // Noncompliant {{AESFastEngine}}
 
         // Instantiate GCMBlockCipher with constructor
-        GCMBlockCipher constructor = new GCMBlockCipher(aesEngine); // Noncompliant {{GCM}}
+        GCMBlockCipher constructor = new GCMBlockCipher(aesEngine); // Noncompliant {{GCMBlockCipher}}
 
         // Initialize cipher with key and parameters
         KeyParameter keyParameter = new KeyParameter(keyBytes);
@@ -35,11 +35,11 @@ public class BcGCMBlockCipherTestFile {
         secureRandom.nextBytes(keyBytes);
 
         // Create a block cipher engine
-        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AES}}
+        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
 
         // Instantiate GCMBlockCipher with newInstance() method
         GCMBlockCipher newInstance =
-                (GCMBlockCipher) GCMBlockCipher.newInstance(aesEngine); // Noncompliant {{GCM}}
+                (GCMBlockCipher) GCMBlockCipher.newInstance(aesEngine); // Noncompliant {{GCMBlockCipher}}
 
         // Initialize cipher with key and parameters
         KeyParameter keyParameter = new KeyParameter(keyBytes);
@@ -54,13 +54,13 @@ public class BcGCMBlockCipherTestFile {
         secureRandom.nextBytes(keyBytes);
 
         // Create a block cipher engine
-        BlockCipher aesEngine = new AESFastEngine(); // Noncompliant {{AES}}
+        BlockCipher aesEngine = new AESFastEngine(); // Noncompliant {{AESFastEngine}}
 
         // Create a GCMMultiplier (e.g., Tables8kGCMMultiplier)
         GCMMultiplier multiplier = new Tables8kGCMMultiplier();
 
         // Instantiate GCMBlockCipher with constructor
-        GCMBlockCipher constructor = new GCMBlockCipher(aesEngine, multiplier); // Noncompliant {{GCM}}
+        GCMBlockCipher constructor = new GCMBlockCipher(aesEngine, multiplier); // Noncompliant {{GCMBlockCipher}}
 
         // Initialize cipher with key and parameters
         KeyParameter keyParameter = new KeyParameter(keyBytes);
@@ -75,14 +75,14 @@ public class BcGCMBlockCipherTestFile {
         secureRandom.nextBytes(keyBytes);
 
         // Create a block cipher engine
-        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AES}}
+        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
 
         // Create a GCMMultiplier (e.g., Tables8kGCMMultiplier)
         GCMMultiplier multiplier = new Tables8kGCMMultiplier();
 
         // Instantiate GCMBlockCipher with newInstance() method
         GCMBlockCipher newInstance =
-                (GCMBlockCipher) GCMBlockCipher.newInstance(aesEngine, multiplier); // Noncompliant {{GCM}}
+                (GCMBlockCipher) GCMBlockCipher.newInstance(aesEngine, multiplier); // Noncompliant {{GCMBlockCipher}}
 
         // Initialize cipher with key and parameters
         KeyParameter keyParameter = new KeyParameter(keyBytes);

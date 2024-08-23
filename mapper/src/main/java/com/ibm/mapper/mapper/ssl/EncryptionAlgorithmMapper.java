@@ -26,14 +26,14 @@ import com.ibm.mapper.model.algorithms.Aria;
 import com.ibm.mapper.model.algorithms.Camellia;
 import com.ibm.mapper.model.algorithms.ChaCha20Poly1305;
 import com.ibm.mapper.model.algorithms.DES;
-import com.ibm.mapper.model.algorithms.GOST28147;
-import com.ibm.mapper.model.algorithms.GOSTR34122015;
 import com.ibm.mapper.model.algorithms.IDEA;
 import com.ibm.mapper.model.algorithms.RC2;
 import com.ibm.mapper.model.algorithms.RC4;
-import com.ibm.mapper.model.algorithms.SEED;
 import com.ibm.mapper.model.algorithms.SM4;
+import com.ibm.mapper.model.algorithms.Skipjack;
 import com.ibm.mapper.model.algorithms.TripleDES;
+import com.ibm.mapper.model.algorithms.gost.GOST28147;
+import com.ibm.mapper.model.algorithms.gost.GOSTR34122015;
 import com.ibm.mapper.model.mode.CBC;
 import com.ibm.mapper.model.mode.CCM;
 import com.ibm.mapper.model.mode.CNT;
@@ -96,7 +96,8 @@ public final class EncryptionAlgorithmMapper implements IMapper {
                     Optional.of(new Camellia(256, new CBC(detectionLocation), detectionLocation));
             case "CAMELLIA 256 GCM" ->
                     Optional.of(new Camellia(256, new GCM(detectionLocation), detectionLocation));
-            case "SEED CBC" -> Optional.of(new SEED(new CBC(detectionLocation), detectionLocation));
+            case "SEED CBC" ->
+                    Optional.of(new Skipjack(new CBC(detectionLocation), detectionLocation));
             case "28147 CNT" ->
                     Optional.of(new GOST28147(new CNT(detectionLocation), detectionLocation));
             case "MAGMA CTR" ->

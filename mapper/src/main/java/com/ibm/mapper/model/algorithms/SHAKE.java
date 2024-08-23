@@ -29,8 +29,12 @@ import javax.annotation.Nonnull;
 public final class SHAKE extends Algorithm implements MessageDigest {
     private static final String NAME = "SHAKE";
 
-    public SHAKE(int digestSize, @Nonnull DetectionLocation detectionLocation) {
+    public SHAKE(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, MessageDigest.class, detectionLocation);
+    }
+
+    public SHAKE(int digestSize, @Nonnull DetectionLocation detectionLocation) {
+        this(detectionLocation);
         this.put(new DigestSize(digestSize, detectionLocation));
     }
 

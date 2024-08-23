@@ -14,11 +14,11 @@ public class BcEAXBlockCipherTestFile {
         secureRandom.nextBytes(keyBytes);
 
         // Create a block cipher engine
-        BlockCipher aesEngine = new AESEngine(); // Noncompliant {{AES}}
+        BlockCipher aesEngine = new AESEngine(); // Noncompliant {{AESEngine}}
 
         // Instantiate EAXBlockCipher with constructor
         EAXBlockCipher constructor =
-                new EAXBlockCipher(aesEngine); // Noncompliant {{EAX}}
+                new EAXBlockCipher(aesEngine); // Noncompliant {{EAXBlockCipher}}
 
         // Initialize cipher with key and parameters
         KeyParameter keyParameter = new KeyParameter(keyBytes);

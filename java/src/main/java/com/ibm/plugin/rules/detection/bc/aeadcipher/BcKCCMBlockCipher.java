@@ -44,7 +44,10 @@ public final class BcKCCMBlockCipher {
                     .forConstructor()
                     .shouldBeDetectedAs(new ValueActionFactory<>(MODE))
                     .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
-                    .addDependingDetectionRules(BcBlockCipher.all())
+                    .addDependingDetectionRules(
+                            BcBlockCipher.all(
+                                    new CipherContext(
+                                            CipherContext.Kind.BLOCK_CIPHER_ENGINE_FOR_AEAD)))
                     .buildForContext(new CipherContext(CipherContext.Kind.AEAD_BLOCK_CIPHER))
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcAEADCipherInit.rules());
@@ -56,7 +59,10 @@ public final class BcKCCMBlockCipher {
                     .forConstructor()
                     .shouldBeDetectedAs(new ValueActionFactory<>(MODE))
                     .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
-                    .addDependingDetectionRules(BcBlockCipher.all())
+                    .addDependingDetectionRules(
+                            BcBlockCipher.all(
+                                    new CipherContext(
+                                            CipherContext.Kind.BLOCK_CIPHER_ENGINE_FOR_AEAD)))
                     .withMethodParameter("int")
                     .buildForContext(new CipherContext(CipherContext.Kind.AEAD_BLOCK_CIPHER))
                     .inBundle(() -> "Bc")

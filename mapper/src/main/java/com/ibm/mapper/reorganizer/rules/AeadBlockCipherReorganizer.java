@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.plugin.translation.reorganizer.rules;
+package com.ibm.mapper.reorganizer.rules;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
@@ -51,16 +51,11 @@ public final class AeadBlockCipherReorganizer {
                                             .noAction()))
                     .perform(
                             (node, parent, roots) -> {
-                                Algorithm authenticatedEncryptionChild =
+                                Algorithm newAuthenticatedEncryption =
                                         (Algorithm)
                                                 node.getChildren()
                                                         .get(AuthenticatedEncryption.class)
                                                         .deepCopy();
-
-                                INode newAuthenticatedEncryption =
-                                        new Algorithm(
-                                                authenticatedEncryptionChild,
-                                                AuthenticatedEncryption.class);
 
                                 for (Map.Entry<Class<? extends INode>, INode> childKeyValue :
                                         node.getChildren().entrySet()) {

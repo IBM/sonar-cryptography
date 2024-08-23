@@ -13,9 +13,9 @@ public class BcISO9796d1EncodingTestFile {
     public byte[] encryptCEK(final RSAPublicKey pub, final SecretKey cek)
     throws RuntimeException {
         try {
-            AsymmetricBlockCipher engine = new RSAEngine(); // Noncompliant {{RSA}}
+            AsymmetricBlockCipher engine = new RSAEngine(); // Noncompliant {{RSAEngine}}
 
-            ISO9796d1Encoding cipher = new ISO9796d1Encoding(engine); // Noncompliant {{ISO 9796-1}}
+            ISO9796d1Encoding cipher = new ISO9796d1Encoding(engine); // Noncompliant {{ISO9796d1Encoding}}
 
             BigInteger mod = pub.getModulus();
             BigInteger exp = pub.getPublicExponent();

@@ -50,7 +50,7 @@ public final class BcISO9796d1Encoding {
                         .createDetectionRule()
                         .forObjectTypes("org.bouncycastle.crypto.encodings.ISO9796d1Encoding")
                         .forConstructor()
-                        .shouldBeDetectedAs(new ValueActionFactory<>("ISO 9796-1"))
+                        .shouldBeDetectedAs(new ValueActionFactory<>("ISO9796d1Encoding"))
                         .withMethodParameter("org.bouncycastle.crypto.AsymmetricBlockCipher")
                         .addDependingDetectionRules(
                                 BcAsymCipherEngine.rules(engineDetectionValueContext))

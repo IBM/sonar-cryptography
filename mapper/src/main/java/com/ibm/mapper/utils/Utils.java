@@ -19,7 +19,12 @@
  */
 package com.ibm.mapper.utils;
 
+import com.ibm.mapper.ITranslator;
+import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.IPrimitive;
+import com.ibm.mapper.model.Mode;
+import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.collections.IAssetCollection;
 import java.util.Collection;
 import java.util.List;
@@ -91,5 +96,33 @@ public final class Utils {
         }
 
         return Optional.empty();
+    }
+
+    public static Algorithm unknown(
+            @Nonnull final Class<? extends IPrimitive> asKind,
+            DetectionLocation detectionLocation) {
+        return new Algorithm(ITranslator.UNKNOWN, asKind, detectionLocation);
+    }
+
+    public static Algorithm cipherWithMode(@Nonnull Algorithm cipher, @Nonnull Mode mode) {
+        cipher.put(mode);
+        return cipher;
+    }
+
+    public static Algorithm unknownWithMode(
+            @Nonnull Mode mode, @Nonnull final Class<? extends IPrimitive> asKind) {
+        Algorithm cipher = unknown(asKind, mode.getDetectionContext());
+        return cipherWithMode(cipher, mode);
+    }
+
+    public static Algorithm cipherWithPadding(@Nonnull Algorithm cipher, @Nonnull Padding padding) {
+        cipher.put(padding);
+        return cipher;
+    }
+
+    public static Algorithm unknownWithPadding(
+            @Nonnull Padding padding, @Nonnull final Class<? extends IPrimitive> asKind) {
+        Algorithm cipher = unknown(asKind, padding.getDetectionContext());
+        return cipherWithPadding(cipher, padding);
     }
 }

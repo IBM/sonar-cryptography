@@ -18,7 +18,7 @@ public class BcGCMSIVBlockCipherTestFile {
 
         // Instantiate GCMSIVBlockCipher with constructor
         GCMSIVBlockCipher constructor =
-                new GCMSIVBlockCipher(); // Noncompliant {{GCM-SIV}}
+                new GCMSIVBlockCipher(); // Noncompliant {{GCMSIVBlockCipher}}
 
         // Initialize cipher with key and parameters
         KeyParameter keyParameter = new KeyParameter(keyBytes);
@@ -33,11 +33,11 @@ public class BcGCMSIVBlockCipherTestFile {
         secureRandom.nextBytes(keyBytes);
 
         // Create a block cipher engine
-        BlockCipher aesEngine = new RijndaelEngine(); // Noncompliant {{Rijndael}}
+        BlockCipher aesEngine = new RijndaelEngine(); // Noncompliant {{RijndaelEngine}}
 
         // Instantiate GCMSIVBlockCipher with constructor
         GCMSIVBlockCipher constructor =
-                new GCMSIVBlockCipher(aesEngine); // Noncompliant {{GCM-SIV}}
+                new GCMSIVBlockCipher(aesEngine); // Noncompliant {{GCMSIVBlockCipher}}
 
         // Initialize cipher with key and parameters
         KeyParameter keyParameter = new KeyParameter(keyBytes);
@@ -52,14 +52,14 @@ public class BcGCMSIVBlockCipherTestFile {
         secureRandom.nextBytes(keyBytes);
 
         // Create a block cipher engine
-        BlockCipher aesEngine = new AESEngine(); // Noncompliant {{AES}}
+        BlockCipher aesEngine = new AESEngine(); // Noncompliant {{AESEngine}}
 
         // Create a GCMMultiplier (e.g., Tables8kGCMMultiplier)
         GCMMultiplier multiplier = new Tables8kGCMMultiplier();
 
         // Instantiate GCMSIVBlockCipher with constructor
         GCMSIVBlockCipher constructor =
-                new GCMSIVBlockCipher(aesEngine, multiplier); // Noncompliant {{GCM-SIV}}
+                new GCMSIVBlockCipher(aesEngine, multiplier); // Noncompliant {{GCMSIVBlockCipher}}
 
         // Initialize cipher with key and parameters
         KeyParameter keyParameter = new KeyParameter(keyBytes);
