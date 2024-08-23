@@ -42,9 +42,11 @@ import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.algorithms.RSAssaPSS;
 import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.model.algorithms.SHA3;
-import java.util.Collection;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * This enricher instance operates on a language-agnostic level, meaning it will enrich the given
@@ -60,15 +62,26 @@ public class Enricher implements IEnricher {
      */
     @Nonnull
     public static Collection<INode> enrich(@Nonnull final Collection<INode> nodes) {
+        return nodes.stream().map(Enricher::enrichTree).toList();
+    }
+
+    @NotNull private static INode enrichTree(@Nonnull INode node) {
         final Enricher enricher = new Enricher();
-        return nodes.stream()
-                .map(
-                        node -> {
-                            final INode enriched = enricher.enrich(node);
-                            enrich(enriched.getChildren().values()).forEach(enriched::put);
-                            return enriched;
-                        })
-                .toList();
+        final INode enriched = enricher.enrich(node);
+
+        final Collection<INode> enrichedChildren = new ArrayList<>();
+        final Collection<INode> markForRemoval = new ArrayList<>();
+        for (final INode child : enriched.getChildren().values()) {
+            final INode enrichedChild = enrichTree(child);
+            if (!child.is(enrichedChild.getKind())) {
+                markForRemoval.add(child);
+            }
+            enrichedChildren.add(enrichedChild);
+        }
+
+        enrichedChildren.forEach(enriched::put);
+        markForRemoval.forEach(remove -> enriched.removeChildOfType(remove.getKind()));
+        return enriched;
     }
 
     /**
