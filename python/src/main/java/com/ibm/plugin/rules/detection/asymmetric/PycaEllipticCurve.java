@@ -28,6 +28,7 @@ import com.ibm.engine.model.context.PrivateKeyContext;
 import com.ibm.engine.model.context.PublicKeyContext;
 import com.ibm.engine.model.context.SignatureContext;
 import com.ibm.engine.model.factory.AlgorithmFactory;
+import com.ibm.engine.model.factory.CurveFactory;
 import com.ibm.engine.model.factory.KeyActionFactory;
 import com.ibm.engine.model.factory.SignatureActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
@@ -110,7 +111,7 @@ public final class PycaEllipticCurve {
                     .forMethods("derive_private_key")
                     .withMethodParameter(ANY)
                     .withMethodParameter(ANY)
-                    .shouldBeDetectedAs(new AlgorithmFactory<>())
+                    .shouldBeDetectedAs(new CurveFactory<>())
                     .buildForContext(new PrivateKeyContext(Map.of("algorithm", "EC")))
                     .inBundle(() -> "Pyca")
                     .withDependingDetectionRules(List.of(SIGN_EC, KEY_EXCHANGE_EC));
