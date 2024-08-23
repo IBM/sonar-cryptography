@@ -31,6 +31,7 @@ import com.ibm.mapper.model.EllipticCurveAlgorithm;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.PrivateKey;
+import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.algorithms.DH;
 import com.ibm.mapper.model.algorithms.DSA;
 import com.ibm.mapper.model.algorithms.Ed25519;
@@ -110,7 +111,18 @@ public final class PycaPrivateKeyContextTranslator implements IContextTranslatio
                                         case "SECT233R1" -> new Sect233r1(detectionLocation);
                                         case "SECT163R2" -> new Sect163r2(detectionLocation);
                                         default -> null;
-                                    });
+                                    })
+                    .map(EllipticCurveAlgorithm::new)
+                    .map(
+                            ec -> {
+                                PrivateKey privateKey = new PrivateKey((PublicKeyEncryption) ec);
+                                privateKey.put(
+                                        new KeyGeneration(
+                                                detectionLocation)); // currently only GENERATE is
+                                // used as key action is this
+                                // context
+                                return privateKey;
+                            });
         }
 
         return Optional.empty();

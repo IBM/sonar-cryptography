@@ -22,15 +22,14 @@ package com.ibm.plugin.rules.detection.asymmetric.EllipticCurve;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.engine.detection.DetectionStore;
-import com.ibm.engine.model.Algorithm;
+import com.ibm.engine.model.Curve;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.context.PrivateKeyContext;
 import com.ibm.mapper.model.EllipticCurve;
-import com.ibm.mapper.model.EllipticCurveAlgorithm;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Key;
+import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.PrivateKey;
-import com.ibm.mapper.model.PublicKey;
+import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.plugin.TestBase;
 import java.util.List;
@@ -56,62 +55,49 @@ public class PycaEllipticCurveDeriveTest extends TestBase {
             int findingId,
             @Nonnull DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> detectionStore,
             @Nonnull List<INode> nodes) {
+
         /*
          * Detection Store
          */
         assertThat(detectionStore.getDetectionValues()).hasSize(1);
         IValue<Tree> value = detectionStore.getDetectionValues().get(0);
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(PrivateKeyContext.class);
-        assertThat(value).isInstanceOf(Algorithm.class);
+        assertThat(value).isInstanceOf(Curve.class);
         assertThat(value.asString()).isEqualTo("SECP256R1");
 
         /*
          * Translation
          */
-        assertThat(nodes).hasSize(2);
+        assertThat(nodes).hasSize(1);
 
         // PrivateKey
         INode privateKeyNode = nodes.get(0);
-        assertThat(privateKeyNode).isInstanceOf(PrivateKey.class);
-        assertThat(privateKeyNode.getChildren()).hasSize(1);
+        assertThat(privateKeyNode.getKind()).isEqualTo(PrivateKey.class);
+        assertThat(privateKeyNode.getChildren()).hasSize(2);
+        assertThat(privateKeyNode.asString()).isEqualTo("EC-secp256r1");
 
-        // EllipticCurveAlgorithm under PrivateKey
-        INode privateKeyAlgorithmNode =
-                privateKeyNode.getChildren().get(EllipticCurveAlgorithm.class);
-        assertThat(privateKeyAlgorithmNode).isNotNull();
-        assertThat(privateKeyAlgorithmNode.asString()).isEqualTo("EC");
+        // KeyGeneration under PrivateKey
+        INode keyGenerationNode = privateKeyNode.getChildren().get(KeyGeneration.class);
+        assertThat(keyGenerationNode).isNotNull();
+        assertThat(keyGenerationNode.getChildren()).isEmpty();
+        assertThat(keyGenerationNode.asString()).isEqualTo("KEYGENERATION");
 
-        // EllipticCurve under EllipticCurveAlgorithm under PrivateKey
-        INode privateKeyCurveNode = privateKeyAlgorithmNode.getChildren().get(EllipticCurve.class);
-        assertThat(privateKeyCurveNode).isNotNull();
-        assertThat(privateKeyCurveNode.asString()).isEqualTo("SECP256R1");
+        // PublicKeyEncryption under PrivateKey
+        INode publicKeyEncryptionNode = privateKeyNode.getChildren().get(PublicKeyEncryption.class);
+        assertThat(publicKeyEncryptionNode).isNotNull();
+        assertThat(publicKeyEncryptionNode.getChildren()).hasSize(2);
+        assertThat(publicKeyEncryptionNode.asString()).isEqualTo("EC-secp256r1");
 
-        // KeyGeneration under EllipticCurveAlgorithm under PrivateKey
-        INode privateKeyKeyGenerationNode =
-                privateKeyAlgorithmNode.getChildren().get(KeyGeneration.class);
-        assertThat(privateKeyKeyGenerationNode).isNotNull();
-        assertThat(privateKeyKeyGenerationNode.asString()).isEqualTo("KEYGENERATION");
+        // EllipticCurve under PublicKeyEncryption under PrivateKey
+        INode ellipticCurveNode = publicKeyEncryptionNode.getChildren().get(EllipticCurve.class);
+        assertThat(ellipticCurveNode).isNotNull();
+        assertThat(ellipticCurveNode.getChildren()).isEmpty();
+        assertThat(ellipticCurveNode.asString()).isEqualTo("secp256r1");
 
-        // PublicKey
-        INode publicKeyNode = nodes.get(1);
-        assertThat(publicKeyNode).isInstanceOfAny(PublicKey.class, Key.class);
-        assertThat(publicKeyNode.getChildren()).hasSize(1);
-
-        // EllipticCurveAlgorithm under PublicKey
-        INode publicKeyAlgorithmNode =
-                publicKeyNode.getChildren().get(EllipticCurveAlgorithm.class);
-        assertThat(publicKeyAlgorithmNode).isNotNull();
-        assertThat(publicKeyAlgorithmNode.asString()).isEqualTo("EC");
-
-        // EllipticCurve under EllipticCurveAlgorithm under PublicKey
-        INode publicKeyCurveNode = publicKeyAlgorithmNode.getChildren().get(EllipticCurve.class);
-        assertThat(publicKeyCurveNode).isNotNull();
-        assertThat(publicKeyCurveNode.asString()).isEqualTo("SECP256R1");
-
-        // KeyGeneration under EllipticCurveAlgorithm under PublicKey
-        INode publicKeyKeyGenerationNode =
-                publicKeyAlgorithmNode.getChildren().get(KeyGeneration.class);
-        assertThat(publicKeyKeyGenerationNode).isNotNull();
-        assertThat(publicKeyKeyGenerationNode.asString()).isEqualTo("KEYGENERATION");
+        // Oid under PublicKeyEncryption under PrivateKey
+        INode oidNode = publicKeyEncryptionNode.getChildren().get(Oid.class);
+        assertThat(oidNode).isNotNull();
+        assertThat(oidNode.getChildren()).isEmpty();
+        assertThat(oidNode.asString()).isEqualTo("1.2.840.10045.2.1");
     }
 }
