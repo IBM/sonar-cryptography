@@ -19,8 +19,15 @@
  */
 package com.ibm.mapper.reorganizer.rules;
 
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Key;
+import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.Signature;
+import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
+import com.ibm.mapper.reorganizer.builder.ReorganizerRuleBuilder;
 import java.util.List;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -165,9 +172,47 @@ public final class SignerReorganizer {
 
      */
 
+    public static final IReorganizerRule MOVE_DIGEST_FROM_SIGN_ACTION_UNDER_SIGNATURE =
+            new ReorganizerRuleBuilder()
+                    .createReorganizerRule()
+                    .forNodeKind(Sign.class)
+                    .withDetectionCondition(
+                            (node, parent, roots) -> {
+                                if (parent != null) {
+                                    return parent instanceof Key
+                                            && node.hasChildOfType(MessageDigest.class).isPresent()
+                                            && parent.hasChildOfType(Signature.class).isPresent();
+                                }
+                                return false;
+                            })
+                    .perform(
+                            (node, parent, roots) -> {
+                                if (parent == null) {
+                                    return roots;
+                                }
+
+                                final Optional<INode> possibleDigest =
+                                        node.hasChildOfType(MessageDigest.class);
+                                final Optional<INode> possibleSignature =
+                                        parent.hasChildOfType(Signature.class);
+
+                                if (possibleSignature.isEmpty()) {
+                                    return roots;
+                                }
+                                if (possibleDigest.isEmpty()) {
+                                    return roots;
+                                }
+
+                                possibleSignature.get().put(possibleDigest.get());
+                                node.removeChildOfType(MessageDigest.class);
+                                return roots;
+                            });
+
     @Unmodifiable
     @Nonnull
     public static List<IReorganizerRule> rules() {
-        return List.of(); // RENAME_SIGNATURE, RENAME_SIGNATURE_PSS, RENAME_SIGNATURE_RSA
+        return List.of(MOVE_DIGEST_FROM_SIGN_ACTION_UNDER_SIGNATURE); // RENAME_SIGNATURE,
+        // RENAME_SIGNATURE_PSS,
+        // RENAME_SIGNATURE_RSA
     }
 }

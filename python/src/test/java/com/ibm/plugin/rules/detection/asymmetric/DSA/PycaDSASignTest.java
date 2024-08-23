@@ -22,21 +22,21 @@ package com.ibm.plugin.rules.detection.asymmetric.DSA;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.engine.detection.DetectionStore;
-import com.ibm.engine.model.CipherAction;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.KeySize;
 import com.ibm.engine.model.SignatureAction;
+import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.DigestContext;
 import com.ibm.engine.model.context.PrivateKeyContext;
 import com.ibm.engine.model.context.SignatureContext;
-import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.BlockSize;
+import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Key;
-import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.PrivateKey;
-import com.ibm.mapper.model.PublicKey;
 import com.ibm.mapper.model.Signature;
+import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.plugin.TestBase;
@@ -62,121 +62,95 @@ public class PycaDSASignTest extends TestBase {
             int findingId,
             @Nonnull DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> detectionStore,
             @Nonnull List<INode> nodes) {
+
         /*
          * Detection Store
          */
         assertThat(detectionStore.getDetectionValues()).hasSize(1);
-        IValue<Tree> value = detectionStore.getDetectionValues().get(0);
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(PrivateKeyContext.class);
-        assertThat(value).isInstanceOf(KeySize.class);
-        assertThat(value.asString()).isEqualTo("1024");
+        IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
+        assertThat(value0).isInstanceOf(KeySize.class);
+        assertThat(value0.asString()).isEqualTo("1024");
 
-        DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> store =
+        DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> store_1 =
                 getStoreOfValueType(SignatureAction.class, detectionStore.getChildren());
-        assertThat(store).isNotNull();
-        assertThat(store.getDetectionValueContext()).isInstanceOf(SignatureContext.class);
-        assertThat(store.getDetectionValues()).hasSize(1);
-        value = store.getDetectionValues().get(0);
-        assertThat(value).isInstanceOf(SignatureAction.class);
-        assertThat(value.asString()).isEqualTo("SIGN");
+        assertThat(store_1.getDetectionValues()).hasSize(1);
+        assertThat(store_1.getDetectionValueContext()).isInstanceOf(SignatureContext.class);
+        IValue<Tree> value0_1 = store_1.getDetectionValues().get(0);
+        assertThat(value0_1).isInstanceOf(SignatureAction.class);
+        assertThat(value0_1.asString()).isEqualTo("SIGN");
 
-        store =
-                getStoreOfValueType(
-                        com.ibm.engine.model.CipherAction.class, detectionStore.getChildren());
-        assertThat(store).isNotNull();
-        assertThat(store.getDetectionValueContext()).isInstanceOf(DigestContext.class);
-        assertThat(store.getDetectionValues()).hasSize(1);
-        value = store.getDetectionValues().get(0);
-        assertThat(value).isInstanceOf(CipherAction.class);
-        assertThat(value.asString()).isEqualTo("HASH");
+        DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> store_1_1 =
+                getStoreOfValueType(ValueAction.class, store_1.getChildren());
+        assertThat(store_1_1.getDetectionValues()).hasSize(1);
+        assertThat(store_1_1.getDetectionValueContext()).isInstanceOf(DigestContext.class);
+        IValue<Tree> value0_1_1 = store_1_1.getDetectionValues().get(0);
+        assertThat(value0_1_1).isInstanceOf(ValueAction.class);
+        assertThat(value0_1_1.asString()).isEqualTo("SHA256");
 
         /*
          * Translation
          */
-        assertThat(nodes).hasSize(2);
+        assertThat(nodes).hasSize(1);
 
         // PrivateKey
         INode privateKeyNode = nodes.get(0);
-        assertThat(privateKeyNode).isInstanceOf(PrivateKey.class);
-        assertThat(privateKeyNode).isNotNull();
+        assertThat(privateKeyNode.getKind()).isEqualTo(PrivateKey.class);
+        assertThat(privateKeyNode.getChildren()).hasSize(3);
         assertThat(privateKeyNode.asString()).isEqualTo("DSA");
-        assertThat(privateKeyNode.getChildren()).hasSize(3); // Three children detected
-
-        // KeyLength under PrivateKey
-        INode privateKeyKeyLengthNode = privateKeyNode.getChildren().get(KeyLength.class);
-        assertThat(privateKeyKeyLengthNode).isNotNull();
-        assertThat(privateKeyKeyLengthNode.asString()).isEqualTo("1024");
 
         // Signature under PrivateKey
-        INode privateKeySignatureNode = privateKeyNode.getChildren().get(Signature.class);
-        assertThat(privateKeySignatureNode).isNotNull();
-        assertThat(privateKeySignatureNode.asString()).isEqualTo("SHA256withDSA");
+        INode signatureNode = privateKeyNode.getChildren().get(Signature.class);
+        assertThat(signatureNode).isNotNull();
+        assertThat(signatureNode.getChildren()).hasSize(2);
+        assertThat(signatureNode.asString()).isEqualTo("DSA");
+
+        // Oid under Signature under PrivateKey
+        INode oidNode = signatureNode.getChildren().get(Oid.class);
+        assertThat(oidNode).isNotNull();
+        assertThat(oidNode.getChildren()).isEmpty();
+        assertThat(oidNode.asString()).isEqualTo("2.16.840.1.101.3.4.3.2");
 
         // MessageDigest under Signature under PrivateKey
-        INode privateKeyMessageDigestNode =
-                privateKeySignatureNode.getChildren().get(MessageDigest.class);
-        assertThat(privateKeyMessageDigestNode).isNotNull();
-        assertThat(privateKeyMessageDigestNode.asString()).isEqualTo("SHA256");
+        INode messageDigestNode = signatureNode.getChildren().get(MessageDigest.class);
+        assertThat(messageDigestNode).isNotNull();
+        assertThat(messageDigestNode.getChildren()).hasSize(4);
+        assertThat(messageDigestNode.asString()).isEqualTo("SHA256");
 
-        // Sign under Signature under PrivateKey
-        INode privateKeySignNode = privateKeySignatureNode.getChildren().get(Sign.class);
-        assertThat(privateKeySignNode).isNotNull();
-        assertThat(privateKeySignNode.asString()).isEqualTo("SIGN");
+        // BlockSize under MessageDigest under Signature under PrivateKey
+        INode blockSizeNode = messageDigestNode.getChildren().get(BlockSize.class);
+        assertThat(blockSizeNode).isNotNull();
+        assertThat(blockSizeNode.getChildren()).isEmpty();
+        assertThat(blockSizeNode.asString()).isEqualTo("512");
 
-        // Algorithm under Signature under PrivateKey
-        INode privateKeyAlgorithmNode = privateKeySignatureNode.getChildren().get(Algorithm.class);
-        assertThat(privateKeyAlgorithmNode).isNotNull();
-        assertThat(privateKeyAlgorithmNode.asString()).isEqualTo("DSA");
+        // Oid under MessageDigest under Signature under PrivateKey
+        INode oidNode1 = messageDigestNode.getChildren().get(Oid.class);
+        assertThat(oidNode1).isNotNull();
+        assertThat(oidNode1.getChildren()).isEmpty();
+        assertThat(oidNode1.asString()).isEqualTo("2.16.840.1.101.3.4.2.1");
 
-        // KeyLength under Algorithm under Signature under PrivateKey
-        INode privateKeyAlgorithmKeyLengthNode =
-                privateKeyAlgorithmNode.getChildren().get(KeyLength.class);
-        assertThat(privateKeyAlgorithmKeyLengthNode).isNotNull();
-        assertThat(privateKeyAlgorithmKeyLengthNode.asString()).isEqualTo("1024");
+        // DigestSize under MessageDigest under Signature under PrivateKey
+        INode digestSizeNode = messageDigestNode.getChildren().get(DigestSize.class);
+        assertThat(digestSizeNode).isNotNull();
+        assertThat(digestSizeNode.getChildren()).isEmpty();
+        assertThat(digestSizeNode.asString()).isEqualTo("256");
 
-        // Algorithm under PrivateKey
-        INode privateKeyAlgorithmNode1 = privateKeyNode.getChildren().get(Algorithm.class);
-        assertThat(privateKeyAlgorithmNode1).isNotNull();
-        assertThat(privateKeyAlgorithmNode1.asString()).isEqualTo("DSA");
+        // Digest under MessageDigest under Signature under PrivateKey
+        INode digestNode = messageDigestNode.getChildren().get(Digest.class);
+        assertThat(digestNode).isNotNull();
+        assertThat(digestNode.getChildren()).isEmpty();
+        assertThat(digestNode.asString()).isEqualTo("DIGEST");
 
-        // KeyLength under Algorithm under PrivateKey
-        privateKeyAlgorithmKeyLengthNode =
-                privateKeyAlgorithmNode1.getChildren().get(KeyLength.class);
-        assertThat(privateKeyAlgorithmKeyLengthNode).isNotNull();
-        assertThat(privateKeyAlgorithmKeyLengthNode.asString()).isEqualTo("1024");
+        // KeyGeneration under PrivateKey
+        INode keyGenerationNode = privateKeyNode.getChildren().get(KeyGeneration.class);
+        assertThat(keyGenerationNode).isNotNull();
+        assertThat(keyGenerationNode.getChildren()).isEmpty();
+        assertThat(keyGenerationNode.asString()).isEqualTo("KEYGENERATION");
 
-        // KeyGeneration under Algorithm under PrivateKey
-        INode privateKeyAlgorithmKeyGenerationNode =
-                privateKeyAlgorithmNode1.getChildren().get(KeyGeneration.class);
-        assertThat(privateKeyAlgorithmKeyGenerationNode).isNotNull();
-        assertThat(privateKeyAlgorithmKeyGenerationNode.asString()).isEqualTo("KEYGENERATION");
-
-        // PublicKey
-        INode publicKeyNode = nodes.get(1);
-        assertThat(publicKeyNode)
-                .isInstanceOfAny(PublicKey.class, Key.class); // Special case because of .deepCopy
-        assertThat(publicKeyNode.getChildren()).hasSize(2); // Two children detected
-
-        // KeyLength under PublicKey
-        INode publicKeyKeyLengthNode = publicKeyNode.getChildren().get(KeyLength.class);
-        assertThat(publicKeyKeyLengthNode).isNotNull();
-        assertThat(publicKeyKeyLengthNode.asString()).isEqualTo("1024");
-
-        // Algorithm under PublicKey
-        INode publicKeyAlgorithmNode = publicKeyNode.getChildren().get(Algorithm.class);
-        assertThat(publicKeyAlgorithmNode).isNotNull();
-        assertThat(publicKeyAlgorithmNode.asString()).isEqualTo("DSA");
-
-        // KeyLength under Algorithm under PublicKey
-        INode publicKeyAlgorithmKeyLengthNode =
-                publicKeyAlgorithmNode.getChildren().get(KeyLength.class);
-        assertThat(publicKeyAlgorithmKeyLengthNode).isNotNull();
-        assertThat(publicKeyAlgorithmKeyLengthNode.asString()).isEqualTo("1024");
-
-        // KeyGeneration under Algorithm under PublicKey
-        INode publicKeyAlgorithmKeyGenerationNode =
-                publicKeyAlgorithmNode.getChildren().get(KeyGeneration.class);
-        assertThat(publicKeyAlgorithmKeyGenerationNode).isNotNull();
-        assertThat(publicKeyAlgorithmKeyGenerationNode.asString()).isEqualTo("KEYGENERATION");
+        // Sign under PrivateKey
+        INode signNode = privateKeyNode.getChildren().get(Sign.class);
+        assertThat(signNode).isNotNull();
+        assertThat(signNode.getChildren()).isEmpty();
+        assertThat(signNode.asString()).isEqualTo("SIGN");
     }
 }
