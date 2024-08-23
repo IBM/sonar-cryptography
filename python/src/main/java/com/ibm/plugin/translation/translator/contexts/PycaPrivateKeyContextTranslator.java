@@ -36,12 +36,25 @@ import com.ibm.mapper.model.algorithms.DSA;
 import com.ibm.mapper.model.algorithms.Ed25519;
 import com.ibm.mapper.model.algorithms.Ed448;
 import com.ibm.mapper.model.algorithms.RSA;
+import com.ibm.mapper.model.curves.Brainpoolp256r1;
+import com.ibm.mapper.model.curves.Brainpoolp384r1;
+import com.ibm.mapper.model.curves.Brainpoolp512r1;
 import com.ibm.mapper.model.curves.Secp192r1;
 import com.ibm.mapper.model.curves.Secp224r1;
 import com.ibm.mapper.model.curves.Secp256k1;
 import com.ibm.mapper.model.curves.Secp256r1;
 import com.ibm.mapper.model.curves.Secp384r1;
 import com.ibm.mapper.model.curves.Secp521r1;
+import com.ibm.mapper.model.curves.Sect163k1;
+import com.ibm.mapper.model.curves.Sect163r2;
+import com.ibm.mapper.model.curves.Sect233k1;
+import com.ibm.mapper.model.curves.Sect233r1;
+import com.ibm.mapper.model.curves.Sect283k1;
+import com.ibm.mapper.model.curves.Sect283r1;
+import com.ibm.mapper.model.curves.Sect409k1;
+import com.ibm.mapper.model.curves.Sect409r1;
+import com.ibm.mapper.model.curves.Sect571k1;
+import com.ibm.mapper.model.curves.Sect571r1;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
@@ -80,7 +93,22 @@ public final class PycaPrivateKeyContextTranslator implements IContextTranslatio
                                         case "SECP224R1" -> new Secp224r1(detectionLocation);
                                         case "SECP192R1" -> new Secp192r1(detectionLocation);
                                         case "SECP256K1" -> new Secp256k1(detectionLocation);
-
+                                        case "BRAINPOOLP256R1" ->
+                                                new Brainpoolp256r1(detectionLocation);
+                                        case "BRAINPOOLP384R1" ->
+                                                new Brainpoolp384r1(detectionLocation);
+                                        case "BRAINPOOLP512R1" ->
+                                                new Brainpoolp512r1(detectionLocation);
+                                        case "SECT571K1" -> new Sect571k1(detectionLocation);
+                                        case "SECT409K1" -> new Sect409k1(detectionLocation);
+                                        case "SECT283K1" -> new Sect283k1(detectionLocation);
+                                        case "SECT233K1" -> new Sect233k1(detectionLocation);
+                                        case "SECT163K1" -> new Sect163k1(detectionLocation);
+                                        case "SECT571R1" -> new Sect571r1(detectionLocation);
+                                        case "SECT409R1" -> new Sect409r1(detectionLocation);
+                                        case "SECT283R1" -> new Sect283r1(detectionLocation);
+                                        case "SECT233R1" -> new Sect233r1(detectionLocation);
+                                        case "SECT163R2" -> new Sect163r2(detectionLocation);
                                         default -> null;
                                     });
         }
