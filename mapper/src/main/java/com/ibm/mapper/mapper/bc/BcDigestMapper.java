@@ -27,6 +27,10 @@ import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.algorithms.SHAKE;
 import com.ibm.mapper.model.algorithms.ascon.AsconHash;
 import com.ibm.mapper.model.algorithms.ascon.AsconXof;
+import com.ibm.mapper.model.algorithms.blake.BLAKE2X;
+import com.ibm.mapper.model.algorithms.blake.BLAKE2b;
+import com.ibm.mapper.model.algorithms.blake.BLAKE2s;
+import com.ibm.mapper.model.algorithms.blake.BLAKE3;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -50,12 +54,14 @@ public class BcDigestMapper implements IMapper {
         return switch (digestString) {
             case "AsconDigest" -> Optional.of(new AsconHash(detectionLocation));
             case "AsconXof" -> Optional.of(new AsconXof(detectionLocation));
-            case "Blake2bDigest" -> Optional.of();
-            case "Blake2bpDigest" -> Optional.of();
-            case "Blake2sDigest" -> Optional.of();
-            case "Blake2spDigest" -> Optional.of();
-            case "Blake2xsDigest" -> Optional.of();
-            case "Blake3Digest" -> Optional.of();
+            case "Blake2bDigest" -> Optional.of(new BLAKE2b(false, detectionLocation));
+            case "Blake2bpDigest" -> Optional.of(new BLAKE2b(true, detectionLocation));
+            case "Blake2sDigest" -> Optional.of(new BLAKE2s(false, detectionLocation));
+            case "Blake2spDigest" -> Optional.of(new BLAKE2s(true, detectionLocation));
+            case "Blake2xsDigest" ->
+                    Optional.of(
+                            new BLAKE2X(new BLAKE2s(false, detectionLocation), detectionLocation));
+            case "Blake3Digest" -> Optional.of(new BLAKE3(detectionLocation));
             case "CSHAKEDigest" -> Optional.of(new SHAKE(detectionLocation));
             case "DSTU7564Digest" -> Optional.of();
             case "GOST3411_2012_256Digest" -> Optional.of();
