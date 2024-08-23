@@ -19,8 +19,6 @@
  */
 package com.ibm.plugin.rules.detection.asymmetric.DSA;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.CipherAction;
 import com.ibm.engine.model.IValue;
@@ -40,21 +38,24 @@ import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.plugin.TestBase;
-import java.util.List;
-import javax.annotation.Nonnull;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
 import org.sonar.plugins.python.api.tree.Tree;
 import org.sonar.python.checks.utils.PythonCheckVerifier;
 
+import javax.annotation.Nonnull;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class PycaDSASignTest extends TestBase {
+
     @Test
-    void test() {
+    public void test() {
         PythonCheckVerifier.verify(
-                "src/test/files/rules/detection/asymmetric/DSA/CryptographyDSASignTestFile.py",
-                this);
+                "src/test/files/rules/detection/asymmetric/DSA/PycaDSASignTestFile.py", this);
     }
 
     @Override

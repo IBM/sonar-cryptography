@@ -21,11 +21,12 @@ package com.ibm.plugin.translation.reorganizer;
 
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.Function3;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * This class contains public static {@code Function3} implementing usual reorganization actions,
@@ -39,7 +40,7 @@ public final class UsualPerformActions {
 
     /**
      * When the current node is not a root node, this action will take all the node children and
-     * move them to the same level (i.e. under the node's parent)
+     * move them to the same level (i.e., under the node's parent)
      */
     @Nonnull
     public static final Function3<INode, INode, List<INode>, List<INode>> performMovingChildrenUp =

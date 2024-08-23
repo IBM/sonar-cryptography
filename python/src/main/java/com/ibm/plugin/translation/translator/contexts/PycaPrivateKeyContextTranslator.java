@@ -52,32 +52,41 @@ public final class PycaPrivateKeyContextTranslator implements IContextTranslatio
             @NotNull DetectionLocation detectionLocation) {
         if (value instanceof KeyAction<Tree>
                 && detectionContext instanceof DetectionContext context) {
-            return context.get("algorithm")
-                    .map(
-                            algorithm ->
-                                    switch (algorithm.toUpperCase().trim()) {
-                                        case "DH" -> new DH(detectionLocation);
-                                        case "FERNET" -> null; // TODO
-                                        case "RSA" -> new RSA(detectionLocation);
-                                        case "DSA" -> new DSA(detectionLocation);
-                                        case "EC" -> new EllipticCurveAlgorithm(detectionLocation);
-                                        case "ED25519" -> new Ed25519(detectionLocation);
-                                        case "ED448" -> new Ed448(detectionLocation);
-                                        default -> null;
-                                    })
-                    .map(
-                            algorithm -> {
-                                PrivateKey privateKey = new PrivateKey(algorithm);
-                                privateKey.put(
-                                        new KeyGeneration(
-                                                detectionLocation)); // currently only GENERATE is
-                                // used as key action is this
-                                // context
-                                return privateKey;
-                            });
+            return getPrivateKey(detectionLocation, context);
         } else if (value instanceof KeySize<Tree> keySize) {
+            if (detectionContext instanceof DetectionContext context
+                    && context.get("algorithm").isPresent()) {
+                return getPrivateKey(detectionLocation, context);
+            }
             return Optional.of(new KeyLength(keySize.getValue(), detectionLocation));
         }
         return Optional.empty();
+    }
+
+    private static @NotNull Optional<INode> getPrivateKey(
+            @NotNull DetectionLocation detectionLocation, @NotNull DetectionContext context) {
+        return context.get("algorithm")
+                .map(
+                        str ->
+                                switch (str.toUpperCase().trim()) {
+                                    case "DH" -> new DH(detectionLocation);
+                                    case "FERNET" -> null; // TODO
+                                    case "RSA" -> new RSA(detectionLocation);
+                                    case "DSA" -> new DSA(detectionLocation);
+                                    case "EC" -> new EllipticCurveAlgorithm(detectionLocation);
+                                    case "ED25519" -> new Ed25519(detectionLocation);
+                                    case "ED448" -> new Ed448(detectionLocation);
+                                    default -> null;
+                                })
+                .map(
+                        algorithm -> {
+                            PrivateKey privateKey = new PrivateKey(algorithm);
+                            privateKey.put(
+                                    new KeyGeneration(
+                                            detectionLocation)); // currently only GENERATE is
+                            // used as key action is this
+                            // context
+                            return privateKey;
+                        });
     }
 }
