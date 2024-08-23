@@ -28,9 +28,11 @@ import com.ibm.engine.model.KeySize;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.SecretKeyContext;
 import com.ibm.mapper.model.AuthenticatedEncryption;
+import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mode;
+import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.SecretKey;
 import com.ibm.mapper.model.functionality.Decrypt;
 import com.ibm.mapper.model.functionality.Encrypt;
@@ -85,46 +87,62 @@ public class PycaAESGCMTest extends TestBase {
         /*
          * Translation
          */
+
         assertThat(nodes).hasSize(1);
 
         // SecretKey
         INode secretKeyNode = nodes.get(0);
-        assertThat(secretKeyNode).isInstanceOf(SecretKey.class);
-        assertThat(secretKeyNode.getChildren()).hasSize(2);
-
-        // KeyLength under SecretKey
-        INode keyLengthNode = secretKeyNode.getChildren().get(KeyLength.class);
-        assertThat(keyLengthNode).isNotNull();
-        assertThat(keyLengthNode.asString()).isEqualTo("128");
+        assertThat(secretKeyNode.getKind()).isEqualTo(SecretKey.class);
+        assertThat(secretKeyNode.getChildren()).hasSize(4);
+        assertThat(secretKeyNode.asString()).isEqualTo("AES");
 
         // AuthenticatedEncryption under SecretKey
-        INode authEncryptionNode = secretKeyNode.getChildren().get(AuthenticatedEncryption.class);
-        assertThat(authEncryptionNode).isNotNull();
-        assertThat(authEncryptionNode.asString()).isEqualTo("AES");
+        INode authenticatedEncryptionNode =
+                secretKeyNode.getChildren().get(AuthenticatedEncryption.class);
+        assertThat(authenticatedEncryptionNode).isNotNull();
+        assertThat(authenticatedEncryptionNode.getChildren()).hasSize(4);
+        assertThat(authenticatedEncryptionNode.asString()).isEqualTo("AES");
 
-        // Mode under AuthenticatedEncryption
-        INode modeNode = authEncryptionNode.getChildren().get(Mode.class);
+        // Mode under AuthenticatedEncryption under SecretKey
+        INode modeNode = authenticatedEncryptionNode.getChildren().get(Mode.class);
         assertThat(modeNode).isNotNull();
+        assertThat(modeNode.getChildren()).isEmpty();
         assertThat(modeNode.asString()).isEqualTo("GCM");
 
-        // Decrypt under AuthenticatedEncryption
-        INode decryptNode = authEncryptionNode.getChildren().get(Decrypt.class);
-        assertThat(decryptNode).isNotNull();
-        assertThat(decryptNode.asString()).isEqualTo("DECRYPT");
+        // BlockSize under AuthenticatedEncryption under SecretKey
+        INode blockSizeNode = authenticatedEncryptionNode.getChildren().get(BlockSize.class);
+        assertThat(blockSizeNode).isNotNull();
+        assertThat(blockSizeNode.getChildren()).isEmpty();
+        assertThat(blockSizeNode.asString()).isEqualTo("128");
 
-        // Encrypt under AuthenticatedEncryption
-        INode encryptNode = authEncryptionNode.getChildren().get(Encrypt.class);
+        // Oid under AuthenticatedEncryption under SecretKey
+        INode oidNode = authenticatedEncryptionNode.getChildren().get(Oid.class);
+        assertThat(oidNode).isNotNull();
+        assertThat(oidNode.getChildren()).isEmpty();
+        assertThat(oidNode.asString()).isEqualTo("2.16.840.1.101.3.4.1.6");
+
+        // KeyLength under AuthenticatedEncryption under SecretKey
+        INode keyLengthNode = authenticatedEncryptionNode.getChildren().get(KeyLength.class);
+        assertThat(keyLengthNode).isNotNull();
+        assertThat(keyLengthNode.getChildren()).isEmpty();
+        assertThat(keyLengthNode.asString()).isEqualTo("128");
+
+        // Encrypt under SecretKey
+        INode encryptNode = secretKeyNode.getChildren().get(Encrypt.class);
         assertThat(encryptNode).isNotNull();
+        assertThat(encryptNode.getChildren()).isEmpty();
         assertThat(encryptNode.asString()).isEqualTo("ENCRYPT");
 
-        // KeyGeneration under AuthenticatedEncryption
-        INode keyGenerationNode = authEncryptionNode.getChildren().get(KeyGeneration.class);
-        assertThat(keyGenerationNode).isNotNull();
-        assertThat(keyGenerationNode.asString()).isEqualTo("KEYGENERATION");
+        // Decrypt under SecretKey
+        INode decryptNode = secretKeyNode.getChildren().get(Decrypt.class);
+        assertThat(decryptNode).isNotNull();
+        assertThat(decryptNode.getChildren()).isEmpty();
+        assertThat(decryptNode.asString()).isEqualTo("DECRYPT");
 
-        // KeyLength under AuthenticatedEncryption
-        keyLengthNode = authEncryptionNode.getChildren().get(KeyLength.class);
-        assertThat(keyLengthNode).isNotNull();
-        assertThat(keyLengthNode.asString()).isEqualTo("128");
+        // Generate under SecretKey
+        INode generateNode = secretKeyNode.getChildren().get(KeyGeneration.class);
+        assertThat(generateNode).isNotNull();
+        assertThat(generateNode.getChildren()).isEmpty();
+        assertThat(generateNode.asString()).isEqualTo("KEYGENERATION");
     }
 }

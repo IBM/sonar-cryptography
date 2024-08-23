@@ -42,11 +42,10 @@ import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.algorithms.RSAssaPSS;
 import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.model.algorithms.SHA3;
-import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
+import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This enricher instance operates on a language-agnostic level, meaning it will enrich the given

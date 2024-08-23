@@ -31,7 +31,6 @@ import com.ibm.mapper.model.SecretKey;
 import com.ibm.mapper.model.algorithms.AES;
 import com.ibm.mapper.model.algorithms.ChaCha20Poly1305;
 import com.ibm.mapper.model.functionality.Encapsulate;
-import com.ibm.mapper.model.functionality.Generate;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.model.mode.CCM;
 import com.ibm.mapper.model.mode.GCM;
@@ -88,7 +87,7 @@ public final class PycaSecretKeyContextTranslator implements IContextTranslation
                     .map(SecretKey::new)
                     .map(
                             key -> {
-                                key.put(new Generate(detectionLocation));
+                                key.put(new KeyGeneration(detectionLocation));
                                 return key;
                             });
         } else if (value instanceof KeyAction<Tree> keyAction
