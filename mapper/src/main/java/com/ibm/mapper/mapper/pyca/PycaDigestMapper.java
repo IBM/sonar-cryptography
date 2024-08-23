@@ -22,6 +22,7 @@ package com.ibm.mapper.mapper.pyca;
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.algorithms.MD5;
+import com.ibm.mapper.model.algorithms.Poly1305;
 import com.ibm.mapper.model.algorithms.SHA;
 import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.model.algorithms.SHA3;
@@ -60,6 +61,7 @@ public final class PycaDigestMapper implements IMapper {
             case "BLAKE2B" -> Optional.empty(); // TODO
             case "BLAKE2S" -> Optional.empty(); // TODO
             case "SM3" -> Optional.of(new SM3(detectionLocation));
+            case "POLY1305" -> Optional.of(new Poly1305(detectionLocation));
             default -> Optional.empty();
         };
     }

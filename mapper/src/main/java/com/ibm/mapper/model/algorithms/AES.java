@@ -73,4 +73,10 @@ public final class AES extends Algorithm implements BlockCipher, AuthenticatedEn
     public AES(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull AES aes) {
         super(aes, asKind);
     }
+
+    public AES(
+            @Nonnull final Class<? extends IPrimitive> asKind,
+            @NotNull DetectionLocation detectionLocation) {
+        super(NAME, asKind, detectionLocation);
+    }
 }

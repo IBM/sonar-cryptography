@@ -24,7 +24,6 @@ import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.DigestContext;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.model.context.KeyAgreementContext;
-import com.ibm.engine.model.context.KeyContext;
 import com.ibm.engine.model.context.KeyDerivationFunctionContext;
 import com.ibm.engine.model.context.MacContext;
 import com.ibm.engine.model.context.PrivateKeyContext;
@@ -35,16 +34,15 @@ import com.ibm.engine.rule.IBundle;
 import com.ibm.mapper.ITranslator;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
+import com.ibm.plugin.translation.translator.contexts.PycaCipherContextTranslator;
+import com.ibm.plugin.translation.translator.contexts.PycaDigestContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.PycaKeyAgreementContextTranslator;
-import com.ibm.plugin.translation.translator.contexts.PycaKeyContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.PycaKeyDerivationContextTranslator;
+import com.ibm.plugin.translation.translator.contexts.PycaMacContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.PycaPrivateKeyContextTranslator;
+import com.ibm.plugin.translation.translator.contexts.PycaPublicKeyContextTranslator;
+import com.ibm.plugin.translation.translator.contexts.PycaSecretKeyContextTranslator;
 import com.ibm.plugin.translation.translator.contexts.PycaSignatureContextTranslator;
-import com.ibm.plugin.translation.translator.contexts.PythonCipherContextTranslator;
-import com.ibm.plugin.translation.translator.contexts.PythonDigestContextTranslator;
-import com.ibm.plugin.translation.translator.contexts.PythonMacContextTranslator;
-import com.ibm.plugin.translation.translator.contexts.PythonPublicKeyContextTranslator;
-import com.ibm.plugin.translation.translator.contexts.PythonSecretKeyContextTranslator;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -77,12 +75,7 @@ public class PythonTranslator extends ITranslator<PythonCheck, Tree, Symbol, Pyt
             return Optional.empty();
         }
 
-        if (detectionValueContext.is(KeyContext.class)) {
-            final PycaKeyContextTranslator pycaKeyContextTranslator =
-                    new PycaKeyContextTranslator();
-            return pycaKeyContextTranslator.translate(
-                    bundleIdentifier, value, detectionValueContext, detectionLocation);
-        } else if (detectionValueContext.is(KeyAgreementContext.class)) {
+        if (detectionValueContext.is(KeyAgreementContext.class)) {
             final PycaKeyAgreementContextTranslator pycaKeyAgreementContextTranslator =
                     new PycaKeyAgreementContextTranslator();
             return pycaKeyAgreementContextTranslator.translate(
@@ -98,36 +91,36 @@ public class PythonTranslator extends ITranslator<PythonCheck, Tree, Symbol, Pyt
             return pycaPrivateKeyContextTranslator.translate(
                     bundleIdentifier, value, detectionValueContext, detectionLocation);
         } else if (detectionValueContext.is(SecretKeyContext.class)) {
-            KeyContext.Kind detectionValueContextKind = ((KeyContext) detectionValueContext).kind();
-            return PythonSecretKeyContextTranslator.translateForSecretKeyContext(
-                    value, detectionValueContextKind, detectionLocation);
-
+            final PycaSecretKeyContextTranslator pycaSecretKeyContextTranslator =
+                    new PycaSecretKeyContextTranslator();
+            return pycaSecretKeyContextTranslator.translate(
+                    bundleIdentifier, value, detectionValueContext, detectionLocation);
         } else if (detectionValueContext.is(PublicKeyContext.class)) {
-            final KeyContext context = ((KeyContext) detectionValueContext);
-            return PythonPublicKeyContextTranslator.translateForPublicKeyContext(
-                    value, context, detectionLocation);
-
+            final PycaPublicKeyContextTranslator pycaPublicKeyContextTranslator =
+                    new PycaPublicKeyContextTranslator();
+            return pycaPublicKeyContextTranslator.translate(
+                    bundleIdentifier, value, detectionValueContext, detectionLocation);
         } else if (detectionValueContext.is(DigestContext.class)) {
-            final DigestContext context = ((DigestContext) detectionValueContext);
-            return PythonDigestContextTranslator.translateForDigestContext(
-                    value, context, detectionLocation);
-
+            final PycaDigestContextTranslator pycaDigestContextTranslator =
+                    new PycaDigestContextTranslator();
+            return pycaDigestContextTranslator.translate(
+                    bundleIdentifier, value, detectionValueContext, detectionLocation);
         } else if (detectionValueContext.is(SignatureContext.class)) {
             final PycaSignatureContextTranslator pycaSignatureContextTranslator =
                     new PycaSignatureContextTranslator();
             return pycaSignatureContextTranslator.translate(
                     bundleIdentifier, value, detectionValueContext, detectionLocation);
         } else if (detectionValueContext.is(CipherContext.class)) {
-            final CipherContext cipherContext = ((CipherContext) detectionValueContext);
-            return PythonCipherContextTranslator.translateForCipherContext(
-                    value, cipherContext, detectionLocation);
-
+            final PycaCipherContextTranslator pycaCipherContextTranslator =
+                    new PycaCipherContextTranslator();
+            return pycaCipherContextTranslator.translate(
+                    bundleIdentifier, value, detectionValueContext, detectionLocation);
         } else if (detectionValueContext.is(MacContext.class)) {
-            MacContext.Kind detectionValueContextKind = ((MacContext) detectionValueContext).kind();
-            return PythonMacContextTranslator.translateForMacContext(
-                    value, detectionValueContextKind, detectionLocation);
+            final PycaMacContextTranslator pycaMacContextTranslator =
+                    new PycaMacContextTranslator();
+            return pycaMacContextTranslator.translate(
+                    bundleIdentifier, value, detectionValueContext, detectionLocation);
         }
-
         return Optional.empty();
     }
 

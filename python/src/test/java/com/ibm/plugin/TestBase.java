@@ -32,7 +32,7 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.Before;
 import org.slf4j.event.Level;
 import org.sonar.api.testfixtures.log.LogTesterJUnit5;
 import org.sonar.plugins.python.api.PythonCheck;
@@ -56,7 +56,7 @@ public abstract class TestBase extends PythonInventoryRule {
         super(PythonDetectionRules.rules());
     }
 
-    @BeforeEach
+    @Before
     public void debug() {
         LogTesterJUnit5 logTesterJUnit5 = new LogTesterJUnit5();
         logTesterJUnit5.setLevel(Level.DEBUG);
@@ -113,16 +113,11 @@ public abstract class TestBase extends PythonInventoryRule {
                     @Nonnull
                             List<DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext>>
                                     detectionStores) {
-        List<DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext>> relevantStores =
-                detectionStores.stream()
-                        .filter(
-                                store ->
-                                        store.getDetectionValues().stream()
-                                                .anyMatch(
-                                                        value ->
-                                                                value.getClass().equals(valueType)))
-                        .toList();
-
-        return relevantStores;
+        return detectionStores.stream()
+                .filter(
+                        store ->
+                                store.getDetectionValues().stream()
+                                        .anyMatch(value -> value.getClass().equals(valueType)))
+                .toList();
     }
 }

@@ -17,22 +17,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper;
+package com.ibm.plugin.translation.translator.contexts;
 
 import com.ibm.engine.model.IValue;
+import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.rule.IBundle;
+import com.ibm.mapper.IContextTranslation;
+import com.ibm.mapper.mapper.pyca.PycaMacMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
+import org.sonar.plugins.python.api.tree.Tree;
 
-public interface IContextTranslation<T> {
+@SuppressWarnings("java:S1301")
+public final class PycaMacContextTranslator implements IContextTranslation<Tree> {
 
-    @Nonnull
-    Optional<INode> translate(
-            @Nonnull final IBundle bundleIdentifier,
-            @Nonnull final IValue<T> value,
-            @Nonnull final IDetectionContext detectionContext,
-            @Nonnull final DetectionLocation detectionLocation);
+    @Override
+    public @NotNull Optional<INode> translate(
+            @NotNull IBundle bundleIdentifier,
+            @NotNull IValue<Tree> value,
+            @NotNull IDetectionContext detectionContext,
+            @NotNull DetectionLocation detectionLocation) {
+        final PycaMacMapper pycaMacMapper = new PycaMacMapper();
+        if (value instanceof com.ibm.engine.model.Algorithm<Tree>
+                || value instanceof ValueAction<Tree>) {
+            return pycaMacMapper.parse(value.asString(), detectionLocation).map(i -> i);
+        }
+        return Optional.empty();
+    }
 }

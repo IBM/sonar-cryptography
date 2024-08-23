@@ -17,22 +17,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper;
+package com.ibm.mapper.model.algorithms;
 
-import com.ibm.engine.model.IValue;
-import com.ibm.engine.model.context.IDetectionContext;
-import com.ibm.engine.rule.IBundle;
-import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
-public interface IContextTranslation<T> {
+public class CMAC extends Algorithm implements BlockCipher, Mac {
+    private static final String NAME = "CMAC"; // OMAC, OMAC1, AES-CMAC
 
-    @Nonnull
-    Optional<INode> translate(
-            @Nonnull final IBundle bundleIdentifier,
-            @Nonnull final IValue<T> value,
-            @Nonnull final IDetectionContext detectionContext,
-            @Nonnull final DetectionLocation detectionLocation);
+    public CMAC(@NotNull DetectionLocation detectionLocation) {
+        super(NAME, Mac.class, detectionLocation);
+    }
 }
