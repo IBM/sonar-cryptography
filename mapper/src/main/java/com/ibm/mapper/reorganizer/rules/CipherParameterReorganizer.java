@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.plugin.translation.reorganizer.rules;
+package com.ibm.mapper.reorganizer.rules;
 
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
@@ -25,8 +25,8 @@ import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.model.functionality.Decrypt;
 import com.ibm.mapper.model.functionality.Encrypt;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
+import com.ibm.mapper.reorganizer.UsualPerformActions;
 import com.ibm.mapper.reorganizer.builder.ReorganizerRuleBuilder;
-import com.ibm.plugin.translation.reorganizer.UsualPerformActions;
 import java.util.List;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;

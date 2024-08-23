@@ -17,8 +17,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.plugin.translation.reorganizer.rules;
+package com.ibm.mapper.reorganizer.rules;
 
+import com.ibm.mapper.ITranslator;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
@@ -27,7 +28,6 @@ import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.padding.OAEP;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.mapper.reorganizer.builder.ReorganizerRuleBuilder;
-import com.ibm.plugin.translation.translator.JavaTranslator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +45,7 @@ public final class AsymmetricBlockCipherReorganizer {
             new ReorganizerRuleBuilder()
                     .createReorganizerRule()
                     .forNodeKind(PublicKeyEncryption.class)
-                    .forNodeValue(JavaTranslator.UNKNOWN)
+                    .forNodeValue(ITranslator.UNKNOWN)
                     .includingChildren(
                             List.of(
                                     new ReorganizerRuleBuilder()

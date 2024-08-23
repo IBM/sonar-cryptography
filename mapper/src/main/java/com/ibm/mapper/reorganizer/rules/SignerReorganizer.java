@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.plugin.translation.reorganizer.rules;
+package com.ibm.mapper.reorganizer.rules;
 
 import com.ibm.mapper.reorganizer.IReorganizerRule;
 import java.util.List;

@@ -17,16 +17,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.plugin.translation.reorganizer;
+package com.ibm.mapper.reorganizer;
 
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.Function3;
-import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This class contains public static {@code Function3} implementing usual reorganization actions,

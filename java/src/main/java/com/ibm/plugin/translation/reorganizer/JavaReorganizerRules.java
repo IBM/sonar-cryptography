@@ -20,12 +20,12 @@
 package com.ibm.plugin.translation.reorganizer;
 
 import com.ibm.mapper.reorganizer.IReorganizerRule;
-import com.ibm.plugin.translation.reorganizer.rules.AeadBlockCipherReorganizer;
-import com.ibm.plugin.translation.reorganizer.rules.AsymmetricBlockCipherReorganizer;
-import com.ibm.plugin.translation.reorganizer.rules.BlockCipherReorganizer;
-import com.ibm.plugin.translation.reorganizer.rules.CipherParameterReorganizer;
-import com.ibm.plugin.translation.reorganizer.rules.MacReorganizer;
-import com.ibm.plugin.translation.reorganizer.rules.SignerReorganizer;
+import com.ibm.mapper.reorganizer.rules.AeadBlockCipherReorganizer;
+import com.ibm.mapper.reorganizer.rules.AsymmetricBlockCipherReorganizer;
+import com.ibm.mapper.reorganizer.rules.BlockCipherReorganizer;
+import com.ibm.mapper.reorganizer.rules.CipherParameterReorganizer;
+import com.ibm.mapper.reorganizer.rules.MacReorganizer;
+import com.ibm.mapper.reorganizer.rules.SignerReorganizer;
 import java.util.List;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
