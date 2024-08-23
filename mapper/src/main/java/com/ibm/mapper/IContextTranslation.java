@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
 public interface IContextTranslation<T> {
 
     @Nonnull
-    public Optional<INode> translate(
+    Optional<INode> translate(
             @Nonnull final IBundle bundleIdentifier,
             @Nonnull final IValue<T> value,
             @Nonnull final IDetectionContext detectionContext,

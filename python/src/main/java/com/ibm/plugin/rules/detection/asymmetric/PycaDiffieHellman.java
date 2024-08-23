@@ -44,7 +44,7 @@ public final class PycaDiffieHellman {
 
     private static final String TYPE = "cryptography.hazmat.primitives.asymmetric.dh";
 
-    // TODO: The key size does not yet appear in CryptographyDiffieHellmanGenerateTestFile because
+    // The key size does not yet appear in PycaDiffieHellmanGenerateTestFile because
     //  of the TraceSymbol problem documented on the Github issue
     private static final IDetectionRule<Tree> GENERATE_PARAMETERS_DH =
             new DetectionRuleBuilder<Tree>()
@@ -65,15 +65,11 @@ public final class PycaDiffieHellman {
                     .forMethods("generate_private_key")
                     .shouldBeDetectedAs(new KeyActionFactory<>(KeyAction.Action.GENERATION))
                     .withAnyParameters()
-                    // The DH_FULL context indicates that the finding comes from
-                    // `generate_private_key` that creates both Private and Public keys
-                    // It distinguishes this case from the DH context used in Public/PrivateNumbers,
-                    // where only the Public or Private key is created
                     .buildForContext(
                             new PrivateKeyContext(
                                     Map.of(
                                             "algorithm", "DH",
-                                            "includePublicKey", "true"))) // TODO
+                                            "includePublicKey", "true")))
                     .inBundle(() -> "Pyca")
                     .withDependingDetectionRules(List.of(GENERATE_PARAMETERS_DH));
 

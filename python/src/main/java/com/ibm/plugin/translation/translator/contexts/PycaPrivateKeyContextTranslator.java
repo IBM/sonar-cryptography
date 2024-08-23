@@ -35,7 +35,7 @@ import com.ibm.mapper.model.algorithms.DSA;
 import com.ibm.mapper.model.algorithms.Ed25519;
 import com.ibm.mapper.model.algorithms.Ed448;
 import com.ibm.mapper.model.algorithms.RSA;
-import com.ibm.mapper.model.functionality.Generate;
+import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
@@ -69,7 +69,7 @@ public final class PycaPrivateKeyContextTranslator implements IContextTranslatio
                             algorithm -> {
                                 PrivateKey privateKey = new PrivateKey(algorithm);
                                 privateKey.put(
-                                        new Generate(
+                                        new KeyGeneration(
                                                 detectionLocation)); // currently only GENERATE is
                                 // used as key action is this
                                 // context

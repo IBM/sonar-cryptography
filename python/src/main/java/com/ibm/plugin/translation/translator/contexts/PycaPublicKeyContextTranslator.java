@@ -30,7 +30,7 @@ import com.ibm.mapper.model.PublicKey;
 import com.ibm.mapper.model.algorithms.DH;
 import com.ibm.mapper.model.algorithms.DSA;
 import com.ibm.mapper.model.algorithms.RSA;
-import com.ibm.mapper.model.functionality.Generate;
+import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
@@ -60,7 +60,7 @@ public final class PycaPublicKeyContextTranslator implements IContextTranslation
                             algorithm -> {
                                 PublicKey publicKey = new PublicKey(algorithm);
                                 publicKey.put(
-                                        new Generate(
+                                        new KeyGeneration(
                                                 detectionLocation)); // currently only GENERATE is
                                 // used as key action is this
                                 // context

@@ -22,35 +22,32 @@ package com.ibm.plugin.rules.detection.asymmetric.DiffieHellman;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.engine.detection.DetectionStore;
-import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.KeyAction;
 import com.ibm.engine.model.context.PrivateKeyContext;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Key;
-import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.PrivateKey;
-import com.ibm.mapper.model.PublicKey;
+import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
 import org.sonar.plugins.python.api.tree.Tree;
 import org.sonar.python.checks.utils.PythonCheckVerifier;
 
-public class PycaDiffieHellmanGenerateTest extends TestBase {
+public final class PycaDiffieHellmanGenerateTest extends TestBase {
 
-    @Disabled // TODO: reenable once this
-    // (https://github.ibm.com/CryptoDiscovery/sonar-java-crypto-plugin/issues/34#issuecomment-74401655) is fixed
+    // The key size does not yet appear because
+    // of the TraceSymbol problem documented on the Github issue
     @Test
-    void test() {
+    public void test() {
         PythonCheckVerifier.verify(
-                "src/test/files/rules/detection/asymmetric/DiffieHellman/CryptographyDiffieHellmanGenerateTestFile.py",
+                "src/test/files/rules/detection/asymmetric/DiffieHellman/PycaDiffieHellmanGenerateTestFile.py",
                 this);
     }
 
@@ -62,69 +59,41 @@ public class PycaDiffieHellmanGenerateTest extends TestBase {
         /*
          * Detection Store
          */
+
         assertThat(detectionStore.getDetectionValues()).hasSize(1);
-        IValue<Tree> value = detectionStore.getDetectionValues().get(0);
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(PrivateKeyContext.class);
-        assertThat(value).isInstanceOf(KeyAction.class);
-        assertThat(value.asString()).isEqualTo("GENERATION");
+        IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
+        assertThat(value0).isInstanceOf(KeyAction.class);
+        assertThat(value0.asString()).isEqualTo("GENERATION");
 
         /*
          * Translation
          */
-        assertThat(nodes).hasSize(2);
+
+        assertThat(nodes).hasSize(1);
 
         // PrivateKey
         INode privateKeyNode = nodes.get(0);
-        assertThat(privateKeyNode).isInstanceOf(PrivateKey.class);
+        assertThat(privateKeyNode.getKind()).isEqualTo(PrivateKey.class);
         assertThat(privateKeyNode.getChildren()).hasSize(2);
+        assertThat(privateKeyNode.asString()).isEqualTo("DH");
 
-        // KeyLength under PrivateKey
-        INode privateKeyKeyLengthNode = privateKeyNode.getChildren().get(KeyLength.class);
-        assertThat(privateKeyKeyLengthNode).isNotNull();
-        assertThat(privateKeyKeyLengthNode.asString()).isEqualTo("2048");
+        // KeyGeneration under PrivateKey
+        INode keyGenerationNode = privateKeyNode.getChildren().get(KeyGeneration.class);
+        assertThat(keyGenerationNode).isNotNull();
+        assertThat(keyGenerationNode.getChildren()).isEmpty();
+        assertThat(keyGenerationNode.asString()).isEqualTo("KEYGENERATION");
 
-        // Algorithm under PrivateKey
-        INode privateKeyAlgorithmNode = privateKeyNode.getChildren().get(Algorithm.class);
-        assertThat(privateKeyAlgorithmNode).isNotNull();
-        assertThat(privateKeyAlgorithmNode.asString()).isEqualTo("DH");
+        // PublicKeyEncryption under PrivateKey
+        INode publicKeyEncryptionNode = privateKeyNode.getChildren().get(PublicKeyEncryption.class);
+        assertThat(publicKeyEncryptionNode).isNotNull();
+        assertThat(publicKeyEncryptionNode.getChildren()).hasSize(1);
+        assertThat(publicKeyEncryptionNode.asString()).isEqualTo("DH");
 
-        // KeyGeneration under Algorithm under PrivateKey
-        INode privateKeyKeyGenerationNode =
-                privateKeyAlgorithmNode.getChildren().get(KeyGeneration.class);
-        assertThat(privateKeyKeyGenerationNode).isNotNull();
-        assertThat(privateKeyKeyGenerationNode.asString()).isEqualTo("KEYGENERATION");
-
-        // KeyLength under Algorithm under PrivateKey
-        INode privateKeyAlgorithmKeyLengthNode =
-                privateKeyAlgorithmNode.getChildren().get(KeyLength.class);
-        assertThat(privateKeyAlgorithmKeyLengthNode).isNotNull();
-        assertThat(privateKeyAlgorithmKeyLengthNode.asString()).isEqualTo("2048");
-
-        // PublicKey
-        INode publicKeyNode = nodes.get(1);
-        assertThat(publicKeyNode).isInstanceOfAny(PublicKey.class, Key.class);
-        assertThat(publicKeyNode.getChildren()).hasSize(2);
-
-        // KeyLength under PublicKey
-        INode publicKeyKeyLengthNode = publicKeyNode.getChildren().get(KeyLength.class);
-        assertThat(publicKeyKeyLengthNode).isNotNull();
-        assertThat(publicKeyKeyLengthNode.asString()).isEqualTo("2048");
-
-        // Algorithm under PublicKey
-        INode publicKeyAlgorithmNode = publicKeyNode.getChildren().get(Algorithm.class);
-        assertThat(publicKeyAlgorithmNode).isNotNull();
-        assertThat(publicKeyAlgorithmNode.asString()).isEqualTo("DH");
-
-        // KeyGeneration under Algorithm under PublicKey
-        INode publicKeyKeyGenerationNode =
-                publicKeyAlgorithmNode.getChildren().get(KeyGeneration.class);
-        assertThat(publicKeyKeyGenerationNode).isNotNull();
-        assertThat(publicKeyKeyGenerationNode.asString()).isEqualTo("KEYGENERATION");
-
-        // KeyLength under Algorithm under PublicKey
-        INode publicKeyAlgorithmKeyLengthNode =
-                publicKeyAlgorithmNode.getChildren().get(KeyLength.class);
-        assertThat(publicKeyAlgorithmKeyLengthNode).isNotNull();
-        assertThat(publicKeyAlgorithmKeyLengthNode.asString()).isEqualTo("2048");
+        // Oid under PublicKeyEncryption under PrivateKey
+        INode oidNode = publicKeyEncryptionNode.getChildren().get(Oid.class);
+        assertThat(oidNode).isNotNull();
+        assertThat(oidNode.getChildren()).isEmpty();
+        assertThat(oidNode.asString()).isEqualTo("1.2.840.113549.1.3.1");
     }
 }

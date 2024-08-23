@@ -26,16 +26,16 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.KeyAction;
 import com.ibm.engine.model.context.PrivateKeyContext;
 import com.ibm.engine.model.context.PublicKeyContext;
-import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Key;
+import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.PrivateKey;
 import com.ibm.mapper.model.PublicKey;
+import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
@@ -43,11 +43,11 @@ import org.sonar.plugins.python.api.tree.Tree;
 import org.sonar.python.checks.utils.PythonCheckVerifier;
 
 public class PycaDSANumbersTest extends TestBase {
+
     @Test
-    void test() {
+    public void test() {
         PythonCheckVerifier.verify(
-                "src/test/files/rules/detection/asymmetric/DSA/CryptographyDSANumbersTestFile.py",
-                this);
+                "src/test/files/rules/detection/asymmetric/DSA/PycaDSANumbersTestFile.py", this);
     }
 
     @Override
@@ -55,68 +55,85 @@ public class PycaDSANumbersTest extends TestBase {
             int findingId,
             @Nonnull DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> detectionStore,
             @Nonnull List<INode> nodes) {
-        /*
-         * Detection Store
-         */
-        assertThat(detectionStore.getDetectionValues()).hasSize(1);
 
-        // Public Key Context
         if (findingId == 0) {
-            IValue<Tree> publicKeyContextValue = detectionStore.getDetectionValues().get(0);
+            /*
+             * Detection Store
+             */
+            assertThat(detectionStore.getDetectionValues()).hasSize(1);
             assertThat(detectionStore.getDetectionValueContext())
                     .isInstanceOf(PublicKeyContext.class);
-            assertThat(publicKeyContextValue).isInstanceOf(KeyAction.class);
-            assertThat(publicKeyContextValue.asString()).isEqualTo("GENERATION");
-        }
+            IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
+            assertThat(value0).isInstanceOf(KeyAction.class);
+            assertThat(value0.asString()).isEqualTo("GENERATION");
 
-        // Private Key Context
-        if (findingId == 1) {
-            IValue<Tree> privateKeyContextValue = detectionStore.getDetectionValues().get(0);
+            /*
+             * Translation
+             */
+            assertThat(nodes).hasSize(1);
+
+            // PublicKey
+            INode publicKeyNode = nodes.get(0);
+            assertThat(publicKeyNode.getKind()).isEqualTo(PublicKey.class);
+            assertThat(publicKeyNode.getChildren()).hasSize(2);
+            assertThat(publicKeyNode.asString()).isEqualTo("DSA");
+
+            // Signature under PublicKey
+            INode signatureNode = publicKeyNode.getChildren().get(Signature.class);
+            assertThat(signatureNode).isNotNull();
+            assertThat(signatureNode.getChildren()).hasSize(1);
+            assertThat(signatureNode.asString()).isEqualTo("DSA");
+
+            // Oid under Signature under PublicKey
+            INode oidNode = signatureNode.getChildren().get(Oid.class);
+            assertThat(oidNode).isNotNull();
+            assertThat(oidNode.getChildren()).isEmpty();
+            assertThat(oidNode.asString()).isEqualTo("1.2.840.10040.4.1");
+
+            // KeyGeneration under PublicKey
+            INode keyGenerationNode = publicKeyNode.getChildren().get(KeyGeneration.class);
+            assertThat(keyGenerationNode).isNotNull();
+            assertThat(keyGenerationNode.getChildren()).isEmpty();
+            assertThat(keyGenerationNode.asString()).isEqualTo("KEYGENERATION");
+        } else {
+            /*
+             * Detection Store
+             */
+            assertThat(detectionStore.getDetectionValues()).hasSize(1);
             assertThat(detectionStore.getDetectionValueContext())
                     .isInstanceOf(PrivateKeyContext.class);
-            assertThat(privateKeyContextValue).isInstanceOf(KeyAction.class);
-            assertThat(privateKeyContextValue.asString()).isEqualTo("GENERATION");
-        }
+            IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
+            assertThat(value0).isInstanceOf(KeyAction.class);
+            assertThat(value0.asString()).isEqualTo("GENERATION");
 
-        /*
-         * Translation
-         */
-        assertThat(nodes).hasSize(1);
+            /*
+             * Translation
+             */
+            assertThat(nodes).hasSize(1);
 
-        if (findingId == 0) {
-            // Public Key
-            INode publicKeyNode = nodes.get(0);
-            assertThat(publicKeyNode).isInstanceOf(PublicKey.class);
-            assertThat(publicKeyNode.getChildren()).hasSize(1);
-
-            // Algorithm under Public Key
-            INode publicKeyAlgorithmNode = publicKeyNode.getChildren().get(Algorithm.class);
-            assertThat(publicKeyAlgorithmNode).isNotNull();
-            assertThat(publicKeyAlgorithmNode.asString()).isEqualTo("DSA");
-
-            // Key Generation under Algorithm under Public Key
-            INode publicKeyKeyGenerationNode =
-                    publicKeyAlgorithmNode.getChildren().get(KeyGeneration.class);
-            assertThat(publicKeyKeyGenerationNode).isNotNull();
-            assertThat(publicKeyKeyGenerationNode.asString()).isEqualTo("KEYGENERATION");
-        }
-
-        if (findingId == 1) {
-            // Private Key
+            // PrivateKey
             INode privateKeyNode = nodes.get(0);
-            assertThat(privateKeyNode).isInstanceOfAny(PrivateKey.class, Key.class);
-            assertThat(privateKeyNode.getChildren()).hasSize(1);
+            assertThat(privateKeyNode.getKind()).isEqualTo(PrivateKey.class);
+            assertThat(privateKeyNode.getChildren()).hasSize(2);
+            assertThat(privateKeyNode.asString()).isEqualTo("DSA");
 
-            // Algorithm under Private Key
-            INode privateKeyAlgorithmNode = privateKeyNode.getChildren().get(Algorithm.class);
-            assertThat(privateKeyAlgorithmNode).isNotNull();
-            assertThat(privateKeyAlgorithmNode.asString()).isEqualTo("DSA");
+            // Signature under PrivateKey
+            INode signatureNode = privateKeyNode.getChildren().get(Signature.class);
+            assertThat(signatureNode).isNotNull();
+            assertThat(signatureNode.getChildren()).hasSize(1);
+            assertThat(signatureNode.asString()).isEqualTo("DSA");
 
-            // Key Generation under Algorithm under Private Key
-            INode privateKeyKeyGenerationNode =
-                    privateKeyAlgorithmNode.getChildren().get(KeyGeneration.class);
-            assertThat(privateKeyKeyGenerationNode).isNotNull();
-            assertThat(privateKeyKeyGenerationNode.asString()).isEqualTo("KEYGENERATION");
+            // Oid under Signature under PrivateKey
+            INode oidNode = signatureNode.getChildren().get(Oid.class);
+            assertThat(oidNode).isNotNull();
+            assertThat(oidNode.getChildren()).isEmpty();
+            assertThat(oidNode.asString()).isEqualTo("1.2.840.10040.4.1");
+
+            // KeyGeneration under PrivateKey
+            INode keyGenerationNode = privateKeyNode.getChildren().get(KeyGeneration.class);
+            assertThat(keyGenerationNode).isNotNull();
+            assertThat(keyGenerationNode.getChildren()).isEmpty();
+            assertThat(keyGenerationNode.asString()).isEqualTo("KEYGENERATION");
         }
     }
 }
