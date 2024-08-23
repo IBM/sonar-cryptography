@@ -55,7 +55,7 @@ public final class SEED extends Algorithm implements BlockCipher {
         this.put(padding);
     }
 
-    public SEED(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull Skipjack seed) {
+    public SEED(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull SEED seed) {
         super(seed, asKind);
     }
 }

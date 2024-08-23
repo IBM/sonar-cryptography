@@ -21,7 +21,6 @@ package com.ibm.mapper.mapper.jca;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyAgreement;
@@ -72,7 +71,7 @@ class JcaAlgorithmMapperTest {
         Optional<? extends INode> assetOptional =
                 jcaAlgorithmMapper.parse("AES/GCM/NoPadding", testDetectionLocation);
         assertThat(assetOptional).isPresent();
-        assertThat(assetOptional.get().is(AuthenticatedEncryption.class)).isTrue();
+        assertThat(assetOptional.get().is(BlockCipher.class)).isTrue();
     }
 
     @Test

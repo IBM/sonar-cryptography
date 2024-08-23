@@ -99,7 +99,7 @@ public class PycaMacMapper implements IMapper {
             case "SHA3_512" -> Optional.of(new SHA3(Mac.class, new SHA3(512, detectionLocation)));
             case "SHAKE128" -> Optional.of(new SHAKE(Mac.class, new SHAKE(128, detectionLocation)));
             case "SHAKE256" -> Optional.of(new SHAKE(Mac.class, new SHAKE(256, detectionLocation)));
-            case "MD5" -> Optional.of(new MD5(Mac.class, new MD5(detectionLocation)));
+            case "MD5" -> Optional.of(new MD5(Mac.class, detectionLocation));
             case "BLAKE2B" -> Optional.empty(); // TODO
             case "BLAKE2S" -> Optional.empty(); // TODO
             case "SM3" -> Optional.of(new SM3(Mac.class, new SM3(detectionLocation)));
