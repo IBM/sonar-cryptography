@@ -22,6 +22,7 @@ package com.ibm.mapper.model.algorithms;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.EllipticCurve;
 import com.ibm.mapper.model.KeyAgreement;
+import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
@@ -31,11 +32,13 @@ public final class ECDH extends Algorithm implements KeyAgreement {
 
     public ECDH(@NotNull DetectionLocation detectionLocation) {
         super(NAME, KeyAgreement.class, detectionLocation);
+        this.put(new Oid("1.3.132.1.12", detectionLocation));
     }
 
     public ECDH(
             @Nonnull EllipticCurve ellipticCurve, @Nonnull DetectionLocation detectionLocation) {
         super(NAME, KeyAgreement.class, detectionLocation);
+        this.put(new Oid("1.3.132.1.12", detectionLocation));
         this.put(ellipticCurve);
     }
 }

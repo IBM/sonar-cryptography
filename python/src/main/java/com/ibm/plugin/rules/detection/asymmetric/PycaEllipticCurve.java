@@ -67,7 +67,7 @@ public final class PycaEllipticCurve {
                     .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
-    private static final IDetectionRule<Tree> KEY_EXCHANGE_EC =
+    public static final IDetectionRule<Tree> KEY_EXCHANGE_EC =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
                     .forObjectTypes(TYPE + "." + GENERATE_METHOD)
@@ -99,7 +99,7 @@ public final class PycaEllipticCurve {
                     .forObjectTypes(TYPE)
                     .forMethods(GENERATE_METHOD)
                     .withMethodParameter(ANY)
-                    .shouldBeDetectedAs(new AlgorithmFactory<>())
+                    .shouldBeDetectedAs(new CurveFactory<>())
                     .buildForContext(new PrivateKeyContext(Map.of("algorithm", "EC")))
                     .inBundle(() -> "Pyca")
                     .withDependingDetectionRules(List.of(SIGN_EC, KEY_EXCHANGE_EC));

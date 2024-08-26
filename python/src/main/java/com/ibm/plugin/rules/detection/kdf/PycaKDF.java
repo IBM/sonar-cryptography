@@ -22,13 +22,12 @@ package com.ibm.plugin.rules.detection.kdf;
 import static com.ibm.engine.detection.MethodMatcher.ANY;
 
 import com.ibm.engine.model.AlgorithmParameter;
-import com.ibm.engine.model.KeyAction;
 import com.ibm.engine.model.Size;
 import com.ibm.engine.model.context.KeyDerivationFunctionContext;
 import com.ibm.engine.model.factory.AlgorithmFactory;
 import com.ibm.engine.model.factory.AlgorithmParameterFactory;
-import com.ibm.engine.model.factory.KeyActionFactory;
 import com.ibm.engine.model.factory.KeySizeFactory;
+import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.List;
@@ -52,11 +51,11 @@ public final class PycaKDF {
                     .createDetectionRule()
                     .forObjectTypes(KDF_TYPE_PREFIX + "x963kdf")
                     .forMethods("X963KDF")
-                    .shouldBeDetectedAs(new KeyActionFactory<>(KeyAction.Action.KDF))
                     .withMethodParameter(HASH_TYPE) // Accepts only hashes (not pre-hashes)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .withMethodParameter("int")
-                    .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
+                    .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BYTE))
+                    .asChildOfParameterWithId(0)
                     .withMethodParameter(ANY)
                     .buildForContext(new KeyDerivationFunctionContext(Map.of("algorithm", "x963")))
                     .inBundle(() -> "Pyca")
@@ -67,12 +66,12 @@ public final class PycaKDF {
                     .createDetectionRule()
                     .forObjectTypes(KDF_TYPE_PREFIX + "kbkdf")
                     .forMethods("KBKDFCMAC")
-                    .shouldBeDetectedAs(new KeyActionFactory<>(KeyAction.Action.KDF))
                     .withMethodParameter("cryptography.hazmat.primitives.ciphers.algorithms.*")
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .withMethodParameter(ANY) // TODO: a Mode could be detected here
                     .withMethodParameter("int")
-                    .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
+                    .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BYTE))
+                    .asChildOfParameterWithId(0)
                     .withMethodParameter(ANY)
                     .withMethodParameter(ANY)
                     .withMethodParameter(ANY)
@@ -88,12 +87,12 @@ public final class PycaKDF {
                     .createDetectionRule()
                     .forObjectTypes(KDF_TYPE_PREFIX + "kbkdf")
                     .forMethods("KBKDFHMAC")
-                    .shouldBeDetectedAs(new KeyActionFactory<>(KeyAction.Action.KDF))
                     .withMethodParameter(HASH_TYPE) // Accepts only hashes (not pre-hashes)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .withMethodParameter(ANY) // TODO: a Mode could be detected here
                     .withMethodParameter("int")
-                    .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
+                    .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BYTE))
+                    .asChildOfParameterWithId(0)
                     .withMethodParameter(ANY)
                     .withMethodParameter(ANY)
                     .withMethodParameter(ANY)
@@ -109,11 +108,11 @@ public final class PycaKDF {
                     .createDetectionRule()
                     .forObjectTypes(KDF_TYPE_PREFIX + "hkdf")
                     .forMethods("HKDFExpand")
-                    .shouldBeDetectedAs(new KeyActionFactory<>(KeyAction.Action.KDF))
                     .withMethodParameter(HASH_TYPE) // Accepts only hashes (not pre-hashes)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .withMethodParameter("int")
-                    .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
+                    .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BYTE))
+                    .asChildOfParameterWithId(0)
                     .withMethodParameter(ANY)
                     .buildForContext(new KeyDerivationFunctionContext(Map.of("kind", "hash")))
                     .inBundle(() -> "Pyca")
@@ -124,11 +123,11 @@ public final class PycaKDF {
                     .createDetectionRule()
                     .forObjectTypes(KDF_TYPE_PREFIX + "hkdf")
                     .forMethods("HKDF")
-                    .shouldBeDetectedAs(new KeyActionFactory<>(KeyAction.Action.KDF))
                     .withMethodParameter(HASH_TYPE) // Accepts only hashes (not pre-hashes)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .withMethodParameter("int")
-                    .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
+                    .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BYTE))
+                    .asChildOfParameterWithId(0)
                     .withMethodParameter(ANY)
                     .withMethodParameter(ANY)
                     .buildForContext(new KeyDerivationFunctionContext(Map.of("kind", "hash")))
@@ -140,11 +139,11 @@ public final class PycaKDF {
                     .createDetectionRule()
                     .forObjectTypes(KDF_TYPE_PREFIX + "concatkdf")
                     .forMethods("ConcatKDFHMAC")
-                    .shouldBeDetectedAs(new KeyActionFactory<>(KeyAction.Action.KDF))
                     .withMethodParameter(HASH_TYPE) // Accepts only hashes (not pre-hashes)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .withMethodParameter("int")
-                    .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
+                    .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BYTE))
+                    .asChildOfParameterWithId(0)
                     .withMethodParameter(ANY)
                     .withMethodParameter(ANY)
                     .buildForContext(
@@ -160,11 +159,11 @@ public final class PycaKDF {
                     .createDetectionRule()
                     .forObjectTypes(KDF_TYPE_PREFIX + "concatkdf")
                     .forMethods("ConcatKDFHash")
-                    .shouldBeDetectedAs(new KeyActionFactory<>(KeyAction.Action.KDF))
                     .withMethodParameter(HASH_TYPE) // Accepts only hashes (not pre-hashes)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .withMethodParameter("int")
-                    .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
+                    .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BYTE))
+                    .asChildOfParameterWithId(0)
                     .withMethodParameter(ANY)
                     .buildForContext(
                             new KeyDerivationFunctionContext(
@@ -179,10 +178,11 @@ public final class PycaKDF {
                     .createDetectionRule()
                     .forObjectTypes(KDF_TYPE_PREFIX + "scrypt")
                     .forMethods("Scrypt")
-                    .shouldBeDetectedAs(new KeyActionFactory<>(KeyAction.Action.KDF))
+                    .shouldBeDetectedAs(new ValueActionFactory<>("scrypt"))
                     .withMethodParameter(ANY)
                     .withMethodParameter("int")
-                    .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
+                    .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BYTE))
+                    .asChildOfParameterWithId(0)
                     .withMethodParameter("int")
                     .withMethodParameter("int")
                     .withMethodParameter("int")
@@ -196,11 +196,11 @@ public final class PycaKDF {
                     .createDetectionRule()
                     .forObjectTypes(KDF_TYPE_PREFIX + "pbkdf2")
                     .forMethods("PBKDF2HMAC")
-                    .shouldBeDetectedAs(new KeyActionFactory<>(KeyAction.Action.KDF))
                     .withMethodParameter(HASH_TYPE) // Accepts only hashes (not pre-hashes)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .withMethodParameter("int")
-                    .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
+                    .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BYTE))
+                    .asChildOfParameterWithId(0)
                     .withMethodParameter(ANY)
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(

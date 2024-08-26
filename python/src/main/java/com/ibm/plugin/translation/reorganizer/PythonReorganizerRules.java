@@ -20,6 +20,7 @@
 package com.ibm.plugin.translation.reorganizer;
 
 import com.ibm.mapper.reorganizer.IReorganizerRule;
+import com.ibm.mapper.reorganizer.rules.KeyAgreementReorganizer;
 import com.ibm.mapper.reorganizer.rules.SignerReorganizer;
 import java.util.List;
 import java.util.stream.Stream;
@@ -33,6 +34,9 @@ public final class PythonReorganizerRules {
 
     @Nonnull
     public static List<IReorganizerRule> rules() {
-        return Stream.of(SignerReorganizer.MOVE_DIGEST_FROM_SIGN_ACTION_UNDER_SIGNATURE).toList();
+        return Stream.of(
+                        SignerReorganizer.MOVE_DIGEST_FROM_SIGN_ACTION_UNDER_SIGNATURE,
+                        KeyAgreementReorganizer.MERGE_KEYAGREEMENT_WITH_PKE_UNDER_PRIVATE_KEY)
+                .toList();
     }
 }

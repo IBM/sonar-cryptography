@@ -29,6 +29,7 @@ import com.ibm.mapper.IContextTranslation;
 import com.ibm.mapper.model.EllipticCurveAlgorithm;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyAgreement;
+import com.ibm.mapper.model.algorithms.ECDH;
 import com.ibm.mapper.model.algorithms.X25519;
 import com.ibm.mapper.model.algorithms.X448;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -45,6 +46,7 @@ public class PycaKeyAgreementContextTranslator implements IContextTranslation<Tr
             @NotNull DetectionLocation detectionLocation) {
         if (value instanceof Algorithm<Tree> algorithm) {
             return switch (algorithm.asString().toUpperCase().trim()) {
+                case "ECDH" -> Optional.of(new ECDH(detectionLocation));
                 case "EC" ->
                         Optional.of(
                                 new EllipticCurveAlgorithm(
