@@ -20,41 +20,25 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public final class SHA3 extends Algorithm implements MessageDigest {
-    private static final String NAME = "SHA3";
+public final class MD4 extends Algorithm implements MessageDigest {
+    private static final String NAME = "MD4";
 
-    public SHA3(@Nonnull DetectionLocation detectionLocation) {
-        super(NAME, MessageDigest.class, detectionLocation);
+    public MD4(@Nonnull DetectionLocation detectionLocation) {
+        this(MessageDigest.class, detectionLocation);
     }
 
-    public SHA3(int digestSize, @Nonnull DetectionLocation detectionLocation) {
-        super(NAME + "-" + digestSize, MessageDigest.class, detectionLocation);
-        this.put(new DigestSize(digestSize, detectionLocation));
-    }
-
-    public SHA3(
-            int digestSize,
-            @Nonnull MessageDigest preHash,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(NAME + "-" + digestSize, MessageDigest.class, detectionLocation);
-        this.put(new DigestSize(digestSize, detectionLocation));
-        this.put(preHash);
-    }
-
-    public SHA3(
-            int digestSize,
+    public MD4(
             @Nonnull final Class<? extends IPrimitive> asKind,
             @Nonnull DetectionLocation detectionLocation) {
-        super(NAME + "-" + digestSize, asKind, detectionLocation);
-    }
-
-    public SHA3(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull SHA3 sha3) {
-        super(sha3, asKind);
+        super(NAME, asKind, detectionLocation);
+        this.put(new BlockSize(512, detectionLocation));
+        this.put(new DigestSize(128, detectionLocation));
     }
 }

@@ -21,40 +21,21 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.DigestSize;
-import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public final class SHA3 extends Algorithm implements MessageDigest {
-    private static final String NAME = "SHA3";
+public final class ParallelHash extends Algorithm implements MessageDigest {
+    // https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-185.pdf
 
-    public SHA3(@Nonnull DetectionLocation detectionLocation) {
+    private static final String NAME = "ParallelHash";
+
+    public ParallelHash(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, MessageDigest.class, detectionLocation);
     }
 
-    public SHA3(int digestSize, @Nonnull DetectionLocation detectionLocation) {
-        super(NAME + "-" + digestSize, MessageDigest.class, detectionLocation);
+    public ParallelHash(int digestSize, @Nonnull DetectionLocation detectionLocation) {
+        this(detectionLocation);
         this.put(new DigestSize(digestSize, detectionLocation));
-    }
-
-    public SHA3(
-            int digestSize,
-            @Nonnull MessageDigest preHash,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(NAME + "-" + digestSize, MessageDigest.class, detectionLocation);
-        this.put(new DigestSize(digestSize, detectionLocation));
-        this.put(preHash);
-    }
-
-    public SHA3(
-            int digestSize,
-            @Nonnull final Class<? extends IPrimitive> asKind,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(NAME + "-" + digestSize, asKind, detectionLocation);
-    }
-
-    public SHA3(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull SHA3 sha3) {
-        super(sha3, asKind);
     }
 }
