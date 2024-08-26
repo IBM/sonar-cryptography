@@ -31,6 +31,9 @@ import org.slf4j.LoggerFactory;
 public final class Reorganizer implements IReorganizer {
     private static final Logger LOGGER = LoggerFactory.getLogger(Reorganizer.class);
 
+    // Maximum number of reorganization steps (to prevent infinite loops)
+    private static final int MAX_ITERATIONS = 10;
+
     private final List<IReorganizerRule> rules;
 
     public Reorganizer(List<IReorganizerRule> rules) {
@@ -52,9 +55,8 @@ public final class Reorganizer implements IReorganizer {
          */
         List<INode> lastRootNodes = rootNodes;
         Optional<List<INode>> newRootNodes = Optional.of(rootNodes);
-        int maxIterations = 10;
         int counter = 0;
-        while (newRootNodes.isPresent() && counter < maxIterations) {
+        while (newRootNodes.isPresent() && counter < MAX_ITERATIONS) {
             lastRootNodes = newRootNodes.get();
             newRootNodes =
                     reorganizeRecursive(
@@ -64,12 +66,12 @@ public final class Reorganizer implements IReorganizer {
                             lastRootNodes);
             counter += 1;
         }
-        if (counter == maxIterations) {
+        if (counter == MAX_ITERATIONS) {
             String message =
                     String.format(
                             "The reorganizer stopped because it exceeded the maximum number of iterations (%d). "
                                     + "Check for a possible infinite loop in your reorganization rules.",
-                            maxIterations);
+                            MAX_ITERATIONS);
             LOGGER.warn(message);
         }
         return lastRootNodes;
