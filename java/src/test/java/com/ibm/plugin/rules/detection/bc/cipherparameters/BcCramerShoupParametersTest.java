@@ -82,7 +82,7 @@ class BcCramerShoupParametersTest extends TestBase {
         assertThat(store_1_1.getDetectionValueContext()).isInstanceOf(DigestContext.class);
         IValue<Tree> value0_1_1_1 = store_1_1.getDetectionValues().get(0);
         assertThat(value0_1_1_1).isInstanceOf(ValueAction.class);
-        assertThat(value0_1_1_1.asString()).isEqualTo("SHA-256");
+        assertThat(value0_1_1_1.asString()).isEqualTo("SHA256Digest");
 
         /*
          * Translation
@@ -93,7 +93,7 @@ class BcCramerShoupParametersTest extends TestBase {
         // BlockCipher
         INode blockCipherNode2 = nodes.get(0);
         assertThat(blockCipherNode2.getKind()).isEqualTo(BlockCipher.class);
-        // assertThat(blockCipherNode2.getChildren()).hasSize(3);
+        assertThat(blockCipherNode2.getChildren()).hasSize(3);
         assertThat(blockCipherNode2.asString()).isEqualTo("AES");
 
         // Encrypt under BlockCipher
@@ -105,7 +105,7 @@ class BcCramerShoupParametersTest extends TestBase {
         // MessageDigest under BlockCipher
         INode messageDigestNode2 = blockCipherNode2.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode2).isNotNull();
-        assertThat(messageDigestNode2.getChildren()).isEmpty();
+        assertThat(messageDigestNode2.getChildren()).hasSize(4);
         assertThat(messageDigestNode2.asString()).isEqualTo("SHA256");
     }
 }

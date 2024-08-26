@@ -9,7 +9,7 @@ public class BcSABERParametersTestFile {
 
     public static void testSABERParameters() {
         // Create a block cipher engine
-        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AES}}
+        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
 
         SABERParameters parameters = new SABERParameters("name", 0, 512, true, false);
 
@@ -18,7 +18,7 @@ public class BcSABERParametersTestFile {
 
     public static void testSABERKeyParameters() {
         // Create a block cipher engine
-        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AES}}
+        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
 
         SABERParameters base = new SABERParameters("name", 0, 512, false, false);
 
@@ -29,7 +29,7 @@ public class BcSABERParametersTestFile {
 
     public static void testSABERPublicKeyParameters() {
         // Create a block cipher engine
-        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AES}}
+        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
 
         SABERParameters base = new SABERParameters("name", 0, 512, false, false);
 
@@ -40,7 +40,7 @@ public class BcSABERParametersTestFile {
 
     public static void testSABERPrivateKeyParameters() {
         // Create a block cipher engine
-        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AES}}
+        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
 
         SABERParameters base = new SABERParameters("name", 0, 512, false, false);
 

@@ -66,7 +66,7 @@ class BcNTRUParametersTest extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("AES");
+        assertThat(value0.asString()).isEqualTo("AESEngine");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
                 getStoreOfValueType(OperationMode.class, detectionStore.getChildren());
@@ -82,7 +82,7 @@ class BcNTRUParametersTest extends TestBase {
         assertThat(store_1_1.getDetectionValueContext()).isInstanceOf(DigestContext.class);
         IValue<Tree> value0_1_1_1 = store_1_1.getDetectionValues().get(0);
         assertThat(value0_1_1_1).isInstanceOf(ValueAction.class);
-        assertThat(value0_1_1_1.asString()).isEqualTo("SHA-256");
+        assertThat(value0_1_1_1.asString()).isEqualTo("SHA256Digest");
 
         /*
          * Translation
@@ -99,7 +99,7 @@ class BcNTRUParametersTest extends TestBase {
         // MessageDigest under BlockCipher
         INode messageDigestNode5 = blockCipherNode5.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode5).isNotNull();
-        assertThat(messageDigestNode5.getChildren()).isEmpty();
+        assertThat(messageDigestNode5.getChildren()).hasSize(4);
         assertThat(messageDigestNode5.asString()).isEqualTo("SHA256");
 
         // Encrypt under BlockCipher
