@@ -29,6 +29,7 @@ import com.ibm.mapper.model.algorithms.KMAC;
 import com.ibm.mapper.model.algorithms.KangarooTwelve;
 import com.ibm.mapper.model.algorithms.Keccak;
 import com.ibm.mapper.model.algorithms.Kupyna;
+import com.ibm.mapper.model.algorithms.LMS;
 import com.ibm.mapper.model.algorithms.MD2;
 import com.ibm.mapper.model.algorithms.MD4;
 import com.ibm.mapper.model.algorithms.MD5;
@@ -100,7 +101,7 @@ public class BcDigestMapper implements IMapper {
             case "KangarooTwelve" -> Optional.of(new KangarooTwelve(detectionLocation));
             case "KeccakDigest" -> Optional.of(new Keccak(detectionLocation));
             case "KMAC" -> Optional.of(new KMAC(detectionLocation));
-            //     case "LMSContext" -> Optional.of();
+            case "LMSContext" -> Optional.of(new LMS(MessageDigest.class, detectionLocation));
             case "MarsupilamiFourteen" -> Optional.of(new MarsupilamiFourteen(detectionLocation));
             case "MD2Digest" -> Optional.of(new MD2(detectionLocation));
             case "MD4Digest" -> Optional.of(new MD4(detectionLocation));
