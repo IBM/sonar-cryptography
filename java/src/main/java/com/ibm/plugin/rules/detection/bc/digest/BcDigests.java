@@ -61,49 +61,49 @@ public final class BcDigests {
          * a constructor, we use `forObjectExactTypes` in associated rules otherwise we would have several
          * detections (a class and its parent) instead of one.
          */
-        infoMap.putKey("AsconDigest").putName("Ascon");
-        infoMap.putKey("AsconXof").putName("Ascon-Xof");
-        infoMap.putKey("Blake2bDigest").putName("BLAKE2b");
-        infoMap.putKey("Blake2bpDigest").putName("BLAKE2bp");
-        infoMap.putKey("Blake2sDigest").putName("BLAKE2s");
-        infoMap.putKey("Blake2spDigest").putName("BLAKE2sp");
-        infoMap.putKey("Blake2xsDigest").putName("BLAKE2xs");
-        infoMap.putKey("Blake3Digest").putName("BLAKE3");
-        infoMap.putKey("CSHAKEDigest").putName("cSHAKE");
-        infoMap.putKey("DSTU7564Digest").putName("DSTU 7564");
-        infoMap.putKey("GOST3411_2012_256Digest"); // Contains size -> handled in translation
-        infoMap.putKey("GOST3411_2012_512Digest"); // Contains size -> handled in translation
-        infoMap.putKey("GOST3411Digest").putName("GOST R 34.11");
-        infoMap.putKey("Haraka256Digest"); // Contains size -> handled in translation
-        infoMap.putKey("Haraka512Digest"); // Contains size -> handled in translation
-        infoMap.putKey("HarakaBase").putName("Haraka"); // Parent class
-        infoMap.putKey("ISAPDigest").putName("ISAP");
-        infoMap.putKey("KeccakDigest").putName("Keccak"); // Parent class
-        infoMap.putKey("MD2Digest").putName("MD2");
-        infoMap.putKey("MD4Digest").putName("MD4");
-        infoMap.putKey("MD5Digest").putName("MD5");
-        infoMap.putKey("NullDigest").putName("Null");
-        infoMap.putKey("ParallelHash").putName("ParallelHash");
-        infoMap.putKey("PhotonBeetleDigest").putName("PHOTON-Beetle");
-        infoMap.putKey("RIPEMD128Digest"); // Contains size -> handled in translation
-        infoMap.putKey("RIPEMD160Digest"); // Contains size -> handled in translation
-        infoMap.putKey("RIPEMD256Digest"); // Contains size -> handled in translation
-        infoMap.putKey("RIPEMD320Digest"); // Contains size -> handled in translation
-        infoMap.putKey("SHA1Digest").putName("SHA-1");
-        infoMap.putKey("SHA224Digest").putName("SHA-224");
-        infoMap.putKey("SHA256Digest").putName("SHA-256");
-        infoMap.putKey("SHA384Digest").putName("SHA-384");
-        infoMap.putKey("SHA3Digest").putName("SHA-3");
-        infoMap.putKey("SHA512Digest").putName("SHA-512");
-        infoMap.putKey("SHA512tDigest").putName("SHA-512/t");
-        infoMap.putKey("SHAKEDigest").putName("SHAKE"); // Parent class
-        infoMap.putKey("SkeinDigest").putName("Skein");
-        infoMap.putKey("SM3Digest").putName("SM3");
-        infoMap.putKey("SparkleDigest").putName("Sparkle");
-        infoMap.putKey("TigerDigest").putName("Tiger");
-        infoMap.putKey("TupleHash").putName("TupleHash");
-        infoMap.putKey("WhirlpoolDigest").putName("Whirlpool");
-        infoMap.putKey("XoodyakDigest").putName("Xoodyak");
+        infoMap.putKey("AsconDigest");
+        infoMap.putKey("AsconXof");
+        infoMap.putKey("Blake2bDigest");
+        infoMap.putKey("Blake2bpDigest");
+        infoMap.putKey("Blake2sDigest");
+        infoMap.putKey("Blake2spDigest");
+        infoMap.putKey("Blake2xsDigest");
+        infoMap.putKey("Blake3Digest");
+        infoMap.putKey("CSHAKEDigest");
+        infoMap.putKey("DSTU7564Digest");
+        infoMap.putKey("GOST3411_2012_256Digest");
+        infoMap.putKey("GOST3411_2012_512Digest");
+        infoMap.putKey("GOST3411Digest");
+        infoMap.putKey("Haraka256Digest");
+        infoMap.putKey("Haraka512Digest");
+        infoMap.putKey("HarakaBase");
+        infoMap.putKey("ISAPDigest");
+        infoMap.putKey("KeccakDigest");
+        infoMap.putKey("MD2Digest");
+        infoMap.putKey("MD4Digest");
+        infoMap.putKey("MD5Digest");
+        infoMap.putKey("NullDigest");
+        infoMap.putKey("ParallelHash");
+        infoMap.putKey("PhotonBeetleDigest");
+        infoMap.putKey("RIPEMD128Digest");
+        infoMap.putKey("RIPEMD160Digest");
+        infoMap.putKey("RIPEMD256Digest");
+        infoMap.putKey("RIPEMD320Digest");
+        infoMap.putKey("SHA1Digest");
+        infoMap.putKey("SHA224Digest");
+        infoMap.putKey("SHA256Digest");
+        infoMap.putKey("SHA384Digest");
+        infoMap.putKey("SHA3Digest");
+        infoMap.putKey("SHA512Digest");
+        infoMap.putKey("SHA512tDigest");
+        infoMap.putKey("SHAKEDigest");
+        infoMap.putKey("SkeinDigest");
+        infoMap.putKey("SM3Digest");
+        infoMap.putKey("SparkleDigest");
+        infoMap.putKey("TigerDigest");
+        infoMap.putKey("TupleHash");
+        infoMap.putKey("WhirlpoolDigest");
+        infoMap.putKey("XoodyakDigest");
     }
 
     private static final List<IDetectionRule<Tree>> regularConstructors(
@@ -114,7 +114,6 @@ public final class BcDigests {
 
         for (Map.Entry<String, BouncyCastleInfoMap.Info> entry : infoMap.entrySet()) {
             String digest = entry.getKey();
-            String digestName = infoMap.getDisplayName(digest, "Digest");
             String digestTypePrefix =
                     entry.getValue().getType() != null
                             ? entry.getValue().getType()
@@ -124,7 +123,7 @@ public final class BcDigests {
                             .createDetectionRule()
                             .forObjectExactTypes(digestTypePrefix + digest)
                             .forConstructor()
-                            .shouldBeDetectedAs(new ValueActionFactory<>(digestName))
+                            .shouldBeDetectedAs(new ValueActionFactory<>(digest))
                             // We want to capture all possible constructors (some have arguments)
                             .withAnyParameters()
                             .buildForContext(context)
@@ -146,7 +145,6 @@ public final class BcDigests {
                         .createDetectionRule()
                         .forObjectExactTypes("org.bouncycastle.crypto.digests.NonMemoableDigest")
                         .forConstructor()
-                        // .shouldBeDetectedAs(new ValueActionFactory<>("NonMemoable"))
                         .withMethodParameter("org.bouncycastle.crypto.Digest")
                         .addDependingDetectionRules(regularConstructors(detectionValueContext))
                         .buildForContext(context)
@@ -158,7 +156,6 @@ public final class BcDigests {
                         .createDetectionRule()
                         .forObjectExactTypes("org.bouncycastle.crypto.digests.ShortenedDigest")
                         .forConstructor()
-                        // .shouldBeDetectedAs(new ValueActionFactory<>("Shortened"))
                         .withMethodParameter("org.bouncycastle.crypto.Digest")
                         .addDependingDetectionRules(regularConstructors(detectionValueContext))
                         .withMethodParameter("int")

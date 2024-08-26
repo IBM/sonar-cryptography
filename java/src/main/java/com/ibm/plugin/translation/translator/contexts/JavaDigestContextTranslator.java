@@ -22,7 +22,9 @@ package com.ibm.plugin.translation.translator.contexts;
 import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.ValueAction;
+import com.ibm.engine.model.context.DigestContext;
 import com.ibm.engine.model.context.IDetectionContext;
+import com.ibm.mapper.mapper.bc.BcDigestMapper;
 import com.ibm.mapper.mapper.jca.JcaMessageDigestMapper;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
@@ -57,48 +59,14 @@ public final class JavaDigestContextTranslator extends JavaAbstractLibraryTransl
             @NotNull IValue<Tree> value,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
-        if (value instanceof Algorithm<Tree>) {
-            return Optional.empty(); // TODO
-        } else if (value instanceof ValueAction) {
-            String digestName = value.asString();
-            DigestSize digestSize = null;
-
-            // Updating the digest name and size (when necessary)
-            switch (digestName) {
-                case "GOST3411_2012_256":
-                    digestSize = new DigestSize(256, detectionLocation);
-                    digestName = "GOST R 34.11-2012";
-                    break;
-                case "GOST3411_2012_512":
-                    digestSize = new DigestSize(512, detectionLocation);
-                    digestName = "GOST R 34.11-2012";
-                    break;
-                case "Haraka256":
-                    digestSize = new DigestSize(256, detectionLocation);
-                    digestName = "Haraka";
-                    break;
-                case "Haraka512":
-                    digestSize = new DigestSize(512, detectionLocation);
-                    digestName = "Haraka";
-                    break;
-                case "RIPEMD128":
-                    digestSize = new DigestSize(128, detectionLocation);
-                    digestName = "RIPEMD";
-                    break;
-                case "RIPEMD160":
-                    digestSize = new DigestSize(160, detectionLocation);
-                    digestName = "RIPEMD";
-                    break;
-                case "RIPEMD256":
-                    digestSize = new DigestSize(256, detectionLocation);
-                    digestName = "RIPEMD";
-                    break;
-                case "RIPEMD320":
-                    digestSize = new DigestSize(320, detectionLocation);
-                    digestName = "RIPEMD";
-                    break;
-                default:
-                    break;
+        final DigestContext.Kind kind = ((DigestContext) detectionContext).kind();
+        if (value instanceof ValueAction) {
+            switch (kind) {
+                case MGF1, MGF -> Optional.empty(); /* TODO: */
+                default -> {
+                    BcDigestMapper bcDigestsMapper = new BcDigestMapper();
+                    return bcDigestsMapper.parse(value.asString(), detectionLocation).map(f -> f);
+                }
             }
 
             /*final com.ibm.mapper.model.Algorithm algorithm =
