@@ -51,7 +51,6 @@ public final class BcDerivationFunction {
          */
         digestDerivationFunctionMap
                 .putKey("BrokenKDF2BytesGenerator")
-                .putName("KDF2")
                 .putType("org.bouncycastle.jce.provider.");
         digestDerivationFunctionMap
                 .putKey("ConcatenationKDFGenerator")
@@ -67,19 +66,15 @@ public final class BcDerivationFunction {
                 .putType("org.bouncycastle.crypto.agreement.kdf.");
         digestDerivationFunctionMap
                 .putKey("HKDFBytesGenerator")
-                .putName("HKDF")
                 .putType("org.bouncycastle.crypto.generators.");
         digestDerivationFunctionMap
                 .putKey("KDF1BytesGenerator")
-                .putName("KDF1")
                 .putType("org.bouncycastle.crypto.generators.");
         digestDerivationFunctionMap
                 .putKey("KDF2BytesGenerator")
-                .putName("KDF2")
                 .putType("org.bouncycastle.crypto.generators.");
         digestDerivationFunctionMap
                 .putKey("MGF1BytesGenerator")
-                .putName("MGF1")
                 .putType("org.bouncycastle.crypto.generators.");
 
         macDerivationFunctionMap.putKey("KDFCounterBytesGenerator");
@@ -142,7 +137,7 @@ public final class BcDerivationFunction {
                         .forObjectTypes(
                                 "org.bouncycastle.crypto.engines.EthereumIESEngine$HandshakeKDFFunction")
                         .forConstructor()
-                        .shouldBeDetectedAs(new ValueActionFactory<>("HandshakeKDF"))
+                        .shouldBeDetectedAs(new ValueActionFactory<>("HandshakeKDFFunction"))
                         .withMethodParameter("int")
                         .withMethodParameter("org.bouncycastle.crypto.Digest")
                         .addDependingDetectionRules(BcDigests.rules())
