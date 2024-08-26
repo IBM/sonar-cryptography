@@ -19,9 +19,12 @@
  */
 package com.ibm.mapper.reorganizer.rules;
 
+import com.ibm.mapper.model.EllipticCurve;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Key;
 import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.PrivateKey;
+import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
@@ -205,6 +208,28 @@ public final class SignerReorganizer {
 
                                 possibleSignature.get().put(possibleDigest.get());
                                 node.removeChildOfType(MessageDigest.class);
+                                return roots;
+                            });
+
+    public static final IReorganizerRule MERGE_SIGNATURE_WITH_PKE_UNDER_PRIVATE_KEY =
+            new ReorganizerRuleBuilder()
+                    .createReorganizerRule()
+                    .forNodeKind(PrivateKey.class)
+                    .withDetectionCondition(
+                            (node, parent, roots) ->
+                                    node.hasChildOfType(PublicKeyEncryption.class).isPresent()
+                                            && node.hasChildOfType(Signature.class).isPresent())
+                    .perform(
+                            (node, parent, roots) -> {
+                                final Optional<INode> pke =
+                                        node.hasChildOfType(PublicKeyEncryption.class);
+                                final Optional<INode> s = node.hasChildOfType(Signature.class);
+                                if (pke.isPresent() && s.isPresent()) {
+                                    pke.get()
+                                            .hasChildOfType(EllipticCurve.class)
+                                            .ifPresent(e -> s.get().put(e));
+                                    node.removeChildOfType(pke.get().getKind());
+                                }
                                 return roots;
                             });
 

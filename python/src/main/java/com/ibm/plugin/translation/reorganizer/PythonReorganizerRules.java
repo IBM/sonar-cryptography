@@ -36,6 +36,7 @@ public final class PythonReorganizerRules {
     public static List<IReorganizerRule> rules() {
         return Stream.of(
                         SignerReorganizer.MOVE_DIGEST_FROM_SIGN_ACTION_UNDER_SIGNATURE,
+                        SignerReorganizer.MERGE_SIGNATURE_WITH_PKE_UNDER_PRIVATE_KEY,
                         KeyAgreementReorganizer.MERGE_KEYAGREEMENT_WITH_PKE_UNDER_PRIVATE_KEY)
                 .toList();
     }
