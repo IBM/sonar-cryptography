@@ -40,6 +40,9 @@ public class BouncyCastleInfoMap {
     public static class Info {
         @Nullable private String name;
 
+        /**
+         * @deprecated use the key of the map instead
+         */
         public String getName() {
             return name;
         }
@@ -129,6 +132,7 @@ public class BouncyCastleInfoMap {
      *
      * @param key - Key of the information map, typically the cryptographic class
      * @return The correct name of the cryptographic asset
+     * @deprecated use the key of the map instead
      */
     public String getDisplayName(@Nonnull String key) {
         return getDisplayName(key, null);
@@ -143,6 +147,7 @@ public class BouncyCastleInfoMap {
      * @param removePart - Substring to remove from the name (only when no specific name was defined
      *     with {@code putName}). If {@code null}, it does nothing.
      * @return The correct name of the cryptographic asset
+     * @deprecated use the key of the map instead
      */
     public String getDisplayName(@Nonnull String key, String removePart) {
         if (!map.containsKey(key)) {
