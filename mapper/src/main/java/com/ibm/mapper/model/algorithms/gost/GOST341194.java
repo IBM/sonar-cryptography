@@ -17,31 +17,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms;
+package com.ibm.mapper.model.algorithms.gost;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.AuthenticatedEncryption;
-import com.ibm.mapper.model.ClassicalBitSecurityLevel;
-import com.ibm.mapper.model.IPrimitive;
+import com.ibm.mapper.model.BlockSize;
+import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class Keccak extends Algorithm implements MessageDigest, AuthenticatedEncryption {
-    // https://keccak.team/keccak.html
+public final class GOST341194 extends Algorithm implements MessageDigest {
+    // https://en.wikipedia.org/wiki/GOST_(hash_function)
 
-    private static final String NAME = "Keccak";
+    private static final String NAME =
+            "GOST341194"; // GOST R 34.11-94, GOST 34.311-95, or just "GOST"
 
-    public Keccak(@Nonnull DetectionLocation detectionLocation) {
+    public GOST341194(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, MessageDigest.class, detectionLocation);
+        this.put(new BlockSize(256, detectionLocation));
+        this.put(new DigestSize(256, detectionLocation));
+        // The hash function is derived from this block cipher:
+        this.put(new GOST28147(detectionLocation));
     }
 
-    public Keccak(int capacity, @Nonnull DetectionLocation detectionLocation) {
-        this(detectionLocation);
-        this.put(new ClassicalBitSecurityLevel(capacity / 2, detectionLocation));
-    }
-
-    public Keccak(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull Keccak keccak) {
-        super(keccak, asKind);
+    public GOST341194(
+            @Nonnull final Class<? extends MessageDigest> asKind, @Nonnull GOST341194 gostr341194) {
+        super(gostr341194, asKind);
     }
 }

@@ -20,28 +20,49 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.AuthenticatedEncryption;
+import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.ClassicalBitSecurityLevel;
+import com.ibm.mapper.model.DigestSize;
+import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 
-public class Keccak extends Algorithm implements MessageDigest, AuthenticatedEncryption {
-    // https://keccak.team/keccak.html
+public final class HarakaV2 extends Algorithm implements MessageDigest {
+    // https://eprint.iacr.org/2016/098.pdf
 
-    private static final String NAME = "Keccak";
+    private static final String NAME = "Haraka v2";
 
-    public Keccak(@Nonnull DetectionLocation detectionLocation) {
+    /** Returns a name of the form "Haraka-XXX v2" where XXX is the block size */
+    @Override
+    @Nonnull
+    public String getName() {
+        StringBuilder builtName = new StringBuilder(this.name);
+
+        Optional<INode> blockSize = this.hasChildOfType(BlockSize.class);
+
+        if (blockSize.isPresent()) {
+            builtName = new StringBuilder("Haraka-");
+            builtName.append(blockSize.get().asString()).append(" v2");
+        }
+
+        return builtName.toString();
+    }
+
+    public HarakaV2(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, MessageDigest.class, detectionLocation);
+        this.put(new DigestSize(256, detectionLocation));
+        this.put(new ClassicalBitSecurityLevel(256, detectionLocation));
     }
 
-    public Keccak(int capacity, @Nonnull DetectionLocation detectionLocation) {
+    public HarakaV2(int blockSize, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
-        this.put(new ClassicalBitSecurityLevel(capacity / 2, detectionLocation));
+        this.put(new BlockSize(blockSize, detectionLocation));
     }
 
-    public Keccak(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull Keccak keccak) {
-        super(keccak, asKind);
+    public HarakaV2(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull HarakaV2 haraka) {
+        super(haraka, asKind);
     }
 }

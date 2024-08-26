@@ -20,28 +20,26 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.ClassicalBitSecurityLevel;
-import com.ibm.mapper.model.IPrimitive;
+import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.NumberOfIterations;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class Keccak extends Algorithm implements MessageDigest, AuthenticatedEncryption {
-    // https://keccak.team/keccak.html
+public final class MarsupilamiFourteen extends Algorithm implements MessageDigest {
+    // https://eprint.iacr.org/2016/770.pdf
 
-    private static final String NAME = "Keccak";
+    private static final String NAME = "MarsupilamiFourteen";
 
-    public Keccak(@Nonnull DetectionLocation detectionLocation) {
+    public MarsupilamiFourteen(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, MessageDigest.class, detectionLocation);
+        this.put(new ClassicalBitSecurityLevel(256, detectionLocation));
+        this.put(new NumberOfIterations(14, detectionLocation));
     }
 
-    public Keccak(int capacity, @Nonnull DetectionLocation detectionLocation) {
+    public MarsupilamiFourteen(int digestSize, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
-        this.put(new ClassicalBitSecurityLevel(capacity / 2, detectionLocation));
-    }
-
-    public Keccak(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull Keccak keccak) {
-        super(keccak, asKind);
+        this.put(new DigestSize(digestSize, detectionLocation));
     }
 }
