@@ -20,30 +20,22 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.AuthenticatedEncryption;
-import com.ibm.mapper.model.ClassicalBitSecurityLevel;
-import com.ibm.mapper.model.IPrimitive;
+import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.MessageDigest;
-import com.ibm.mapper.model.NumberOfIterations;
-import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class Xoodyak extends Algorithm
-        implements MessageDigest, StreamCipher, AuthenticatedEncryption {
-    // https://csrc.nist.gov/CSRC/media/Projects/lightweight-cryptography/documents/finalist-round/updated-spec-doc/xoodyak-spec-final.pdf
+public final class TupleHash extends Algorithm implements MessageDigest {
+    // https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-185.pdf
 
-    private static final String NAME = "Xoodyak";
+    private static final String NAME = "TupleHash";
 
-    public Xoodyak(@Nonnull DetectionLocation detectionLocation) {
-        this(MessageDigest.class, detectionLocation);
-        this.put(new ClassicalBitSecurityLevel(128, detectionLocation));
-        this.put(new NumberOfIterations(12, detectionLocation));
+    public TupleHash(@Nonnull DetectionLocation detectionLocation) {
+        super(NAME, MessageDigest.class, detectionLocation);
     }
 
-    public Xoodyak(
-            @Nonnull final Class<? extends IPrimitive> asKind,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(NAME, asKind, detectionLocation);
+    public TupleHash(int digestSize, @Nonnull DetectionLocation detectionLocation) {
+        this(detectionLocation);
+        this.put(new DigestSize(digestSize, detectionLocation));
     }
 }

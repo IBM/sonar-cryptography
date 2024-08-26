@@ -34,7 +34,7 @@ import javax.annotation.Nonnull;
 public class Schwaemm extends Algorithm implements AuthenticatedEncryption, BlockCipher {
     // https://csrc.nist.gov/CSRC/media/Projects/lightweight-cryptography/documents/finalist-round/updated-spec-doc/sparkle-spec-final.pdf
 
-    private static final String NAME = "Schwaemm";
+    private static final String NAME = "Schwaemm"; // from the Sparkle family
 
     /**
      * Returns a name of the form "SchwaemmXXX-YYY" where XXX is the rate and YYY is the capacity
