@@ -102,7 +102,7 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                 default -> Optional.empty();
             };
         } else if (value instanceof ValueAction<Tree> valueAction) {
-            com.ibm.mapper.model.Algorithm algorithm;
+            // com.ibm.mapper.model.Algorithm algorithm;
             // BlockCipher blockCipher;
             // AuthenticatedEncryption ae;
             // PublicKeyEncryption pke;

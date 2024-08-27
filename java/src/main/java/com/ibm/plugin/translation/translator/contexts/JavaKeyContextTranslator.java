@@ -95,7 +95,7 @@ public final class JavaKeyContextTranslator extends JavaAbstractLibraryTranslato
             @NotNull DetectionLocation detectionLocation) {
         if (value instanceof ValueAction<Tree> valueAction) {
             final KeyContext.Kind kind = ((KeyContext) detectionContext).kind();
-            com.ibm.mapper.model.Algorithm algorithm;
+            // com.ibm.mapper.model.Algorithm algorithm;
             switch (kind) {
                 case DH:
                     BcAgreementMapper bcAgreementMapper = new BcAgreementMapper();
