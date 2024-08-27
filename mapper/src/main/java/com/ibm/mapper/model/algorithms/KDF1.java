@@ -21,15 +21,21 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.KeyDerivationFunction;
+import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
-public class ANSIX963 extends Algorithm implements KeyDerivationFunction {
-    // https://csrc.nist.gov/CSRC/media/Events/Key-Management-Workshop-2000/documents/x963_overview.pdf
+public final class KDF1 extends Algorithm implements KeyDerivationFunction {
+    // See 6.2.2 of https://www.shoup.net/iso/std6.pdf (ISO 18033)
 
-    private static final String NAME = "ANSI X9.63";
+    private static final String NAME = "KDF1";
 
-    public ANSIX963(@NotNull DetectionLocation detectionLocation) {
+    public KDF1(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, KeyDerivationFunction.class, detectionLocation);
+    }
+
+    public KDF1(@Nonnull MessageDigest messageDigest) {
+        this(messageDigest.getDetectionContext());
+        this.put(messageDigest);
     }
 }

@@ -22,11 +22,22 @@ package com.ibm.mapper.mapper.bc;
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.KeyDerivationFunction;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Unknown;
+import com.ibm.mapper.model.algorithms.ANSIX942;
+import com.ibm.mapper.model.algorithms.ANSIX963;
 import com.ibm.mapper.model.algorithms.ConcatenationKDF;
+import com.ibm.mapper.model.algorithms.DH;
+import com.ibm.mapper.model.algorithms.ECDH;
+import com.ibm.mapper.model.algorithms.HKDF;
+import com.ibm.mapper.model.algorithms.KDF1;
+import com.ibm.mapper.model.algorithms.KDF2;
+import com.ibm.mapper.model.algorithms.KDFCounter;
+import com.ibm.mapper.model.algorithms.KDFDoublePipeline;
+import com.ibm.mapper.model.algorithms.KDFFeedback;
+import com.ibm.mapper.model.algorithms.KDFSession;
 import com.ibm.mapper.model.algorithms.MGF1;
-import com.ibm.mapper.model.algorithms.PBKDF2;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -48,19 +59,32 @@ public class BcDerivationFunctionMapper implements IMapper {
     private Optional<? extends INode> map(
             @Nonnull String digestString, @Nonnull DetectionLocation detectionLocation) {
         return switch (digestString) {
-            case "BrokenKDF2BytesGenerator" -> Optional.of(new PBKDF2(detectionLocation));
+            case "BrokenKDF2BytesGenerator" -> Optional.of(new KDF2(detectionLocation));
             case "ConcatenationKDFGenerator" ->
                     Optional.of(new ConcatenationKDF(detectionLocation));
-            case "DHKEKGenerator" -> Optional.of();
-            case "ECDHKEKGenerator" -> Optional.of();
-            case "HandshakeKDFFunction" -> Optional.of();
-            case "GSKKFDGenerator" -> Optional.of();
-            case "HKDFBytesGenerator" -> Optional.of();
-            case "KDF1BytesGenerator" -> Optional.of(new PBKDF1(detectionLocation));
-            case "KDF2BytesGenerator" -> Optional.of(new PBKDF2(detectionLocation));
-            case "KDFCounterBytesGenerator" -> Optional.of();
-            case "KDFDoublePipelineIterationBytesGenerator" -> Optional.of();
-            case "KDFFeedbackBytesGenerator" -> Optional.of();
+            case "DHKEKGenerator" -> {
+                // "RFC 2631 Diffie-hellman KEK derivation function"
+                // https://datatracker.ietf.org/doc/html/rfc2631#section-2.1.2
+                KeyDerivationFunction kdf = new ANSIX942(detectionLocation);
+                kdf.put(new DH(detectionLocation));
+                yield Optional.of(kdf);
+            }
+            case "ECDHKEKGenerator" -> {
+                // "X9.63 based key derivation function for ECDH CMS"
+                // https://csrc.nist.gov/CSRC/media/Events/Key-Management-Workshop-2000/documents/x963_overview.pdf
+                KeyDerivationFunction kdf = new ANSIX963(detectionLocation);
+                kdf.put(new ECDH(detectionLocation));
+                yield Optional.of(kdf);
+            }
+            // TODO: case "HandshakeKDFFunction" -> Optional.of();
+            case "GSKKFDGenerator" -> Optional.of(new KDFSession(detectionLocation));
+            case "HKDFBytesGenerator" -> Optional.of(new HKDF(detectionLocation));
+            case "KDF1BytesGenerator" -> Optional.of(new KDF1(detectionLocation));
+            case "KDF2BytesGenerator" -> Optional.of(new KDF2(detectionLocation));
+            case "KDFCounterBytesGenerator" -> Optional.of(new KDFCounter(detectionLocation));
+            case "KDFDoublePipelineIterationBytesGenerator" ->
+                    Optional.of(new KDFDoublePipeline(detectionLocation));
+            case "KDFFeedbackBytesGenerator" -> Optional.of(new KDFFeedback(detectionLocation));
             case "MGF1BytesGenerator" -> Optional.of(new MGF1(detectionLocation));
             default -> {
                 final Algorithm algorithm =

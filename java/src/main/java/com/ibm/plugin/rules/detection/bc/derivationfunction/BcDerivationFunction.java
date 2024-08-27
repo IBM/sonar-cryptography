@@ -139,6 +139,7 @@ public final class BcDerivationFunction {
                         .forConstructor()
                         .shouldBeDetectedAs(new ValueActionFactory<>("HandshakeKDFFunction"))
                         .withMethodParameter("int")
+                        // TODO: this determines whether its KDF1 or KDF2
                         .withMethodParameter("org.bouncycastle.crypto.Digest")
                         .addDependingDetectionRules(BcDigests.rules())
                         .buildForContext(new KeyContext(KeyContext.Kind.KDF))

@@ -21,15 +21,21 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.KeyDerivationFunction;
+import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
-public class ANSIX963 extends Algorithm implements KeyDerivationFunction {
-    // https://csrc.nist.gov/CSRC/media/Events/Key-Management-Workshop-2000/documents/x963_overview.pdf
+public final class KDFDoublePipeline extends Algorithm implements KeyDerivationFunction {
+    // See 4.3 in https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-108r1-upd1.pdf
 
-    private static final String NAME = "ANSI X9.63";
+    private static final String NAME = "KDF in Double-Pipeline Mode";
 
-    public ANSIX963(@NotNull DetectionLocation detectionLocation) {
+    public KDFDoublePipeline(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, KeyDerivationFunction.class, detectionLocation);
+    }
+
+    public KDFDoublePipeline(@Nonnull Mac mac) {
+        this(mac.getDetectionContext());
+        this.put(mac);
     }
 }
