@@ -64,7 +64,7 @@ class BcHKDFBytesGeneratorTest extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(KeyContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("HKDF");
+        assertThat(value0.asString()).isEqualTo("HKDFBytesGenerator");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
                 getStoreOfValueType(ValueAction.class, detectionStore.getChildren());
@@ -72,7 +72,7 @@ class BcHKDFBytesGeneratorTest extends TestBase {
         assertThat(store_1.getDetectionValueContext()).isInstanceOf(DigestContext.class);
         IValue<Tree> value0_1 = store_1.getDetectionValues().get(0);
         assertThat(value0_1).isInstanceOf(ValueAction.class);
-        assertThat(value0_1.asString()).isEqualTo(findingId == 0 ? "SHA-256" : "SHA-512");
+        assertThat(value0_1.asString()).isEqualTo(findingId == 0 ? "SHA256Digest" : "SHA512Digest");
 
         /*
          * Translation
@@ -90,7 +90,7 @@ class BcHKDFBytesGeneratorTest extends TestBase {
         INode messageDigestNode1 =
                 keyDerivationFunctionNode1.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode1).isNotNull();
-        assertThat(messageDigestNode1.getChildren()).isEmpty();
+        assertThat(messageDigestNode1.getChildren()).hasSize(4);
         assertThat(messageDigestNode1.asString()).isEqualTo(findingId == 0 ? "SHA256" : "SHA512");
     }
 }

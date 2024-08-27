@@ -23,9 +23,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.IValue;
+import com.ibm.engine.model.OperationMode;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.DigestContext;
 import com.ibm.engine.model.context.KeyContext;
+import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyDerivationFunction;
 import com.ibm.mapper.model.MessageDigest;
@@ -63,8 +65,8 @@ class BcHandshakeKDFFunctionTest extends TestBase {
         assertThat(detectionStore.getDetectionValues()).hasSize(1);
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(KeyContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
-        assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("HandshakeKDF");
+        assertThat(value0).isInstanceOf(OperationMode.class);
+        assertThat(value0.asString()).isEqualTo("1");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
                 getStoreOfValueType(ValueAction.class, detectionStore.getChildren());
@@ -72,7 +74,7 @@ class BcHandshakeKDFFunctionTest extends TestBase {
         assertThat(store_1.getDetectionValueContext()).isInstanceOf(DigestContext.class);
         IValue<Tree> value0_1 = store_1.getDetectionValues().get(0);
         assertThat(value0_1).isInstanceOf(ValueAction.class);
-        assertThat(value0_1.asString()).isEqualTo("SHA-256");
+        assertThat(value0_1.asString()).isEqualTo("SHA256Digest");
 
         /*
          * Translation
@@ -84,12 +86,36 @@ class BcHandshakeKDFFunctionTest extends TestBase {
         INode keyDerivationFunctionNode = nodes.get(0);
         assertThat(keyDerivationFunctionNode.getKind()).isEqualTo(KeyDerivationFunction.class);
         assertThat(keyDerivationFunctionNode.getChildren()).hasSize(1);
-        assertThat(keyDerivationFunctionNode.asString()).isEqualTo("HandshakeKDF");
+        assertThat(keyDerivationFunctionNode.asString()).isEqualTo("KDF2");
 
         // MessageDigest under KeyDerivationFunction
         INode messageDigestNode = keyDerivationFunctionNode.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode).isNotNull();
-        assertThat(messageDigestNode.getChildren()).isEmpty();
+        assertThat(messageDigestNode.getChildren()).hasSize(4);
         assertThat(messageDigestNode.asString()).isEqualTo("SHA256");
+
+        // DigestSize under MessageDigest under KeyDerivationFunction
+        INode digestSizeNode = messageDigestNode.getChildren().get(DigestSize.class);
+        assertThat(digestSizeNode).isNotNull();
+        assertThat(digestSizeNode.getChildren()).isEmpty();
+        assertThat(digestSizeNode.asString()).isEqualTo("256");
+
+        // // Digest under MessageDigest under KeyDerivationFunction
+        // INode digestNode = messageDigestNode.getChildren().get(Digest.class);
+        // assertThat(digestNode).isNotNull();
+        // assertThat(digestNode.getChildren()).isEmpty();
+        // assertThat(digestNode.asString()).isEqualTo("DIGEST");
+
+        // // BlockSize under MessageDigest under KeyDerivationFunction
+        // INode blockSizeNode = messageDigestNode.getChildren().get(BlockSize.class);
+        // assertThat(blockSizeNode).isNotNull();
+        // assertThat(blockSizeNode.getChildren()).isEmpty();
+        // assertThat(blockSizeNode.asString()).isEqualTo("512");
+
+        // // Oid under MessageDigest under KeyDerivationFunction
+        // INode oidNode = messageDigestNode.getChildren().get(Oid.class);
+        // assertThat(oidNode).isNotNull();
+        // assertThat(oidNode.getChildren()).isEmpty();
+        // assertThat(oidNode.asString()).isEqualTo("2.16.840.1.101.3.4.2.1");
     }
 }

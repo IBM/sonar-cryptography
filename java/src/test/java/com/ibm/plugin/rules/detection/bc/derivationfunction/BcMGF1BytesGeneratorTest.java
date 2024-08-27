@@ -64,7 +64,7 @@ class BcMGF1BytesGeneratorTest extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(KeyContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("MGF1");
+        assertThat(value0.asString()).isEqualTo("MGF1BytesGenerator");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
                 getStoreOfValueType(ValueAction.class, detectionStore.getChildren());
@@ -72,7 +72,7 @@ class BcMGF1BytesGeneratorTest extends TestBase {
         assertThat(store_1.getDetectionValueContext()).isInstanceOf(DigestContext.class);
         IValue<Tree> value0_1 = store_1.getDetectionValues().get(0);
         assertThat(value0_1).isInstanceOf(ValueAction.class);
-        assertThat(value0_1.asString()).isEqualTo("SHA-256");
+        assertThat(value0_1.asString()).isEqualTo("SHA256Digest");
 
         /*
          * Translation
@@ -83,13 +83,13 @@ class BcMGF1BytesGeneratorTest extends TestBase {
         // MaskGenerationFunction
         INode maskGenerationFunctionNode = nodes.get(0);
         assertThat(maskGenerationFunctionNode.getKind()).isEqualTo(MaskGenerationFunction.class);
-        assertThat(maskGenerationFunctionNode.getChildren()).hasSize(1);
+        assertThat(maskGenerationFunctionNode.getChildren()).hasSize(2);
         assertThat(maskGenerationFunctionNode.asString()).isEqualTo("MGF1");
 
         // MessageDigest under MaskGenerationFunction
         INode messageDigestNode = maskGenerationFunctionNode.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode).isNotNull();
-        assertThat(messageDigestNode.getChildren()).isEmpty();
+        assertThat(messageDigestNode.getChildren()).hasSize(4);
         assertThat(messageDigestNode.asString()).isEqualTo("SHA256");
     }
 }
