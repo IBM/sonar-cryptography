@@ -38,16 +38,6 @@ public final class BcDSA {
 
     /* TODO: maybe the function `extractSecret` would be a better entry point than the constructors? */
 
-    // static {
-    //     infoMap.putKey("DSASigner");
-    //     infoMap.putKey("DSTU4145Signer").putName("DSTU 4145-2002");
-    //     infoMap.putKey("ECDSASigner");
-    //     infoMap.putKey("ECGOST3410_2012Signer").putName("GOST R 34.10-2012");
-    //     infoMap.putKey("ECGOST3410Signer").putName("GOST R 34.10-2001");
-    //     infoMap.putKey("ECNRSigner").putName("EC-NR");
-    //     infoMap.putKey("GOST3410Signer").putName("GOST R 34.10-94");
-    // }
-
     public static final List<String> dsas =
             List.of(
                     "DSASigner",
