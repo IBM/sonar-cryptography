@@ -50,17 +50,17 @@ public final class BcEncapsulatedSecretExtractor {
         infoMap.putKey("BIKEKEMExtractor").putType("org.bouncycastle.pqc.crypto.bike.");
         infoMap.putKey("CMCEKEMExtractor").putType("org.bouncycastle.pqc.crypto.cmce.");
         infoMap.putKey("FrodoKEMExtractor")
-                .putName("FrodoKEM")
+                // .putName("FrodoKEM")
                 .putType("org.bouncycastle.pqc.crypto.frodo.");
         infoMap.putKey("HQCKEMExtractor").putType("org.bouncycastle.pqc.crypto.hqc.");
         infoMap.putKey("KyberKEMExtractor").putType("org.bouncycastle.pqc.crypto.crystals.kyber.");
         infoMap.putKey("NTRUKEMExtractor").putType("org.bouncycastle.pqc.crypto.ntru.");
         infoMap.putKey("NTRULPRimeKEMExtractor")
-                .putName("NTRU-LPRime")
+                // .putName("NTRU-LPRime")
                 .putType("org.bouncycastle.pqc.crypto.ntruprime.");
         infoMap.putKey("SABERKEMExtractor").putType("org.bouncycastle.pqc.crypto.saber.");
         infoMap.putKey("SNTRUPrimeKEMExtractor")
-                .putName("sNTRUprime")
+                // .putName("sNTRUprime")
                 .putType("org.bouncycastle.pqc.crypto.ntruprime.");
     }
 
@@ -69,14 +69,13 @@ public final class BcEncapsulatedSecretExtractor {
 
         for (Map.Entry<String, BouncyCastleInfoMap.Info> entry : infoMap.entrySet()) {
             String extractor = entry.getKey();
-            String extractorName = infoMap.getDisplayName(extractor, "KEMExtractor");
             String type = entry.getValue().getType();
             constructorsList.add(
                     new DetectionRuleBuilder<Tree>()
                             .createDetectionRule()
                             .forObjectTypes(type + extractor)
                             .forConstructor()
-                            .shouldBeDetectedAs(new ValueActionFactory<>(extractorName))
+                            .shouldBeDetectedAs(new ValueActionFactory<>(extractor))
                             // We want to capture all possible constructors (some have arguments)
                             .withAnyParameters()
                             .buildForContext(new KeyContext(KeyContext.Kind.KEM))
@@ -95,7 +94,7 @@ public final class BcEncapsulatedSecretExtractor {
                         .createDetectionRule()
                         .forObjectTypes("org.bouncycastle.crypto.kems.RSAKEMExtractor")
                         .forConstructor()
-                        .shouldBeDetectedAs(new ValueActionFactory<>("RSA"))
+                        .shouldBeDetectedAs(new ValueActionFactory<>("RSAKEMExtractor"))
                         .withMethodParameter("org.bouncycastle.crypto.params.RSAKeyParameters")
                         .withMethodParameter("int")
                         .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
@@ -111,7 +110,7 @@ public final class BcEncapsulatedSecretExtractor {
                         .createDetectionRule()
                         .forObjectTypes("org.bouncycastle.crypto.kems.ECIESKEMExtractor")
                         .forConstructor()
-                        .shouldBeDetectedAs(new ValueActionFactory<>("ECIES"))
+                        .shouldBeDetectedAs(new ValueActionFactory<>("ECIESKEMExtractor"))
                         .withMethodParameter(
                                 "org.bouncycastle.crypto.params.ECPrivateKeyParameters")
                         .withMethodParameter("int")
@@ -128,7 +127,7 @@ public final class BcEncapsulatedSecretExtractor {
                         .createDetectionRule()
                         .forObjectTypes("org.bouncycastle.crypto.kems.ECIESKEMExtractor")
                         .forConstructor()
-                        .shouldBeDetectedAs(new ValueActionFactory<>("ECIES"))
+                        .shouldBeDetectedAs(new ValueActionFactory<>("ECIESKEMExtractor"))
                         .withMethodParameter(
                                 "org.bouncycastle.crypto.params.ECPrivateKeyParameters")
                         .withMethodParameter("int")
