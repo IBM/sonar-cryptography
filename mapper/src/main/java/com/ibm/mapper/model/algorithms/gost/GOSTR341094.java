@@ -24,10 +24,10 @@ import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public final class GOSTR341012 extends Algorithm implements Signature {
-    private static final String NAME = "GOSTR341012"; // GOST R 34.10-2012
+public final class GOSTR341094 extends Algorithm implements Signature {
+    private static final String NAME = "GOSTR341094"; // GOST R 34.10-94
 
-    public GOSTR341012(@Nonnull DetectionLocation detectionLocation) {
+    public GOSTR341094(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, Signature.class, detectionLocation);
     }
 }

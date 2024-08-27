@@ -17,17 +17,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms.gost;
+package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public final class GOSTR341012 extends Algorithm implements Signature {
-    private static final String NAME = "GOSTR341012"; // GOST R 34.10-2012
+public class DSTU4145 extends Algorithm implements Signature {
+    private static final String NAME = "DSTU 4145-2002";
 
-    public GOSTR341012(@Nonnull DetectionLocation detectionLocation) {
+    public DSTU4145(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, Signature.class, detectionLocation);
     }
 }
