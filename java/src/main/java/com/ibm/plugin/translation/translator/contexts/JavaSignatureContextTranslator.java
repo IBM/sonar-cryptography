@@ -20,9 +20,14 @@
 package com.ibm.plugin.translation.translator.contexts;
 
 import com.ibm.engine.model.IValue;
+import com.ibm.engine.model.OperationMode;
 import com.ibm.engine.model.SaltSize;
 import com.ibm.engine.model.SignatureAction;
+import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.IDetectionContext;
+import com.ibm.engine.model.context.SignatureContext;
+import com.ibm.mapper.mapper.bc.BcDSAMapper;
+import com.ibm.mapper.mapper.bc.BcOperationModeSigningMapper;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.SaltLength;
@@ -59,59 +64,68 @@ public final class JavaSignatureContextTranslator extends JavaAbstractLibraryTra
             @NotNull IValue<Tree> value,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
-        /*final SignatureContext.Kind kind = ((SignatureContext) detectionContext).kind();
+        final SignatureContext.Kind kind = ((SignatureContext) detectionContext).kind();
         if (value instanceof ValueAction<Tree> valueAction) {
-            Algorithm algorithm;
-            Signature signature;
-            ECAlgorithm eca;
-            ProbabilisticSignatureScheme pss;
             switch (kind) {
-                case EdDSA:
-                    String curveName = ITranslator.UNKNOWN;
-                    switch (valueAction.asString()) {
-                        case "Ed25519":
-                            curveName = "Curve25519";
-                            break;
-                        case "Ed448":
-                            curveName = "Curve448";
-                            break;
-                        default:
-                            break;
-                    }
-                    algorithm = new Algorithm("EdDSA", detectionLocation);
-                    signature = new Signature(algorithm);
-
-                    eca = new EllipticCurveAlgorithm(new Algorithm("EC", detectionLocation));
-                    eca.put(new EllipticCurve(curveName, detectionLocation));
-
-                    signature.put(eca);
-                    return Optional.of(signature);
-                case ALGORITHM_AND_HASH_WRAPPER, DIGEST_MESSAGE_WRAPPER:
-                    // Maybe choose a better way to translate DIGEST_MESSAGE_WRAPPER
-                    algorithm = new Algorithm(ITranslator.UNKNOWN, detectionLocation);
-                    signature = new Signature(algorithm);
-                    return Optional.of(signature);
-                case RSA:
-                    algorithm = new Algorithm(ITranslator.UNKNOWN + "withRSA", detectionLocation);
-                    signature = new Signature(algorithm);
-                    PublicKeyEncryption pke =
-                            new PublicKeyEncryption(new Algorithm("RSA", detectionLocation));
-                    signature.put(pke);
-                    return Optional.of(signature);
-                case SIGNATURE_NAME, DSA:
-                    algorithm = new Algorithm(valueAction.asString(), detectionLocation);
-                    signature = new Signature(algorithm);
-                    return Optional.of(signature);
-                case PSS:
-                    pss = new ProbabilisticSignatureScheme(detectionLocation);
-                    algorithm = new Algorithm(ITranslator.UNKNOWN + "-PSS", detectionLocation);
-                    signature = new Signature(algorithm);
-                    signature.put(pss);
-                    return Optional.of(signature);
+                case DSA:
+                    BcDSAMapper bcDSAMapper = new BcDSAMapper();
+                    return bcDSAMapper.parse(valueAction.asString(), detectionLocation).map(f -> f);
                 default:
-                    algorithm = new Algorithm(valueAction.asString(), detectionLocation);
-                    return Optional.of(algorithm);
+                    return Optional.empty(); // TODO
             }
+            /*final SignatureContext.Kind kind = ((SignatureContext) detectionContext).kind();
+            if (value instanceof ValueAction<Tree> valueAction) {
+                Algorithm algorithm;
+                Signature signature;
+                ECAlgorithm eca;
+                ProbabilisticSignatureScheme pss;
+                switch (kind) {
+                    case EdDSA:
+                        String curveName = ITranslator.UNKNOWN;
+                        switch (valueAction.asString()) {
+                            case "Ed25519":
+                                curveName = "Curve25519";
+                                break;
+                            case "Ed448":
+                                curveName = "Curve448";
+                                break;
+                            default:
+                                break;
+                        }
+                        algorithm = new Algorithm("EdDSA", detectionLocation);
+                        signature = new Signature(algorithm);
+
+                        eca = new EllipticCurveAlgorithm(new Algorithm("EC", detectionLocation));
+                        eca.put(new EllipticCurve(curveName, detectionLocation));
+
+                        signature.put(eca);
+                        return Optional.of(signature);
+                    case ALGORITHM_AND_HASH_WRAPPER, DIGEST_MESSAGE_WRAPPER:
+                        // Maybe choose a better way to translate DIGEST_MESSAGE_WRAPPER
+                        algorithm = new Algorithm(ITranslator.UNKNOWN, detectionLocation);
+                        signature = new Signature(algorithm);
+                        return Optional.of(signature);
+                    case RSA:
+                        algorithm = new Algorithm(ITranslator.UNKNOWN + "withRSA", detectionLocation);
+                        signature = new Signature(algorithm);
+                        PublicKeyEncryption pke =
+                                new PublicKeyEncryption(new Algorithm("RSA", detectionLocation));
+                        signature.put(pke);
+                        return Optional.of(signature);
+                    case SIGNATURE_NAME, DSA:
+                        algorithm = new Algorithm(valueAction.asString(), detectionLocation);
+                        signature = new Signature(algorithm);
+                        return Optional.of(signature);
+                    case PSS:
+                        pss = new ProbabilisticSignatureScheme(detectionLocation);
+                        algorithm = new Algorithm(ITranslator.UNKNOWN + "-PSS", detectionLocation);
+                        signature = new Signature(algorithm);
+                        signature.put(pss);
+                        return Optional.of(signature);
+                    default:
+                        algorithm = new Algorithm(valueAction.asString(), detectionLocation);
+                        return Optional.of(algorithm);
+                }*/
         } else if (value instanceof OperationMode<Tree> operationMode) {
             switch (kind) {
                 case SIGNING_STATUS:
@@ -123,7 +137,7 @@ public final class JavaSignatureContextTranslator extends JavaAbstractLibraryTra
                 default:
                     break;
             }
-        }*/
+        }
         return Optional.empty();
     }
 }
