@@ -63,7 +63,7 @@ class BcBIKEKEMExtractorTest extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(KeyContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("BIKE");
+        assertThat(value0.asString()).isEqualTo("BIKEKEMExtractor");
 
         /*
          * Translation

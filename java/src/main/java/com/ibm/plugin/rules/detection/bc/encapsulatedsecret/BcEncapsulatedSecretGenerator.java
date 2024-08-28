@@ -49,19 +49,13 @@ public final class BcEncapsulatedSecretGenerator {
     static {
         infoMap.putKey("BIKEKEMGenerator").putType("org.bouncycastle.pqc.crypto.bike.");
         infoMap.putKey("CMCEKEMGenerator").putType("org.bouncycastle.pqc.crypto.cmce.");
-        infoMap.putKey("FrodoKEMGenerator")
-                // .putName("FrodoKEM")
-                .putType("org.bouncycastle.pqc.crypto.frodo.");
+        infoMap.putKey("FrodoKEMGenerator").putType("org.bouncycastle.pqc.crypto.frodo.");
         infoMap.putKey("HQCKEMGenerator").putType("org.bouncycastle.pqc.crypto.hqc.");
         infoMap.putKey("KyberKEMGenerator").putType("org.bouncycastle.pqc.crypto.crystals.kyber.");
         infoMap.putKey("NTRUKEMGenerator").putType("org.bouncycastle.pqc.crypto.ntru.");
-        infoMap.putKey("NTRULPRimeKEMGenerator")
-                // .putName("NTRU-LPRime")
-                .putType("org.bouncycastle.pqc.crypto.ntruprime.");
+        infoMap.putKey("NTRULPRimeKEMGenerator").putType("org.bouncycastle.pqc.crypto.ntruprime.");
         infoMap.putKey("SABERKEMGenerator").putType("org.bouncycastle.pqc.crypto.saber.");
-        infoMap.putKey("SNTRUPrimeKEMGenerator")
-                // .putName("sNTRUprime")
-                .putType("org.bouncycastle.pqc.crypto.ntruprime.");
+        infoMap.putKey("SNTRUPrimeKEMGenerator").putType("org.bouncycastle.pqc.crypto.ntruprime.");
     }
 
     private static @NotNull List<IDetectionRule<Tree>> simpleConstructors() {

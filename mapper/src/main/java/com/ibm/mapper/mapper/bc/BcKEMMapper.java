@@ -30,6 +30,11 @@ import com.ibm.mapper.model.algorithms.ECIES;
 import com.ibm.mapper.model.algorithms.FrodoKEM;
 import com.ibm.mapper.model.algorithms.HQC;
 import com.ibm.mapper.model.algorithms.MLKEM;
+import com.ibm.mapper.model.algorithms.RSAKEM;
+import com.ibm.mapper.model.algorithms.SABER;
+import com.ibm.mapper.model.algorithms.ntru.NTRU;
+import com.ibm.mapper.model.algorithms.ntru.NTRULPrime;
+import com.ibm.mapper.model.algorithms.ntru.StreamlinedNTRUPrime;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -62,11 +67,14 @@ public class BcKEMMapper implements IMapper {
                     Optional.of(new HQC(KeyEncapsulationMechanism.class, detectionLocation));
             case "KyberKEMExtractor", "KyberKEMGenerator" ->
                     Optional.of(new MLKEM(detectionLocation));
-            case "NTRUKEMExtractor", "NTRUKEMGenerator" -> Optional.of();
-            case "NTRULPRimeKEMExtractor", "NTRULPRimeKEMGenerator" -> Optional.of();
-            case "RSAKEMExtractor", "RSAKEMGenerator" -> Optional.of();
-            case "SABERKEMExtractor", "SABERKEMGenerator" -> Optional.of();
-            case "SNTRUPrimeKEMExtractor", "SNTRUPrimeKEMGenerator" -> Optional.of();
+            case "NTRUKEMExtractor", "NTRUKEMGenerator" -> Optional.of(new NTRU(detectionLocation));
+            case "NTRULPRimeKEMExtractor", "NTRULPRimeKEMGenerator" ->
+                    Optional.of(new NTRULPrime(detectionLocation));
+            case "RSAKEMExtractor", "RSAKEMGenerator" -> Optional.of(new RSAKEM(detectionLocation));
+            case "SABERKEMExtractor", "SABERKEMGenerator" ->
+                    Optional.of(new SABER(detectionLocation));
+            case "SNTRUPrimeKEMExtractor", "SNTRUPrimeKEMGenerator" ->
+                    Optional.of(new StreamlinedNTRUPrime(detectionLocation));
             default -> {
                 final Algorithm algorithm =
                         new Algorithm(

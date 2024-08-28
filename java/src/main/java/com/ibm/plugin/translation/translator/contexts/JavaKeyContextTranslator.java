@@ -32,6 +32,7 @@ import com.ibm.engine.model.context.PublicKeyContext;
 import com.ibm.engine.model.context.SecretKeyContext;
 import com.ibm.mapper.mapper.bc.BcAgreementMapper;
 import com.ibm.mapper.mapper.bc.BcDerivationFunctionMapper;
+import com.ibm.mapper.mapper.bc.BcKEMMapper;
 import com.ibm.mapper.mapper.bc.BcOperationModeKDFMapper;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.mapper.jca.JcaCurveMapper;
@@ -111,11 +112,9 @@ public final class JavaKeyContextTranslator extends JavaAbstractLibraryTranslato
                     return bcDerivationFunctionMapper
                             .parse(valueAction.asString(), detectionLocation)
                             .map(f -> f);
-                /*case KEM:
-                algorithm =
-                        new com.ibm.mapper.model.Algorithm(
-                                valueAction.asString(), detectionLocation);
-                return Optional.of(new KeyEncapsulationMechanism(algorithm));*/
+                case KEM:
+                    BcKEMMapper bcKEMMapper = new BcKEMMapper();
+                    return bcKEMMapper.parse(valueAction.asString(), detectionLocation).map(f -> f);
                 default:
                     break;
             }
