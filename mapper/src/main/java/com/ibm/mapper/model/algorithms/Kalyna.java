@@ -23,6 +23,7 @@ import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
@@ -70,5 +71,9 @@ public class Kalyna extends Algorithm implements BlockCipher {
         this(detectionLocation);
         this.put(new BlockSize(blockSize, detectionLocation));
         this.put(new KeyLength(keyLength, detectionLocation));
+    }
+
+    public Kalyna(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull Kalyna kalyna) {
+        super(kalyna, asKind);
     }
 }

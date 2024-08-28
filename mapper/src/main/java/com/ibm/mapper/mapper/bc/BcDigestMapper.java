@@ -21,7 +21,9 @@ package com.ibm.mapper.mapper.bc;
 
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.IAlgorithm;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.algorithms.HarakaV2;
@@ -64,6 +66,12 @@ import javax.annotation.Nullable;
 
 public class BcDigestMapper implements IMapper {
 
+    private final Class<? extends IPrimitive> asKind;
+
+    public BcDigestMapper(Class<? extends IPrimitive> asKind) {
+        this.asKind = asKind;
+    }
+
     @Override
     @Nonnull
     public Optional<? extends INode> parse(
@@ -71,7 +79,11 @@ public class BcDigestMapper implements IMapper {
         if (str == null) {
             return Optional.empty();
         }
-        return map(str, detectionLocation);
+        Optional<? extends INode> node = map(str, detectionLocation);
+        if (node.isPresent()) {
+            return Optional.of(new Algorithm((IAlgorithm) node.get(), asKind));
+        }
+        return Optional.empty();
     }
 
     @Nonnull
@@ -100,7 +112,7 @@ public class BcDigestMapper implements IMapper {
                     Optional.of(new Isap(MessageDigest.class, new Isap(detectionLocation)));
             case "KangarooTwelve" -> Optional.of(new KangarooTwelve(detectionLocation));
             case "KeccakDigest" -> Optional.of(new Keccak(detectionLocation));
-            case "KMAC" -> Optional.of(new KMAC(detectionLocation));
+            case "KMAC" -> Optional.of(new KMAC(MessageDigest.class, new KMAC(detectionLocation)));
             case "LMSContext" -> Optional.of(new LMS(MessageDigest.class, detectionLocation));
             case "MarsupilamiFourteen" -> Optional.of(new MarsupilamiFourteen(detectionLocation));
             case "MD2Digest" -> Optional.of(new MD2(detectionLocation));

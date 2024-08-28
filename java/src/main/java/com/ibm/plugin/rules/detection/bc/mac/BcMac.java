@@ -203,9 +203,10 @@ public final class BcMac {
                             .createDetectionRule()
                             .forObjectTypes("org.bouncycastle.crypto.macs." + macClass)
                             .forConstructor()
-                            .shouldBeDetectedAs(new ValueActionFactory<>(macClass))
+                            //     .shouldBeDetectedAs(new ValueActionFactory<>(macClass))
                             .withMethodParameter("org.bouncycastle.crypto.Digest")
-                            .addDependingDetectionRules(BcDigests.rules())
+                            .addDependingDetectionRules(
+                                    BcDigests.rules(new MacContext(MacContext.Kind.HMAC)))
                             .buildForContext(new MacContext())
                             .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcMacInit.rules()));
