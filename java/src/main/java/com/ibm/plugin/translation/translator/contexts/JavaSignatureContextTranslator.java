@@ -26,7 +26,7 @@ import com.ibm.engine.model.SignatureAction;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.model.context.SignatureContext;
-import com.ibm.mapper.mapper.bc.BcDSAMapper;
+import com.ibm.mapper.mapper.bc.BcDsaMapper;
 import com.ibm.mapper.mapper.bc.BcOperationModeSigningMapper;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.model.INode;
@@ -68,7 +68,7 @@ public final class JavaSignatureContextTranslator extends JavaAbstractLibraryTra
         if (value instanceof ValueAction<Tree> valueAction) {
             switch (kind) {
                 case DSA:
-                    BcDSAMapper bcDSAMapper = new BcDSAMapper();
+                    BcDsaMapper bcDSAMapper = new BcDsaMapper();
                     return bcDSAMapper.parse(valueAction.asString(), detectionLocation).map(f -> f);
                 default:
                     return Optional.empty(); // TODO

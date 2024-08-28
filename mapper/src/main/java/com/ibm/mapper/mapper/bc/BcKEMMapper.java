@@ -40,7 +40,7 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class BcKEMMapper implements IMapper {
+public class BcKemMapper implements IMapper {
 
     @Override
     @Nonnull

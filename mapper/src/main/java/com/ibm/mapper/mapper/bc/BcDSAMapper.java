@@ -34,7 +34,7 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class BcDSAMapper implements IMapper {
+public class BcDsaMapper implements IMapper {
 
     @Override
     @Nonnull
