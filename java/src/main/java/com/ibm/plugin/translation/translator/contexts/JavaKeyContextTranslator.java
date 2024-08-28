@@ -118,6 +118,9 @@ public final class JavaKeyContextTranslator extends JavaAbstractLibraryTranslato
                 default:
                     break;
             }
+        } else if (value instanceof KeySize<Tree> keySize) {
+            KeyLength keyLength = new KeyLength(keySize.getValue(), detectionLocation);
+            return Optional.of(keyLength);
         } else if (value instanceof OperationMode<Tree> operationMode) {
             BcOperationModeKDFMapper bcOperationModeKDFMapper = new BcOperationModeKDFMapper();
             return bcOperationModeKDFMapper

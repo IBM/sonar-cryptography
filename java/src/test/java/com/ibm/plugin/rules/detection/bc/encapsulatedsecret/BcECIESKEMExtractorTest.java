@@ -131,7 +131,7 @@ class BcECIESKEMExtractorTest extends TestBase {
         INode messageDigestNode1 =
                 keyDerivationFunctionNode1.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode1).isNotNull();
-        assertThat(messageDigestNode1.getChildren()).hasSize(1);
-        assertThat(messageDigestNode1.asString()).isEqualTo("SHA-256");
+        assertThat(messageDigestNode1.getChildren()).hasSize(4);
+        assertThat(messageDigestNode1.asString()).isEqualTo("SHA256");
     }
 }

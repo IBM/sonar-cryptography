@@ -75,7 +75,7 @@ class BcECIESKEMGeneratorTest extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(KeyContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("ECIES");
+        assertThat(value0.asString()).isEqualTo("ECIESKEMGenerator");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
                 getStoreOfValueType(KeySize.class, detectionStore.getChildren());
@@ -91,7 +91,7 @@ class BcECIESKEMGeneratorTest extends TestBase {
         assertThat(store_2.getDetectionValueContext()).isInstanceOf(KeyContext.class);
         IValue<Tree> value0_2 = store_2.getDetectionValues().get(0);
         assertThat(value0_2).isInstanceOf(ValueAction.class);
-        assertThat(value0_2.asString()).isEqualTo("HKDF");
+        assertThat(value0_2.asString()).isEqualTo("HKDFBytesGenerator");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_2_1 =
                 getStoreOfValueType(ValueAction.class, store_2.getChildren());
@@ -99,7 +99,7 @@ class BcECIESKEMGeneratorTest extends TestBase {
         assertThat(store_2_1.getDetectionValueContext()).isInstanceOf(DigestContext.class);
         IValue<Tree> value0_2_1 = store_2_1.getDetectionValues().get(0);
         assertThat(value0_2_1).isInstanceOf(ValueAction.class);
-        assertThat(value0_2_1.asString()).isEqualTo("SHA-256");
+        assertThat(value0_2_1.asString()).isEqualTo("SHA256Digest");
 
         /*
          * Translation
@@ -131,7 +131,7 @@ class BcECIESKEMGeneratorTest extends TestBase {
         INode messageDigestNode1 =
                 keyDerivationFunctionNode1.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode1).isNotNull();
-        assertThat(messageDigestNode1.getChildren()).hasSize(1);
-        assertThat(messageDigestNode1.asString()).isEqualTo("SHA-256");
+        assertThat(messageDigestNode1.getChildren()).hasSize(4);
+        assertThat(messageDigestNode1.asString()).isEqualTo("SHA256");
     }
 }
