@@ -31,9 +31,13 @@ import com.ibm.mapper.model.algorithms.Kupyna;
 import com.ibm.mapper.model.algorithms.Poly1305;
 import com.ibm.mapper.model.algorithms.SipHash;
 import com.ibm.mapper.model.algorithms.Skein;
+import com.ibm.mapper.model.algorithms.VMPCMAC;
+import com.ibm.mapper.model.algorithms.ZUC;
 import com.ibm.mapper.model.algorithms.blake.BLAKE3;
+import com.ibm.mapper.model.algorithms.gost.GOST28147;
 import com.ibm.mapper.model.mode.CBC;
 import com.ibm.mapper.model.mode.CFB;
+import com.ibm.mapper.model.mode.GMAC;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.mapper.utils.Utils;
 import java.util.Optional;
@@ -68,8 +72,15 @@ public class BcMacMapper implements IMapper {
                 /* what is the "Mac mode" of DSTU7624? It should be appended */
                 yield Optional.of(new Kalyna(Mac.class, new Kalyna(detectionLocation)));
             }
-            case "GMac", "KGMac" -> Optional.of();
-            case "GOST28147Mac" -> Optional.of();
+            case "GMac" ->
+                    Optional.of(Utils.unknownWithMode(new GMAC(detectionLocation), Mac.class));
+            case "KGMac" ->
+                    Optional.of(
+                            Utils.cipherWithMode(
+                                    new Kalyna(Mac.class, new Kalyna(detectionLocation)),
+                                    new GMAC(detectionLocation)));
+            case "GOST28147Mac" ->
+                    Optional.of(new GOST28147(Mac.class, new GOST28147(detectionLocation)));
             // case "HMac", "OldHMac" -> Optional.empty(); // Handled differently
             case "KMAC" -> Optional.of(new KMAC(detectionLocation));
             case "Poly1305" ->
@@ -77,9 +88,9 @@ public class BcMacMapper implements IMapper {
             case "SipHash" -> Optional.of(new SipHash(detectionLocation));
             case "SipHash128" -> Optional.of(new SipHash(128, detectionLocation));
             case "SkeinMac" -> Optional.of(new Skein(Mac.class, new Skein(detectionLocation)));
-            case "VMPCMac" -> Optional.of();
-            case "Zuc128Mac" -> Optional.of();
-            case "Zuc256Mac" -> Optional.of();
+            case "VMPCMac" -> Optional.of(new VMPCMAC(detectionLocation));
+            case "Zuc128Mac" -> Optional.of(new ZUC(Mac.class, new ZUC(128, detectionLocation)));
+            case "Zuc256Mac" -> Optional.of(new ZUC(Mac.class, new ZUC(256, detectionLocation)));
             default -> {
                 final Algorithm algorithm = new Algorithm(macString, Mac.class, detectionLocation);
                 algorithm.put(new Unknown(detectionLocation));
