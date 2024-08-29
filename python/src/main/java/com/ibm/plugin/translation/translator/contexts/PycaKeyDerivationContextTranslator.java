@@ -27,7 +27,7 @@ import com.ibm.engine.model.context.DetectionContext;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.rule.IBundle;
 import com.ibm.mapper.IContextTranslation;
-import com.ibm.mapper.mapper.pyca.PycaDigestMapper;
+import com.ibm.mapper.mapper.pyca.PycaHashBasedKeyDerivationMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.algorithms.ANSIX963;
@@ -49,8 +49,15 @@ public class PycaKeyDerivationContextTranslator implements IContextTranslation<T
             @NotNull DetectionLocation detectionLocation) {
         if (value instanceof Algorithm<Tree> algorithm) {
             // hash algorithm
-            final PycaDigestMapper pycaDigestMapper = new PycaDigestMapper();
-            return pycaDigestMapper.parse(algorithm.asString(), detectionLocation).map(i -> i);
+            final PycaHashBasedKeyDerivationMapper pycaHashBasedKeyDerivationMapper =
+                    new PycaHashBasedKeyDerivationMapper();
+            return pycaHashBasedKeyDerivationMapper
+                    .parse(algorithm.asString(), detectionLocation)
+                    .map(
+                            kdf -> {
+                                kdf.put(new KeyDerivation(detectionLocation));
+                                return kdf;
+                            });
         } else if (value instanceof KeySize<Tree> keySize) {
             return Optional.of(new KeyLength(keySize.getValue(), detectionLocation));
         } else if (value instanceof KeyAction<Tree>

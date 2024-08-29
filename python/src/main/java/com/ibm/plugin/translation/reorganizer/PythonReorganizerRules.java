@@ -17,28 +17,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms;
+package com.ibm.plugin.translation.reorganizer;
 
-import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.EllipticCurve;
-import com.ibm.mapper.model.KeyAgreement;
-import com.ibm.mapper.model.Oid;
-import com.ibm.mapper.utils.DetectionLocation;
+import com.ibm.mapper.reorganizer.IReorganizerRule;
+import com.ibm.mapper.reorganizer.rules.KeyAgreementReorganizer;
+import com.ibm.mapper.reorganizer.rules.PaddingReorganizer;
+import com.ibm.mapper.reorganizer.rules.SignerReorganizer;
+import java.util.List;
+import java.util.stream.Stream;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
-public final class ECDH extends Algorithm implements KeyAgreement {
-    private static final String NAME = "ECDH";
+public final class PythonReorganizerRules {
 
-    public ECDH(@NotNull DetectionLocation detectionLocation) {
-        super(NAME, KeyAgreement.class, detectionLocation);
-        this.put(new Oid("1.3.132.1.12", detectionLocation));
+    private PythonReorganizerRules() {
+        // private
     }
 
-    public ECDH(
-            @Nonnull EllipticCurve ellipticCurve, @Nonnull DetectionLocation detectionLocation) {
-        super(NAME, KeyAgreement.class, detectionLocation);
-        this.put(new Oid("1.3.132.1.12", detectionLocation));
-        this.put(ellipticCurve);
+    @Nonnull
+    public static List<IReorganizerRule> rules() {
+        return Stream.of(
+                        SignerReorganizer.MOVE_DIGEST_FROM_SIGN_ACTION_UNDER_SIGNATURE,
+                        SignerReorganizer.MERGE_SIGNATURE_WITH_PKE_UNDER_PRIVATE_KEY,
+                        KeyAgreementReorganizer.MERGE_KEYAGREEMENT_WITH_PKE_UNDER_PRIVATE_KEY,
+                        PaddingReorganizer.MOVE_OAEP_UNDER_ALGORITHM)
+                .toList();
     }
 }

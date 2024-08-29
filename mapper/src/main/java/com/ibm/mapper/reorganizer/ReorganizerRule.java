@@ -37,38 +37,33 @@ public record ReorganizerRule(
     @Override
     public boolean match(@Nonnull INode node, @Nonnull INode parent, @Nonnull List<INode> roots) {
         // Kind check
-        if (node.is(kind)) {
-
-            // Name check
-            if (value != null && !value.equals(node.asString())) {
-                return false;
-            }
-
-            // Children check
-            if (nonNullChildren && node.getChildren().isEmpty()) {
-                return false;
-            }
-            for (IReorganizerRule childRule : children) {
-                Class<? extends INode> childKind = childRule.getNodeKind();
-
-                if (!node.getChildren().containsKey(childKind)) {
-                    return false;
-                }
-
-                if (!childRule.match(node.getChildren().get(childKind), node, roots)) {
-                    return false;
-                }
-            }
-
-            // Detection condition check
-            if (detectionConditionFunction != null
-                    && !(detectionConditionFunction.apply(node, parent, roots))) {
-                return false;
-            }
-
-            return true;
+        if (!node.is(kind)) {
+            return false;
         }
-        return false;
+
+        // Name check
+        if (value != null && !value.equals(node.asString())) {
+            return false;
+        }
+
+        // Children check
+        if (nonNullChildren && node.getChildren().isEmpty()) {
+            return false;
+        }
+        for (IReorganizerRule childRule : children) {
+            Class<? extends INode> childKind = childRule.getNodeKind();
+
+            if (!node.getChildren().containsKey(childKind)) {
+                return false;
+            }
+
+            if (!childRule.match(node.getChildren().get(childKind), node, roots)) {
+                return false;
+            }
+        }
+        // Detection condition check
+        return detectionConditionFunction == null
+                || detectionConditionFunction.apply(node, parent, roots);
     }
 
     @Override

@@ -5,4 +5,4 @@ from cryptography.hazmat.primitives.asymmetric import ec
 
 def verify(pubkey, signature, digest):
     if isinstance(pubkey, ec.EllipticCurvePublicKey):
-        pubkey.verify(signature, digest, ec.ECDSA(hashes.SHA3_512())) # TODO: What should I detect here? Should I use `verify` as an entry point?
+        pubkey.verify(signature, digest, ec.ECDSA(hashes.SHA3_512()))

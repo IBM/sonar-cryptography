@@ -23,6 +23,7 @@ import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.plugin.rules.detection.PythonBaseDetectionRule;
 import com.ibm.plugin.rules.detection.PythonDetectionRules;
+import com.ibm.plugin.translation.reorganizer.PythonReorganizerRules;
 import java.util.List;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
@@ -38,13 +39,12 @@ import org.sonar.plugins.python.api.tree.Tree;
 public class PythonInventoryRule extends PythonBaseDetectionRule {
 
     public PythonInventoryRule() {
-        // TODO: add Python reorganizer rules here if necessary
-        super(PythonDetectionRules.rules(), List.of());
+        super(PythonDetectionRules.rules(), PythonReorganizerRules.rules());
     }
 
     @VisibleForTesting
     protected PythonInventoryRule(@Nonnull List<IDetectionRule<Tree>> detectionRules) {
-        super(detectionRules, List.of());
+        super(detectionRules, PythonReorganizerRules.rules());
     }
 
     @Override

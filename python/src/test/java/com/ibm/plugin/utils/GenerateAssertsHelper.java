@@ -170,7 +170,7 @@ public class GenerateAssertsHelper {
 
             writer.write(
                     String.format(
-                            "DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> %s = getStoreOfValueType(%s.class, %s.getChildren());%n",
+                            "DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> %s = getStoreOfValueType(%s.class, %s.getChildren());%n",
                             childrenStoreVarName, kind, detectionStoreVarName));
 
             generateDetectionStoreAssertions(writer, store, childrenStoreVarName);

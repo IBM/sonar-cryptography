@@ -17,28 +17,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms;
+package com.ibm.enricher.algorithm;
 
-import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.EllipticCurve;
-import com.ibm.mapper.model.KeyAgreement;
+import com.ibm.enricher.IEnricher;
+import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Oid;
-import com.ibm.mapper.utils.DetectionLocation;
-import javax.annotation.Nonnull;
+import com.ibm.mapper.model.Padding;
+import com.ibm.mapper.model.Signature;
+import com.ibm.mapper.model.algorithms.RSA;
+import com.ibm.mapper.model.padding.OAEP;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
-public final class ECDH extends Algorithm implements KeyAgreement {
-    private static final String NAME = "ECDH";
+public class RSAoaepEnricher implements IEnricher {
 
-    public ECDH(@NotNull DetectionLocation detectionLocation) {
-        super(NAME, KeyAgreement.class, detectionLocation);
-        this.put(new Oid("1.3.132.1.12", detectionLocation));
-    }
-
-    public ECDH(
-            @Nonnull EllipticCurve ellipticCurve, @Nonnull DetectionLocation detectionLocation) {
-        super(NAME, KeyAgreement.class, detectionLocation);
-        this.put(new Oid("1.3.132.1.12", detectionLocation));
-        this.put(ellipticCurve);
+    @Override
+    public @NotNull INode enrich(@NotNull INode node) {
+        if (node instanceof RSA rsa) {
+            final Optional<INode> padding = rsa.hasChildOfType(Padding.class);
+            if (padding.isEmpty()) {
+                return node;
+            }
+            if (padding.get() instanceof OAEP) {
+                final RSA newRSA = new RSA(Signature.class, rsa);
+                newRSA.put(new Oid("1.2.840.113549.1.1.7", rsa.getDetectionContext()));
+                return newRSA;
+            }
+        }
+        return node;
     }
 }

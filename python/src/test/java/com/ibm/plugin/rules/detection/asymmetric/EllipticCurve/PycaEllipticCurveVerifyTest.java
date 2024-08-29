@@ -24,8 +24,8 @@ import com.ibm.mapper.model.INode;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import javax.annotation.Nonnull;
+import org.junit.Test;
 import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
@@ -33,12 +33,14 @@ import org.sonar.plugins.python.api.tree.Tree;
 import org.sonar.python.checks.utils.PythonCheckVerifier;
 
 public class PycaEllipticCurveVerifyTest extends TestBase {
-    @Disabled // TODO: Reenable once we have an approach to detect `verify` (either make it an entry
-    // point, or better handle file imports for depending detection rule)
+
+    @Disabled(
+            "Reenable once we have an approach to detect `verify` (either make it an entry\n"
+                    + "point, or better handle file imports for depending detection rule)")
     @Test
-    void test() {
+    public void test() {
         PythonCheckVerifier.verify(
-                "src/test/files/rules/detection/asymmetric/EllipticCurve/CryptographyEllipticCurveVerifyTestFile.py",
+                "src/test/files/rules/detection/asymmetric/EllipticCurve/PycallipticCurveVerifyTestFile.py",
                 this);
     }
 
@@ -47,6 +49,6 @@ public class PycaEllipticCurveVerifyTest extends TestBase {
             int findingId,
             @Nonnull DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> detectionStore,
             @Nonnull List<INode> nodes) {
-        // TODO:
+        // TODO
     }
 }

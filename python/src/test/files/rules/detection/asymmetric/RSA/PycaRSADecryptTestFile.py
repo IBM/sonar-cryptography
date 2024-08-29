@@ -11,7 +11,7 @@ def decrypt(ciphertext):
     plaintext = private_key.decrypt(
         ciphertext,
         padding.OAEP(
-            mgf=padding.MGF1(algorithm=hashes.SHA256()),
+            mgf=padding.MGF1(algorithm=hashes.SHA384()),
             algorithm=hashes.SHA256(),
             label=None
         )

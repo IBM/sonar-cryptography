@@ -23,20 +23,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.Algorithm;
+import com.ibm.engine.model.Curve;
 import com.ibm.engine.model.IValue;
+import com.ibm.engine.model.KeySize;
+import com.ibm.engine.model.context.KeyAgreementContext;
+import com.ibm.engine.model.context.KeyDerivationFunctionContext;
 import com.ibm.engine.model.context.PrivateKeyContext;
-import com.ibm.engine.model.context.SecretKeyContext;
+import com.ibm.mapper.model.BlockSize;
+import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.EllipticCurve;
-import com.ibm.mapper.model.EllipticCurveAlgorithm;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Key;
+import com.ibm.mapper.model.KeyAgreement;
+import com.ibm.mapper.model.KeyDerivationFunction;
+import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.PrivateKey;
-import com.ibm.mapper.model.PublicKey;
+import com.ibm.mapper.model.functionality.KeyDerivation;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
@@ -44,10 +51,11 @@ import org.sonar.plugins.python.api.tree.Tree;
 import org.sonar.python.checks.utils.PythonCheckVerifier;
 
 public class PycaEllipticCurveKeyExchangeTest extends TestBase {
+
     @Test
-    void test() {
+    public void test() {
         PythonCheckVerifier.verify(
-                "src/test/files/rules/detection/asymmetric/EllipticCurve/CryptographyEllipticCurveKeyExchangeTestFile.py",
+                "src/test/files/rules/detection/asymmetric/EllipticCurve/PycaEllipticCurveKeyExchangeTestFile.py",
                 this);
     }
 
@@ -56,71 +64,122 @@ public class PycaEllipticCurveKeyExchangeTest extends TestBase {
             int findingId,
             @Nonnull DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> detectionStore,
             @Nonnull List<INode> nodes) {
-        /*
-         * Detection Store
-         */
-        assertThat(detectionStore.getDetectionValues()).hasSize(1);
-        IValue<Tree> value = detectionStore.getDetectionValues().get(0);
-        assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(PrivateKeyContext.class);
-        assertThat(value).isInstanceOf(Algorithm.class);
-        assertThat(value.asString()).isEqualTo("SECP384R1");
+        if (findingId == 0) {
+            /*
+             * Detection Store
+             */
 
-        DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> store =
-                getStoreOfValueType(Algorithm.class, detectionStore.getChildren());
-        assertThat(store).isNotNull();
-        assertThat(store.getDetectionValueContext()).isInstanceOf(SecretKeyContext.class);
-        assertThat(store.getDetectionValues()).hasSize(1);
-        value = store.getDetectionValues().get(0);
-        assertThat(value).isInstanceOf(Algorithm.class);
-        assertThat(value.asString()).isEqualTo("ECDH");
+            assertThat(detectionStore.getDetectionValues()).hasSize(1);
+            assertThat(detectionStore.getDetectionValueContext())
+                    .isInstanceOf(PrivateKeyContext.class);
+            IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
+            assertThat(value0).isInstanceOf(Curve.class);
+            assertThat(value0.asString()).isEqualTo("SECP384R1");
 
-        /*
-         * Translation
-         */
-        assertThat(nodes).hasSize(2);
+            DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> store_1 =
+                    getStoreOfValueType(Algorithm.class, detectionStore.getChildren());
+            assertThat(store_1.getDetectionValues()).hasSize(1);
+            assertThat(store_1.getDetectionValueContext()).isInstanceOf(KeyAgreementContext.class);
+            IValue<Tree> value0_1 = store_1.getDetectionValues().get(0);
+            assertThat(value0_1).isInstanceOf(Algorithm.class);
+            assertThat(value0_1.asString()).isEqualTo("ECDH");
 
-        // PrivateKey
-        INode privateKeyNode = nodes.get(0);
-        assertThat(privateKeyNode).isInstanceOf(PrivateKey.class);
-        assertThat(privateKeyNode.getChildren()).hasSize(1);
+            /*
+             * Translation
+             */
 
-        // EllipticCurveAlgorithm under PrivateKey
-        INode privateKeyAlgorithmNode =
-                privateKeyNode.getChildren().get(EllipticCurveAlgorithm.class);
-        assertThat(privateKeyAlgorithmNode).isNotNull();
-        assertThat(privateKeyAlgorithmNode.asString()).isEqualTo("EC");
+            assertThat(nodes).hasSize(1);
 
-        // EllipticCurve under EllipticCurveAlgorithm under PrivateKey
-        INode privateKeyCurveNode = privateKeyAlgorithmNode.getChildren().get(EllipticCurve.class);
-        assertThat(privateKeyCurveNode).isNotNull();
-        assertThat(privateKeyCurveNode.asString()).isEqualTo("SECP384R1");
+            // PrivateKey
+            INode privateKeyNode = nodes.get(0);
+            assertThat(privateKeyNode.getKind()).isEqualTo(PrivateKey.class);
+            assertThat(privateKeyNode.getChildren()).hasSize(2);
+            assertThat(privateKeyNode.asString()).isEqualTo("EC-secp384r1");
 
-        // KeyGeneration under EllipticCurveAlgorithm under PrivateKey
-        INode privateKeyKeyGenerationNode =
-                privateKeyAlgorithmNode.getChildren().get(KeyGeneration.class);
-        assertThat(privateKeyKeyGenerationNode).isNotNull();
-        assertThat(privateKeyKeyGenerationNode.asString()).isEqualTo("KEYGENERATION");
+            // KeyGeneration under PrivateKey
+            INode keyGenerationNode = privateKeyNode.getChildren().get(KeyGeneration.class);
+            assertThat(keyGenerationNode).isNotNull();
+            assertThat(keyGenerationNode.getChildren()).isEmpty();
+            assertThat(keyGenerationNode.asString()).isEqualTo("KEYGENERATION");
 
-        // PublicKey
-        INode publicKeyNode = nodes.get(1);
-        assertThat(publicKeyNode).isInstanceOfAny(PublicKey.class, Key.class);
-        assertThat(publicKeyNode.getChildren()).hasSize(1);
+            // KeyAgreement under PrivateKey
+            INode keyAgreementNode = privateKeyNode.getChildren().get(KeyAgreement.class);
+            assertThat(keyAgreementNode).isNotNull();
+            assertThat(keyAgreementNode.getChildren()).hasSize(2);
+            assertThat(keyAgreementNode.asString()).isEqualTo("ECDH");
 
-        // EllipticCurveAlgorithm under PublicKey
-        INode publicKeyAlgorithmNode =
-                publicKeyNode.getChildren().get(EllipticCurveAlgorithm.class);
-        assertThat(publicKeyAlgorithmNode).isNotNull();
-        assertThat(publicKeyAlgorithmNode.asString()).isEqualTo("EC");
+            // EllipticCurve under KeyAgreement under PrivateKey
+            INode ellipticCurveNode = keyAgreementNode.getChildren().get(EllipticCurve.class);
+            assertThat(ellipticCurveNode).isNotNull();
+            assertThat(ellipticCurveNode.getChildren()).isEmpty();
+            assertThat(ellipticCurveNode.asString()).isEqualTo("secp384r1");
 
-        // EllipticCurve under EllipticCurveAlgorithm under PublicKey
-        INode publicKeyCurveNode = publicKeyAlgorithmNode.getChildren().get(EllipticCurve.class);
-        assertThat(publicKeyCurveNode).isNotNull();
-        assertThat(publicKeyCurveNode.asString()).isEqualTo("SECP384R1");
+            // Oid under KeyAgreement under PrivateKey
+            INode oidNode = keyAgreementNode.getChildren().get(Oid.class);
+            assertThat(oidNode).isNotNull();
+            assertThat(oidNode.getChildren()).isEmpty();
+            assertThat(oidNode.asString()).isEqualTo("1.3.132.1.12");
+        } else if (findingId == 1) {
+            /*
+             * Detection Store
+             */
+            assertThat(detectionStore.getDetectionValues()).hasSize(1);
+            assertThat(detectionStore.getDetectionValueContext())
+                    .isInstanceOf(KeyDerivationFunctionContext.class);
+            IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
+            assertThat(value0).isInstanceOf(Algorithm.class);
+            assertThat(value0.asString()).isEqualTo("SHA256");
 
-        // KeyGeneration under EllipticCurveAlgorithm under PublicKey
-        INode publicKeyKeyGenerationNode =
-                publicKeyAlgorithmNode.getChildren().get(KeyGeneration.class);
-        assertThat(publicKeyKeyGenerationNode).isNotNull();
-        assertThat(publicKeyKeyGenerationNode.asString()).isEqualTo("KEYGENERATION");
+            DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> store_1 =
+                    getStoreOfValueType(KeySize.class, detectionStore.getChildren());
+            assertThat(store_1.getDetectionValues()).hasSize(1);
+            assertThat(store_1.getDetectionValueContext())
+                    .isInstanceOf(KeyDerivationFunctionContext.class);
+            IValue<Tree> value0_1 = store_1.getDetectionValues().get(0);
+            assertThat(value0_1).isInstanceOf(KeySize.class);
+            assertThat(value0_1.asString()).isEqualTo("256");
+
+            /*
+             * Translation
+             */
+            assertThat(nodes).hasSize(1);
+
+            // KeyDerivationFunction
+            INode keyDerivationFunctionNode = nodes.get(0);
+            assertThat(keyDerivationFunctionNode.getKind()).isEqualTo(KeyDerivationFunction.class);
+            assertThat(keyDerivationFunctionNode.getChildren()).hasSize(5);
+            assertThat(keyDerivationFunctionNode.asString()).isEqualTo("SHA256");
+
+            // BlockSize under KeyDerivationFunction
+            INode blockSizeNode = keyDerivationFunctionNode.getChildren().get(BlockSize.class);
+            assertThat(blockSizeNode).isNotNull();
+            assertThat(blockSizeNode.getChildren()).isEmpty();
+            assertThat(blockSizeNode.asString()).isEqualTo("512");
+
+            // DigestSize under KeyDerivationFunction
+            INode digestSizeNode = keyDerivationFunctionNode.getChildren().get(DigestSize.class);
+            assertThat(digestSizeNode).isNotNull();
+            assertThat(digestSizeNode.getChildren()).isEmpty();
+            assertThat(digestSizeNode.asString()).isEqualTo("256");
+
+            // KeyDerivation under KeyDerivationFunction
+            INode keyDerivationNode =
+                    keyDerivationFunctionNode.getChildren().get(KeyDerivation.class);
+            assertThat(keyDerivationNode).isNotNull();
+            assertThat(keyDerivationNode.getChildren()).isEmpty();
+            assertThat(keyDerivationNode.asString()).isEqualTo("KEYDERIVATION");
+
+            // KeyLength under KeyDerivationFunction
+            INode keyLengthNode = keyDerivationFunctionNode.getChildren().get(KeyLength.class);
+            assertThat(keyLengthNode).isNotNull();
+            assertThat(keyLengthNode.getChildren()).isEmpty();
+            assertThat(keyLengthNode.asString()).isEqualTo("256");
+
+            // Oid under KeyDerivationFunction
+            INode oidNode = keyDerivationFunctionNode.getChildren().get(Oid.class);
+            assertThat(oidNode).isNotNull();
+            assertThat(oidNode.getChildren()).isEmpty();
+            assertThat(oidNode.asString()).isEqualTo("2.16.840.1.101.3.4.2.1");
+        }
     }
 }

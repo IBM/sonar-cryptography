@@ -60,6 +60,7 @@ public final class PycaRSA {
                     .createDetectionRule()
                     .forObjectTypes(PADDING_TYPE)
                     .forMethods("MGF1")
+                    .shouldBeDetectedAs(new ValueActionFactory<>("MGF1"))
                     .withMethodParameter(HASH_TYPE) // This "type" accepts both hashes
                     // and pre-hashes
                     .addDependingDetectionRules(PycaHash.rules())
@@ -101,7 +102,8 @@ public final class PycaRSA {
                     .forMethods("OAEP")
                     .shouldBeDetectedAs(new ValueActionFactory<>("OAEP"))
                     .withMethodParameter(ANY)
-                    .shouldBeDetectedAs(new AlgorithmFactory<>())
+                    // .shouldBeDetectedAs(new AlgorithmFactory<>())
+                    // .asChildOfParameterWithId(-1)
                     .addDependingDetectionRules(List.of(MGF1))
                     .withMethodParameter(HASH_TYPE) // This "type" accepts both hashes
                     // and pre-hashes

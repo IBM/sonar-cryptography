@@ -17,28 +17,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms;
+package com.ibm.mapper.model.curves;
 
-import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.EllipticCurve;
-import com.ibm.mapper.model.KeyAgreement;
-import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.utils.DetectionLocation;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class ECDH extends Algorithm implements KeyAgreement {
-    private static final String NAME = "ECDH";
-
-    public ECDH(@NotNull DetectionLocation detectionLocation) {
-        super(NAME, KeyAgreement.class, detectionLocation);
-        this.put(new Oid("1.3.132.1.12", detectionLocation));
-    }
-
-    public ECDH(
-            @Nonnull EllipticCurve ellipticCurve, @Nonnull DetectionLocation detectionLocation) {
-        super(NAME, KeyAgreement.class, detectionLocation);
-        this.put(new Oid("1.3.132.1.12", detectionLocation));
-        this.put(ellipticCurve);
+public final class Brainpoolp512r1 extends EllipticCurve {
+    public Brainpoolp512r1(@NotNull DetectionLocation detectionLocation) {
+        super("Brainpoolp512r1", detectionLocation);
     }
 }

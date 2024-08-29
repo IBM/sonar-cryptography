@@ -26,6 +26,7 @@ import com.ibm.engine.rule.IBundle;
 import com.ibm.mapper.IContextTranslation;
 import com.ibm.mapper.mapper.pyca.PycaDigestMapper;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +43,13 @@ public final class PycaDigestContextTranslator implements IContextTranslation<Tr
             @NotNull DetectionLocation detectionLocation) {
         if (value instanceof ValueAction<Tree>) {
             final PycaDigestMapper pycaDigestMapper = new PycaDigestMapper();
-            return pycaDigestMapper.parse(value.asString(), detectionLocation).map(i -> i);
+            return pycaDigestMapper
+                    .parse(value.asString(), detectionLocation)
+                    .map(
+                            hash -> {
+                                hash.put(new Digest(detectionLocation));
+                                return hash;
+                            });
         }
         return Optional.empty();
     }
