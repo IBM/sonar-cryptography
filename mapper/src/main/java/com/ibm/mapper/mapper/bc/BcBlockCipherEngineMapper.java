@@ -74,6 +74,7 @@ public class BcBlockCipherEngineMapper implements IMapper {
         }
         Optional<? extends INode> node = map(str, detectionLocation);
         if (node.isPresent()) {
+            // TODO: Change this to not use the `new Algorithm` hack to change the kind
             return Optional.of(new Algorithm((IAlgorithm) node.get(), asKind));
         }
         return Optional.empty();

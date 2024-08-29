@@ -80,7 +80,11 @@ public class BcDigestMapper implements IMapper {
             return Optional.empty();
         }
         Optional<? extends INode> node = map(str, detectionLocation);
+        // TODO: Change this to not use the `new Algorithm` hack to change the kind
         if (node.isPresent()) {
+            if (asKind == MessageDigest.class) {
+                return node;
+            }
             return Optional.of(new Algorithm((IAlgorithm) node.get(), asKind));
         }
         return Optional.empty();
