@@ -115,7 +115,7 @@ class BcBlockCipherMacTest extends TestBase {
         assertThat(tagLengthNode.getChildren()).isEmpty();
         assertThat(tagLengthNode.asString()).isEqualTo("128");
 
-        // Mode under BlockCipher under Mac
+        // Mode under Mac
         INode modeNode = macNode.getChildren().get(Mode.class);
         assertThat(modeNode).isNotNull();
         assertThat(modeNode.getChildren()).isEmpty();

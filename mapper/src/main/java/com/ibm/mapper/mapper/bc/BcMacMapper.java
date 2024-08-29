@@ -81,7 +81,6 @@ public class BcMacMapper implements IMapper {
                                     new GMAC(detectionLocation)));
             case "GOST28147Mac" ->
                     Optional.of(new GOST28147(Mac.class, new GOST28147(detectionLocation)));
-            // case "HMac", "OldHMac" -> Optional.empty(); // Handled differently
             case "KMAC" -> Optional.of(new KMAC(detectionLocation));
             case "Poly1305" ->
                     Optional.of(new Poly1305(Mac.class, new Poly1305(detectionLocation)));

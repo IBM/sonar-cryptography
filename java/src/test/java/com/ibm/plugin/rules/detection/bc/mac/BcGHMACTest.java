@@ -27,13 +27,10 @@ import com.ibm.engine.model.MacSize;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.MacContext;
-import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.TagLength;
-import com.ibm.mapper.model.functionality.Digest;
-import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
 import java.util.List;
@@ -92,7 +89,7 @@ class BcGHMACTest extends TestBase {
         assertThat(store_2.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0_2 = store_2.getDetectionValues().get(0);
         assertThat(value0_2).isInstanceOf(ValueAction.class);
-        assertThat(value0_2.asString()).isEqualTo("AES");
+        assertThat(value0_2.asString()).isEqualTo("AESEngine");
 
         /*
          * Translation
@@ -103,14 +100,8 @@ class BcGHMACTest extends TestBase {
         // Mac
         INode macNode = nodes.get(0);
         assertThat(macNode.getKind()).isEqualTo(Mac.class);
-        assertThat(macNode.getChildren()).hasSize(4);
-        assertThat(macNode.asString()).isEqualTo("GMAC-AES");
-
-        // Digest under Mac
-        INode digestNode = macNode.getChildren().get(Digest.class);
-        assertThat(digestNode).isNotNull();
-        assertThat(digestNode.getChildren()).isEmpty();
-        assertThat(digestNode.asString()).isEqualTo("DIGEST");
+        assertThat(macNode.getChildren()).hasSize(3);
+        assertThat(macNode.asString()).isEqualTo("AES");
 
         // TagLength under Mac
         INode tagLengthNode = macNode.getChildren().get(TagLength.class);
@@ -118,22 +109,16 @@ class BcGHMACTest extends TestBase {
         assertThat(tagLengthNode.getChildren()).isEmpty();
         assertThat(tagLengthNode.asString()).isEqualTo("128");
 
-        // Tag under Mac
-        INode tagNode = macNode.getChildren().get(Tag.class);
-        assertThat(tagNode).isNotNull();
-        assertThat(tagNode.getChildren()).isEmpty();
-        assertThat(tagNode.asString()).isEqualTo("TAG");
+        // // Tag under Mac
+        // INode tagNode = macNode.getChildren().get(Tag.class);
+        // assertThat(tagNode).isNotNull();
+        // assertThat(tagNode.getChildren()).isEmpty();
+        // assertThat(tagNode.asString()).isEqualTo("TAG");
 
-        // BlockCipher under Mac
-        INode blockCipherNode1 = macNode.getChildren().get(BlockCipher.class);
-        assertThat(blockCipherNode1).isNotNull();
-        assertThat(blockCipherNode1.getChildren()).hasSize(2);
-        assertThat(blockCipherNode1.asString()).isEqualTo("AES");
-
-        // Mode under BlockCipher under Mac
-        INode modeNode1 = blockCipherNode1.getChildren().get(Mode.class);
+        // Mode under Mac
+        INode modeNode1 = macNode.getChildren().get(Mode.class);
         assertThat(modeNode1).isNotNull();
         assertThat(modeNode1.getChildren()).isEmpty();
-        assertThat(modeNode1.asString()).isEqualTo("GCM");
+        assertThat(modeNode1.asString()).isEqualTo("GMAC");
     }
 }

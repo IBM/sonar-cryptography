@@ -308,13 +308,9 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                     .parse(algorithmParameter.asString(), detectionLocation)
                     .map(f -> f);
         } else if (value instanceof BlockSize<Tree> blockSize) {
-            return switch (kind) {
-                case BLOCK_CIPHER, WRAP_ENGINE ->
-                        Optional.of(
-                                new com.ibm.mapper.model.BlockSize(
-                                        Integer.parseInt(blockSize.asString()), detectionLocation));
-                default -> Optional.empty();
-            };
+            return Optional.of(
+                    new com.ibm.mapper.model.BlockSize(
+                            Integer.parseInt(blockSize.asString()), detectionLocation));
         }
         return Optional.empty();
     }

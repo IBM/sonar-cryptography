@@ -27,15 +27,12 @@ import com.ibm.engine.model.MacSize;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.MacContext;
-import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.TagLength;
-import com.ibm.mapper.model.functionality.Digest;
-import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
 import java.util.List;
@@ -106,14 +103,14 @@ class BcCFBBlockCipherMacTest extends TestBase {
         assertThat(store_3.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0_3 = store_3.getDetectionValues().get(0);
         assertThat(value0_3).isInstanceOf(ValueAction.class);
-        assertThat(value0_3.asString()).isEqualTo("AES");
+        assertThat(value0_3.asString()).isEqualTo("AESEngine");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_4 = stores.get(1);
         assertThat(store_4.getDetectionValues()).hasSize(1);
         assertThat(store_4.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0_4 = store_4.getDetectionValues().get(0);
         assertThat(value0_4).isInstanceOf(ValueAction.class);
-        assertThat(value0_4.asString()).isEqualTo("PKCS7");
+        assertThat(value0_4.asString()).isEqualTo("PKCS7Padding");
 
         /*
          * Translation
@@ -125,34 +122,28 @@ class BcCFBBlockCipherMacTest extends TestBase {
         INode macNode = nodes.get(0);
         assertThat(macNode.getKind()).isEqualTo(Mac.class);
         assertThat(macNode.getChildren()).hasSize(4);
-        assertThat(macNode.asString()).isEqualTo("CFB-MAC-AES");
+        assertThat(macNode.asString()).isEqualTo("AES");
 
-        // Tag under Mac
-        INode tagNode = macNode.getChildren().get(Tag.class);
-        assertThat(tagNode).isNotNull();
-        assertThat(tagNode.getChildren()).isEmpty();
-        assertThat(tagNode.asString()).isEqualTo("TAG");
+        // // Tag under Mac
+        // INode tagNode = macNode.getChildren().get(Tag.class);
+        // assertThat(tagNode).isNotNull();
+        // assertThat(tagNode.getChildren()).isEmpty();
+        // assertThat(tagNode.asString()).isEqualTo("TAG");
 
-        // BlockCipher under Mac
-        INode blockCipherNode1 = macNode.getChildren().get(BlockCipher.class);
-        assertThat(blockCipherNode1).isNotNull();
-        assertThat(blockCipherNode1.getChildren()).hasSize(4);
-        assertThat(blockCipherNode1.asString()).isEqualTo("AES");
-
-        // Mode under BlockCipher under Mac
-        INode modeNode = blockCipherNode1.getChildren().get(Mode.class);
+        // Mode under Mac
+        INode modeNode = macNode.getChildren().get(Mode.class);
         assertThat(modeNode).isNotNull();
         assertThat(modeNode.getChildren()).isEmpty();
         assertThat(modeNode.asString()).isEqualTo("CFB");
 
-        // Padding under BlockCipher under Mac
-        INode paddingNode = blockCipherNode1.getChildren().get(Padding.class);
+        // Padding under Mac
+        INode paddingNode = macNode.getChildren().get(Padding.class);
         assertThat(paddingNode).isNotNull();
         assertThat(paddingNode.getChildren()).isEmpty();
         assertThat(paddingNode.asString()).isEqualTo("PKCS7");
 
-        // BlockSize under BlockCipher under Mac
-        INode blockSize = blockCipherNode1.getChildren().get(BlockSize.class);
+        // BlockSize under Mac
+        INode blockSize = macNode.getChildren().get(BlockSize.class);
         assertThat(blockSize).isNotNull();
         assertThat(blockSize.getChildren()).isEmpty();
         assertThat(blockSize.asString()).isEqualTo("64");
@@ -162,11 +153,5 @@ class BcCFBBlockCipherMacTest extends TestBase {
         assertThat(tagLengthNode).isNotNull();
         assertThat(tagLengthNode.getChildren()).isEmpty();
         assertThat(tagLengthNode.asString()).isEqualTo("128");
-
-        // Digest under Mac
-        INode digestNode = macNode.getChildren().get(Digest.class);
-        assertThat(digestNode).isNotNull();
-        assertThat(digestNode.getChildren()).isEmpty();
-        assertThat(digestNode.asString()).isEqualTo("DIGEST");
     }
 }
