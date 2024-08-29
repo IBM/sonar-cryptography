@@ -27,7 +27,7 @@ import org.bouncycastle.crypto.params.KeyParameter;
 public class BcBlockCipherMacTestFile {
 
     public static byte[] generateBlockCipherMac(byte[] key, byte[] input) { 
-        AESEngine cipher = new AESEngine(); // Noncompliant {{AES}}
+        AESEngine cipher = new AESEngine(); // Noncompliant {{AESEngine}}
         int macSizeInBits = 128;
 
         BlockCipherMac mac =

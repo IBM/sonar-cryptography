@@ -25,10 +25,10 @@ import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.MacContext;
+import com.ibm.mapper.model.ClassicalBitSecurityLevel;
+import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mac;
-import com.ibm.mapper.model.MessageDigest;
-import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
@@ -76,24 +76,25 @@ class BcBlake3MacTest extends TestBase {
         INode macNode = nodes.get(0);
         assertThat(macNode.getKind()).isEqualTo(Mac.class);
         assertThat(macNode.getChildren()).hasSize(3);
-        assertThat(macNode.asString()).isEqualTo("BLAKE3-MAC");
+        assertThat(macNode.asString()).isEqualTo("BLAKE3");
 
-        // MessageDigest under Mac
-        INode messageDigestNode = macNode.getChildren().get(MessageDigest.class);
-        assertThat(messageDigestNode).isNotNull();
-        assertThat(messageDigestNode.getChildren()).isEmpty();
-        assertThat(messageDigestNode.asString()).isEqualTo("BLAKE");
-
-        // Digest under Mac
-        INode digestNode = macNode.getChildren().get(Digest.class);
-        assertThat(digestNode).isNotNull();
-        assertThat(digestNode.getChildren()).isEmpty();
-        assertThat(digestNode.asString()).isEqualTo("DIGEST");
+        // DigestSize under Mac
+        INode digestSizeNode = macNode.getChildren().get(DigestSize.class);
+        assertThat(digestSizeNode).isNotNull();
+        assertThat(digestSizeNode.getChildren()).isEmpty();
+        assertThat(digestSizeNode.asString()).isEqualTo("256");
 
         // Tag under Mac
         INode tagNode = macNode.getChildren().get(Tag.class);
         assertThat(tagNode).isNotNull();
         assertThat(tagNode.getChildren()).isEmpty();
         assertThat(tagNode.asString()).isEqualTo("TAG");
+
+        // ClassicalBitSecurityLevel under Mac
+        INode classicalBitSecurityLevelNode =
+                macNode.getChildren().get(ClassicalBitSecurityLevel.class);
+        assertThat(classicalBitSecurityLevelNode).isNotNull();
+        assertThat(classicalBitSecurityLevelNode.getChildren()).isEmpty();
+        assertThat(classicalBitSecurityLevelNode.asString()).isEqualTo("128");
     }
 }
