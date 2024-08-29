@@ -358,6 +358,9 @@ public final class BcMac {
                         // TODO: "bit length of the underlying SHAKE function" -> should I
                         // capture?
                         .withMethodParameter("int")
+                        .shouldBeDetectedAs(
+                                new MacSizeFactory<>(Size.UnitType.BIT) /* use something else */)
+                        .asChildOfParameterWithId(-1)
                         .withMethodParameter(BYTE_ARRAY_TYPE)
                         .buildForContext(new MacContext())
                         .inBundle(() -> "Bc")

@@ -85,7 +85,7 @@ public class Algorithm implements IAlgorithm {
     @Nonnull
     @Override
     public String asString() {
-        return name;
+        return getName();
     }
 
     @Nonnull
