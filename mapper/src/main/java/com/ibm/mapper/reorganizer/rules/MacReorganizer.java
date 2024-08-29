@@ -19,6 +19,8 @@
  */
 package com.ibm.mapper.reorganizer.rules;
 
+import com.ibm.mapper.ITranslator;
+import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.INode;
@@ -28,6 +30,7 @@ import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.mapper.reorganizer.builder.ReorganizerRuleBuilder;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +45,52 @@ public final class MacReorganizer {
     private MacReorganizer() {
         // private
     }
+
+    @Nonnull
+    private static final IReorganizerRule MERGE_UNKNOWN_MAC_AND_CIPHER =
+            new ReorganizerRuleBuilder()
+                    .createReorganizerRule()
+                    .forNodeKind(Mac.class)
+                    .forNodeValue(ITranslator.UNKNOWN)
+                    .includingChildren(
+                            List.of(
+                                    new ReorganizerRuleBuilder()
+                                            .createReorganizerRule()
+                                            .forNodeKind(BlockCipher.class)
+                                            .noAction()))
+                    .perform(
+                            (node, parent, roots) -> {
+                                Algorithm blockCipher =
+                                        (Algorithm)
+                                                node.getChildren()
+                                                        .get(BlockCipher.class)
+                                                        .deepCopy();
+                                INode newMac = new Algorithm(blockCipher, Mac.class);
+
+                                for (Map.Entry<Class<? extends INode>, INode> childKeyValue :
+                                        node.getChildren().entrySet()) {
+                                    if (!childKeyValue.getKey().equals(BlockCipher.class)) {
+                                        newMac.put(childKeyValue.getValue());
+                                    }
+                                }
+
+                                if (parent == null) {
+                                    // `node` is a root node
+                                    // Create a copy of the roots list
+                                    List<INode> rootsCopy = new ArrayList<>(roots);
+                                    for (int i = 0; i < rootsCopy.size(); i++) {
+                                        if (rootsCopy.get(i).equals(node)) {
+                                            rootsCopy.set(i, newMac);
+                                            break;
+                                        }
+                                    }
+                                    return rootsCopy;
+                                } else {
+                                    // Replace the previous PublicKeyEncryption node
+                                    parent.put(newMac);
+                                    return roots;
+                                }
+                            });
 
     @Nonnull
     private static final IReorganizerRule MOVE_NODES_UNDER_CIPHER =
@@ -182,6 +231,6 @@ public final class MacReorganizer {
     @Unmodifiable
     @Nonnull
     public static List<IReorganizerRule> rules() {
-        return List.of(MOVE_NODES_UNDER_CIPHER); // RENAME_MAC
+        return List.of(MERGE_UNKNOWN_MAC_AND_CIPHER, MOVE_NODES_UNDER_CIPHER); // RENAME_MAC
     }
 }

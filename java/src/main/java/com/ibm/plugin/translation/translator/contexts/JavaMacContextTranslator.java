@@ -76,11 +76,11 @@ public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslato
                     BcMacMapper bcMacMapper = new BcMacMapper();
                     return bcMacMapper.parse(value.asString(), detectionLocation).map(f -> f);
             }
-        }
-        /*} else if (value instanceof MacSize<Tree> macSize) {
+        } else if (value instanceof MacSize<Tree> macSize) {
             TagLength tagLength = new TagLength(macSize.getValue(), detectionLocation);
             return Optional.of(tagLength);
-        } else if (value instanceof BlockSize<Tree> blockSizeDetection) {
+        }
+        /*else if (value instanceof BlockSize<Tree> blockSizeDetection) {
             com.ibm.mapper.model.BlockSize blockSize =
                     new com.ibm.mapper.model.BlockSize(
                             blockSizeDetection.getValue(), detectionLocation);
