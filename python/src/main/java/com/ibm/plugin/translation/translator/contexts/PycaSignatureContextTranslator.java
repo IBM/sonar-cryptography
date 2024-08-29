@@ -74,13 +74,18 @@ public final class PycaSignatureContextTranslator implements IContextTranslation
                 case VERIFY -> Optional.of(new Verify(detectionLocation));
             };
         } else if (value instanceof ValueAction<Tree>
-                && detectionContext instanceof DetectionContext context
-                && context.get("kind").map(k -> k.equals("padding")).orElse(false) // padding case
-        ) {
-            return switch (value.asString().toUpperCase().trim()) {
-                case "PKCS1V15" -> Optional.empty(); // TODO
-                default -> Optional.empty();
-            };
+                && detectionContext instanceof DetectionContext context) {
+            if (context.get("kind").map(k -> k.equals("padding")).orElse(false)) { // padding case
+                return switch (value.asString().toUpperCase().trim()) {
+                    case "PKCS1V15" -> Optional.empty(); // TODO
+                    default -> Optional.empty();
+                };
+            } else {
+                return switch (value.asString().toUpperCase().trim()) {
+                    case "MGF1" -> Optional.of(new MGF1(detectionLocation));
+                    default -> Optional.empty();
+                };
+            }
         }
         return Optional.empty();
     }

@@ -113,7 +113,7 @@ public abstract class ITranslator<R, T, S, P> {
      */
     static class Traverser<R, T, S, P> {
         @Nonnull final DetectionStore<R, T, S, P> rootDetectionStore;
-        @Nonnull final List<INode> newParents = new ArrayList<>();
+        @Nonnull final List<INode> newRoots = new ArrayList<>();
         @Nonnull final Function<DetectionStore<R, T, S, P>, Map<Integer, List<INode>>> translator;
 
         public Traverser(
@@ -131,7 +131,7 @@ public abstract class ITranslator<R, T, S, P> {
             travers(rootDetectionStore, rootNodes);
             final List<INode> translatedRootNodes =
                     new ArrayList<>(rootNodes.values().stream().flatMap(List::stream).toList());
-            translatedRootNodes.addAll(newParents);
+            translatedRootNodes.addAll(newRoots);
             return translatedRootNodes;
         }
 
@@ -196,7 +196,7 @@ public abstract class ITranslator<R, T, S, P> {
                             if (parentNode.hasChildOfType(childNode.getKind()).isPresent()) {
                                 final INode newParent = parentNode.deepCopy();
                                 newParent.put(childNode);
-                                newParents.add(newParent);
+                                newRoots.add(newParent);
                             } else {
                                 parentNode.put(childNode);
                             }

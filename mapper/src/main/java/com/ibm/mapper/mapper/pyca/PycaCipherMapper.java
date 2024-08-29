@@ -27,7 +27,6 @@ import com.ibm.mapper.model.algorithms.Camellia;
 import com.ibm.mapper.model.algorithms.ChaCha20;
 import com.ibm.mapper.model.algorithms.ChaCha20Poly1305;
 import com.ibm.mapper.model.algorithms.IDEA;
-import com.ibm.mapper.model.algorithms.MGF1;
 import com.ibm.mapper.model.algorithms.RC4;
 import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.algorithms.SEED;
@@ -48,7 +47,6 @@ public final class PycaCipherMapper implements IMapper {
         }
 
         return switch (str.toUpperCase().trim()) {
-            case "MGF1" -> Optional.of(new MGF1(detectionLocation));
             case "AES" -> Optional.of(new AES(detectionLocation));
             case "AES128" -> Optional.of(new AES(128, detectionLocation));
             case "AES256" -> Optional.of(new AES(256, detectionLocation));

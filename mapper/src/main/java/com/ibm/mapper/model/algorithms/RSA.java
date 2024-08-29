@@ -51,4 +51,8 @@ public final class RSA extends Algorithm implements KeyAgreement, Signature, Pub
         super(NAME, asKind, detectionLocation);
         this.put(new Oid(OID, detectionLocation));
     }
+
+    public RSA(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull RSA rsa) {
+        super(rsa, asKind);
+    }
 }

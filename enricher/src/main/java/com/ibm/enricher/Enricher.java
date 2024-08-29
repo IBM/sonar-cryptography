@@ -26,6 +26,7 @@ import com.ibm.enricher.algorithm.DSAEnricher;
 import com.ibm.enricher.algorithm.MacOrDigestEnricher;
 import com.ibm.enricher.algorithm.PBKDF2Enricher;
 import com.ibm.enricher.algorithm.RSAEnricher;
+import com.ibm.enricher.algorithm.RSAoaepEnricher;
 import com.ibm.enricher.algorithm.RSAssaPSSEnricher;
 import com.ibm.enricher.algorithm.SHA2Enricher;
 import com.ibm.enricher.algorithm.SHA3Enricher;
@@ -119,6 +120,9 @@ public class Enricher implements IEnricher {
         }
         if (node instanceof RSAssaPSS) {
             node = new RSAssaPSSEnricher().enrich(node);
+        }
+        if (node instanceof RSA) {
+            node = new RSAoaepEnricher().enrich(node);
         }
 
         if (node instanceof Signature) {
