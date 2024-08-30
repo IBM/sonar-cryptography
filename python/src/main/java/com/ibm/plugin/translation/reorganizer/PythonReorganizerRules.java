@@ -38,6 +38,7 @@ public final class PythonReorganizerRules {
         return Stream.of(
                         SignerReorganizer.MOVE_DIGEST_FROM_SIGN_ACTION_UNDER_SIGNATURE,
                         SignerReorganizer.MERGE_SIGNATURE_WITH_PKE_UNDER_PRIVATE_KEY,
+                        SignerReorganizer.MOVE_PSS_FROM_UNDER_SIGN_FUNCTION_TO_UNDER_KEY,
                         KeyAgreementReorganizer.MERGE_KEYAGREEMENT_WITH_PKE_UNDER_PRIVATE_KEY,
                         PaddingReorganizer.MOVE_OAEP_UNDER_ALGORITHM)
                 .toList();

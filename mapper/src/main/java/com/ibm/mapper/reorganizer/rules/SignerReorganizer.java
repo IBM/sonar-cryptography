@@ -24,15 +24,14 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Key;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PrivateKey;
+import com.ibm.mapper.model.ProbabilisticSignatureScheme;
 import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.mapper.reorganizer.builder.ReorganizerRuleBuilder;
-import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 
 public final class SignerReorganizer {
 
@@ -233,11 +232,59 @@ public final class SignerReorganizer {
                                 return roots;
                             });
 
-    @Unmodifiable
     @Nonnull
-    public static List<IReorganizerRule> rules() {
-        return List.of(MOVE_DIGEST_FROM_SIGN_ACTION_UNDER_SIGNATURE); // RENAME_SIGNATURE,
-        // RENAME_SIGNATURE_PSS,
-        // RENAME_SIGNATURE_RSA
-    }
+    public static final IReorganizerRule MOVE_PSS_FROM_UNDER_SIGN_FUNCTION_TO_UNDER_KEY =
+            new ReorganizerRuleBuilder()
+                    .createReorganizerRule()
+                    .forNodeKind(PrivateKey.class)
+                    .withDetectionCondition(
+                            (node, parent, roots) -> {
+                                final Optional<INode> func = node.hasChildOfType(Sign.class);
+                                return func.filter(
+                                                iNode ->
+                                                        node.hasChildOfType(
+                                                                                PublicKeyEncryption
+                                                                                        .class)
+                                                                        .isPresent()
+                                                                && iNode.hasChildOfType(
+                                                                                ProbabilisticSignatureScheme
+                                                                                        .class)
+                                                                        .isPresent())
+                                        .isPresent();
+                            })
+                    .perform(
+                            (node, parent, roots) -> {
+                                final Optional<INode> func = node.hasChildOfType(Sign.class);
+                                if (func.isPresent()) {
+                                    func.get()
+                                            .hasChildOfType(ProbabilisticSignatureScheme.class)
+                                            .ifPresent(
+                                                    pss -> {
+                                                        node.put(pss);
+                                                        func.get()
+                                                                .removeChildOfType(
+                                                                        ProbabilisticSignatureScheme
+                                                                                .class);
+                                                    });
+                                    // move as child of PSS
+                                    func.get()
+                                            .hasChildOfType(MessageDigest.class)
+                                            .ifPresent(
+                                                    digest -> {
+                                                        node.hasChildOfType(
+                                                                        ProbabilisticSignatureScheme
+                                                                                .class)
+                                                                .ifPresent(
+                                                                        pss -> {
+                                                                            pss.put(digest);
+                                                                        });
+                                                        func.get()
+                                                                .removeChildOfType(
+                                                                        MessageDigest.class);
+                                                    });
+                                    node.hasChildOfType(PublicKeyEncryption.class)
+                                            .ifPresent(n -> node.removeChildOfType(n.getKind()));
+                                }
+                                return roots;
+                            });
 }

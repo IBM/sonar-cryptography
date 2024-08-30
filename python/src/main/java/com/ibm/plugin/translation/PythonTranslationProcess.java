@@ -51,16 +51,16 @@ public final class PythonTranslationProcess
         // 1. Translate
         final PythonTranslator pythonTranslator = new PythonTranslator();
         final List<INode> translatedValues = pythonTranslator.translate(rootDetectionStore);
-        Utils.printNodeTree("translated ", translatedValues);
+        Utils.printNodeTree(" translated ", translatedValues);
 
         // 2. Reorganize
         final Reorganizer pythonReorganizer = new Reorganizer(reorganizerRules);
         final List<INode> reorganizedValues = pythonReorganizer.reorganize(translatedValues);
-        Utils.printNodeTree("reorganised", reorganizedValues);
+        Utils.printNodeTree("reorganised ", reorganizedValues);
 
         // 3. Enrich
         final Collection<INode> enrichedValues = Enricher.enrich(reorganizedValues);
-        Utils.printNodeTree("enriched   ", reorganizedValues);
+        Utils.printNodeTree("  enriched  ", reorganizedValues);
 
         return Collections.unmodifiableCollection(enrichedValues).stream().toList();
     }

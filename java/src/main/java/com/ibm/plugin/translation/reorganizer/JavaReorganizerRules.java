@@ -25,7 +25,6 @@ import com.ibm.mapper.reorganizer.rules.AsymmetricBlockCipherReorganizer;
 import com.ibm.mapper.reorganizer.rules.BlockCipherReorganizer;
 import com.ibm.mapper.reorganizer.rules.CipherParameterReorganizer;
 import com.ibm.mapper.reorganizer.rules.MacReorganizer;
-import com.ibm.mapper.reorganizer.rules.SignerReorganizer;
 import java.util.List;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
@@ -42,8 +41,7 @@ public final class JavaReorganizerRules {
                         AsymmetricBlockCipherReorganizer.rules().stream(),
                         BlockCipherReorganizer.rules().stream(),
                         CipherParameterReorganizer.rules().stream(),
-                        MacReorganizer.rules().stream(),
-                        SignerReorganizer.rules().stream())
+                        MacReorganizer.rules().stream())
                 .flatMap(i -> i)
                 .toList();
     }
