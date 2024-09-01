@@ -40,7 +40,7 @@ public class PycaEllipticCurveVerifyTest extends TestBase {
     @Test
     public void test() {
         PythonCheckVerifier.verify(
-                "src/test/files/rules/detection/asymmetric/EllipticCurve/PycallipticCurveVerifyTestFile.py",
+                "src/test/files/rules/detection/asymmetric/EllipticCurve/PycaEllipticCurveVerifyTestFile.py",
                 this);
     }
 

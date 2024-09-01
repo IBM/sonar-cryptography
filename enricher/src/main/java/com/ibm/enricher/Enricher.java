@@ -128,7 +128,6 @@ public class Enricher implements IEnricher {
         if (node instanceof Signature) {
             node = new SignatureEnricher().enrich(node);
         }
-
         if (node instanceof MessageDigest) {
             node = new MacOrDigestEnricher().enrich(node);
         }

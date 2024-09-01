@@ -22,11 +22,17 @@ package com.ibm.mapper.reorganizer.builder;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.mapper.reorganizer.IReorganizerRule.KindBuilder;
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public final class ReorganizerRuleBuilder implements IReorganizerRule.IReorganizerRuleBuilder {
 
     @Override
     public @Nonnull KindBuilder createReorganizerRule() {
         return new ReorganizerRuleBuilderImpl();
+    }
+
+    @Override
+    public @NotNull KindBuilder createReorganizerRule(@NotNull String ruleName) {
+        return new ReorganizerRuleBuilderImpl(ruleName);
     }
 }

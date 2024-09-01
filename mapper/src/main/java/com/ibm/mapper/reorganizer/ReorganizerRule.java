@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public record ReorganizerRule(
+        @Nullable String name,
         @Nonnull Class<? extends INode> kind,
         @Nullable String value,
         @Nonnull List<IReorganizerRule> children,
@@ -82,7 +83,8 @@ public record ReorganizerRule(
         String[] kindStrings = kind.toString().split("\\.");
         String kindName = kindStrings[kindStrings.length - 1];
         return String.format(
-                "[kind: %s | value: %s | %d subrule(s)]", kindName, value, children.size());
+                "[name: %s | kind: %s | value: %s | %d subrule(s)]",
+                name, kindName, value, children.size());
     }
 
     @Override

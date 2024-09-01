@@ -20,13 +20,14 @@
 package com.ibm.mapper.reorganizer.builder;
 
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.reorganizer.IFunctionDetectionCondition;
+import com.ibm.mapper.reorganizer.IFunctionPerformReorganization;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.mapper.reorganizer.IReorganizerRule.ChildrenBuilder;
 import com.ibm.mapper.reorganizer.IReorganizerRule.DetectionConditionBuilder;
 import com.ibm.mapper.reorganizer.IReorganizerRule.PerformBuilder;
 import com.ibm.mapper.reorganizer.IReorganizerRule.ValueBuilder;
 import com.ibm.mapper.reorganizer.ReorganizerRule;
-import com.ibm.mapper.utils.Function3;
 import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -39,27 +40,30 @@ final class ReorganizerRuleBuilderImpl
                 IReorganizerRule.DetectionConditionBuilder,
                 IReorganizerRule.PerformBuilder {
 
+    @Nullable private String ruleName;
     @Nullable private Class<? extends INode> kind;
     @Nullable private String value;
     @Nonnull private List<IReorganizerRule> children = new LinkedList<>();
     private boolean nonNullChildren = false;
-    @Nullable private Function3<INode, INode, List<INode>, List<INode>> performFunction;
-    @Nullable private Function3<INode, INode, List<INode>, Boolean> detectionConditionFunction;
+    @Nullable private IFunctionPerformReorganization performFunction;
+    @Nullable private IFunctionDetectionCondition detectionConditionFunction;
 
     public ReorganizerRuleBuilderImpl() {}
 
+    public ReorganizerRuleBuilderImpl(@Nonnull String ruleName) {
+        this.ruleName = ruleName;
+    }
+
     public ReorganizerRuleBuilderImpl(
+            @Nullable String ruleName,
             @Nullable Class<? extends INode> kind,
             @Nullable String value,
             @Nonnull List<IReorganizerRule> children,
             boolean nonNullChildren,
-            @Nullable Function3<INode, INode, List<INode>, Boolean> detectionConditionFunction) {
-        if (kind != null) {
-            this.kind = kind;
-        }
-        if (value != null) {
-            this.value = value;
-        }
+            @Nullable IFunctionDetectionCondition detectionConditionFunction) {
+        this.ruleName = ruleName;
+        this.kind = kind;
+        this.value = value;
         this.children = children;
         this.nonNullChildren = nonNullChildren;
         if (detectionConditionFunction != null) {
@@ -72,7 +76,7 @@ final class ReorganizerRuleBuilderImpl
     public ValueBuilder forNodeKind(@Nonnull Class<? extends INode> kind) {
         this.kind = kind;
         return new ReorganizerRuleBuilderImpl(
-                kind, value, children, nonNullChildren, detectionConditionFunction);
+                ruleName, kind, value, children, nonNullChildren, detectionConditionFunction);
     }
 
     @Override
@@ -80,7 +84,7 @@ final class ReorganizerRuleBuilderImpl
     public ChildrenBuilder forNodeValue(@Nonnull String value) {
         this.value = value;
         return new ReorganizerRuleBuilderImpl(
-                kind, value, children, nonNullChildren, detectionConditionFunction);
+                ruleName, kind, value, children, nonNullChildren, detectionConditionFunction);
     }
 
     @Override
@@ -88,7 +92,7 @@ final class ReorganizerRuleBuilderImpl
     public DetectionConditionBuilder includingChildren(@Nonnull List<IReorganizerRule> children) {
         this.children = children;
         return new ReorganizerRuleBuilderImpl(
-                kind, value, children, nonNullChildren, detectionConditionFunction);
+                ruleName, kind, value, children, nonNullChildren, detectionConditionFunction);
     }
 
     @Override
@@ -96,22 +100,21 @@ final class ReorganizerRuleBuilderImpl
     public DetectionConditionBuilder withAnyNonNullChildren() {
         this.nonNullChildren = true;
         return new ReorganizerRuleBuilderImpl(
-                kind, value, children, nonNullChildren, detectionConditionFunction);
+                ruleName, kind, value, children, nonNullChildren, detectionConditionFunction);
     }
 
     @Override
     @Nonnull
     public PerformBuilder withDetectionCondition(
-            Function3<INode, INode, List<INode>, Boolean> detectionConditionFunction) {
+            @Nonnull IFunctionDetectionCondition detectionConditionFunction) {
         this.detectionConditionFunction = detectionConditionFunction;
         return new ReorganizerRuleBuilderImpl(
-                kind, value, children, nonNullChildren, detectionConditionFunction);
+                ruleName, kind, value, children, nonNullChildren, detectionConditionFunction);
     }
 
     @Override
     @Nonnull
-    public IReorganizerRule perform(
-            @Nonnull Function3<INode, INode, List<INode>, List<INode>> performFunction) {
+    public IReorganizerRule perform(@Nonnull IFunctionPerformReorganization performFunction) {
         this.performFunction = performFunction;
         return build();
     }
@@ -131,6 +134,7 @@ final class ReorganizerRuleBuilderImpl
         }
 
         return new ReorganizerRule(
+                ruleName,
                 kind,
                 value,
                 children,

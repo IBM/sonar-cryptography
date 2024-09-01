@@ -20,9 +20,9 @@
 package com.ibm.mapper.reorganizer;
 
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.utils.Function3;
 import java.util.List;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface IReorganizerRule {
 
@@ -44,8 +44,7 @@ public interface IReorganizerRule {
      * @param roots - The list of root nodes for the translation tree
      * @return An updated list of root nodes for the translation tree
      */
-    @Nonnull
-    List<INode> applyReorganization(
+    @Nullable List<INode> applyReorganization(
             @Nonnull INode node, @Nonnull INode parent, @Nonnull List<INode> roots);
 
     @Nonnull
@@ -71,6 +70,9 @@ public interface IReorganizerRule {
     interface IReorganizerRuleBuilder {
         @Nonnull
         KindBuilder createReorganizerRule();
+
+        @Nonnull
+        KindBuilder createReorganizerRule(@Nonnull String ruleName);
     }
 
     interface KindBuilder {
@@ -90,11 +92,10 @@ public interface IReorganizerRule {
 
         @Nonnull
         PerformBuilder withDetectionCondition(
-                Function3<INode, INode, List<INode>, Boolean> detectionConditionFunction);
+                @Nonnull IFunctionDetectionCondition detectionConditionFunction);
 
         @Nonnull
-        IReorganizerRule perform(
-                @Nonnull Function3<INode, INode, List<INode>, List<INode>> performFunction);
+        IReorganizerRule perform(@Nonnull IFunctionPerformReorganization performFunction);
 
         @Nonnull
         IReorganizerRule noAction();
@@ -109,11 +110,10 @@ public interface IReorganizerRule {
 
         @Nonnull
         PerformBuilder withDetectionCondition(
-                Function3<INode, INode, List<INode>, Boolean> detectionConditionFunction);
+                @Nonnull IFunctionDetectionCondition detectionConditionFunction);
 
         @Nonnull
-        IReorganizerRule perform(
-                @Nonnull Function3<INode, INode, List<INode>, List<INode>> performFunction);
+        IReorganizerRule perform(@Nonnull IFunctionPerformReorganization performFunction);
 
         @Nonnull
         IReorganizerRule noAction();
@@ -122,11 +122,10 @@ public interface IReorganizerRule {
     interface DetectionConditionBuilder {
         @Nonnull
         PerformBuilder withDetectionCondition(
-                Function3<INode, INode, List<INode>, Boolean> detectionConditionFunction);
+                @Nonnull IFunctionDetectionCondition detectionConditionFunction);
 
         @Nonnull
-        IReorganizerRule perform(
-                @Nonnull Function3<INode, INode, List<INode>, List<INode>> performFunction);
+        IReorganizerRule perform(@Nonnull IFunctionPerformReorganization performFunction);
 
         @Nonnull
         IReorganizerRule noAction();
@@ -134,8 +133,7 @@ public interface IReorganizerRule {
 
     interface PerformBuilder {
         @Nonnull
-        IReorganizerRule perform(
-                @Nonnull Function3<INode, INode, List<INode>, List<INode>> performFunction);
+        IReorganizerRule perform(@Nonnull IFunctionPerformReorganization performFunction);
 
         @Nonnull
         IReorganizerRule noAction();

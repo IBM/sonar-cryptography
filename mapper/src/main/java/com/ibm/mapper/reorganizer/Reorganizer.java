@@ -33,7 +33,7 @@ public final class Reorganizer implements IReorganizer {
 
     private final List<IReorganizerRule> rules;
 
-    public Reorganizer(List<IReorganizerRule> rules) {
+    public Reorganizer(@Nonnull List<IReorganizerRule> rules) {
         this.rules = rules;
     }
 
@@ -130,7 +130,7 @@ public final class Reorganizer implements IReorganizer {
                                 "[reorganizer] MATCH: Node '%s' & Rule %s",
                                 node.asString(), reorganizerRule.asString());
                 LOGGER.debug(message);
-                return Optional.of(
+                return Optional.ofNullable(
                         reorganizerRule.applyReorganization(node, parent, rootNodes)); // new root
             }
         }

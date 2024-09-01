@@ -40,7 +40,7 @@ import org.jetbrains.annotations.NotNull;
 public class SignatureEnricher implements IEnricher {
     @Override
     public @NotNull INode enrich(@NotNull INode node) {
-        if (node instanceof Signature signature) {
+        if (node instanceof Signature signature && signature.is(Signature.class)) {
             return enrich(signature);
         }
         return node;
@@ -63,10 +63,6 @@ public class SignatureEnricher implements IEnricher {
     @SuppressWarnings("java:S3776")
     @Nonnull
     private Signature enrichRSA(@NotNull RSA rsa) {
-        if (!rsa.is(Signature.class)) {
-            return rsa;
-        }
-
         Optional<INode> possibleDigest = rsa.hasChildOfType(MessageDigest.class);
         if (possibleDigest.isEmpty()) {
             return rsa;
