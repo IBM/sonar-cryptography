@@ -82,9 +82,8 @@ public final class JavaDigestContextTranslator extends JavaAbstractLibraryTransl
                                         .map(size -> new MessageDigest(algorithm, size))
                                         .orElse(new MessageDigest(algorithm)));
             };*/
-        } else if (value instanceof com.ibm.engine.model.DigestSize) {
-            return Optional.of(
-                    new DigestSize(Integer.parseInt(value.asString()), detectionLocation));
+        } else if (value instanceof com.ibm.engine.model.DigestSize digestSize) {
+            return Optional.of(new DigestSize(digestSize.getValue(), detectionLocation));
         }
         return Optional.empty();
     }

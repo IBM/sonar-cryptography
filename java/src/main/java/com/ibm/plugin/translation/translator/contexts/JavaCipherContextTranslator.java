@@ -309,8 +309,7 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                     .map(f -> f);
         } else if (value instanceof BlockSize<Tree> blockSize) {
             return Optional.of(
-                    new com.ibm.mapper.model.BlockSize(
-                            Integer.parseInt(blockSize.asString()), detectionLocation));
+                    new com.ibm.mapper.model.BlockSize(blockSize.getValue(), detectionLocation));
         }
         return Optional.empty();
     }
