@@ -32,6 +32,7 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.PrivateKey;
 import com.ibm.mapper.model.PublicKeyEncryption;
+import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.algorithms.DH;
 import com.ibm.mapper.model.algorithms.DSA;
 import com.ibm.mapper.model.algorithms.Ed25519;
@@ -57,6 +58,7 @@ import com.ibm.mapper.model.curves.Sect409r1;
 import com.ibm.mapper.model.curves.Sect571k1;
 import com.ibm.mapper.model.curves.Sect571r1;
 import com.ibm.mapper.model.functionality.KeyGeneration;
+import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
@@ -148,11 +150,15 @@ public final class PycaPrivateKeyContextTranslator implements IContextTranslatio
                 .map(
                         algorithm -> {
                             PrivateKey privateKey = new PrivateKey(algorithm);
-                            privateKey.put(
-                                    new KeyGeneration(
-                                            detectionLocation)); // currently only GENERATE is
-                            // used as key action is this
-                            // context
+                            if (algorithm.is(Signature.class)) {
+                                privateKey.put(new Sign(detectionLocation));
+                            } else {
+                                privateKey.put(
+                                        new KeyGeneration(
+                                                detectionLocation)); // currently only GENERATE is
+                                // used as key action is this
+                                // context
+                            }
                             return privateKey;
                         })
                 .map(

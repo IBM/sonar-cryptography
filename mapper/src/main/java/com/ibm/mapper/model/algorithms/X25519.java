@@ -21,6 +21,7 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.KeyAgreement;
+import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.curves.Curve25519;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
@@ -31,5 +32,6 @@ public final class X25519 extends Algorithm implements KeyAgreement {
     public X25519(@NotNull DetectionLocation detectionLocation) {
         super(NAME, KeyAgreement.class, detectionLocation);
         this.put(new Curve25519(detectionLocation));
+        this.put(new Oid("1.3.101.110", detectionLocation));
     }
 }

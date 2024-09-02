@@ -19,18 +19,19 @@
  */
 package com.ibm.mapper.model.algorithms;
 
-import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.curves.Curve448;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
-public final class Ed448 extends Algorithm implements Signature {
+public final class Ed448 extends EdDSA implements Signature {
     private static final String NAME = "Ed448";
 
     public Ed448(@NotNull DetectionLocation detectionLocation) {
-        super(NAME, Signature.class, detectionLocation);
+        super(NAME, detectionLocation);
         this.put(new Curve448(detectionLocation));
         this.put(new SHAKE(256, detectionLocation));
+        this.put(new Oid("1.3.101.113", detectionLocation));
     }
 }

@@ -22,10 +22,15 @@ package com.ibm.mapper.model.algorithms;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class EdDSA extends Algorithm implements Signature {
+public class EdDSA extends Algorithm implements Signature {
     private static final String NAME = "EdDSA";
+
+    protected EdDSA(@Nonnull String name, @NotNull DetectionLocation detectionLocation) {
+        super(name, Signature.class, detectionLocation);
+    }
 
     public EdDSA(@NotNull DetectionLocation detectionLocation) {
         super(NAME, Signature.class, detectionLocation);
