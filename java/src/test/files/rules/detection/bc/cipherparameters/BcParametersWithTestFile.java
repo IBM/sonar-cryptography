@@ -8,7 +8,7 @@ public class BcParametersWithTestFile {
 
     public static void testParametersWithID() {
         // Create a block cipher engine
-        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AES}}
+        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
 
         GMSSParameters base = new GMSSParameters(256);
 

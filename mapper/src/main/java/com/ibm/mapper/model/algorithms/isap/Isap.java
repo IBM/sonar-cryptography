@@ -22,6 +22,7 @@ package com.ibm.mapper.model.algorithms.isap;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.ClassicalBitSecurityLevel;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.NonceLength;
 import com.ibm.mapper.model.TagLength;
@@ -30,12 +31,16 @@ import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
 public class Isap extends Algorithm implements AuthenticatedEncryption {
-    // https://csrc.nist.gov/CSRC/media/Projects/Lightweight-Cryptography/documents/round-1/spec-doc/ISAP-spec.pdf
+    // https://csrc.nist.gov/CSRC/media/Projects/lightweight-cryptography/documents/finalist-round/updated-spec-doc/isap-spec-final.pdf
 
     private static final String NAME = "Isap";
 
     public Isap(@NotNull DetectionLocation detectionLocation) {
         this(NAME, detectionLocation);
+    }
+
+    public Isap(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull Isap isap) {
+        super(isap, asKind);
     }
 
     protected Isap(@Nonnull String name, @NotNull DetectionLocation detectionLocation) {

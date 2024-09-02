@@ -102,7 +102,7 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                 default -> Optional.empty();
             };
         } else if (value instanceof ValueAction<Tree> valueAction) {
-            com.ibm.mapper.model.Algorithm algorithm;
+            // com.ibm.mapper.model.Algorithm algorithm;
             // BlockCipher blockCipher;
             // AuthenticatedEncryption ae;
             // PublicKeyEncryption pke;
@@ -308,13 +308,8 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                     .parse(algorithmParameter.asString(), detectionLocation)
                     .map(f -> f);
         } else if (value instanceof BlockSize<Tree> blockSize) {
-            return switch (kind) {
-                case BLOCK_CIPHER, WRAP_ENGINE ->
-                        Optional.of(
-                                new com.ibm.mapper.model.BlockSize(
-                                        Integer.parseInt(blockSize.asString()), detectionLocation));
-                default -> Optional.empty();
-            };
+            return Optional.of(
+                    new com.ibm.mapper.model.BlockSize(blockSize.getValue(), detectionLocation));
         }
         return Optional.empty();
     }

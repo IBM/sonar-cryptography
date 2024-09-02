@@ -26,6 +26,8 @@ import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
 public class CMAC extends Algorithm implements BlockCipher, Mac {
+    // https://en.wikipedia.org/wiki/One-key_MAC
+
     private static final String NAME = "CMAC"; // OMAC, OMAC1, AES-CMAC
 
     public CMAC(@NotNull DetectionLocation detectionLocation) {

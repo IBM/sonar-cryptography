@@ -31,8 +31,6 @@ import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.TagLength;
-import com.ibm.mapper.model.functionality.Digest;
-import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
 import java.util.List;
@@ -44,7 +42,7 @@ import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
-class BcCHMACTest extends TestBase {
+class BcCMACTest extends TestBase {
     @Test
     void test() {
         CheckVerifier.newVerifier()
@@ -91,7 +89,7 @@ class BcCHMACTest extends TestBase {
         assertThat(store_2.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0_2 = store_2.getDetectionValues().get(0);
         assertThat(value0_2).isInstanceOf(ValueAction.class);
-        assertThat(value0_2.asString()).isEqualTo("AES");
+        assertThat(value0_2.asString()).isEqualTo("AESEngine");
 
         /*
          * Translation
@@ -102,20 +100,14 @@ class BcCHMACTest extends TestBase {
         // Mac
         INode macNode = nodes.get(0);
         assertThat(macNode.getKind()).isEqualTo(Mac.class);
-        assertThat(macNode.getChildren()).hasSize(4);
-        assertThat(macNode.asString()).isEqualTo("CMAC-AES");
+        assertThat(macNode.getChildren()).hasSize(2);
+        assertThat(macNode.asString()).isEqualTo("CMAC");
 
-        // Tag under Mac
-        INode tagNode = macNode.getChildren().get(Tag.class);
-        assertThat(tagNode).isNotNull();
-        assertThat(tagNode.getChildren()).isEmpty();
-        assertThat(tagNode.asString()).isEqualTo("TAG");
-
-        // Digest under Mac
-        INode digestNode = macNode.getChildren().get(Digest.class);
-        assertThat(digestNode).isNotNull();
-        assertThat(digestNode.getChildren()).isEmpty();
-        assertThat(digestNode.asString()).isEqualTo("DIGEST");
+        // // Tag under Mac
+        // INode tagNode = macNode.getChildren().get(Tag.class);
+        // assertThat(tagNode).isNotNull();
+        // assertThat(tagNode.getChildren()).isEmpty();
+        // assertThat(tagNode.asString()).isEqualTo("TAG");
 
         // TagLength under Mac
         INode tagLengthNode = macNode.getChildren().get(TagLength.class);

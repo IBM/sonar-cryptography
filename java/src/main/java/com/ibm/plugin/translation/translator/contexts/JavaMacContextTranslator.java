@@ -22,9 +22,14 @@ package com.ibm.plugin.translation.translator.contexts;
 import com.ibm.engine.model.BlockSize;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.MacSize;
+import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.IDetectionContext;
+import com.ibm.engine.model.context.MacContext;
+import com.ibm.mapper.mapper.bc.BcDigestMapper;
+import com.ibm.mapper.mapper.bc.BcMacMapper;
 import com.ibm.mapper.mapper.jca.JcaMacMapper;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
@@ -61,151 +66,16 @@ public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslato
             @NotNull IValue<Tree> value,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
-        /*if (value instanceof ValueAction<Tree> valueAction) {
-            Algorithm baseAlgorithm;
-            Algorithm macAlgorithm;
-            BlockCipher blockCipher;
-            StreamCipher streamCipher;
-            MessageDigest messageDigest;
-            HMAC mac;
-            Mode mode;
-            switch (valueAction.asString()) {
-                case "Blake3Mac":
-                    macAlgorithm = new Algorithm("BLAKE3-MAC", detectionLocation);
-                    mac = new HMAC(macAlgorithm);
-
-                    baseAlgorithm = new Algorithm("BLAKE", detectionLocation);
-                    messageDigest = new MessageDigest(baseAlgorithm);
-                    mac.put(messageDigest);
-                    break;
-                case "BlockCipherMac", "CBCBlockCipherMac", "ISO9797Alg3Mac":
-                    macAlgorithm =
-                            new Algorithm("CBC-MAC-" + ITranslator.UNKNOWN, detectionLocation);
-                    mac = new HMAC(macAlgorithm);
-
-                    mode = new Mode("CBC", detectionLocation);
-                    mac.put(mode);
-                    break;
-                case "CFBBlockCipherMac":
-                    macAlgorithm =
-                            new Algorithm("CFB-MAC-" + ITranslator.UNKNOWN, detectionLocation);
-                    mac = new HMAC(macAlgorithm);
-
-                    mode = new Mode("CFB", detectionLocation);
-                    mac.put(mode);
-                    break;
-                case "CMac", "CMacWithIV":
-                    macAlgorithm = new Algorithm("CMAC-" + ITranslator.UNKNOWN, detectionLocation);
-                    mac = new HMAC(macAlgorithm);
-                    break;
-                case "DSTU7564Mac":
-                    macAlgorithm = new Algorithm("DSTU 7564-MAC", detectionLocation);
-                    mac = new HMAC(macAlgorithm);
-
-                    baseAlgorithm = new Algorithm("DSTU 7564", detectionLocation);
-                    messageDigest = new MessageDigest(baseAlgorithm);
-                    mac.put(messageDigest);
-                    break;
-                case "DSTU7624Mac":
-                    macAlgorithm = new Algorithm("DSTU 7624:2014-MAC", detectionLocation);
-                    mac = new HMAC(macAlgorithm);
-
-                    baseAlgorithm = new Algorithm("DSTU 7624:2014", detectionLocation);
-                    blockCipher = new BlockCipher(baseAlgorithm, null, null);
-                    mac.put(blockCipher);
-                    break;
-                case "GMac", "KGMac":
-                    macAlgorithm = new Algorithm("GMAC-" + ITranslator.UNKNOWN, detectionLocation);
-                    mac = new HMAC(macAlgorithm);
-
-                    mode = new Mode("GCM", detectionLocation);
-                    mac.put(mode);
-                    break;
-                case "GOST28147Mac":
-                    macAlgorithm = new Algorithm("GOST 28147-89-MAC", detectionLocation);
-                    mac = new HMAC(macAlgorithm);
-
-                    baseAlgorithm = new Algorithm("GOST 28147-89", detectionLocation);
-                    blockCipher = new BlockCipher(baseAlgorithm, null, null);
-                    mac.put(blockCipher);
-                    break;
-                case "HMac", "OldHMac":
-                    macAlgorithm = new Algorithm("HMAC-" + ITranslator.UNKNOWN, detectionLocation);
-                    mac = new HMAC(macAlgorithm);
-                    break;
-                case "KMAC":
-                    macAlgorithm = new Algorithm("KMAC", detectionLocation);
-                    mac = new HMAC(macAlgorithm);
-
-                    baseAlgorithm = new Algorithm("Keccak", detectionLocation);
-                    messageDigest = new MessageDigest(baseAlgorithm);
-                    mac.put(messageDigest);
-                    break;
-                case "Poly1305":
-                    macAlgorithm = new Algorithm("Poly1305", detectionLocation);
-                    mac = new HMAC(macAlgorithm);
-                    break;
-                case "SipHash":
-                    macAlgorithm = new Algorithm("SipHash", detectionLocation);
-                    mac = new HMAC(macAlgorithm);
-
-                    baseAlgorithm = new Algorithm("SipHash", detectionLocation);
-                    messageDigest = new MessageDigest(baseAlgorithm);
-                    mac.put(messageDigest);
-                    break;
-                case "SipHash128":
-                    macAlgorithm = new Algorithm("SipHash", detectionLocation);
-                    mac = new HMAC(macAlgorithm);
-
-                    baseAlgorithm = new Algorithm("SipHash", detectionLocation);
-                    messageDigest = new MessageDigest(baseAlgorithm);
-
-                    DigestSize digestSize = new DigestSize(128, detectionLocation);
-                    messageDigest.put(digestSize);
-
-                    mac.put(messageDigest);
-                    break;
-                case "SkeinMac":
-                    macAlgorithm = new Algorithm("Skein", detectionLocation);
-                    mac = new HMAC(macAlgorithm);
-
-                    baseAlgorithm = new Algorithm("Threefish", detectionLocation);
-                    blockCipher = new BlockCipher(baseAlgorithm, null, null);
-                    mac.put(blockCipher);
-                    break;
-                case "VMPCMac":
-                    macAlgorithm = new Algorithm("VMPC", detectionLocation);
-                    mac = new HMAC(macAlgorithm);
-
-                    baseAlgorithm = new Algorithm("VMPC", detectionLocation);
-                    streamCipher = new StreamCipher(baseAlgorithm, null, null);
-                    mac.put(streamCipher);
-                    break;
-                case "Zuc128Mac":
-                    macAlgorithm = new Algorithm("ZUC-128", detectionLocation);
-                    mac = new HMAC(macAlgorithm);
-
-                    baseAlgorithm = new Algorithm("ZUC-128", detectionLocation);
-                    streamCipher = new StreamCipher(baseAlgorithm, null, null);
-                    mac.put(streamCipher);
-                    break;
-                case "Zuc256Mac":
-                    macAlgorithm = new Algorithm("ZUC-256", detectionLocation);
-                    mac = new HMAC(macAlgorithm);
-
-                    baseAlgorithm = new Algorithm("ZUC-256", detectionLocation);
-                    streamCipher = new StreamCipher(baseAlgorithm, null, null);
-                    mac.put(streamCipher);
-                    break;
+        final MacContext.Kind kind = ((MacContext) detectionContext).kind();
+        if (value instanceof ValueAction<Tree> valueAction) {
+            switch (kind) {
+                case HMAC:
+                    BcDigestMapper bcDigestsMapper = new BcDigestMapper(Mac.class);
+                    return bcDigestsMapper.parse(value.asString(), detectionLocation).map(f -> f);
                 default:
-                    LOGGER.warn("An unknown Mac algorithm was used: its translation may be wrong");
-                    // Default translation: simply return a Mac node
-                    macAlgorithm = new Algorithm(valueAction.asString(), detectionLocation);
-                    mac = new HMAC(macAlgorithm);
+                    BcMacMapper bcMacMapper = new BcMacMapper();
+                    return bcMacMapper.parse(value.asString(), detectionLocation).map(f -> f);
             }
-            mac.put(new Tag(detectionLocation));
-            mac.put(new Digest(detectionLocation));
-            return Optional.of(mac);
         } else if (value instanceof MacSize<Tree> macSize) {
             TagLength tagLength = new TagLength(macSize.getValue(), detectionLocation);
             return Optional.of(tagLength);
@@ -214,7 +84,7 @@ public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslato
                     new com.ibm.mapper.model.BlockSize(
                             blockSizeDetection.getValue(), detectionLocation);
             return Optional.of(blockSize);
-        }*/
+        }
         return Optional.empty();
     }
 }

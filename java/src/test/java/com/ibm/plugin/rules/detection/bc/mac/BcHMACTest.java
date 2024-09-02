@@ -25,11 +25,9 @@ import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.MacContext;
+import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mac;
-import com.ibm.mapper.model.StreamCipher;
-import com.ibm.mapper.model.functionality.Digest;
-import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
 import java.util.List;
@@ -41,11 +39,11 @@ import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
-class BcVMPCHMACTest extends TestBase {
+class BcHMACTest extends TestBase {
     @Test
     void test() {
         CheckVerifier.newVerifier()
-                .onFile("src/test/files/rules/detection/bc/mac/BcVMPCMacTestFile.java")
+                .onFile("src/test/files/rules/detection/bc/mac/BcHMacTestFile.java")
                 .withChecks(this)
                 .withClassPath(BouncyCastleJars.JARS)
                 .verifyIssues();
@@ -56,6 +54,7 @@ class BcVMPCHMACTest extends TestBase {
             int findingId,
             @NotNull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
             @NotNull List<INode> nodes) {
+
         /*
          * Detection Store
          */
@@ -64,7 +63,7 @@ class BcVMPCHMACTest extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(MacContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("VMPCMac");
+        assertThat(value0.asString()).isEqualTo("SHA256Digest");
 
         /*
          * Translation
@@ -75,25 +74,13 @@ class BcVMPCHMACTest extends TestBase {
         // Mac
         INode macNode = nodes.get(0);
         assertThat(macNode.getKind()).isEqualTo(Mac.class);
-        assertThat(macNode.getChildren()).hasSize(3);
-        assertThat(macNode.asString()).isEqualTo("VMPC");
+        assertThat(macNode.getChildren()).hasSize(1);
+        assertThat(macNode.asString()).isEqualTo("SHA256");
 
-        // Digest under Mac
-        INode digestNode = macNode.getChildren().get(Digest.class);
-        assertThat(digestNode).isNotNull();
-        assertThat(digestNode.getChildren()).isEmpty();
-        assertThat(digestNode.asString()).isEqualTo("DIGEST");
-
-        // Tag under Mac
-        INode tagNode = macNode.getChildren().get(Tag.class);
-        assertThat(tagNode).isNotNull();
-        assertThat(tagNode.getChildren()).isEmpty();
-        assertThat(tagNode.asString()).isEqualTo("TAG");
-
-        // StreamCipher under Mac
-        INode streamCipherNode = macNode.getChildren().get(StreamCipher.class);
-        assertThat(streamCipherNode).isNotNull();
-        assertThat(streamCipherNode.getChildren()).isEmpty();
-        assertThat(streamCipherNode.asString()).isEqualTo("VMPC");
+        // DigestSize under Mac
+        INode digestSizeNode = macNode.getChildren().get(DigestSize.class);
+        assertThat(digestSizeNode).isNotNull();
+        assertThat(digestSizeNode.getChildren()).isEmpty();
+        assertThat(digestSizeNode.asString()).isEqualTo("256");
     }
 }

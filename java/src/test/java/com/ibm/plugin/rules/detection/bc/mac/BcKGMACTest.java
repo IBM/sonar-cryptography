@@ -27,7 +27,12 @@ import com.ibm.engine.model.MacSize;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.MacContext;
+import com.ibm.mapper.model.AuthenticatedEncryption;
+import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Mac;
+import com.ibm.mapper.model.Mode;
+import com.ibm.mapper.model.TagLength;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
 import java.util.List;
@@ -39,7 +44,7 @@ import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
-class BcKGHMACTest extends TestBase {
+class BcKGMACTest extends TestBase {
     @Test
     void test() {
         CheckVerifier.newVerifier()
@@ -86,7 +91,7 @@ class BcKGHMACTest extends TestBase {
         assertThat(store_2.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0_2 = store_2.getDetectionValues().get(0);
         assertThat(value0_2).isInstanceOf(ValueAction.class);
-        assertThat(value0_2.asString()).isEqualTo("KGCM");
+        assertThat(value0_2.asString()).isEqualTo("KGCMBlockCipher");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_2_1 =
                 getStoreOfValueType(ValueAction.class, store_2.getChildren());
@@ -94,13 +99,57 @@ class BcKGHMACTest extends TestBase {
         assertThat(store_2_1.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0_2_1 = store_2_1.getDetectionValues().get(0);
         assertThat(value0_2_1).isInstanceOf(ValueAction.class);
-        assertThat(value0_2_1.asString()).isEqualTo("DSTU 7624:2014");
+        assertThat(value0_2_1.asString()).isEqualTo("DSTU7624Engine");
+
+        DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_2_1_1 =
+                getStoreOfValueType(com.ibm.engine.model.BlockSize.class, store_2_1.getChildren());
+        assertThat(store_2_1_1.getDetectionValues()).hasSize(1);
+        assertThat(store_2_1_1.getDetectionValueContext()).isInstanceOf(CipherContext.class);
+        IValue<Tree> value0_2_1_1 = store_2_1_1.getDetectionValues().get(0);
+        assertThat(value0_2_1_1).isInstanceOf(com.ibm.engine.model.BlockSize.class);
+        assertThat(value0_2_1_1.asString()).isEqualTo("64");
 
         /*
          * Translation
          */
 
-        //  TODO:
+        assertThat(nodes).hasSize(1);
 
+        // Mac
+        INode macNode = nodes.get(0);
+        assertThat(macNode.getKind()).isEqualTo(Mac.class);
+        assertThat(macNode.getChildren()).hasSize(3);
+        assertThat(macNode.asString()).isEqualTo("Kalyna");
+
+        // TagLength under Mac
+        INode tagLengthNode = macNode.getChildren().get(TagLength.class);
+        assertThat(tagLengthNode).isNotNull();
+        assertThat(tagLengthNode.getChildren()).isEmpty();
+        assertThat(tagLengthNode.asString()).isEqualTo("128");
+
+        // Mode under Mac
+        INode modeNode = macNode.getChildren().get(Mode.class);
+        assertThat(modeNode).isNotNull();
+        assertThat(modeNode.getChildren()).isEmpty();
+        assertThat(modeNode.asString()).isEqualTo("GMAC");
+
+        // AuthenticatedEncryption under Mac
+        INode authenticatedEncryptionNode =
+                macNode.getChildren().get(AuthenticatedEncryption.class);
+        assertThat(authenticatedEncryptionNode).isNotNull();
+        assertThat(authenticatedEncryptionNode.getChildren()).hasSize(2);
+        assertThat(authenticatedEncryptionNode.asString()).isEqualTo("Kalyna");
+
+        // BlockSize under AuthenticatedEncryption under Mac
+        INode blockSizeNode = authenticatedEncryptionNode.getChildren().get(BlockSize.class);
+        assertThat(blockSizeNode).isNotNull();
+        assertThat(blockSizeNode.getChildren()).isEmpty();
+        assertThat(blockSizeNode.asString()).isEqualTo("64");
+
+        // Mode under AuthenticatedEncryption under Mac
+        INode modeNode1 = authenticatedEncryptionNode.getChildren().get(Mode.class);
+        assertThat(modeNode1).isNotNull();
+        assertThat(modeNode1.getChildren()).isEmpty();
+        assertThat(modeNode1.asString()).isEqualTo("GCM");
     }
 }

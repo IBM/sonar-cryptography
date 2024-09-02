@@ -16,11 +16,11 @@ public class BcRSAKEMGeneratorTestFile {
             Digest digest = new SHA256Digest(); // Digest
             DerivationFunction kdf =
                     new HKDFBytesGenerator(digest); // Your DerivationFunction implementation
-            // Noncompliant@-1 {{HKDF}}
+            // Noncompliant@-1 {{HKDFBytesGenerator}}
     
             // Initialize the RSAKEMGenerator
             RSAKEMGenerator kemGenerator =
-                    new RSAKEMGenerator(keyLen, kdf, rnd); // Noncompliant {{RSA}}
+                    new RSAKEMGenerator(keyLen, kdf, rnd); // Noncompliant {{RSAKEMGenerator}}
     
             // Generate secret
             SecretWithEncapsulation secret =

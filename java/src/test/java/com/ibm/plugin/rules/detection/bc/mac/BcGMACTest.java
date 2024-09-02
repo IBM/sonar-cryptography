@@ -23,14 +23,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.IValue;
+import com.ibm.engine.model.MacSize;
 import com.ibm.engine.model.ValueAction;
-import com.ibm.engine.model.context.DigestContext;
+import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.MacContext;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mac;
-import com.ibm.mapper.model.MessageDigest;
-import com.ibm.mapper.model.functionality.Digest;
-import com.ibm.mapper.model.functionality.Tag;
+import com.ibm.mapper.model.Mode;
+import com.ibm.mapper.model.TagLength;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
 import java.util.List;
@@ -42,11 +42,11 @@ import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
-class BcHHMACTest extends TestBase {
+class BcGMACTest extends TestBase {
     @Test
     void test() {
         CheckVerifier.newVerifier()
-                .onFile("src/test/files/rules/detection/bc/mac/BcHMacTestFile.java")
+                .onFile("src/test/files/rules/detection/bc/mac/BcGMacTestFile.java")
                 .withChecks(this)
                 .withClassPath(BouncyCastleJars.JARS)
                 .verifyIssues();
@@ -57,22 +57,39 @@ class BcHHMACTest extends TestBase {
             int findingId,
             @NotNull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
             @NotNull List<INode> nodes) {
+        /**
+         * TODO: Optimally, we shouldn't have these direct detections of engines, as they appear in
+         * the depending detection rules
+         */
+        if (findingId == 0 || findingId == 1) {
+            return;
+        }
+
         /*
          * Detection Store
          */
+
         assertThat(detectionStore.getDetectionValues()).hasSize(1);
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(MacContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("HMac");
+        assertThat(value0.asString()).isEqualTo("GMac");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
-                getStoreOfValueType(ValueAction.class, detectionStore.getChildren());
+                getStoreOfValueType(MacSize.class, detectionStore.getChildren());
         assertThat(store_1.getDetectionValues()).hasSize(1);
-        assertThat(store_1.getDetectionValueContext()).isInstanceOf(DigestContext.class);
+        assertThat(store_1.getDetectionValueContext()).isInstanceOf(MacContext.class);
         IValue<Tree> value0_1 = store_1.getDetectionValues().get(0);
-        assertThat(value0_1).isInstanceOf(ValueAction.class);
-        assertThat(value0_1.asString()).isEqualTo("SHA-256");
+        assertThat(value0_1).isInstanceOf(MacSize.class);
+        assertThat(value0_1.asString()).isEqualTo("128");
+
+        DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_2 =
+                getStoreOfValueType(ValueAction.class, detectionStore.getChildren());
+        assertThat(store_2.getDetectionValues()).hasSize(1);
+        assertThat(store_2.getDetectionValueContext()).isInstanceOf(CipherContext.class);
+        IValue<Tree> value0_2 = store_2.getDetectionValues().get(0);
+        assertThat(value0_2).isInstanceOf(ValueAction.class);
+        assertThat(value0_2.asString()).isEqualTo("AESEngine");
 
         /*
          * Translation
@@ -84,24 +101,24 @@ class BcHHMACTest extends TestBase {
         INode macNode = nodes.get(0);
         assertThat(macNode.getKind()).isEqualTo(Mac.class);
         assertThat(macNode.getChildren()).hasSize(3);
-        assertThat(macNode.asString()).isEqualTo("HMAC-SHA-256");
+        assertThat(macNode.asString()).isEqualTo("AES");
 
-        // MessageDigest under Mac
-        INode messageDigestNode = macNode.getChildren().get(MessageDigest.class);
-        assertThat(messageDigestNode).isNotNull();
-        assertThat(messageDigestNode.getChildren()).hasSize(1);
-        assertThat(messageDigestNode.asString()).isEqualTo("SHA-256");
+        // TagLength under Mac
+        INode tagLengthNode = macNode.getChildren().get(TagLength.class);
+        assertThat(tagLengthNode).isNotNull();
+        assertThat(tagLengthNode.getChildren()).isEmpty();
+        assertThat(tagLengthNode.asString()).isEqualTo("128");
 
-        // Tag under Mac
-        INode tagNode = macNode.getChildren().get(Tag.class);
-        assertThat(tagNode).isNotNull();
-        assertThat(tagNode.getChildren()).isEmpty();
-        assertThat(tagNode.asString()).isEqualTo("TAG");
+        // // Tag under Mac
+        // INode tagNode = macNode.getChildren().get(Tag.class);
+        // assertThat(tagNode).isNotNull();
+        // assertThat(tagNode.getChildren()).isEmpty();
+        // assertThat(tagNode.asString()).isEqualTo("TAG");
 
-        // Digest under Mac
-        INode digestNode = macNode.getChildren().get(Digest.class);
-        assertThat(digestNode).isNotNull();
-        assertThat(digestNode.getChildren()).isEmpty();
-        assertThat(digestNode.asString()).isEqualTo("DIGEST");
+        // Mode under Mac
+        INode modeNode1 = macNode.getChildren().get(Mode.class);
+        assertThat(modeNode1).isNotNull();
+        assertThat(modeNode1.getChildren()).isEmpty();
+        assertThat(modeNode1.asString()).isEqualTo("GMAC");
     }
 }

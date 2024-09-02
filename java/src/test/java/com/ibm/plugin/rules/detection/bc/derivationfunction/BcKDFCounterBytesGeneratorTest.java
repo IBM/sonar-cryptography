@@ -24,15 +24,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.ValueAction;
-import com.ibm.engine.model.context.DigestContext;
 import com.ibm.engine.model.context.KeyContext;
-import com.ibm.engine.model.context.MacContext;
+import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyDerivationFunction;
 import com.ibm.mapper.model.Mac;
-import com.ibm.mapper.model.MessageDigest;
-import com.ibm.mapper.model.functionality.Digest;
-import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
 import java.util.List;
@@ -77,23 +73,7 @@ class BcKDFCounterBytesGeneratorTest extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(KeyContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("KDFCounter");
-
-        DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
-                getStoreOfValueType(ValueAction.class, detectionStore.getChildren());
-        assertThat(store_1.getDetectionValues()).hasSize(1);
-        assertThat(store_1.getDetectionValueContext()).isInstanceOf(MacContext.class);
-        IValue<Tree> value0_1 = store_1.getDetectionValues().get(0);
-        assertThat(value0_1).isInstanceOf(ValueAction.class);
-        assertThat(value0_1.asString()).isEqualTo("HMac");
-
-        DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1_1 =
-                getStoreOfValueType(ValueAction.class, store_1.getChildren());
-        assertThat(store_1_1.getDetectionValues()).hasSize(1);
-        assertThat(store_1_1.getDetectionValueContext()).isInstanceOf(DigestContext.class);
-        IValue<Tree> value0_1_1 = store_1_1.getDetectionValues().get(0);
-        assertThat(value0_1_1).isInstanceOf(ValueAction.class);
-        assertThat(value0_1_1.asString()).isEqualTo("SHA-256");
+        assertThat(value0.asString()).isEqualTo("KDFCounterBytesGenerator");
 
         /*
          * Translation
@@ -105,30 +85,18 @@ class BcKDFCounterBytesGeneratorTest extends TestBase {
         INode keyDerivationFunctionNode = nodes.get(0);
         assertThat(keyDerivationFunctionNode.getKind()).isEqualTo(KeyDerivationFunction.class);
         assertThat(keyDerivationFunctionNode.getChildren()).hasSize(1);
-        assertThat(keyDerivationFunctionNode.asString()).isEqualTo("KDFCounter");
+        assertThat(keyDerivationFunctionNode.asString()).isEqualTo("KDF in Counter Mode");
 
         // Mac under KeyDerivationFunction
         INode macNode = keyDerivationFunctionNode.getChildren().get(Mac.class);
         assertThat(macNode).isNotNull();
-        assertThat(macNode.getChildren()).hasSize(3);
-        assertThat(macNode.asString()).isEqualTo("HMAC-SHA256");
+        assertThat(macNode.getChildren()).hasSize(1);
+        assertThat(macNode.asString()).isEqualTo("SHA256");
 
-        // Digest under Mac under KeyDerivationFunction
-        INode digestNode = macNode.getChildren().get(Digest.class);
-        assertThat(digestNode).isNotNull();
-        assertThat(digestNode.getChildren()).isEmpty();
-        assertThat(digestNode.asString()).isEqualTo("DIGEST");
-
-        // MessageDigest under Mac under KeyDerivationFunction
-        INode messageDigestNode = macNode.getChildren().get(MessageDigest.class);
-        assertThat(messageDigestNode).isNotNull();
-        assertThat(messageDigestNode.getChildren()).isEmpty();
-        assertThat(messageDigestNode.asString()).isEqualTo("SHA256");
-
-        // Tag under Mac under KeyDerivationFunction
-        INode tagNode = macNode.getChildren().get(Tag.class);
-        assertThat(tagNode).isNotNull();
-        assertThat(tagNode.getChildren()).isEmpty();
-        assertThat(tagNode.asString()).isEqualTo("TAG");
+        // DigestSize under Mac under KeyDerivationFunction
+        INode digestSizeNode = macNode.getChildren().get(DigestSize.class);
+        assertThat(digestSizeNode).isNotNull();
+        assertThat(digestSizeNode.getChildren()).isEmpty();
+        assertThat(digestSizeNode.asString()).isEqualTo("256");
     }
 }

@@ -25,12 +25,16 @@ import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class GOST28147 extends Algorithm implements BlockCipher, AuthenticatedEncryption {
+public final class GOST28147 extends Algorithm
+        implements BlockCipher, AuthenticatedEncryption, Mac {
+    // https://www.rfc-editor.org/rfc/rfc5830
+
     private static final String NAME = "GOST28147"; // Magma, GOST 28147-89 (RFC 5830)
 
     public GOST28147(@NotNull DetectionLocation detectionLocation) {

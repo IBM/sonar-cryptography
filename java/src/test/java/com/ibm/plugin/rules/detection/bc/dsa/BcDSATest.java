@@ -63,7 +63,7 @@ class BcDSATest extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(SignatureContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("ECDSA");
+        assertThat(value0.asString()).isEqualTo("ECDSASigner");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
                 getStoreOfValueType(OperationMode.class, detectionStore.getChildren());

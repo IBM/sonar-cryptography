@@ -20,14 +20,28 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.AuthenticatedEncryption;
+import com.ibm.mapper.model.ClassicalBitSecurityLevel;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
-public class Keccak extends Algorithm implements MessageDigest {
+public class Keccak extends Algorithm implements MessageDigest, AuthenticatedEncryption {
+    // https://keccak.team/keccak.html
+
     private static final String NAME = "Keccak";
 
-    public Keccak(@NotNull DetectionLocation detectionLocation) {
+    public Keccak(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, MessageDigest.class, detectionLocation);
+    }
+
+    public Keccak(int capacity, @Nonnull DetectionLocation detectionLocation) {
+        this(detectionLocation);
+        this.put(new ClassicalBitSecurityLevel(capacity / 2, detectionLocation));
+    }
+
+    public Keccak(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull Keccak keccak) {
+        super(keccak, asKind);
     }
 }

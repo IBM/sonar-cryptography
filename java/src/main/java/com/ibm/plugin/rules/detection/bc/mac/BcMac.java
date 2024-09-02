@@ -203,9 +203,10 @@ public final class BcMac {
                             .createDetectionRule()
                             .forObjectTypes("org.bouncycastle.crypto.macs." + macClass)
                             .forConstructor()
-                            .shouldBeDetectedAs(new ValueActionFactory<>(macClass))
+                            //     .shouldBeDetectedAs(new ValueActionFactory<>(macClass))
                             .withMethodParameter("org.bouncycastle.crypto.Digest")
-                            .addDependingDetectionRules(BcDigests.rules())
+                            .addDependingDetectionRules(
+                                    BcDigests.rules(new MacContext(MacContext.Kind.HMAC)))
                             .buildForContext(new MacContext())
                             .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcMacInit.rules()));
@@ -357,6 +358,9 @@ public final class BcMac {
                         // TODO: "bit length of the underlying SHAKE function" -> should I
                         // capture?
                         .withMethodParameter("int")
+                        .shouldBeDetectedAs(
+                                new MacSizeFactory<>(Size.UnitType.BIT) /* use something else */)
+                        .asChildOfParameterWithId(-1)
                         .withMethodParameter(BYTE_ARRAY_TYPE)
                         .buildForContext(new MacContext())
                         .inBundle(() -> "Bc")

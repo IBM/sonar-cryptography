@@ -31,8 +31,8 @@ public class BcKGMacTestFile {
         byte[] key = Hex.decode("00112233445566778899AABBCCDDEEFF");
         byte[] input = Hex.decode("48656c6c6f20576f726c64"); // "Hello World" in hex
 
-        DSTU7624Engine engine = new DSTU7624Engine(64); // Noncompliant {{DSTU 7624:2014}}
-        KGCMBlockCipher blockCipher = new KGCMBlockCipher(engine); // Noncompliant {{KGCM}}
+        DSTU7624Engine engine = new DSTU7624Engine(64); // Noncompliant {{DSTU7624Engine}}
+        KGCMBlockCipher blockCipher = new KGCMBlockCipher(engine); // Noncompliant {{KGCMBlockCipher}}
         KGMac gmac = new KGMac(blockCipher, 128); // Noncompliant {{KGMac}}
 
         CipherParameters params = new KeyParameter(key);

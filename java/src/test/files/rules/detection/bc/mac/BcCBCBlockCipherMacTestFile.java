@@ -15,7 +15,7 @@ public class BcCBCBlockCipherMacTestFile {
         byte[] iv = "0123456789abcdef".getBytes(StandardCharsets.UTF_8);
 
         // Initialize AES cipher with CBC mode
-        BlockCipher cipher = AESEngine.newInstance(); // Noncompliant {{AES}}
+        BlockCipher cipher = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
         ParametersWithIV params = new ParametersWithIV(new KeyParameter(key), iv);
         cipher.init(true, params); // true for encryption, false for decryption
 
@@ -37,7 +37,7 @@ public class BcCBCBlockCipherMacTestFile {
         byte[] iv = "0123456789abcdef".getBytes(StandardCharsets.UTF_8);
 
         // Initialize AES cipher with CBC mode
-        BlockCipher cipher = AESEngine.newInstance(); // Noncompliant {{AES}}
+        BlockCipher cipher = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
         ParametersWithIV params = new ParametersWithIV(new KeyParameter(key), iv);
         cipher.init(true, params); // true for encryption, false for decryption
 
@@ -59,7 +59,7 @@ public class BcCBCBlockCipherMacTestFile {
         byte[] iv = "0123456789abcdef".getBytes(StandardCharsets.UTF_8);
 
         // Initialize AES cipher with CBC mode
-        BlockCipher cipher = AESEngine.newInstance(); // Noncompliant {{AES}}
+        BlockCipher cipher = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
         ParametersWithIV params = new ParametersWithIV(new KeyParameter(key), iv);
         cipher.init(true, params); // true for encryption, false for decryption
 
@@ -81,7 +81,7 @@ public class BcCBCBlockCipherMacTestFile {
         byte[] iv = "0123456789abcdef".getBytes(StandardCharsets.UTF_8);
 
         // Initialize AES cipher with CBC mode
-        BlockCipher cipher = AESEngine.newInstance(); // Noncompliant {{AES}}
+        BlockCipher cipher = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
         ParametersWithIV params = new ParametersWithIV(new KeyParameter(key), iv);
         cipher.init(true, params); // true for encryption, false for decryption
 

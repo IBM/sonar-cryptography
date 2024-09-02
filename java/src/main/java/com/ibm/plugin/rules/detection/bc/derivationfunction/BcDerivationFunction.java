@@ -20,6 +20,7 @@
 package com.ibm.plugin.rules.detection.bc.derivationfunction;
 
 import com.ibm.engine.model.context.KeyContext;
+import com.ibm.engine.model.factory.OperationModeFactory;
 import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
@@ -51,7 +52,6 @@ public final class BcDerivationFunction {
          */
         digestDerivationFunctionMap
                 .putKey("BrokenKDF2BytesGenerator")
-                .putName("KDF2")
                 .putType("org.bouncycastle.jce.provider.");
         digestDerivationFunctionMap
                 .putKey("ConcatenationKDFGenerator")
@@ -67,19 +67,15 @@ public final class BcDerivationFunction {
                 .putType("org.bouncycastle.crypto.agreement.kdf.");
         digestDerivationFunctionMap
                 .putKey("HKDFBytesGenerator")
-                .putName("HKDF")
                 .putType("org.bouncycastle.crypto.generators.");
         digestDerivationFunctionMap
                 .putKey("KDF1BytesGenerator")
-                .putName("KDF1")
                 .putType("org.bouncycastle.crypto.generators.");
         digestDerivationFunctionMap
                 .putKey("KDF2BytesGenerator")
-                .putName("KDF2")
                 .putType("org.bouncycastle.crypto.generators.");
         digestDerivationFunctionMap
                 .putKey("MGF1BytesGenerator")
-                .putName("MGF1")
                 .putType("org.bouncycastle.crypto.generators.");
 
         macDerivationFunctionMap.putKey("KDFCounterBytesGenerator");
@@ -94,15 +90,13 @@ public final class BcDerivationFunction {
         for (Map.Entry<String, BouncyCastleInfoMap.Info> entry :
                 digestDerivationFunctionMap.entrySet()) {
             String generator = entry.getKey();
-            String generatorName =
-                    digestDerivationFunctionMap.getDisplayName(generator, "Generator");
             String type = entry.getValue().getType();
             constructorsList.add(
                     new DetectionRuleBuilder<Tree>()
                             .createDetectionRule()
                             .forObjectTypes(type + generator)
                             .forConstructor()
-                            .shouldBeDetectedAs(new ValueActionFactory<>(generatorName))
+                            .shouldBeDetectedAs(new ValueActionFactory<>(generator))
                             .withMethodParameter("org.bouncycastle.crypto.Digest")
                             .addDependingDetectionRules(BcDigests.rules())
                             .buildForContext(new KeyContext(KeyContext.Kind.KDF))
@@ -114,14 +108,12 @@ public final class BcDerivationFunction {
         for (Map.Entry<String, BouncyCastleInfoMap.Info> entry :
                 macDerivationFunctionMap.entrySet()) {
             String generator = entry.getKey();
-            String generatorName =
-                    macDerivationFunctionMap.getDisplayName(generator, "BytesGenerator");
             constructorsList.add(
                     new DetectionRuleBuilder<Tree>()
                             .createDetectionRule()
                             .forObjectTypes("org.bouncycastle.crypto.generators." + generator)
                             .forConstructor()
-                            .shouldBeDetectedAs(new ValueActionFactory<>(generatorName))
+                            .shouldBeDetectedAs(new ValueActionFactory<>(generator))
                             .withMethodParameter("org.bouncycastle.crypto.Mac")
                             .addDependingDetectionRules(BcMac.rules())
                             .buildForContext(new KeyContext(KeyContext.Kind.KDF))
@@ -142,8 +134,8 @@ public final class BcDerivationFunction {
                         .forObjectTypes(
                                 "org.bouncycastle.crypto.engines.EthereumIESEngine$HandshakeKDFFunction")
                         .forConstructor()
-                        .shouldBeDetectedAs(new ValueActionFactory<>("HandshakeKDF"))
-                        .withMethodParameter("int")
+                        .withMethodParameter("int") /* this determines whether its KDF1 or KDF2 */
+                        .shouldBeDetectedAs(new OperationModeFactory<>())
                         .withMethodParameter("org.bouncycastle.crypto.Digest")
                         .addDependingDetectionRules(BcDigests.rules())
                         .buildForContext(new KeyContext(KeyContext.Kind.KDF))

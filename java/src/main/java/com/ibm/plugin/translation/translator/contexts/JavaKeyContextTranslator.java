@@ -23,6 +23,7 @@ import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.Curve;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.KeySize;
+import com.ibm.engine.model.OperationMode;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.model.context.KeyContext;
@@ -30,6 +31,9 @@ import com.ibm.engine.model.context.PrivateKeyContext;
 import com.ibm.engine.model.context.PublicKeyContext;
 import com.ibm.engine.model.context.SecretKeyContext;
 import com.ibm.mapper.mapper.bc.BcAgreementMapper;
+import com.ibm.mapper.mapper.bc.BcDerivationFunctionMapper;
+import com.ibm.mapper.mapper.bc.BcKemMapper;
+import com.ibm.mapper.mapper.bc.BcOperationModeKDFMapper;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.mapper.jca.JcaCurveMapper;
 import com.ibm.mapper.model.IAlgorithm;
@@ -95,29 +99,33 @@ public final class JavaKeyContextTranslator extends JavaAbstractLibraryTranslato
             @NotNull DetectionLocation detectionLocation) {
         if (value instanceof ValueAction<Tree> valueAction) {
             final KeyContext.Kind kind = ((KeyContext) detectionContext).kind();
-            com.ibm.mapper.model.Algorithm algorithm;
+            // com.ibm.mapper.model.Algorithm algorithm;
             switch (kind) {
                 case DH:
                     BcAgreementMapper bcAgreementMapper = new BcAgreementMapper();
                     return bcAgreementMapper
                             .parse(valueAction.asString(), detectionLocation)
                             .map(f -> f);
-                /*case KDF:
-                    algorithm =
-                            new com.ibm.mapper.model.Algorithm(
-                                    valueAction.asString(), detectionLocation);
-                    if (valueAction.asString().equals("MGF1")) {
-                        return Optional.of(new MaskGenerationFunction(algorithm));
-                    }
-                    return Optional.of(new KeyDerivationFunction(algorithm));
+                case KDF:
+                    BcDerivationFunctionMapper bcDerivationFunctionMapper =
+                            new BcDerivationFunctionMapper();
+                    return bcDerivationFunctionMapper
+                            .parse(valueAction.asString(), detectionLocation)
+                            .map(f -> f);
                 case KEM:
-                    algorithm =
-                            new com.ibm.mapper.model.Algorithm(
-                                    valueAction.asString(), detectionLocation);
-                    return Optional.of(new KeyEncapsulationMechanism(algorithm));*/
+                    BcKemMapper bcKEMMapper = new BcKemMapper();
+                    return bcKEMMapper.parse(valueAction.asString(), detectionLocation).map(f -> f);
                 default:
                     break;
             }
+        } else if (value instanceof KeySize<Tree> keySize) {
+            KeyLength keyLength = new KeyLength(keySize.getValue(), detectionLocation);
+            return Optional.of(keyLength);
+        } else if (value instanceof OperationMode<Tree> operationMode) {
+            BcOperationModeKDFMapper bcOperationModeKDFMapper = new BcOperationModeKDFMapper();
+            return bcOperationModeKDFMapper
+                    .parse(operationMode.asString(), detectionLocation)
+                    .map(f -> f);
         }
         return Optional.empty();
     }

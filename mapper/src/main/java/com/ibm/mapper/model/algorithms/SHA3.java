@@ -29,6 +29,10 @@ import javax.annotation.Nonnull;
 public final class SHA3 extends Algorithm implements MessageDigest {
     private static final String NAME = "SHA3";
 
+    public SHA3(@Nonnull DetectionLocation detectionLocation) {
+        super(NAME, MessageDigest.class, detectionLocation);
+    }
+
     public SHA3(int digestSize, @Nonnull DetectionLocation detectionLocation) {
         super(NAME + "-" + digestSize, MessageDigest.class, detectionLocation);
         this.put(new DigestSize(digestSize, detectionLocation));

@@ -34,8 +34,8 @@ public class BcGMacTestFile {
         byte[] key = Hex.decode("00112233445566778899AABBCCDDEEFF");
         byte[] input = Hex.decode("48656c6c6f20576f726c64"); // "Hello World" in hex
 
-        MultiBlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AES}}
-        GCMModeCipher blockCipher = GCMBlockCipher.newInstance(aesEngine); // Noncompliant {{GCM}}
+        MultiBlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
+        GCMModeCipher blockCipher = GCMBlockCipher.newInstance(aesEngine); // Noncompliant {{GCMBlockCipher}}
         GMac gmac = new GMac(blockCipher, 128); // Noncompliant {{GMac}}
 
         CipherParameters params = new KeyParameter(key);

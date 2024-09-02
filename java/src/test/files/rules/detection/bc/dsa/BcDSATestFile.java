@@ -25,7 +25,7 @@ public class BcDSATestFile {
 
         // Sign a message
         byte[] message = "Hello, ECDSA!".getBytes();
-        ECDSASigner signer = new ECDSASigner(); // Noncompliant {{ECDSA}}
+        ECDSASigner signer = new ECDSASigner(); // Noncompliant {{ECDSASigner}}
         signer.init(true, privateKey); // true for signing
         BigInteger[] signature = signer.generateSignature(message);
     }

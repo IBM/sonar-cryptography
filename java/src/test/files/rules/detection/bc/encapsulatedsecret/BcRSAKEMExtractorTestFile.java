@@ -14,7 +14,7 @@ public class BcRSAKEMExtractorTestFile {
         Digest digest = new SHA256Digest(); // Digest
         DerivationFunction kdf =
                 new HKDFBytesGenerator(digest); // Your DerivationFunction implementation
-        // Noncompliant@-1 {{HKDF}}
+        // Noncompliant@-1 {{HKDFBytesGenerator}}
 
         // Create a RSAKeyParameters object named privParams
         RSAKeyParameters privParams =
@@ -22,7 +22,7 @@ public class BcRSAKEMExtractorTestFile {
 
         // Instantiate the RSAKEMExtractor
         RSAKEMExtractor extractor =
-                new RSAKEMExtractor(privParams, keyLen, kdf); // Noncompliant {{RSA}}
+                new RSAKEMExtractor(privParams, keyLen, kdf); // Noncompliant {{RSAKEMExtractor}}
 
         // Extract the shared secret key using the private key parameters
         byte[] sharedSecret = extractor.extractSecret(null);
