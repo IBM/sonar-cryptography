@@ -19,6 +19,8 @@
  */
 package com.ibm.plugin.rules.detection.asymmetric.RSA;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.KeySize;
@@ -39,17 +41,14 @@ import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.plugin.TestBase;
+import java.util.List;
+import javax.annotation.Nonnull;
 import org.junit.Test;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
 import org.sonar.plugins.python.api.tree.Tree;
 import org.sonar.python.checks.utils.PythonCheckVerifier;
-
-import javax.annotation.Nonnull;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class PycaRSASign2Test extends TestBase {
 

@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.plugin.rules.detection.asymmetric;
+package com.ibm.plugin.rules.detection.keyagreement;
 
 import com.ibm.engine.model.KeyAction;
 import com.ibm.engine.model.context.KeyAgreementContext;
@@ -31,9 +31,9 @@ import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.python.api.tree.Tree;
 
 @SuppressWarnings("java:S1192")
-public final class PycaGenerate {
+public final class PycaKeyAgreement {
 
-    private PycaGenerate() {
+    private PycaKeyAgreement() {
         // private
     }
 
