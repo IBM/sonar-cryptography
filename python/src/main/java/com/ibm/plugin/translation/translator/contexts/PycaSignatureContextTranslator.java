@@ -33,6 +33,7 @@ import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.algorithms.ECDSA;
 import com.ibm.mapper.model.algorithms.MGF1;
 import com.ibm.mapper.model.algorithms.RSA;
+import com.ibm.mapper.model.algorithms.RSAssaPSS;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.model.functionality.Verify;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -57,7 +58,6 @@ public final class PycaSignatureContextTranslator implements IContextTranslation
                                         Signature.class,
                                         new EllipticCurveAlgorithm(detectionLocation)));
                 case "ECDSA" -> Optional.of(new ECDSA(detectionLocation));
-                case "MGF1" -> Optional.of(new MGF1(detectionLocation)); // TODO: to verify
                 case "RSA" -> {
                     if (detectionContext instanceof DetectionContext context
                             && context.get("kind").map(k -> k.equals("PSS")).orElse(false)) {
@@ -83,6 +83,7 @@ public final class PycaSignatureContextTranslator implements IContextTranslation
             } else {
                 return switch (value.asString().toUpperCase().trim()) {
                     case "MGF1" -> Optional.of(new MGF1(detectionLocation));
+                    case "RSA-PSS" -> Optional.of(new RSAssaPSS(detectionLocation));
                     default -> Optional.empty();
                 };
             }

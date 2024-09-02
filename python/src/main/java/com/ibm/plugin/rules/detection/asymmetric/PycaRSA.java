@@ -29,7 +29,6 @@ import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.PrivateKeyContext;
 import com.ibm.engine.model.context.PublicKeyContext;
 import com.ibm.engine.model.context.SignatureContext;
-import com.ibm.engine.model.factory.AlgorithmFactory;
 import com.ibm.engine.model.factory.CipherActionFactory;
 import com.ibm.engine.model.factory.KeyActionFactory;
 import com.ibm.engine.model.factory.KeySizeFactory;
@@ -73,11 +72,11 @@ public final class PycaRSA {
                     .createDetectionRule()
                     .forObjectTypes(PADDING_TYPE)
                     .forMethods("PSS")
+                    .shouldBeDetectedAs(new ValueActionFactory<>("RSA-PSS"))
                     .withMethodParameter(ANY)
-                    .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .addDependingDetectionRules(List.of(MGF1))
                     .withMethodParameter(ANY)
-                    .buildForContext(new SignatureContext(Map.of("kind", "PSS")))
+                    .buildForContext(new SignatureContext())
                     .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
@@ -88,7 +87,7 @@ public final class PycaRSA {
                     .forMethods("PKCS1v15")
                     .shouldBeDetectedAs(
                             new ValueActionFactory<>(
-                                    "PKCS1v15")) // this is nessecary to capture something to
+                                    "PKCS1v15")) // this is necessary to capture something to
                     // trigger the translation
                     .withAnyParameters()
                     .buildForContext(new SignatureContext(Map.of("kind", "padding")))

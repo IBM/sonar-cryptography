@@ -19,43 +19,44 @@
  */
 package com.ibm.plugin.rules.detection.asymmetric.RSA;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.ibm.engine.detection.DetectionStore;
-import com.ibm.engine.model.CipherAction;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.KeySize;
 import com.ibm.engine.model.SignatureAction;
+import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.DigestContext;
 import com.ibm.engine.model.context.PrivateKeyContext;
 import com.ibm.engine.model.context.SignatureContext;
-import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.BlockSize;
+import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Key;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.MessageDigest;
-import com.ibm.mapper.model.Padding;
+import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.PrivateKey;
-import com.ibm.mapper.model.PublicKey;
 import com.ibm.mapper.model.Signature;
+import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.plugin.TestBase;
-import java.util.List;
-import javax.annotation.Nonnull;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
 import org.sonar.plugins.python.api.tree.Tree;
 import org.sonar.python.checks.utils.PythonCheckVerifier;
 
+import javax.annotation.Nonnull;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class PycaRSASign2Test extends TestBase {
+
     @Test
-    void test() {
+    public void test() {
         PythonCheckVerifier.verify(
-                "src/test/files/rules/detection/asymmetric/RSA/CryptographyRSASign2TestFile.py",
-                this);
+                "src/test/files/rules/detection/asymmetric/RSA/PycaRSASign2TestFile.py", this);
     }
 
     @Override
@@ -66,133 +67,105 @@ public class PycaRSASign2Test extends TestBase {
         /*
          * Detection Store
          */
+
         assertThat(detectionStore.getDetectionValues()).hasSize(1);
-        IValue<Tree> value = detectionStore.getDetectionValues().get(0);
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(PrivateKeyContext.class);
-        assertThat(value).isInstanceOf(KeySize.class);
-        assertThat(value.asString()).isEqualTo("2048");
+        IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
+        assertThat(value0).isInstanceOf(KeySize.class);
+        assertThat(value0.asString()).isEqualTo("2048");
 
-        DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> store =
+        DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> store_1 =
                 getStoreOfValueType(SignatureAction.class, detectionStore.getChildren());
-        assertThat(store).isNotNull();
-        assertThat(store.getDetectionValueContext()).isInstanceOf(SignatureContext.class);
-        assertThat(store.getDetectionValues()).hasSize(1);
-        value = store.getDetectionValues().get(0);
-        assertThat(value).isInstanceOf(SignatureAction.class);
-        assertThat(value.asString()).isEqualTo("SIGN");
+        assertThat(store_1.getDetectionValues()).hasSize(1);
+        assertThat(store_1.getDetectionValueContext()).isInstanceOf(SignatureContext.class);
+        IValue<Tree> value0_1 = store_1.getDetectionValues().get(0);
+        assertThat(value0_1).isInstanceOf(SignatureAction.class);
+        assertThat(value0_1.asString()).isEqualTo("SIGN");
 
-        store =
-                getStoreOfValueType(
-                        com.ibm.engine.model.SignatureAction.class, store.getChildren());
-        assertThat(store).isNotNull();
-        assertThat(store.getDetectionValueContext()).isInstanceOf(SignatureContext.class);
-        assertThat(store.getDetectionValues()).hasSize(1);
-        value = store.getDetectionValues().get(0);
-        assertThat(value).isInstanceOf(SignatureAction.class);
-        assertThat(value.asString()).isEqualTo("PADDING");
-
-        store =
-                getStoreOfValueType(
-                        com.ibm.engine.model.CipherAction.class, detectionStore.getChildren());
-        assertThat(store).isNotNull();
-        assertThat(store.getDetectionValueContext()).isInstanceOf(DigestContext.class);
-        assertThat(store.getDetectionValues()).hasSize(1);
-        value = store.getDetectionValues().get(0);
-        assertThat(value).isInstanceOf(CipherAction.class);
-        assertThat(value.asString()).isEqualTo("HASH");
+        List<DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext>> stores =
+                getStoresOfValueType(ValueAction.class, store_1.getChildren());
+        assertThat(stores).isNotNull();
+        for (DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> store : stores) {
+            assertThat(store.getDetectionValues()).hasSize(1);
+            assertThat(store.getDetectionValueContext())
+                    .isInstanceOfAny(SignatureContext.class, DigestContext.class);
+            IValue<Tree> v = store.getDetectionValues().get(0);
+            assertThat(v).isInstanceOf(ValueAction.class);
+            assertThat(v.asString())
+                    .satisfiesAnyOf(
+                            s -> assertThat(s).isEqualTo("PKCS1v15"),
+                            s -> assertThat(s).isEqualTo("SHA3_384"));
+        }
 
         /*
          * Translation
          */
-        assertThat(nodes).hasSize(2);
+        assertThat(nodes).hasSize(1);
 
         // PrivateKey
         INode privateKeyNode = nodes.get(0);
-        assertThat(privateKeyNode).isInstanceOf(PrivateKey.class);
-        assertThat(privateKeyNode).isNotNull();
+        assertThat(privateKeyNode.getKind()).isEqualTo(PrivateKey.class);
+        assertThat(privateKeyNode.getChildren()).hasSize(4);
         assertThat(privateKeyNode.asString()).isEqualTo("RSA");
-        assertThat(privateKeyNode.getChildren()).hasSize(3); // Three children detected
+
+        // KeyGeneration under PrivateKey
+        INode keyGenerationNode = privateKeyNode.getChildren().get(KeyGeneration.class);
+        assertThat(keyGenerationNode).isNotNull();
+        assertThat(keyGenerationNode.getChildren()).isEmpty();
+        assertThat(keyGenerationNode.asString()).isEqualTo("KEYGENERATION");
+
+        // Sign under PrivateKey
+        INode signNode = privateKeyNode.getChildren().get(Sign.class);
+        assertThat(signNode).isNotNull();
+        assertThat(signNode.getChildren()).isEmpty();
+        assertThat(signNode.asString()).isEqualTo("SIGN");
 
         // KeyLength under PrivateKey
-        INode privateKeyKeyLengthNode = privateKeyNode.getChildren().get(KeyLength.class);
-        assertThat(privateKeyKeyLengthNode).isNotNull();
-        assertThat(privateKeyKeyLengthNode.asString()).isEqualTo("2048");
+        INode keyLengthNode = privateKeyNode.getChildren().get(KeyLength.class);
+        assertThat(keyLengthNode).isNotNull();
+        assertThat(keyLengthNode.getChildren()).isEmpty();
+        assertThat(keyLengthNode.asString()).isEqualTo("2048");
 
         // Signature under PrivateKey
-        INode privateKeySignatureNode = privateKeyNode.getChildren().get(Signature.class);
-        assertThat(privateKeySignatureNode).isNotNull();
-        assertThat(privateKeySignatureNode.asString()).isEqualTo("SHA3-384withRSA");
+        INode signatureNode = privateKeyNode.getChildren().get(Signature.class);
+        assertThat(signatureNode).isNotNull();
+        assertThat(signatureNode.getChildren()).hasSize(2);
+        assertThat(signatureNode.asString()).isEqualTo("RSA");
 
         // MessageDigest under Signature under PrivateKey
-        INode privateKeyMessageDigestNode =
-                privateKeySignatureNode.getChildren().get(MessageDigest.class);
-        assertThat(privateKeyMessageDigestNode).isNotNull();
-        assertThat(privateKeyMessageDigestNode.asString()).isEqualTo("SHA3-384");
+        INode messageDigestNode = signatureNode.getChildren().get(MessageDigest.class);
+        assertThat(messageDigestNode).isNotNull();
+        assertThat(messageDigestNode.getChildren()).hasSize(4);
+        assertThat(messageDigestNode.asString()).isEqualTo("SHA3-384");
 
-        // Sign under Signature under PrivateKey
-        INode privateKeySignNode = privateKeySignatureNode.getChildren().get(Sign.class);
-        assertThat(privateKeySignNode).isNotNull();
-        assertThat(privateKeySignNode.asString()).isEqualTo("SIGN");
+        // DigestSize under MessageDigest under Signature under PrivateKey
+        INode digestSizeNode = messageDigestNode.getChildren().get(DigestSize.class);
+        assertThat(digestSizeNode).isNotNull();
+        assertThat(digestSizeNode.getChildren()).isEmpty();
+        assertThat(digestSizeNode.asString()).isEqualTo("384");
 
-        // Algorithm under Signature under PrivateKey
-        INode privateKeyAlgorithmNode = privateKeySignatureNode.getChildren().get(Algorithm.class);
-        assertThat(privateKeyAlgorithmNode).isNotNull();
-        assertThat(privateKeyAlgorithmNode.asString()).isEqualTo("RSA");
+        // Oid under MessageDigest under Signature under PrivateKey
+        INode oidNode = messageDigestNode.getChildren().get(Oid.class);
+        assertThat(oidNode).isNotNull();
+        assertThat(oidNode.getChildren()).isEmpty();
+        assertThat(oidNode.asString()).isEqualTo("2.16.840.1.101.3.4.2.9");
 
-        // KeyLength under Algorithm under Signature under PrivateKey
-        INode privateKeyAlgorithmKeyLengthNode =
-                privateKeyAlgorithmNode.getChildren().get(KeyLength.class);
-        assertThat(privateKeyAlgorithmKeyLengthNode).isNotNull();
-        assertThat(privateKeyAlgorithmKeyLengthNode.asString()).isEqualTo("2048");
+        // BlockSize under MessageDigest under Signature under PrivateKey
+        INode blockSizeNode = messageDigestNode.getChildren().get(BlockSize.class);
+        assertThat(blockSizeNode).isNotNull();
+        assertThat(blockSizeNode.getChildren()).isEmpty();
+        assertThat(blockSizeNode.asString()).isEqualTo("832");
 
-        // Padding under Signature under PrivateKey
-        INode pkcsNode = privateKeySignatureNode.getChildren().get(Padding.class);
-        assertThat(pkcsNode).isNotNull();
-        assertThat(pkcsNode.asString()).isEqualTo("PKCS1v15");
+        // Digest under MessageDigest under Signature under PrivateKey
+        INode digestNode = messageDigestNode.getChildren().get(Digest.class);
+        assertThat(digestNode).isNotNull();
+        assertThat(digestNode.getChildren()).isEmpty();
+        assertThat(digestNode.asString()).isEqualTo("DIGEST");
 
-        // Algorithm under PrivateKey
-        INode privateKeyAlgorithmNode1 = privateKeyNode.getChildren().get(Algorithm.class);
-        assertThat(privateKeyAlgorithmNode1).isNotNull();
-        assertThat(privateKeyAlgorithmNode1.asString()).isEqualTo("RSA");
-
-        // KeyLength under Algorithm under PrivateKey
-        privateKeyAlgorithmKeyLengthNode =
-                privateKeyAlgorithmNode1.getChildren().get(KeyLength.class);
-        assertThat(privateKeyAlgorithmKeyLengthNode).isNotNull();
-        assertThat(privateKeyAlgorithmKeyLengthNode.asString()).isEqualTo("2048");
-
-        // KeyGeneration under Algorithm under PrivateKey
-        INode privateKeyAlgorithmKeyGenerationNode =
-                privateKeyAlgorithmNode1.getChildren().get(KeyGeneration.class);
-        assertThat(privateKeyAlgorithmKeyGenerationNode).isNotNull();
-        assertThat(privateKeyAlgorithmKeyGenerationNode.asString()).isEqualTo("KEYGENERATION");
-
-        // PublicKey
-        INode publicKeyNode = nodes.get(1);
-        assertThat(publicKeyNode)
-                .isInstanceOfAny(PublicKey.class, Key.class); // Special case because of .deepCopy
-        assertThat(publicKeyNode.getChildren()).hasSize(2); // Two children detected
-
-        // KeyLength under PublicKey
-        INode publicKeyKeyLengthNode = publicKeyNode.getChildren().get(KeyLength.class);
-        assertThat(publicKeyKeyLengthNode).isNotNull();
-        assertThat(publicKeyKeyLengthNode.asString()).isEqualTo("2048");
-
-        // Algorithm under PublicKey
-        INode publicKeyAlgorithmNode = publicKeyNode.getChildren().get(Algorithm.class);
-        assertThat(publicKeyAlgorithmNode).isNotNull();
-        assertThat(publicKeyAlgorithmNode.asString()).isEqualTo("RSA");
-
-        // KeyLength under Algorithm under PublicKey
-        INode publicKeyAlgorithmKeyLengthNode =
-                publicKeyAlgorithmNode.getChildren().get(KeyLength.class);
-        assertThat(publicKeyAlgorithmKeyLengthNode).isNotNull();
-        assertThat(publicKeyAlgorithmKeyLengthNode.asString()).isEqualTo("2048");
-
-        // KeyGeneration under Algorithm under PublicKey
-        INode publicKeyAlgorithmKeyGenerationNode =
-                publicKeyAlgorithmNode.getChildren().get(KeyGeneration.class);
-        assertThat(publicKeyAlgorithmKeyGenerationNode).isNotNull();
-        assertThat(publicKeyAlgorithmKeyGenerationNode.asString()).isEqualTo("KEYGENERATION");
+        // Oid under Signature under PrivateKey
+        INode oidNode1 = signatureNode.getChildren().get(Oid.class);
+        assertThat(oidNode1).isNotNull();
+        assertThat(oidNode1.getChildren()).isEmpty();
+        assertThat(oidNode1.asString()).isEqualTo("2.16.840.1.101.3.4.3.15");
     }
 }

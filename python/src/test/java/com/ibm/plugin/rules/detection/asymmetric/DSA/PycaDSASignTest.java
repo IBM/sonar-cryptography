@@ -96,7 +96,7 @@ public class PycaDSASignTest extends TestBase {
         // PrivateKey
         INode privateKeyNode = nodes.get(0);
         assertThat(privateKeyNode.getKind()).isEqualTo(PrivateKey.class);
-        assertThat(privateKeyNode.getChildren()).hasSize(3);
+        assertThat(privateKeyNode.getChildren()).hasSize(4);
         assertThat(privateKeyNode.asString()).isEqualTo("DSA");
 
         // Signature under PrivateKey

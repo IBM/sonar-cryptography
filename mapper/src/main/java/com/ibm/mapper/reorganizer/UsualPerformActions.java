@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -42,7 +43,7 @@ public final class UsualPerformActions {
      * move them to the same level (i.e., under the node's parent)
      */
     @Nonnull
-    public static final Function3<INode, INode, List<INode>, List<INode>> performMovingChildrenUp =
+    public static final IFunctionPerformReorganization performMovingChildrenUp =
             (node, parent, roots) -> {
                 if (parent == null) {
                     // Do nothing
@@ -68,7 +69,7 @@ public final class UsualPerformActions {
      * @return The {@code Function3} returning the updated list of root nodes
      */
     @Nonnull
-    public static Function3<INode, INode, List<INode>, List<INode>> performReplacingNode(
+    public static IFunctionPerformReorganization performReplacingNode(
             @Nonnull Function3<INode, INode, List<INode>, INode> perform) {
         return (node, parent, roots) -> {
             INode newNode = perform.apply(node, parent, roots);
@@ -80,7 +81,7 @@ public final class UsualPerformActions {
     private static List<INode> replaceNode(
             @Nonnull INode newNode,
             @NotNull INode originalNode,
-            INode parent,
+            @Nullable INode parent,
             @Nonnull List<INode> roots) {
         // Add all the children to the new node
         for (Map.Entry<Class<? extends INode>, INode> childKeyValue :

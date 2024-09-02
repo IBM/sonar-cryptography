@@ -17,25 +17,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.enricher.algorithm;
+package com.ibm.mapper.reorganizer;
 
-import com.ibm.enricher.IEnricher;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.algorithms.RSA;
-import org.jetbrains.annotations.NotNull;
+import com.ibm.mapper.utils.Function3;
+import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-public class RSAEnricher implements IEnricher, IEnrichWithDefaultKeySize {
+public interface IFunctionPerformReorganization
+        extends Function3<INode, INode, List<INode>, List<INode>> {
 
-    @NotNull @Override
-    public INode enrich(@NotNull INode node) {
-        if (node instanceof RSA rsa) {
-            return enrich(rsa);
-        }
-        return node;
-    }
-
-    @NotNull private RSA enrich(@NotNull RSA rsa) {
-        this.applyDefaultKeySizeForJca(rsa, 2048);
-        return rsa;
-    }
+    @Override
+    @Nullable List<INode> apply(@Nonnull INode node, @Nullable INode parent, @Nonnull List<INode> roots);
 }

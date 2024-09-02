@@ -40,7 +40,7 @@ import org.jetbrains.annotations.NotNull;
 public class SignatureEnricher implements IEnricher {
     @Override
     public @NotNull INode enrich(@NotNull INode node) {
-        if (node instanceof Signature signature) {
+        if (node instanceof Signature signature && signature.is(Signature.class)) {
             return enrich(signature);
         }
         return node;
