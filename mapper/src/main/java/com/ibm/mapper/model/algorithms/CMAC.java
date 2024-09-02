@@ -25,12 +25,18 @@ import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
-public class CMAC extends Algorithm implements BlockCipher, Mac {
+public final class CMAC extends Algorithm implements Mac {
     // https://en.wikipedia.org/wiki/One-key_MAC
-
     private static final String NAME = "CMAC"; // OMAC, OMAC1, AES-CMAC
 
     public CMAC(@NotNull DetectionLocation detectionLocation) {
         super(NAME, Mac.class, detectionLocation);
+    }
+
+    @Override
+    public @NotNull String getName() {
+        return this.hasChildOfType(BlockCipher.class)
+                .map(node -> node.asString() + "-" + this.name)
+                .orElse(this.name);
     }
 }

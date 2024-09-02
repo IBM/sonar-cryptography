@@ -28,8 +28,6 @@ import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.algorithms.ANSIX942;
 import com.ibm.mapper.model.algorithms.ANSIX963;
 import com.ibm.mapper.model.algorithms.ConcatenationKDF;
-import com.ibm.mapper.model.algorithms.DH;
-import com.ibm.mapper.model.algorithms.ECDH;
 import com.ibm.mapper.model.algorithms.HKDF;
 import com.ibm.mapper.model.algorithms.KDF1;
 import com.ibm.mapper.model.algorithms.KDF2;
@@ -38,6 +36,7 @@ import com.ibm.mapper.model.algorithms.KDFDoublePipeline;
 import com.ibm.mapper.model.algorithms.KDFFeedback;
 import com.ibm.mapper.model.algorithms.KDFSession;
 import com.ibm.mapper.model.algorithms.MGF1;
+import com.ibm.mapper.model.functionality.KeyDerivation;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -64,17 +63,17 @@ public class BcDerivationFunctionMapper implements IMapper {
                     Optional.of(new ConcatenationKDF(detectionLocation));
             case "DHKEKGenerator" -> {
                 // "RFC 2631 Diffie-hellman KEK derivation function"
-                // https://datatracker.ietf.org/doc/html/rfc2631#section-2.1.2
-                KeyDerivationFunction kdf = new ANSIX942(detectionLocation);
-                kdf.put(new DH(detectionLocation));
+                // https://datatracker.ietf.org/doc/html/rfc2631#section-2.1.3
+                final KeyDerivationFunction kdf = new ANSIX942(detectionLocation);
+                kdf.put(new KeyDerivation(detectionLocation)); // TODO: add to enrichment
                 yield Optional.of(kdf);
             }
             case "ECDHKEKGenerator" -> {
                 // "X9.63 based key derivation function for ECDH CMS"
                 // https://csrc.nist.gov/CSRC/media/Events/Key-Management-Workshop-2000/documents/x963_overview.pdf
-                KeyDerivationFunction kdf = new ANSIX963(detectionLocation);
-                kdf.put(new ECDH(detectionLocation));
-                yield Optional.of(kdf);
+                final KeyDerivationFunction kdf = new ANSIX963(detectionLocation);
+                kdf.put(new KeyDerivation(detectionLocation)); // TODO: add to enrichment
+                yield Optional.of(new ANSIX963(detectionLocation));
             }
             // TODO: case "HandshakeKDFFunction" -> Optional.of();
             case "GSKKFDGenerator" -> Optional.of(new KDFSession(detectionLocation));

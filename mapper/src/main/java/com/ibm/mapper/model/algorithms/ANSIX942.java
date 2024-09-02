@@ -31,5 +31,6 @@ public class ANSIX942 extends Algorithm implements KeyDerivationFunction {
 
     public ANSIX942(@NotNull DetectionLocation detectionLocation) {
         super(NAME, KeyDerivationFunction.class, detectionLocation);
+        this.put(new DH(detectionLocation));
     }
 }

@@ -20,19 +20,16 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.KeyAgreement;
-import com.ibm.mapper.model.Oid;
-import com.ibm.mapper.model.curves.Curve25519;
+import com.ibm.mapper.model.AuthenticatedEncryption;
+import com.ibm.mapper.model.mode.CBC;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
-public final class X25519 extends Algorithm implements KeyAgreement {
-    private static final String NAME = "x25519";
+public final class Fernet extends Algorithm implements AuthenticatedEncryption {
+    private static final String NAME = "Fernet";
 
-    public X25519(@NotNull DetectionLocation detectionLocation) {
-        super(NAME, KeyAgreement.class, detectionLocation);
-        this.put(new Curve25519(detectionLocation));
-        this.put(new DH(detectionLocation));
-        this.put(new Oid("1.3.101.110", detectionLocation));
+    public Fernet(@NotNull DetectionLocation detectionLocation) {
+        super(NAME, AuthenticatedEncryption.class, detectionLocation);
+        this.put(new AES(128, new CBC(detectionLocation), detectionLocation));
     }
 }
