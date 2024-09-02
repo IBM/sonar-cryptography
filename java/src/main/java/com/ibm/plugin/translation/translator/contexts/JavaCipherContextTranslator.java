@@ -130,9 +130,8 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                             .parse(valueAction.asString(), detectionLocation)
                             .map(f -> f);
                 case ASYMMETRIC_CIPHER_ENGINE, ASYMMETRIC_CIPHER_ENGINE_SIGNATURE:
-                    /* TODO: the Signature distinction (and therefore the asKind parameter of the mapper) does not seem necessary */
                     BcAsymCipherEngineMapper bcAsymCipherEngineMapper =
-                            new BcAsymCipherEngineMapper(PublicKeyEncryption.class);
+                            new BcAsymCipherEngineMapper();
                     return bcAsymCipherEngineMapper
                             .parse(valueAction.asString(), detectionLocation)
                             .map(f -> f);
