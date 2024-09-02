@@ -31,6 +31,8 @@ import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
 public final class AESWrap extends Algorithm implements BlockCipher, AuthenticatedEncryption {
+    // https://datatracker.ietf.org/doc/html/rfc3394
+
     private static final String NAME = "AESWrap";
 
     public AESWrap(@NotNull DetectionLocation detectionLocation) {

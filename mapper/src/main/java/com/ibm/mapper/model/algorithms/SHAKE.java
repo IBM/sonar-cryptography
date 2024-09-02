@@ -20,22 +20,16 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.DigestSize;
+import com.ibm.mapper.model.ExtendableOutputFunction;
 import com.ibm.mapper.model.IPrimitive;
-import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public final class SHAKE extends Algorithm implements MessageDigest {
+public final class SHAKE extends Algorithm implements ExtendableOutputFunction {
     private static final String NAME = "SHAKE";
 
     public SHAKE(@Nonnull DetectionLocation detectionLocation) {
-        super(NAME, MessageDigest.class, detectionLocation);
-    }
-
-    public SHAKE(int digestSize, @Nonnull DetectionLocation detectionLocation) {
-        this(detectionLocation);
-        this.put(new DigestSize(digestSize, detectionLocation));
+        super(NAME, ExtendableOutputFunction.class, detectionLocation);
     }
 
     public SHAKE(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull SHAKE shake) {

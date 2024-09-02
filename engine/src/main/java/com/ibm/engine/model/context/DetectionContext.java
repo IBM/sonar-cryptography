@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 
-public abstract class DetectionContext {
+public abstract class DetectionContext implements IDetectionContext {
     @Unmodifiable @Nonnull private final Map<String, String> properties;
 
     protected DetectionContext(@Nonnull Map<String, String> properties) {

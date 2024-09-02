@@ -31,5 +31,6 @@ public class ANSIX963 extends Algorithm implements KeyDerivationFunction {
 
     public ANSIX963(@NotNull DetectionLocation detectionLocation) {
         super(NAME, KeyDerivationFunction.class, detectionLocation);
+        this.put(new ECDH(detectionLocation));
     }
 }

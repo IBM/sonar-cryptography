@@ -23,6 +23,10 @@ import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 
+/**
+ * @deprecated
+ */
+@Deprecated(since = "1.2.0")
 public final class ClassicalBitSecurityLevel extends Property {
 
     @Nonnull private final Integer bitSecurityLevel; // in bit

@@ -32,12 +32,14 @@ import com.ibm.mapper.model.KeyAgreement;
 import com.ibm.mapper.model.algorithms.ECDH;
 import com.ibm.mapper.model.algorithms.X25519;
 import com.ibm.mapper.model.algorithms.X448;
+import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.python.api.tree.Tree;
 
 public class PycaKeyAgreementContextTranslator implements IContextTranslation<Tree> {
+
     @Override
     public @NotNull Optional<INode> translate(
             @NotNull IBundle bundleIdentifier,
@@ -45,15 +47,23 @@ public class PycaKeyAgreementContextTranslator implements IContextTranslation<Tr
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
         if (value instanceof Algorithm<Tree> algorithm) {
-            return switch (algorithm.asString().toUpperCase().trim()) {
-                case "ECDH" -> Optional.of(new ECDH(detectionLocation));
-                case "EC" ->
-                        Optional.of(
-                                new EllipticCurveAlgorithm(
-                                        KeyAgreement.class,
-                                        new EllipticCurveAlgorithm(detectionLocation)));
-                default -> Optional.empty();
-            };
+            return Optional.of(algorithm)
+                    .map(
+                            algo ->
+                                    switch (algo.asString().toUpperCase().trim()) {
+                                        case "ECDH" -> new ECDH(detectionLocation);
+                                        case "EC" ->
+                                                new EllipticCurveAlgorithm(
+                                                        KeyAgreement.class,
+                                                        new EllipticCurveAlgorithm(
+                                                                detectionLocation));
+                                        default -> null;
+                                    })
+                    .map(
+                            ka -> {
+                                ka.put(new KeyGeneration(detectionLocation));
+                                return ka;
+                            });
         } else if (value instanceof KeyAction<Tree>) {
             // key action is always "generate"
             if (detectionContext instanceof DetectionContext context) {
@@ -64,7 +74,12 @@ public class PycaKeyAgreementContextTranslator implements IContextTranslation<Tr
                                             case "X25519" -> new X25519(detectionLocation);
                                             case "X448" -> new X448(detectionLocation);
                                             default -> null;
-                                        });
+                                        })
+                        .map(
+                                ka -> {
+                                    ka.put(new KeyGeneration(detectionLocation));
+                                    return ka;
+                                });
             }
         }
         return Optional.empty();

@@ -25,11 +25,11 @@ import com.ibm.plugin.rules.detection.aead.PycaAES;
 import com.ibm.plugin.rules.detection.asymmetric.PycaDSA;
 import com.ibm.plugin.rules.detection.asymmetric.PycaDiffieHellman;
 import com.ibm.plugin.rules.detection.asymmetric.PycaEllipticCurve;
-import com.ibm.plugin.rules.detection.asymmetric.PycaGenerate;
 import com.ibm.plugin.rules.detection.asymmetric.PycaRSA;
 import com.ibm.plugin.rules.detection.asymmetric.PycaSign;
 import com.ibm.plugin.rules.detection.fernet.PycaFernet;
 import com.ibm.plugin.rules.detection.kdf.PycaKDF;
+import com.ibm.plugin.rules.detection.keyagreement.PycaKeyAgreement;
 import com.ibm.plugin.rules.detection.mac.PycaMAC;
 import com.ibm.plugin.rules.detection.symmetric.PycaCipher;
 import com.ibm.plugin.rules.detection.wrapping.PycaWrapping;
@@ -47,7 +47,7 @@ public final class PythonDetectionRules {
     public static List<IDetectionRule<Tree>> rules() {
         return Stream.of(
                         // rules
-                        PycaGenerate.rules().stream(),
+                        PycaKeyAgreement.rules().stream(),
                         PycaSign.rules().stream(),
                         PycaEllipticCurve.rules().stream(),
                         PycaRSA.rules().stream(),

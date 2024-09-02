@@ -24,7 +24,6 @@ import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
 public final class Curve25519 extends EllipticCurve {
-
     public Curve25519(@NotNull DetectionLocation detectionLocation) {
         super("Curve25519", detectionLocation);
     }

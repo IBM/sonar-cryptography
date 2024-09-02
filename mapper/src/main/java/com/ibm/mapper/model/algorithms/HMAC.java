@@ -20,19 +20,28 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.KeyAgreement;
-import com.ibm.mapper.model.Oid;
-import com.ibm.mapper.model.curves.Curve25519;
+import com.ibm.mapper.model.Mac;
+import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class X25519 extends Algorithm implements KeyAgreement {
-    private static final String NAME = "x25519";
+public final class HMAC extends Algorithm implements Mac {
+    private static final String NAME = "HMAC";
 
-    public X25519(@NotNull DetectionLocation detectionLocation) {
-        super(NAME, KeyAgreement.class, detectionLocation);
-        this.put(new Curve25519(detectionLocation));
-        this.put(new DH(detectionLocation));
-        this.put(new Oid("1.3.101.110", detectionLocation));
+    public HMAC(@Nonnull DetectionLocation detectionLocation) {
+        super(NAME, Mac.class, detectionLocation);
+    }
+
+    public HMAC(@Nonnull MessageDigest messageDigest) {
+        super(NAME, Mac.class, messageDigest.getDetectionContext());
+        this.put(messageDigest);
+    }
+
+    @Override
+    public @NotNull String getName() {
+        return this.hasChildOfType(MessageDigest.class)
+                .map(digest -> this.name + "-" + digest.asString())
+                .orElse(this.name);
     }
 }

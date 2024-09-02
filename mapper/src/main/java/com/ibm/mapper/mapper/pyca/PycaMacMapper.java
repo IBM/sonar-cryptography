@@ -39,6 +39,8 @@ import com.ibm.mapper.model.algorithms.SHAKE;
 import com.ibm.mapper.model.algorithms.SM3;
 import com.ibm.mapper.model.algorithms.SM4;
 import com.ibm.mapper.model.algorithms.TripleDES;
+import com.ibm.mapper.model.algorithms.blake.BLAKE2b;
+import com.ibm.mapper.model.algorithms.blake.BLAKE2s;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
@@ -97,11 +99,13 @@ public class PycaMacMapper implements IMapper {
             case "SHA3_256" -> Optional.of(new SHA3(Mac.class, new SHA3(256, detectionLocation)));
             case "SHA3_384" -> Optional.of(new SHA3(Mac.class, new SHA3(384, detectionLocation)));
             case "SHA3_512" -> Optional.of(new SHA3(Mac.class, new SHA3(512, detectionLocation)));
-            case "SHAKE128" -> Optional.of(new SHAKE(Mac.class, new SHAKE(128, detectionLocation)));
-            case "SHAKE256" -> Optional.of(new SHAKE(Mac.class, new SHAKE(256, detectionLocation)));
+            case "SHAKE128", "SHAKE256" ->
+                    Optional.of(new SHAKE(Mac.class, new SHAKE(detectionLocation)));
             case "MD5" -> Optional.of(new MD5(Mac.class, detectionLocation));
-            case "BLAKE2B" -> Optional.empty(); // TODO
-            case "BLAKE2S" -> Optional.empty(); // TODO
+            case "BLAKE2B" ->
+                    Optional.of(new BLAKE2b(Mac.class, new BLAKE2b(false, detectionLocation)));
+            case "BLAKE2S" ->
+                    Optional.of(new BLAKE2s(Mac.class, new BLAKE2s(false, detectionLocation)));
             case "SM3" -> Optional.of(new SM3(Mac.class, new SM3(detectionLocation)));
             case "POLY1305" ->
                     Optional.of(new Poly1305(Mac.class, new Poly1305(detectionLocation)));

@@ -30,6 +30,8 @@ import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.model.algorithms.SHA3;
 import com.ibm.mapper.model.algorithms.SHAKE;
 import com.ibm.mapper.model.algorithms.SM3;
+import com.ibm.mapper.model.algorithms.blake.BLAKE2b;
+import com.ibm.mapper.model.algorithms.blake.BLAKE2s;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
@@ -94,19 +96,20 @@ public final class PycaHashBasedKeyDerivationMapper implements IMapper {
                     Optional.of(
                             new SHA3(
                                     KeyDerivationFunction.class, new SHA3(512, detectionLocation)));
-            case "SHAKE128" ->
+            case "SHAKE128", "SHAKE256" ->
                     Optional.of(
-                            new SHAKE(
-                                    KeyDerivationFunction.class,
-                                    new SHAKE(128, detectionLocation)));
-            case "SHAKE256" ->
-                    Optional.of(
-                            new SHAKE(
-                                    KeyDerivationFunction.class,
-                                    new SHAKE(256, detectionLocation)));
+                            new SHAKE(KeyDerivationFunction.class, new SHAKE(detectionLocation)));
             case "MD5" -> Optional.of(new MD5(Mac.class, detectionLocation));
-            case "BLAKE2B" -> Optional.empty(); // TODO
-            case "BLAKE2S" -> Optional.empty(); // TODO
+            case "BLAKE2B" ->
+                    Optional.of(
+                            new BLAKE2b(
+                                    KeyDerivationFunction.class,
+                                    new BLAKE2b(false, detectionLocation)));
+            case "BLAKE2S" ->
+                    Optional.of(
+                            new BLAKE2s(
+                                    KeyDerivationFunction.class,
+                                    new BLAKE2s(false, detectionLocation)));
             case "SM3" ->
                     Optional.of(new SM3(KeyDerivationFunction.class, new SM3(detectionLocation)));
             case "POLY1305" ->
