@@ -41,8 +41,11 @@ public class BouncyCastleInfoMap {
         @Nullable private String name;
 
         /**
-         * @deprecated use the key of the map instead
+         * use the key of the map instead
+         *
+         * @deprecated
          */
+        @Deprecated(since = "2.0.0")
         public String getName() {
             return name;
         }
@@ -134,6 +137,7 @@ public class BouncyCastleInfoMap {
      * @return The correct name of the cryptographic asset
      * @deprecated use the key of the map instead
      */
+    @Deprecated(since = "2.0.0")
     public String getDisplayName(@Nonnull String key) {
         return getDisplayName(key, null);
     }
@@ -149,6 +153,7 @@ public class BouncyCastleInfoMap {
      * @return The correct name of the cryptographic asset
      * @deprecated use the key of the map instead
      */
+    @Deprecated(since = "2.0.0")
     public String getDisplayName(@Nonnull String key, String removePart) {
         if (!map.containsKey(key)) {
             throw new IllegalArgumentException("Key does not exist in the map: " + key);
