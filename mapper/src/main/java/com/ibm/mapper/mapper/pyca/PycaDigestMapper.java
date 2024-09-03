@@ -20,7 +20,7 @@
 package com.ibm.mapper.mapper.pyca;
 
 import com.ibm.mapper.mapper.IMapper;
-import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.algorithms.MD5;
 import com.ibm.mapper.model.algorithms.Poly1305;
 import com.ibm.mapper.model.algorithms.SHA;
@@ -37,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
 
 public final class PycaDigestMapper implements IMapper {
     @Override
-    public @NotNull Optional<? extends INode> parse(
+    public @NotNull Optional<MessageDigest> parse(
             @Nullable String str, @NotNull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();

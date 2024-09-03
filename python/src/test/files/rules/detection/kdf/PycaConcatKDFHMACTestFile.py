@@ -5,7 +5,7 @@ from cryptography.hazmat.primitives.kdf.concatkdf import ConcatKDFHMAC
 salt = os.urandom(16)
 otherinfo = b"concatkdf-example"
 
-ckdf = ConcatKDFHMAC( # Noncompliant {{KDF}} {{SHA256}} {{32}}
+ckdf = ConcatKDFHMAC( # Noncompliant {{SHA256}}
     algorithm=hashes.SHA256(),
     length=32,
     salt=salt,

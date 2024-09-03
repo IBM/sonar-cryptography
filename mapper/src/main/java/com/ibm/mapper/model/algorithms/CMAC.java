@@ -21,8 +21,10 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.utils.DetectionLocation;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
 public final class CMAC extends Algorithm implements Mac {
@@ -31,6 +33,11 @@ public final class CMAC extends Algorithm implements Mac {
 
     public CMAC(@NotNull DetectionLocation detectionLocation) {
         super(NAME, Mac.class, detectionLocation);
+    }
+
+    public CMAC(@Nonnull Cipher cipher) {
+        super(NAME, Mac.class, cipher.getDetectionContext());
+        this.put(cipher);
     }
 
     @Override

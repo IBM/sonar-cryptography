@@ -27,10 +27,15 @@ import com.ibm.engine.model.context.DetectionContext;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.rule.IBundle;
 import com.ibm.mapper.IContextTranslation;
+import com.ibm.mapper.mapper.pyca.PycaCipherMapper;
+import com.ibm.mapper.mapper.pyca.PycaDigestMapper;
 import com.ibm.mapper.mapper.pyca.PycaHashBasedKeyDerivationMapper;
+import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.algorithms.ANSIX963;
+import com.ibm.mapper.model.algorithms.CMAC;
+import com.ibm.mapper.model.algorithms.HMAC;
 import com.ibm.mapper.model.algorithms.PBKDF2;
 import com.ibm.mapper.model.algorithms.Scrypt;
 import com.ibm.mapper.model.functionality.KeyDerivation;
@@ -47,17 +52,55 @@ public class PycaKeyDerivationContextTranslator implements IContextTranslation<T
             @NotNull IValue<Tree> value,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
-        if (value instanceof Algorithm<Tree> algorithm) {
+        if (value instanceof Algorithm<Tree> algorithm
+                && detectionContext instanceof DetectionContext context) {
             // hash algorithm
-            final PycaHashBasedKeyDerivationMapper pycaHashBasedKeyDerivationMapper =
-                    new PycaHashBasedKeyDerivationMapper();
-            return pycaHashBasedKeyDerivationMapper
-                    .parse(algorithm.asString(), detectionLocation)
-                    .map(
-                            kdf -> {
-                                kdf.put(new KeyDerivation(detectionLocation));
-                                return kdf;
-                            });
+            Optional<String> possibleKind = context.get("kind");
+            if (possibleKind.isPresent()) {
+                final String kind = possibleKind.get();
+                return switch (kind) {
+                    case "hash" -> {
+                        final PycaHashBasedKeyDerivationMapper pycaHashBasedKeyDerivationMapper =
+                                new PycaHashBasedKeyDerivationMapper();
+                        yield pycaHashBasedKeyDerivationMapper
+                                .parse(algorithm.asString(), detectionLocation)
+                                .map(
+                                        kdf -> {
+                                            kdf.put(new KeyDerivation(detectionLocation));
+                                            return kdf;
+                                        });
+                    }
+                    case "hmac" -> {
+                        final PycaDigestMapper digestMapper = new PycaDigestMapper();
+                        yield digestMapper
+                                .parse(algorithm.asString(), detectionLocation)
+                                .map(HMAC::new)
+                                .map(
+                                        kdf -> {
+                                            kdf.put(new KeyDerivation(detectionLocation));
+                                            return kdf;
+                                        });
+                    }
+                    case "cmac" -> {
+                        final PycaCipherMapper cipherMapper = new PycaCipherMapper();
+                        yield cipherMapper
+                                .parse(algorithm.asString(), detectionLocation)
+                                .map(
+                                        c -> {
+                                            if (c instanceof Cipher cipher) {
+                                                return new CMAC(cipher);
+                                            }
+                                            return null;
+                                        })
+                                .map(
+                                        kdf -> {
+                                            kdf.put(new KeyDerivation(detectionLocation));
+                                            return kdf;
+                                        });
+                    }
+                    default -> Optional.empty();
+                };
+            }
         } else if (value instanceof KeySize<Tree> keySize) {
             return Optional.of(new KeyLength(keySize.getValue(), detectionLocation));
         } else if (value instanceof KeyAction<Tree>

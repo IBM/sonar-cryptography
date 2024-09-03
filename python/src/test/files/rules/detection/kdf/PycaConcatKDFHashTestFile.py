@@ -4,9 +4,9 @@ from cryptography.hazmat.primitives.kdf.concatkdf import ConcatKDFHash
 
 otherinfo = b"concatkdf-example"
 
-ckdf = ConcatKDFHash( # Noncompliant {{KDF}} {{SHA256}} {{32}}
+ckdf = ConcatKDFHash( # Noncompliant {{SHA256}}
     algorithm=hashes.SHA256(),
-    length=32,
+    length=64,
     otherinfo=otherinfo,
 )
 

@@ -39,14 +39,10 @@ public final class SHAKE extends Algorithm implements ExtendableOutputFunction {
     @Override
     @Nonnull
     public String getName() {
-        StringBuilder builtName = new StringBuilder(this.name);
-
-        Optional<INode> parameterSetIdentifier = this.hasChildOfType(ParameterSetIdentifier.class);
-
-        if (parameterSetIdentifier.isPresent()) {
-            builtName.append(parameterSetIdentifier.get().asString());
-        }
-
+        final StringBuilder builtName = new StringBuilder(this.name);
+        final Optional<INode> parameterSetIdentifier =
+                this.hasChildOfType(ParameterSetIdentifier.class);
+        parameterSetIdentifier.ifPresent(node -> builtName.append(node.asString()));
         return builtName.toString();
     }
 

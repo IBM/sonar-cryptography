@@ -149,7 +149,7 @@ public final class PycaKDF {
                     .buildForContext(
                             new KeyDerivationFunctionContext(
                                     Map.of(
-                                            "kind", "mac",
+                                            "kind", "hmac",
                                             "spec", "concat")))
                     .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
