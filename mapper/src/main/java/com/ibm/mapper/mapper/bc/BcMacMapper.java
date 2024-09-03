@@ -71,7 +71,7 @@ public class BcMacMapper implements IMapper {
             case "CMac", "CMacWithIV" -> Optional.of(new CMAC(detectionLocation));
             case "DSTU7564Mac" -> Optional.of(new Kupyna(Mac.class, new Kupyna(detectionLocation)));
             case "DSTU7624Mac" -> {
-                /* what is the "Mac mode" of DSTU7624? It should be appended */
+                /* TODO: what is the "Mac mode" of DSTU7624? It should be appended */
                 yield Optional.of(new Kalyna(Mac.class, new Kalyna(detectionLocation)));
             }
             case "GMac" ->
