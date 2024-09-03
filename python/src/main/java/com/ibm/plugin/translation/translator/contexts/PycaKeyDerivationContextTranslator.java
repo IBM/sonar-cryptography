@@ -21,9 +21,9 @@ package com.ibm.plugin.translation.translator.contexts;
 
 import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
-import com.ibm.engine.model.KeyAction;
 import com.ibm.engine.model.KeySize;
 import com.ibm.engine.model.Mode;
+import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.DetectionContext;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.rule.IBundle;
@@ -111,6 +111,17 @@ public class PycaKeyDerivationContextTranslator implements IContextTranslation<T
                                             return pbkdf2;
                                         });
                     }
+                    case "x963" -> {
+                        final PycaDigestMapper digestMapper = new PycaDigestMapper();
+                        yield digestMapper
+                                .parse(algorithm.asString(), detectionLocation)
+                                .map(
+                                        kdf -> {
+                                            final ANSIX963 ansix963 = new ANSIX963(kdf);
+                                            ansix963.put(new KeyDerivation(detectionLocation));
+                                            return ansix963;
+                                        });
+                    }
                     default -> Optional.empty();
                 };
             }
@@ -121,15 +132,12 @@ public class PycaKeyDerivationContextTranslator implements IContextTranslation<T
             return Optional.empty();
         } else if (value instanceof KeySize<Tree> keySize) {
             return Optional.of(new KeyLength(keySize.getValue(), detectionLocation));
-        } else if (value instanceof KeyAction<Tree>
-                && detectionContext instanceof DetectionContext context) {
-            return context.get("algorithm")
+        } else if (value instanceof ValueAction<Tree> action) {
+            return Optional.of(action.asString().toUpperCase().trim())
                     .map(
-                            algo ->
-                                    switch (algo.toUpperCase().trim()) {
-                                        case "PBKDF2" -> new PBKDF2(detectionLocation);
+                            str ->
+                                    switch (action.asString().toUpperCase().trim()) {
                                         case "SCRYPT" -> new Scrypt(detectionLocation);
-                                        case "X963" -> new ANSIX963(detectionLocation);
                                         default -> null;
                                     })
                     .map(

@@ -58,7 +58,7 @@ public final class PycaKDF {
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BYTE))
                     .asChildOfParameterWithId(0)
                     .withMethodParameter(ANY)
-                    .buildForContext(new KeyDerivationFunctionContext(Map.of("algorithm", "x963")))
+                    .buildForContext(new KeyDerivationFunctionContext(Map.of("kind", "x963")))
                     .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
@@ -183,7 +183,7 @@ public final class PycaKDF {
                     .createDetectionRule()
                     .forObjectTypes(KDF_TYPE_PREFIX + "scrypt")
                     .forMethods("Scrypt")
-                    .shouldBeDetectedAs(new ValueActionFactory<>("scrypt"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>("Scrypt"))
                     .withMethodParameter(ANY)
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BYTE))
@@ -191,8 +191,7 @@ public final class PycaKDF {
                     .withMethodParameter("int")
                     .withMethodParameter("int")
                     .withMethodParameter("int")
-                    .buildForContext(
-                            new KeyDerivationFunctionContext(Map.of("algorithm", "scrypt")))
+                    .buildForContext(new KeyDerivationFunctionContext())
                     .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
