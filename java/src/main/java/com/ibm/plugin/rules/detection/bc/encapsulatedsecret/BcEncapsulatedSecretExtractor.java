@@ -42,7 +42,7 @@ public final class BcEncapsulatedSecretExtractor {
         // nothing
     }
 
-    /* TODO: maybe the function `extractSecret` would be a better entry point than the constructors? */
+    /* TODO: capture `generateEncapsulated` to obtain information from `AsymmetricKeyParameter` */
 
     private static BouncyCastleInfoMap infoMap = new BouncyCastleInfoMap();
 

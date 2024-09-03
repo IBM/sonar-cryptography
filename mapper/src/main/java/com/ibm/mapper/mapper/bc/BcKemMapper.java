@@ -29,9 +29,9 @@ import com.ibm.mapper.model.algorithms.ClassicMcEliece;
 import com.ibm.mapper.model.algorithms.ECIES;
 import com.ibm.mapper.model.algorithms.FrodoKEM;
 import com.ibm.mapper.model.algorithms.HQC;
-import com.ibm.mapper.model.algorithms.MLKEM;
 import com.ibm.mapper.model.algorithms.RSAKEM;
 import com.ibm.mapper.model.algorithms.SABER;
+import com.ibm.mapper.model.algorithms.kyber.Kyber;
 import com.ibm.mapper.model.algorithms.ntru.NTRU;
 import com.ibm.mapper.model.algorithms.ntru.NTRULPrime;
 import com.ibm.mapper.model.algorithms.ntru.StreamlinedNTRUPrime;
@@ -66,7 +66,7 @@ public class BcKemMapper implements IMapper {
             case "HQCKEMExtractor", "HQCKEMGenerator" ->
                     Optional.of(new HQC(KeyEncapsulationMechanism.class, detectionLocation));
             case "KyberKEMExtractor", "KyberKEMGenerator" ->
-                    Optional.of(new MLKEM(detectionLocation));
+                    Optional.of(new Kyber(detectionLocation));
             case "NTRUKEMExtractor", "NTRUKEMGenerator" -> Optional.of(new NTRU(detectionLocation));
             case "NTRULPRimeKEMExtractor", "NTRULPRimeKEMGenerator" ->
                     Optional.of(new NTRULPrime(detectionLocation));

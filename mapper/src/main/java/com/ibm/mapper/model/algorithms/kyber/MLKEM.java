@@ -17,21 +17,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms;
+package com.ibm.mapper.model.algorithms.kyber;
 
 import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyEncapsulationMechanism;
+import com.ibm.mapper.model.ParameterSetIdentifier;
 import com.ibm.mapper.utils.DetectionLocation;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 
 public class MLKEM extends Algorithm implements KeyEncapsulationMechanism {
-    // https://en.wikipedia.org/wiki/Kyber
-    // https://pq-crystals.org/kyber/
+    // https://csrc.nist.gov/pubs/fips/203/final
+    // This is the standardized version of Kyber
 
-    private static final String NAME =
-            "ML-KEM"; // Kyber, Module-Lattice-Based Key-Encapsulation Mechanism
+    private static final String NAME = "ML-KEM"; // Module-Lattice-Based Key-Encapsulation Mechanism
+
+    /** Returns a name of the form "ML-KEM-XXX" where XXX is the parameter set identifer */
+    @Override
+    @Nonnull
+    public String getName() {
+        StringBuilder builtName = new StringBuilder(this.name);
+
+        Optional<INode> parameterSetIdentifier = this.hasChildOfType(ParameterSetIdentifier.class);
+
+        if (parameterSetIdentifier.isPresent()) {
+            builtName.append("-").append(parameterSetIdentifier.get().asString());
+        }
+
+        return builtName.toString();
+    }
 
     public MLKEM(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, KeyEncapsulationMechanism.class, detectionLocation);
+    }
+
+    public MLKEM(int parameterSetIdentifier, @Nonnull DetectionLocation detectionLocation) {
+        this(detectionLocation);
+        this.put(
+                new ParameterSetIdentifier(
+                        String.valueOf(parameterSetIdentifier), detectionLocation));
     }
 }
