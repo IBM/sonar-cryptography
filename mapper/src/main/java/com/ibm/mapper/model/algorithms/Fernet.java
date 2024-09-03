@@ -22,6 +22,7 @@ package com.ibm.mapper.model.algorithms;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.mode.CBC;
+import com.ibm.mapper.model.padding.PKCS7;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,6 +31,12 @@ public final class Fernet extends Algorithm implements AuthenticatedEncryption {
 
     public Fernet(@NotNull DetectionLocation detectionLocation) {
         super(NAME, AuthenticatedEncryption.class, detectionLocation);
-        this.put(new AES(128, new CBC(detectionLocation), detectionLocation));
+        this.put(
+                new AES(
+                        128,
+                        new CBC(detectionLocation),
+                        new PKCS7(detectionLocation),
+                        detectionLocation));
+        this.put(new HMAC(new SHA2(256, detectionLocation)));
     }
 }

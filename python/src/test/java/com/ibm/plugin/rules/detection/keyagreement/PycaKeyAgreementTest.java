@@ -28,6 +28,8 @@ import com.ibm.engine.model.context.KeyAgreementContext;
 import com.ibm.mapper.model.EllipticCurve;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyAgreement;
+import com.ibm.mapper.model.Oid;
+import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.plugin.TestBase;
 import java.util.List;
@@ -72,8 +74,21 @@ public class PycaKeyAgreementTest extends TestBase {
             // KeyAgreement
             INode keyAgreementNode = nodes.get(0);
             assertThat(keyAgreementNode.getKind()).isEqualTo(KeyAgreement.class);
-            assertThat(keyAgreementNode.getChildren()).hasSize(2);
+            assertThat(keyAgreementNode.getChildren()).hasSize(4);
             assertThat(keyAgreementNode.asString()).isEqualTo("x25519");
+
+            // PublicKeyEncryption under KeyAgreement
+            INode publicKeyEncryptionNode =
+                    keyAgreementNode.getChildren().get(PublicKeyEncryption.class);
+            assertThat(publicKeyEncryptionNode).isNotNull();
+            assertThat(publicKeyEncryptionNode.getChildren()).hasSize(1);
+            assertThat(publicKeyEncryptionNode.asString()).isEqualTo("DH");
+
+            // Oid under PublicKeyEncryption under KeyAgreement
+            INode oidNode = publicKeyEncryptionNode.getChildren().get(Oid.class);
+            assertThat(oidNode).isNotNull();
+            assertThat(oidNode.getChildren()).isEmpty();
+            assertThat(oidNode.asString()).isEqualTo("1.2.840.113549.1.3.1");
 
             // EllipticCurve under KeyAgreement
             INode ellipticCurveNode = keyAgreementNode.getChildren().get(EllipticCurve.class);
@@ -86,6 +101,13 @@ public class PycaKeyAgreementTest extends TestBase {
             assertThat(keyGenerationNode).isNotNull();
             assertThat(keyGenerationNode.getChildren()).isEmpty();
             assertThat(keyGenerationNode.asString()).isEqualTo("KEYGENERATION");
+
+            // Oid under KeyAgreement
+            INode oidNode1 = keyAgreementNode.getChildren().get(Oid.class);
+            assertThat(oidNode1).isNotNull();
+            assertThat(oidNode1.getChildren()).isEmpty();
+            assertThat(oidNode1.asString()).isEqualTo("1.3.101.110");
+
         } else if (findingId == 1) {
             /*
              * Detection Store
@@ -105,8 +127,21 @@ public class PycaKeyAgreementTest extends TestBase {
             // KeyAgreement
             INode keyAgreementNode = nodes.get(0);
             assertThat(keyAgreementNode.getKind()).isEqualTo(KeyAgreement.class);
-            assertThat(keyAgreementNode.getChildren()).hasSize(2);
+            assertThat(keyAgreementNode.getChildren()).hasSize(4);
             assertThat(keyAgreementNode.asString()).isEqualTo("x25519");
+
+            // PublicKeyEncryption under KeyAgreement
+            INode publicKeyEncryptionNode =
+                    keyAgreementNode.getChildren().get(PublicKeyEncryption.class);
+            assertThat(publicKeyEncryptionNode).isNotNull();
+            assertThat(publicKeyEncryptionNode.getChildren()).hasSize(1);
+            assertThat(publicKeyEncryptionNode.asString()).isEqualTo("DH");
+
+            // Oid under PublicKeyEncryption under KeyAgreement
+            INode oidNode = publicKeyEncryptionNode.getChildren().get(Oid.class);
+            assertThat(oidNode).isNotNull();
+            assertThat(oidNode.getChildren()).isEmpty();
+            assertThat(oidNode.asString()).isEqualTo("1.2.840.113549.1.3.1");
 
             // EllipticCurve under KeyAgreement
             INode ellipticCurveNode = keyAgreementNode.getChildren().get(EllipticCurve.class);
@@ -119,6 +154,13 @@ public class PycaKeyAgreementTest extends TestBase {
             assertThat(keyGenerationNode).isNotNull();
             assertThat(keyGenerationNode.getChildren()).isEmpty();
             assertThat(keyGenerationNode.asString()).isEqualTo("KEYGENERATION");
+
+            // Oid under KeyAgreement
+            INode oidNode1 = keyAgreementNode.getChildren().get(Oid.class);
+            assertThat(oidNode1).isNotNull();
+            assertThat(oidNode1.getChildren()).isEmpty();
+            assertThat(oidNode1.asString()).isEqualTo("1.3.101.110");
+
         } else {
             /*
              * Detection Store
@@ -138,8 +180,21 @@ public class PycaKeyAgreementTest extends TestBase {
             // KeyAgreement
             INode keyAgreementNode1 = nodes.get(0);
             assertThat(keyAgreementNode1.getKind()).isEqualTo(KeyAgreement.class);
-            assertThat(keyAgreementNode1.getChildren()).hasSize(2);
+            assertThat(keyAgreementNode1.getChildren()).hasSize(4);
             assertThat(keyAgreementNode1.asString()).isEqualTo("x448");
+
+            // PublicKeyEncryption under KeyAgreement
+            INode publicKeyEncryptionNode1 =
+                    keyAgreementNode1.getChildren().get(PublicKeyEncryption.class);
+            assertThat(publicKeyEncryptionNode1).isNotNull();
+            assertThat(publicKeyEncryptionNode1.getChildren()).hasSize(1);
+            assertThat(publicKeyEncryptionNode1.asString()).isEqualTo("DH");
+
+            // Oid under PublicKeyEncryption under KeyAgreement
+            INode oidNode2 = publicKeyEncryptionNode1.getChildren().get(Oid.class);
+            assertThat(oidNode2).isNotNull();
+            assertThat(oidNode2.getChildren()).isEmpty();
+            assertThat(oidNode2.asString()).isEqualTo("1.2.840.113549.1.3.1");
 
             // EllipticCurve under KeyAgreement
             INode ellipticCurveNode1 = keyAgreementNode1.getChildren().get(EllipticCurve.class);
@@ -152,6 +207,12 @@ public class PycaKeyAgreementTest extends TestBase {
             assertThat(keyGenerationNode1).isNotNull();
             assertThat(keyGenerationNode1.getChildren()).isEmpty();
             assertThat(keyGenerationNode1.asString()).isEqualTo("KEYGENERATION");
+
+            // Oid under KeyAgreement
+            INode oidNode3 = keyAgreementNode1.getChildren().get(Oid.class);
+            assertThat(oidNode3).isNotNull();
+            assertThat(oidNode3.getChildren()).isEmpty();
+            assertThat(oidNode3.asString()).isEqualTo("1.3.101.111");
         }
     }
 }

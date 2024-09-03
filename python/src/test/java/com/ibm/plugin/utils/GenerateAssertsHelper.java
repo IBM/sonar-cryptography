@@ -77,7 +77,6 @@ public class GenerateAssertsHelper {
                     /*
                     * Detection Store
                     */
-
                     """);
             generateDetectionStoreAssertions(
                     writer, detectionStore, initialDetectionStoreVariableName);
@@ -88,7 +87,6 @@ public class GenerateAssertsHelper {
                     /*
                     * Translation
                     */
-
                     """);
             generateNodeAssertions(writer, translationRoots, initialTranslationNodesVariableName);
         } catch (IOException e) {

@@ -28,13 +28,13 @@ import com.ibm.engine.model.context.PrivateKeyContext;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.EllipticCurve;
+import com.ibm.mapper.model.ExtendableOutputFunction;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.PrivateKey;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.functionality.Digest;
-import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -128,12 +128,6 @@ public class PycaEllipticCurveSign2Test extends TestBase {
             assertThat(ellipticCurveNode).isNotNull();
             assertThat(ellipticCurveNode.getChildren()).isEmpty();
             assertThat(ellipticCurveNode.asString()).isEqualTo("Curve25519");
-
-            // Sign under PrivateKey
-            INode signNode = privateKeyNode.getChildren().get(Sign.class);
-            assertThat(signNode).isNotNull();
-            assertThat(signNode.getChildren()).isEmpty();
-            assertThat(signNode.asString()).isEqualTo("SIGN");
         } else if (findingId == 1) {
             /*
              * Detection Store
@@ -163,16 +157,11 @@ public class PycaEllipticCurveSign2Test extends TestBase {
             assertThat(signatureNode.asString()).isEqualTo("Ed448");
 
             // MessageDigest under Signature under PrivateKey
-            INode messageDigestNode = signatureNode.getChildren().get(MessageDigest.class);
+            INode messageDigestNode =
+                    signatureNode.getChildren().get(ExtendableOutputFunction.class);
             assertThat(messageDigestNode).isNotNull();
-            assertThat(messageDigestNode.getChildren()).hasSize(2);
+            assertThat(messageDigestNode.getChildren()).hasSize(1);
             assertThat(messageDigestNode.asString()).isEqualTo("SHAKE");
-
-            // DigestSize under MessageDigest under Signature under PrivateKey
-            INode digestSizeNode = messageDigestNode.getChildren().get(DigestSize.class);
-            assertThat(digestSizeNode).isNotNull();
-            assertThat(digestSizeNode.getChildren()).isEmpty();
-            assertThat(digestSizeNode.asString()).isEqualTo("256");
 
             // Digest under MessageDigest under Signature under PrivateKey
             INode digestNode = messageDigestNode.getChildren().get(Digest.class);
@@ -190,13 +179,7 @@ public class PycaEllipticCurveSign2Test extends TestBase {
             INode ellipticCurveNode = signatureNode.getChildren().get(EllipticCurve.class);
             assertThat(ellipticCurveNode).isNotNull();
             assertThat(ellipticCurveNode.getChildren()).isEmpty();
-            assertThat(ellipticCurveNode.asString()).isEqualTo("Curve448");
-
-            // Sign under PrivateKey
-            INode signNode = privateKeyNode.getChildren().get(Sign.class);
-            assertThat(signNode).isNotNull();
-            assertThat(signNode.getChildren()).isEmpty();
-            assertThat(signNode.asString()).isEqualTo("SIGN");
+            assertThat(ellipticCurveNode.asString()).isEqualTo("Edwards448");
         }
     }
 }

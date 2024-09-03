@@ -20,6 +20,7 @@
 package com.ibm.enricher.algorithm;
 
 import com.ibm.enricher.IEnricher;
+import com.ibm.mapper.model.ExtendableOutputFunction;
 import com.ibm.mapper.model.IAsset;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mac;
@@ -28,7 +29,7 @@ import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Tag;
 import org.jetbrains.annotations.NotNull;
 
-public class MacOrDigestEnricher implements IEnricher {
+public class TagOrDigestEnricher implements IEnricher {
 
     @Override
     public @NotNull INode enrich(@NotNull INode node) {
@@ -36,7 +37,7 @@ public class MacOrDigestEnricher implements IEnricher {
             if (node.is(Mac.class)) {
                 node.put(new Tag(asset.getDetectionContext()));
                 return node;
-            } else if (node.is(MessageDigest.class)) {
+            } else if (node.is(MessageDigest.class) || node.is(ExtendableOutputFunction.class)) {
                 node.put(new Digest(asset.getDetectionContext()));
                 return node;
             }
