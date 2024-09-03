@@ -21,8 +21,11 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.ExtendableOutputFunction;
+import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.IPrimitive;
+import com.ibm.mapper.model.ParameterSetIdentifier;
 import com.ibm.mapper.utils.DetectionLocation;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 
 public final class SHAKE extends Algorithm implements ExtendableOutputFunction {
@@ -30,6 +33,28 @@ public final class SHAKE extends Algorithm implements ExtendableOutputFunction {
 
     public SHAKE(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, ExtendableOutputFunction.class, detectionLocation);
+    }
+
+    /** Returns a name of the form "SHAKEXXX" where XXX is the parameter set identifer */
+    @Override
+    @Nonnull
+    public String getName() {
+        StringBuilder builtName = new StringBuilder(this.name);
+
+        Optional<INode> parameterSetIdentifier = this.hasChildOfType(ParameterSetIdentifier.class);
+
+        if (parameterSetIdentifier.isPresent()) {
+            builtName.append(parameterSetIdentifier.get().asString());
+        }
+
+        return builtName.toString();
+    }
+
+    public SHAKE(int parameterSetIdentifier, @Nonnull DetectionLocation detectionLocation) {
+        this(detectionLocation);
+        this.put(
+                new ParameterSetIdentifier(
+                        String.valueOf(parameterSetIdentifier), detectionLocation));
     }
 
     public SHAKE(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull SHAKE shake) {

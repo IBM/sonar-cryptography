@@ -96,9 +96,16 @@ public final class PycaHashBasedKeyDerivationMapper implements IMapper {
                     Optional.of(
                             new SHA3(
                                     KeyDerivationFunction.class, new SHA3(512, detectionLocation)));
-            case "SHAKE128", "SHAKE256" ->
+            case "SHAKE128" ->
                     Optional.of(
-                            new SHAKE(KeyDerivationFunction.class, new SHAKE(detectionLocation)));
+                            new SHAKE(
+                                    KeyDerivationFunction.class,
+                                    new SHAKE(128, detectionLocation)));
+            case "SHAKE256" ->
+                    Optional.of(
+                            new SHAKE(
+                                    KeyDerivationFunction.class,
+                                    new SHAKE(256, detectionLocation)));
             case "MD5" -> Optional.of(new MD5(Mac.class, detectionLocation));
             case "BLAKE2B" ->
                     Optional.of(

@@ -57,7 +57,8 @@ public final class PycaDigestMapper implements IMapper {
             case "SHA3_256" -> Optional.of(new SHA3(256, detectionLocation));
             case "SHA3_384" -> Optional.of(new SHA3(384, detectionLocation));
             case "SHA3_512" -> Optional.of(new SHA3(512, detectionLocation));
-            case "SHAKE128", "SHAKE256" -> Optional.of(new SHAKE(detectionLocation));
+            case "SHAKE128" -> Optional.of(new SHAKE(128, detectionLocation));
+            case "SHAKE256" -> Optional.of(new SHAKE(256, detectionLocation));
             case "MD5" -> Optional.of(new MD5(detectionLocation));
             case "BLAKE2B" -> Optional.of(new BLAKE2b(false, detectionLocation));
             case "BLAKE2S" -> Optional.of(new BLAKE2s(false, detectionLocation));
