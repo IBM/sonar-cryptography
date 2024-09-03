@@ -42,7 +42,7 @@ public final class BcEncapsulatedSecretExtractor {
         // nothing
     }
 
-    /* TODO: capture `generateEncapsulated` to obtain information from `AsymmetricKeyParameter` */
+    /* TODO: capture the `AsymmetricKeyParameter` argument in most contructors */
 
     private static BouncyCastleInfoMap infoMap = new BouncyCastleInfoMap();
 
