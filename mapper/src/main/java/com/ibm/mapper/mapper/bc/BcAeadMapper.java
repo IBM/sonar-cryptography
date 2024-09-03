@@ -25,6 +25,7 @@ import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.algorithms.AES;
+import com.ibm.mapper.model.algorithms.ChaCha20;
 import com.ibm.mapper.model.algorithms.ChaCha20Poly1305;
 import com.ibm.mapper.model.algorithms.Xoodyak;
 import com.ibm.mapper.model.algorithms.ascon.Ascon;
@@ -103,6 +104,11 @@ public class BcAeadMapper implements IMapper {
                                     new OCB(detectionLocation), AuthenticatedEncryption.class));
 
             case "ChaCha20Poly1305" -> Optional.of(new ChaCha20Poly1305(detectionLocation));
+            case "ChaCha20Poly1305[WITH_MAC]" ->
+                    Optional.of(
+                            new ChaCha20(
+                                    AuthenticatedEncryption.class,
+                                    new ChaCha20(detectionLocation)));
 
             default -> {
                 final Algorithm algorithm =

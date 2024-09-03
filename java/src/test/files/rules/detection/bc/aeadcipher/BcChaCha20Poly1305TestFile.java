@@ -29,7 +29,7 @@ public class BcChaCha20Poly1305TestFile {
 
         // Instantiate ChaCha20Poly1305 with constructor
         ChaCha20Poly1305 constructor =
-                new ChaCha20Poly1305(new Poly1305()); // Noncompliant {{ChaCha20Poly1305}}
+                new ChaCha20Poly1305(new Poly1305()); // Noncompliant {{ChaCha20Poly1305[WITH_MAC]}}
                 // Noncompliant@-1 {{Poly1305}}
 
         // Initialize cipher with key and parameters

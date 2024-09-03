@@ -64,7 +64,7 @@ public final class CAST256 extends Algorithm implements BlockCipher {
         this.put(padding);
     }
 
-    public CAST256(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull CAST128 cast256) {
+    public CAST256(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull CAST256 cast256) {
         super(cast256, asKind);
     }
 }

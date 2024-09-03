@@ -31,9 +31,9 @@ import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.MacContext;
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.TagLength;
-import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Encrypt;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
@@ -77,7 +77,8 @@ class BcChaCha20Poly1305Test extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("ChaCha20Poly1305");
+        assertThat(value0.asString())
+                .isEqualTo(findingId == 0 ? "ChaCha20Poly1305" : "ChaCha20Poly1305[WITH_MAC]");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
                 getStoreOfValueType(OperationMode.class, detectionStore.getChildren());
@@ -115,7 +116,7 @@ class BcChaCha20Poly1305Test extends TestBase {
         // AuthenticatedEncryption
         INode authenticatedEncryptionNode1 = nodes.get(0);
         assertThat(authenticatedEncryptionNode1.getKind()).isEqualTo(AuthenticatedEncryption.class);
-        assertThat(authenticatedEncryptionNode1.getChildren()).hasSize(3);
+        assertThat(authenticatedEncryptionNode1.getChildren()).hasSize(findingId == 0 ? 3 : 2);
         assertThat(authenticatedEncryptionNode1.asString()).isEqualTo("ChaCha20");
 
         // Encrypt under AuthenticatedEncryption
@@ -124,29 +125,31 @@ class BcChaCha20Poly1305Test extends TestBase {
         assertThat(encryptNode1.getChildren()).isEmpty();
         assertThat(encryptNode1.asString()).isEqualTo("ENCRYPT");
 
-        // MessageDigest under AuthenticatedEncryption
-        INode messageDigestNode1 =
-                authenticatedEncryptionNode1.getChildren().get(MessageDigest.class);
-        assertThat(messageDigestNode1).isNotNull();
-        assertThat(messageDigestNode1.getChildren()).hasSize(1);
-        assertThat(messageDigestNode1.asString()).isEqualTo("Poly1305");
+        if (findingId == 0) {
+            // MessageDigest under AuthenticatedEncryption
+            INode messageDigestNode1 =
+                    authenticatedEncryptionNode1.getChildren().get(MessageDigest.class);
+            assertThat(messageDigestNode1).isNotNull();
+            assertThat(messageDigestNode1.getChildren()).hasSize(1);
+            assertThat(messageDigestNode1.asString()).isEqualTo("Poly1305");
 
-        // Digest under MessageDigest under AuthenticatedEncryption
-        INode digestNode1 = messageDigestNode1.getChildren().get(Digest.class);
-        assertThat(digestNode1).isNotNull();
-        assertThat(digestNode1.getChildren()).isEmpty();
-        assertThat(digestNode1.asString()).isEqualTo("DIGEST");
+            // TagLength under AuthenticatedEncryption
+            INode tagLengthNode1 = authenticatedEncryptionNode1.getChildren().get(TagLength.class);
+            assertThat(tagLengthNode1).isNotNull();
+            assertThat(tagLengthNode1.getChildren()).isEmpty();
+            assertThat(tagLengthNode1.asString()).isEqualTo("128");
+        } else if (findingId == 1) {
+            // Mac under AuthenticatedEncryption
+            INode macNode1 = authenticatedEncryptionNode1.getChildren().get(Mac.class);
+            assertThat(macNode1).isNotNull();
+            assertThat(macNode1.getChildren()).hasSize(2);
+            assertThat(macNode1.asString()).isEqualTo("Poly1305");
 
-        // TagLength under AuthenticatedEncryption
-        INode tagLengthNode1 = authenticatedEncryptionNode1.getChildren().get(TagLength.class);
-        assertThat(tagLengthNode1).isNotNull();
-        assertThat(tagLengthNode1.getChildren()).isEmpty();
-        assertThat(tagLengthNode1.asString()).isEqualTo("128");
-
-        // // Tag under Mac under AuthenticatedEncryption
-        // INode tagNode1 = messageDigestNode1.getChildren().get(Tag.class);
-        // assertThat(tagNode1).isNotNull();
-        // assertThat(tagNode1.getChildren()).isEmpty();
-        // assertThat(tagNode1.asString()).isEqualTo("TAG");
+            // TagLength under Mac under AuthenticatedEncryption
+            INode tagLengthNode1 = macNode1.getChildren().get(TagLength.class);
+            assertThat(tagLengthNode1).isNotNull();
+            assertThat(tagLengthNode1.getChildren()).isEmpty();
+            assertThat(tagLengthNode1.asString()).isEqualTo("128");
+        }
     }
 }

@@ -21,8 +21,6 @@ package com.ibm.mapper.mapper.bc;
 
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.BlockCipher;
-import com.ibm.mapper.model.IAlgorithm;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.Unknown;
@@ -72,56 +70,57 @@ public class BcBlockCipherEngineMapper implements IMapper {
         if (str == null) {
             return Optional.empty();
         }
-        Optional<? extends INode> node = map(str, detectionLocation);
-        if (node.isPresent()) {
-            // TODO: Change this to not use the `new Algorithm` hack to change the kind
-            return Optional.of(new Algorithm((IAlgorithm) node.get(), asKind));
-        }
-        return Optional.empty();
+        return map(str, detectionLocation);
     }
 
     @Nonnull
     private Optional<? extends INode> map(
             @Nonnull String blockCipherString, @Nonnull DetectionLocation detectionLocation) {
         return switch (blockCipherString) {
-            case "AESEngine" -> Optional.of(new AES(detectionLocation));
-            case "AESFastEngine" -> Optional.of(new AES(detectionLocation));
-            case "AESLightEngine" -> Optional.of(new AES(detectionLocation));
-            case "ARIAEngine" -> Optional.of(new Aria(detectionLocation));
-            case "BlowfishEngine" -> Optional.of(new Blowfish(detectionLocation));
-            case "CamelliaEngine" -> Optional.of(new Camellia(detectionLocation));
-            case "CamelliaLightEngine" -> Optional.of(new Camellia(detectionLocation));
-            case "CAST5Engine" -> Optional.of(new CAST128(detectionLocation));
-            case "CAST6Engine" -> Optional.of(new CAST256(detectionLocation));
-            case "DESedeEngine" -> Optional.of(new DESede(detectionLocation));
-            case "DESEngine" -> Optional.of(new DES(detectionLocation));
-            case "DSTU7624Engine" -> Optional.of(new Kalyna(detectionLocation));
-            case "GOST28147Engine" -> Optional.of(new GOST28147(detectionLocation));
-            case "GOST3412_2015Engine" -> Optional.of(new GOSTR34122015(detectionLocation));
-            case "IDEAEngine" -> Optional.of(new IDEA(detectionLocation));
-            case "LEAEngine" -> Optional.of(new LEA(detectionLocation));
-            case "NoekeonEngine" -> Optional.of(new NOEKEON(detectionLocation));
+            case "AESEngine", "AESFastEngine", "AESLightEngine", "RijndaelEngine" ->
+                    Optional.of(new AES(asKind, new AES(detectionLocation)));
+            case "ARIAEngine" -> Optional.of(new Aria(asKind, new Aria(detectionLocation)));
+            case "BlowfishEngine" ->
+                    Optional.of(new Blowfish(asKind, new Blowfish(detectionLocation)));
+            case "CamelliaEngine", "CamelliaLightEngine" ->
+                    Optional.of(new Camellia(asKind, new Camellia(detectionLocation)));
+            case "CAST5Engine" -> Optional.of(new CAST128(asKind, new CAST128(detectionLocation)));
+            case "CAST6Engine" -> Optional.of(new CAST256(asKind, new CAST256(detectionLocation)));
+            case "DESedeEngine" -> Optional.of(new DESede(asKind, new DESede(detectionLocation)));
+            case "DESEngine" -> Optional.of(new DES(asKind, new DES(detectionLocation)));
+            case "DSTU7624Engine" -> Optional.of(new Kalyna(asKind, new Kalyna(detectionLocation)));
+            case "GOST28147Engine" ->
+                    Optional.of(new GOST28147(asKind, new GOST28147(detectionLocation)));
+            case "GOST3412_2015Engine" ->
+                    Optional.of(new GOSTR34122015(asKind, new GOSTR34122015(detectionLocation)));
+            case "IDEAEngine" -> Optional.of(new IDEA(asKind, new IDEA(detectionLocation)));
+            case "LEAEngine" -> Optional.of(new LEA(asKind, new LEA(detectionLocation)));
+            case "NoekeonEngine" ->
+                    Optional.of(new NOEKEON(asKind, new NOEKEON(detectionLocation)));
             case "NullEngine" -> /* this block cipher is simply defined by output = input (identity function) */
-                    Optional.of(new Algorithm("Identity", BlockCipher.class, detectionLocation));
-            case "RC2Engine" -> Optional.of(new RC2(detectionLocation));
-            case "RC532Engine" -> Optional.of(new RC5(64, detectionLocation));
-            case "RC564Engine" -> Optional.of(new RC5(128, detectionLocation));
-            case "RC6Engine" -> Optional.of(new RC6(detectionLocation));
-            case "RijndaelEngine" -> Optional.of(new AES(detectionLocation));
-            case "SEEDEngine" -> Optional.of(new SEED(detectionLocation));
-            case "SerpentEngine" -> Optional.of(new Serpent(detectionLocation));
-            case "Shacal2Engine" -> Optional.of(new SHACAL2(detectionLocation));
-            case "SkipjackEngine" -> Optional.of(new Skipjack(detectionLocation));
-            case "SM4Engine" -> Optional.of(new SM4(detectionLocation));
-            case "TEAEngine" -> Optional.of(new TEA(detectionLocation));
-            case "ThreefishEngine" -> Optional.of(new Threefish(detectionLocation));
-            case "TnepresEngine" -> Optional.of(new Serpent(detectionLocation));
-            case "TwofishEngine" -> Optional.of(new Twofish(detectionLocation));
-            case "XTEAEngine" -> Optional.of(new XTEA(detectionLocation));
+                    Optional.of(new Algorithm("Identity", asKind, detectionLocation));
+            case "RC2Engine" -> Optional.of(new RC2(asKind, new RC2(detectionLocation)));
+            case "RC532Engine" -> Optional.of(new RC5(asKind, new RC5(64, detectionLocation)));
+            case "RC564Engine" -> Optional.of(new RC5(asKind, new RC5(128, detectionLocation)));
+            case "RC6Engine" -> Optional.of(new RC6(asKind, new RC6(detectionLocation)));
+            case "SEEDEngine" -> Optional.of(new SEED(asKind, new SEED(detectionLocation)));
+            case "SerpentEngine", "TnepresEngine" ->
+                    Optional.of(new Serpent(asKind, new Serpent(detectionLocation)));
+            case "Shacal2Engine" ->
+                    Optional.of(new SHACAL2(asKind, new SHACAL2(detectionLocation)));
+            case "SkipjackEngine" ->
+                    Optional.of(new Skipjack(asKind, new Skipjack(detectionLocation)));
+            case "SM4Engine" -> Optional.of(new SM4(asKind, new SM4(detectionLocation)));
+            case "TEAEngine" -> Optional.of(new TEA(asKind, new TEA(detectionLocation)));
+            case "ThreefishEngine" ->
+                    Optional.of(new Threefish(asKind, new Threefish(detectionLocation)));
+            case "TwofishEngine" ->
+                    Optional.of(new Twofish(asKind, new Twofish(detectionLocation)));
+            case "XTEAEngine" -> Optional.of(new XTEA(asKind, new XTEA(detectionLocation)));
 
             default -> {
                 final Algorithm algorithm =
-                        new Algorithm(blockCipherString, BlockCipher.class, detectionLocation);
+                        new Algorithm(blockCipherString, asKind, detectionLocation);
                 algorithm.put(new Unknown(detectionLocation));
                 yield Optional.of(algorithm);
             }

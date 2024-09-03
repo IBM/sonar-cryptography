@@ -54,8 +54,7 @@ public final class AeadBlockCipherReorganizer {
                                 Algorithm newAuthenticatedEncryption =
                                         (Algorithm)
                                                 node.getChildren()
-                                                        .get(AuthenticatedEncryption.class)
-                                                        .deepCopy();
+                                                        .get(AuthenticatedEncryption.class);
 
                                 for (Map.Entry<Class<? extends INode>, INode> childKeyValue :
                                         node.getChildren().entrySet()) {
