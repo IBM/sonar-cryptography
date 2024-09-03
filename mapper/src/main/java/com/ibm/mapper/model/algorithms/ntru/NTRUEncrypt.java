@@ -20,19 +20,19 @@
 package com.ibm.mapper.model.algorithms.ntru;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public final class NTRUEncrypt extends Algorithm implements BlockCipher {
+public final class NTRUEncrypt extends Algorithm implements PublicKeyEncryption {
     // https://en.wikipedia.org/wiki/NTRU
 
     private static final String NAME = "NTRUEncrypt";
 
     public NTRUEncrypt(@Nonnull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+        super(NAME, PublicKeyEncryption.class, detectionLocation);
     }
 
     public NTRUEncrypt(int keyLength, @Nonnull DetectionLocation detectionLocation) {

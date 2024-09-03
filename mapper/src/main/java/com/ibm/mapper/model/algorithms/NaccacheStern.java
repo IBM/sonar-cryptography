@@ -20,19 +20,19 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public final class NaccacheStern extends Algorithm implements BlockCipher {
+public final class NaccacheStern extends Algorithm implements PublicKeyEncryption {
     // https://en.wikipedia.org/wiki/Naccache–Stern_cryptosystem
 
     private static final String NAME = "Naccache-Stern";
 
     public NaccacheStern(@Nonnull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+        super(NAME, PublicKeyEncryption.class, detectionLocation);
     }
 
     public NaccacheStern(int keyLength, @Nonnull DetectionLocation detectionLocation) {

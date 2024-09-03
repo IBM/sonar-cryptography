@@ -31,7 +31,7 @@ public final class Ed448 extends EdDSA implements Signature {
     public Ed448(@NotNull DetectionLocation detectionLocation) {
         super(NAME, detectionLocation);
         this.put(new Edwards448(detectionLocation));
-        this.put(new SHAKE(detectionLocation));
+        this.put(new SHAKE(256, detectionLocation));
         this.put(new Oid("1.3.101.113", detectionLocation));
     }
 }

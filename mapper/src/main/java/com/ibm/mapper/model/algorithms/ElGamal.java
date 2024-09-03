@@ -20,21 +20,21 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public final class ElGamal extends Algorithm implements BlockCipher, Signature {
+public final class ElGamal extends Algorithm implements PublicKeyEncryption, Signature {
     // https://en.wikipedia.org/wiki/ElGamal_encryption
     // https://en.wikipedia.org/wiki/ElGamal_signature_scheme
 
     private static final String NAME = "ElGamal";
 
     public ElGamal(@Nonnull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+        super(NAME, PublicKeyEncryption.class, detectionLocation);
     }
 
     public ElGamal(int keyLength, @Nonnull DetectionLocation detectionLocation) {
