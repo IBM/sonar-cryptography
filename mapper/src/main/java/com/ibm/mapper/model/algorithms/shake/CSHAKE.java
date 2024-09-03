@@ -17,25 +17,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms;
+package com.ibm.mapper.model.algorithms.shake;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.ExtendableOutputFunction;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.IPrimitive;
+import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.ParameterSetIdentifier;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
-public final class SHAKE extends Algorithm implements ExtendableOutputFunction {
-    private static final String NAME = "SHAKE";
+public final class CSHAKE extends Algorithm implements MessageDigest {
+    // https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-185.pdf
 
-    public SHAKE(@Nonnull DetectionLocation detectionLocation) {
-        super(NAME, ExtendableOutputFunction.class, detectionLocation);
+    private static final String NAME = "cSHAKE"; // customizable SHAKE
+
+    public CSHAKE(@Nonnull DetectionLocation detectionLocation) {
+        super(NAME, MessageDigest.class, detectionLocation);
     }
 
-    /** Returns a name of the form "SHAKEXXX" where XXX is the parameter set identifer */
+    /** Returns a name of the form "cSHAKEXXX" where XXX is the parameter set identifer */
     @Override
     @Nonnull
     public String getName() {
@@ -46,14 +48,14 @@ public final class SHAKE extends Algorithm implements ExtendableOutputFunction {
         return builtName.toString();
     }
 
-    public SHAKE(int parameterSetIdentifier, @Nonnull DetectionLocation detectionLocation) {
+    public CSHAKE(int parameterSetIdentifier, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(
                 new ParameterSetIdentifier(
                         String.valueOf(parameterSetIdentifier), detectionLocation));
     }
 
-    public SHAKE(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull SHAKE shake) {
-        super(shake, asKind);
+    public CSHAKE(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull CSHAKE cSHAKE) {
+        super(cSHAKE, asKind);
     }
 }

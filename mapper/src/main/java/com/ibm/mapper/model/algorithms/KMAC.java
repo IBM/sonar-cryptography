@@ -20,12 +20,13 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.ClassicalBitSecurityLevel;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.ParameterSetIdentifier;
+import com.ibm.mapper.model.algorithms.shake.CSHAKE;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -35,29 +36,35 @@ public final class KMAC extends Algorithm implements MessageDigest {
 
     private static final String NAME = "KMAC";
 
-    /** Returns a name of the form "KMACXXX" where XXX is the security level in bits */
+    /** Returns a name of the form "KMACXXX" where XXX is the parameter set identifer */
     @Override
     @Nonnull
     public String getName() {
         StringBuilder builtName = new StringBuilder(this.name);
 
-        Optional<INode> bitSecurityLevel = this.hasChildOfType(ClassicalBitSecurityLevel.class);
+        Optional<INode> parameterSetIdentifier = this.hasChildOfType(ParameterSetIdentifier.class);
 
-        if (bitSecurityLevel.isPresent()) {
-            builtName.append(bitSecurityLevel.get().asString());
+        if (parameterSetIdentifier.isPresent()) {
+            builtName.append(parameterSetIdentifier.get().asString());
         }
 
         return builtName.toString();
     }
 
     public KMAC(@Nonnull DetectionLocation detectionLocation) {
+        /* KMAC is a hash function mostly used as a MAC */
         super(NAME, Mac.class, detectionLocation);
+        this.put(new CSHAKE(detectionLocation));
     }
 
-    public KMAC(int bitSecurityLevel, @Nonnull DetectionLocation detectionLocation) {
-        this(detectionLocation);
-        this.put(new ClassicalBitSecurityLevel(bitSecurityLevel, detectionLocation));
-        this.put(new DigestSize(2 * bitSecurityLevel, detectionLocation));
+    public KMAC(int parameterSetIdentifier, @Nonnull DetectionLocation detectionLocation) {
+        /* KMAC is a hash function mostly used as a MAC */
+        super(NAME, Mac.class, detectionLocation);
+        this.put(
+                new ParameterSetIdentifier(
+                        String.valueOf(parameterSetIdentifier), detectionLocation));
+        this.put(new CSHAKE(parameterSetIdentifier, detectionLocation));
+        this.put(new DigestSize(2 * parameterSetIdentifier, detectionLocation));
     }
 
     public KMAC(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull KMAC kmac) {

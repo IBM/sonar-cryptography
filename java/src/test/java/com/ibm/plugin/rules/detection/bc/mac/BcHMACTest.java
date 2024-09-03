@@ -33,6 +33,7 @@ import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.functionality.Digest;
+import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
 import java.util.List;
@@ -87,7 +88,7 @@ class BcHMACTest extends TestBase {
         // Mac
         INode macNode = nodes.get(0);
         assertThat(macNode.getKind()).isEqualTo(Mac.class);
-        assertThat(macNode.getChildren()).hasSize(1);
+        assertThat(macNode.getChildren()).hasSize(2);
         assertThat(macNode.asString()).isEqualTo("HMAC-SHA256");
 
         // MessageDigest under Mac
@@ -119,5 +120,11 @@ class BcHMACTest extends TestBase {
         assertThat(digestSizeNode).isNotNull();
         assertThat(digestSizeNode.getChildren()).isEmpty();
         assertThat(digestSizeNode.asString()).isEqualTo("256");
+
+        // Tag under Mac
+        INode tagNode = macNode.getChildren().get(Tag.class);
+        assertThat(tagNode).isNotNull();
+        assertThat(tagNode.getChildren()).isEmpty();
+        assertThat(tagNode.asString()).isEqualTo("TAG");
     }
 }
