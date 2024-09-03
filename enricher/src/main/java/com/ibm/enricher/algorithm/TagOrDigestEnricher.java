@@ -17,32 +17,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.plugin.rules.detection.kdf;
+package com.ibm.enricher.algorithm;
 
-import com.ibm.engine.detection.DetectionStore;
+import com.ibm.enricher.IEnricher;
+import com.ibm.mapper.model.ExtendableOutputFunction;
+import com.ibm.mapper.model.IAsset;
 import com.ibm.mapper.model.INode;
-import com.ibm.plugin.TestBase;
-import java.util.List;
-import javax.annotation.Nonnull;
-import org.junit.jupiter.api.Test;
-import org.sonar.plugins.python.api.PythonCheck;
-import org.sonar.plugins.python.api.PythonVisitorContext;
-import org.sonar.plugins.python.api.symbols.Symbol;
-import org.sonar.plugins.python.api.tree.Tree;
-import org.sonar.python.checks.utils.PythonCheckVerifier;
+import com.ibm.mapper.model.Mac;
+import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.functionality.Digest;
+import com.ibm.mapper.model.functionality.Tag;
+import org.jetbrains.annotations.NotNull;
 
-public class CryptographyKBKDFHMACTest extends TestBase {
-    @Test
-    void test() {
-        PythonCheckVerifier.verify(
-                "src/test/files/rules/detection/kdf/CryptographyKBKDFHMACTestFile.py", this);
-    }
+public class TagOrDigestEnricher implements IEnricher {
 
     @Override
-    public void asserts(
-            int findingId,
-            @Nonnull DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> detectionStore,
-            @Nonnull List<INode> nodes) {
-        // TODO:
+    public @NotNull INode enrich(@NotNull INode node) {
+        if (node instanceof IAsset asset) {
+            if (node.is(Mac.class)) {
+                node.put(new Tag(asset.getDetectionContext()));
+                return node;
+            } else if (node.is(MessageDigest.class) || node.is(ExtendableOutputFunction.class)) {
+                node.put(new Digest(asset.getDetectionContext()));
+                return node;
+            }
+        }
+        return node;
     }
 }

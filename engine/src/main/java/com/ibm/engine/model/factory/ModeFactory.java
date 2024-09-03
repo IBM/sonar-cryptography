@@ -17,30 +17,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.enricher.algorithm;
+package com.ibm.engine.model.factory;
 
-import com.ibm.enricher.IEnricher;
-import com.ibm.mapper.model.IAsset;
-import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Mac;
-import com.ibm.mapper.model.MessageDigest;
-import com.ibm.mapper.model.functionality.Digest;
-import com.ibm.mapper.model.functionality.Tag;
+import com.ibm.engine.detection.ResolvedValue;
+import com.ibm.engine.model.IValue;
+import com.ibm.engine.model.Mode;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
-public class MacOrDigestEnricher implements IEnricher {
+public class ModeFactory<T> implements IValueFactory<T> {
 
     @Override
-    public @NotNull INode enrich(@NotNull INode node) {
-        if (node instanceof IAsset asset) {
-            if (node.is(Mac.class)) {
-                node.put(new Tag(asset.getDetectionContext()));
-                return node;
-            } else if (node.is(MessageDigest.class)) {
-                node.put(new Digest(asset.getDetectionContext()));
-                return node;
-            }
+    public Optional<IValue<T>> apply(@NotNull ResolvedValue<Object, T> objectTResolvedValue) {
+        if (objectTResolvedValue.value() instanceof String s) {
+            return Optional.of(new Mode<>(s, objectTResolvedValue.tree()));
         }
-        return node;
+        return Optional.empty();
     }
 }

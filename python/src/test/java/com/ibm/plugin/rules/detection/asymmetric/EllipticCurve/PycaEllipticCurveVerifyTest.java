@@ -24,8 +24,8 @@ import com.ibm.mapper.model.INode;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import javax.annotation.Nonnull;
+import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.jupiter.api.Disabled;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
@@ -34,7 +34,8 @@ import org.sonar.python.checks.utils.PythonCheckVerifier;
 
 public class PycaEllipticCurveVerifyTest extends TestBase {
 
-    @Disabled(
+    // junit4
+    @Ignore(
             "Reenable once we have an approach to detect `verify` (either make it an entry\n"
                     + "point, or better handle file imports for depending detection rule)")
     @Test

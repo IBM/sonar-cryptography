@@ -20,51 +20,43 @@
 package com.ibm.plugin.translation.translator.contexts;
 
 import com.ibm.engine.model.IValue;
+import com.ibm.engine.model.KeyAction;
 import com.ibm.engine.model.context.DetectionContext;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.rule.IBundle;
 import com.ibm.mapper.IContextTranslation;
-import com.ibm.mapper.mapper.pyca.PycaCipherMapper;
-import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.algorithms.CMAC;
+import com.ibm.mapper.model.SecretKey;
+import com.ibm.mapper.model.algorithms.Fernet;
+import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.python.api.tree.Tree;
 
-@SuppressWarnings("java:S1301")
-public final class PycaMacContextTranslator implements IContextTranslation<Tree> {
-
+public final class PycaSecretContextTranslator implements IContextTranslation<Tree> {
     @Override
     public @NotNull Optional<INode> translate(
             @NotNull IBundle bundleIdentifier,
             @NotNull IValue<Tree> value,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
-
-        if (value instanceof com.ibm.engine.model.Algorithm<Tree> algorithm
+        if (value instanceof KeyAction<Tree>
                 && detectionContext instanceof DetectionContext context) {
-            // hash algorithm
-            Optional<String> possibleKind = context.get("kind");
-            if (possibleKind.isPresent()) {
-                final String kind = possibleKind.get();
-                return switch (kind) {
-                    case "cmac" -> {
-                        final PycaCipherMapper cipherMapper = new PycaCipherMapper();
-                        yield cipherMapper
-                                .parse(algorithm.asString(), detectionLocation)
-                                .map(
-                                        c -> {
-                                            if (c instanceof Cipher cipher) {
-                                                return new CMAC(cipher);
-                                            }
-                                            return null;
-                                        });
-                    }
-                    default -> Optional.empty();
-                };
-            }
+            // action is always "generate"
+            return context.get("algorithm")
+                    .map(
+                            str ->
+                                    switch (str.toUpperCase().trim()) {
+                                        case "FERNET" -> new Fernet(detectionLocation);
+                                        default -> null;
+                                    })
+                    .map(
+                            algo -> {
+                                final SecretKey key = new SecretKey(algo);
+                                key.put(new KeyGeneration(detectionLocation));
+                                return key;
+                            });
         }
         return Optional.empty();
     }

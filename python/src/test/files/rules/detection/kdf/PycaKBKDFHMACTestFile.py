@@ -7,7 +7,7 @@ from cryptography.hazmat.primitives.kdf.kbkdf import (
 label = b"KBKDF HMAC Label"
 context = b"KBKDF HMAC Context"
 
-kdf = KBKDFHMAC( # Noncompliant {{KDF}} {{SHA256}} {{32}}
+kdf = KBKDFHMAC( # Noncompliant {{SHA256}}
     algorithm=hashes.SHA256(),
     mode=Mode.CounterMode,
     length=32,

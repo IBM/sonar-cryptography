@@ -19,4 +19,4 @@
  */
 package com.ibm.mapper.model;
 
-public interface ExtendableOutputFunction extends IPrimitive {}
+public interface ExtendableOutputFunction extends MessageDigest {}

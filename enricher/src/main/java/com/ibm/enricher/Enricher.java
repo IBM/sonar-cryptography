@@ -23,7 +23,6 @@ import com.ibm.enricher.algorithm.AESEnricher;
 import com.ibm.enricher.algorithm.DESEnricher;
 import com.ibm.enricher.algorithm.DHEnricher;
 import com.ibm.enricher.algorithm.DSAEnricher;
-import com.ibm.enricher.algorithm.MacOrDigestEnricher;
 import com.ibm.enricher.algorithm.PBKDF2Enricher;
 import com.ibm.enricher.algorithm.RSAEnricher;
 import com.ibm.enricher.algorithm.RSAoaepEnricher;
@@ -31,20 +30,11 @@ import com.ibm.enricher.algorithm.RSAssaPSSEnricher;
 import com.ibm.enricher.algorithm.SHA2Enricher;
 import com.ibm.enricher.algorithm.SHA3Enricher;
 import com.ibm.enricher.algorithm.SignatureEnricher;
+import com.ibm.enricher.algorithm.TagOrDigestEnricher;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.MessageDigest;
-import com.ibm.mapper.model.Signature;
-import com.ibm.mapper.model.algorithms.AES;
-import com.ibm.mapper.model.algorithms.DES;
-import com.ibm.mapper.model.algorithms.DH;
-import com.ibm.mapper.model.algorithms.DSA;
-import com.ibm.mapper.model.algorithms.PBKDF2;
-import com.ibm.mapper.model.algorithms.RSA;
-import com.ibm.mapper.model.algorithms.RSAssaPSS;
-import com.ibm.mapper.model.algorithms.SHA2;
-import com.ibm.mapper.model.algorithms.SHA3;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
@@ -84,6 +74,22 @@ public class Enricher implements IEnricher {
         return enriched;
     }
 
+    @Nonnull
+    private static final List<IEnricher> enrichers =
+            List.of(
+                    new AESEnricher(),
+                    new DESEnricher(),
+                    new RSAEnricher(),
+                    new DHEnricher(),
+                    new DSAEnricher(),
+                    new SHA2Enricher(),
+                    new SHA3Enricher(),
+                    new PBKDF2Enricher(),
+                    new RSAssaPSSEnricher(),
+                    new RSAoaepEnricher(),
+                    new SignatureEnricher(),
+                    new TagOrDigestEnricher());
+
     /**
      * Enriches the given node with additional information.
      *
@@ -91,45 +97,8 @@ public class Enricher implements IEnricher {
      */
     @NotNull @Override
     public INode enrich(@Nonnull INode node) {
-        if (node instanceof AES) {
-            node = new AESEnricher().enrich(node);
-        }
-        if (node instanceof DES) {
-            node = new DESEnricher().enrich(node);
-        }
-
-        if (node instanceof RSA) {
-            node = new RSAEnricher().enrich(node);
-        }
-        if (node instanceof DH) {
-            node = new DHEnricher().enrich(node);
-        }
-        if (node instanceof DSA) {
-            node = new DSAEnricher().enrich(node);
-        }
-
-        if (node instanceof SHA2) {
-            node = new SHA2Enricher().enrich(node);
-        }
-        if (node instanceof SHA3) {
-            node = new SHA3Enricher().enrich(node);
-        }
-
-        if (node instanceof PBKDF2) {
-            node = new PBKDF2Enricher().enrich(node);
-        }
-        if (node instanceof RSAssaPSS) {
-            node = new RSAssaPSSEnricher().enrich(node);
-        }
-        if (node instanceof RSA) {
-            node = new RSAoaepEnricher().enrich(node);
-        }
-
-        if (node instanceof Signature) {
-            node = new SignatureEnricher().enrich(node);
-        }
-        if (node instanceof MessageDigest) {
-            node = new MacOrDigestEnricher().enrich(node);
+        for (final IEnricher enricher : enrichers) {
+            node = enricher.enrich(node);
         }
         return node;
     }

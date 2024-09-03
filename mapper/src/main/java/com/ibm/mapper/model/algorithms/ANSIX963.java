@@ -21,6 +21,7 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.KeyDerivationFunction;
+import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,5 +33,10 @@ public class ANSIX963 extends Algorithm implements KeyDerivationFunction {
     public ANSIX963(@NotNull DetectionLocation detectionLocation) {
         super(NAME, KeyDerivationFunction.class, detectionLocation);
         this.put(new ECDH(detectionLocation));
+    }
+
+    public ANSIX963(@NotNull MessageDigest messageDigest) {
+        this(messageDigest.getDetectionContext());
+        this.put(messageDigest);
     }
 }

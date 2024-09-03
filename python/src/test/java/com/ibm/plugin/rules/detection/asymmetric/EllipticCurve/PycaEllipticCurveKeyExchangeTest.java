@@ -105,7 +105,7 @@ public class PycaEllipticCurveKeyExchangeTest extends TestBase {
             // KeyAgreement under PrivateKey
             INode keyAgreementNode = privateKeyNode.getChildren().get(KeyAgreement.class);
             assertThat(keyAgreementNode).isNotNull();
-            assertThat(keyAgreementNode.getChildren()).hasSize(2);
+            assertThat(keyAgreementNode.getChildren()).hasSize(3);
             assertThat(keyAgreementNode.asString()).isEqualTo("ECDH");
 
             // EllipticCurve under KeyAgreement under PrivateKey
@@ -119,6 +119,12 @@ public class PycaEllipticCurveKeyExchangeTest extends TestBase {
             assertThat(oidNode).isNotNull();
             assertThat(oidNode.getChildren()).isEmpty();
             assertThat(oidNode.asString()).isEqualTo("1.3.132.1.12");
+
+            // KeyGeneration under PrivateKey
+            keyGenerationNode = keyAgreementNode.getChildren().get(KeyGeneration.class);
+            assertThat(keyGenerationNode).isNotNull();
+            assertThat(keyGenerationNode.getChildren()).isEmpty();
+            assertThat(keyGenerationNode.asString()).isEqualTo("KEYGENERATION");
         } else if (findingId == 1) {
             /*
              * Detection Store

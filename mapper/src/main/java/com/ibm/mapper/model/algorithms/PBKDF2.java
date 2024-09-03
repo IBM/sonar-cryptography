@@ -20,19 +20,48 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mac;
+import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
 import com.ibm.mapper.utils.DetectionLocation;
+import java.util.Optional;
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public final class PBKDF2 extends Algorithm implements PasswordBasedKeyDerivationFunction {
+    private static final String NAME = "PBKDF2";
+
+    @Override
+    public @NotNull String getName() {
+        final StringBuilder sb = new StringBuilder(this.name + "-");
+
+        final Optional<INode> mac = this.hasChildOfType(Mac.class);
+        if (mac.isPresent()) {
+            sb.append(mac.get().asString());
+            return sb.toString();
+        }
+
+        final Optional<INode> digest = this.hasChildOfType(MessageDigest.class);
+        if (digest.isPresent()) {
+            sb.append(digest.get().asString());
+            return sb.toString();
+        }
+
+        return this.name;
+    }
 
     public PBKDF2(@Nonnull Mac mac) {
-        super("PBKDF2", PasswordBasedKeyDerivationFunction.class, mac.getDetectionContext());
+        super(NAME, PasswordBasedKeyDerivationFunction.class, mac.getDetectionContext());
         this.put(mac);
     }
 
+    public PBKDF2(@Nonnull MessageDigest messageDigest) {
+        super(NAME, PasswordBasedKeyDerivationFunction.class, messageDigest.getDetectionContext());
+        this.put(messageDigest);
+    }
+
     public PBKDF2(@Nonnull DetectionLocation detectionLocation) {
-        super("PBKDF2", PasswordBasedKeyDerivationFunction.class, detectionLocation);
+        super(NAME, PasswordBasedKeyDerivationFunction.class, detectionLocation);
     }
 }

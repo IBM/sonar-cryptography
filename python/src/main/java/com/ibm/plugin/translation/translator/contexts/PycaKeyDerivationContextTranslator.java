@@ -21,19 +21,26 @@ package com.ibm.plugin.translation.translator.contexts;
 
 import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
-import com.ibm.engine.model.KeyAction;
 import com.ibm.engine.model.KeySize;
+import com.ibm.engine.model.Mode;
+import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.DetectionContext;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.rule.IBundle;
 import com.ibm.mapper.IContextTranslation;
+import com.ibm.mapper.mapper.pyca.PycaCipherMapper;
+import com.ibm.mapper.mapper.pyca.PycaDigestMapper;
 import com.ibm.mapper.mapper.pyca.PycaHashBasedKeyDerivationMapper;
+import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.algorithms.ANSIX963;
+import com.ibm.mapper.model.algorithms.CMAC;
+import com.ibm.mapper.model.algorithms.HMAC;
 import com.ibm.mapper.model.algorithms.PBKDF2;
 import com.ibm.mapper.model.algorithms.Scrypt;
 import com.ibm.mapper.model.functionality.KeyDerivation;
+import com.ibm.mapper.model.mode.CTR;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
@@ -47,28 +54,90 @@ public class PycaKeyDerivationContextTranslator implements IContextTranslation<T
             @NotNull IValue<Tree> value,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
-        if (value instanceof Algorithm<Tree> algorithm) {
+        if (value instanceof Algorithm<Tree> algorithm
+                && detectionContext instanceof DetectionContext context) {
             // hash algorithm
-            final PycaHashBasedKeyDerivationMapper pycaHashBasedKeyDerivationMapper =
-                    new PycaHashBasedKeyDerivationMapper();
-            return pycaHashBasedKeyDerivationMapper
-                    .parse(algorithm.asString(), detectionLocation)
-                    .map(
-                            kdf -> {
-                                kdf.put(new KeyDerivation(detectionLocation));
-                                return kdf;
-                            });
+            Optional<String> possibleKind = context.get("kind");
+            if (possibleKind.isPresent()) {
+                final String kind = possibleKind.get();
+                return switch (kind) {
+                    case "hash" -> {
+                        final PycaHashBasedKeyDerivationMapper pycaHashBasedKeyDerivationMapper =
+                                new PycaHashBasedKeyDerivationMapper();
+                        yield pycaHashBasedKeyDerivationMapper
+                                .parse(algorithm.asString(), detectionLocation)
+                                .map(
+                                        kdf -> {
+                                            kdf.put(new KeyDerivation(detectionLocation));
+                                            return kdf;
+                                        });
+                    }
+                    case "hmac" -> {
+                        final PycaDigestMapper digestMapper = new PycaDigestMapper();
+                        yield digestMapper
+                                .parse(algorithm.asString(), detectionLocation)
+                                .map(HMAC::new)
+                                .map(
+                                        kdf -> {
+                                            kdf.put(new KeyDerivation(detectionLocation));
+                                            return kdf;
+                                        });
+                    }
+                    case "cmac" -> {
+                        final PycaCipherMapper cipherMapper = new PycaCipherMapper();
+                        yield cipherMapper
+                                .parse(algorithm.asString(), detectionLocation)
+                                .map(
+                                        c -> {
+                                            if (c instanceof Cipher cipher) {
+                                                return new CMAC(cipher);
+                                            }
+                                            return null;
+                                        })
+                                .map(
+                                        kdf -> {
+                                            kdf.put(new KeyDerivation(detectionLocation));
+                                            return kdf;
+                                        });
+                    }
+                    case "pbkdf2" -> {
+                        final PycaDigestMapper digestMapper = new PycaDigestMapper();
+                        yield digestMapper
+                                .parse(algorithm.asString(), detectionLocation)
+                                .map(
+                                        kdf -> {
+                                            final PBKDF2 pbkdf2 = new PBKDF2(kdf);
+                                            pbkdf2.put(new KeyDerivation(detectionLocation));
+                                            return pbkdf2;
+                                        });
+                    }
+                    case "x963" -> {
+                        final PycaDigestMapper digestMapper = new PycaDigestMapper();
+                        yield digestMapper
+                                .parse(algorithm.asString(), detectionLocation)
+                                .map(
+                                        kdf -> {
+                                            final ANSIX963 ansix963 = new ANSIX963(kdf);
+                                            ansix963.put(new KeyDerivation(detectionLocation));
+                                            return ansix963;
+                                        });
+                    }
+                    default -> Optional.empty();
+                };
+            }
+        } else if (value instanceof Mode<Tree> mode) {
+            if (mode.asString().equalsIgnoreCase("CounterMode")) {
+                return Optional.of(new CTR(detectionLocation));
+            }
+            return Optional.empty();
         } else if (value instanceof KeySize<Tree> keySize) {
             return Optional.of(new KeyLength(keySize.getValue(), detectionLocation));
-        } else if (value instanceof KeyAction<Tree>
-                && detectionContext instanceof DetectionContext context) {
-            return context.get("algorithm")
+        } else if (value instanceof ValueAction<Tree> action) {
+            return Optional.of(action.asString().toUpperCase().trim())
                     .map(
-                            algo ->
-                                    switch (algo.toUpperCase().trim()) {
-                                        case "PBKDF2" -> new PBKDF2(detectionLocation);
+                            str ->
+                                    switch (action.asString().toUpperCase().trim()) {
                                         case "SCRYPT" -> new Scrypt(detectionLocation);
-                                        case "X963" -> new ANSIX963(detectionLocation);
                                         default -> null;
                                     })
                     .map(

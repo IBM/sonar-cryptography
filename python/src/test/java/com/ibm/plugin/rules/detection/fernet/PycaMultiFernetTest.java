@@ -41,6 +41,7 @@ import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.SecretKey;
 import com.ibm.mapper.model.functionality.Decrypt;
 import com.ibm.mapper.model.functionality.Digest;
+import com.ibm.mapper.model.functionality.Encrypt;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
@@ -53,12 +54,12 @@ import org.sonar.plugins.python.api.symbols.Symbol;
 import org.sonar.plugins.python.api.tree.Tree;
 import org.sonar.python.checks.utils.PythonCheckVerifier;
 
-public class PycaFernetDecryptTest extends TestBase {
+public class PycaMultiFernetTest extends TestBase {
 
     @Test
     public void test() {
         PythonCheckVerifier.verify(
-                "src/test/files/rules/detection/fernet/PycaFernetDecryptTestFile.py", this);
+                "src/test/files/rules/detection/fernet/PycaMultiFernetTestFile.py", this);
     }
 
     @Override
@@ -75,13 +76,16 @@ public class PycaFernetDecryptTest extends TestBase {
         assertThat(value0).isInstanceOf(KeyAction.class);
         assertThat(value0.asString()).isEqualTo("GENERATION");
 
-        DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> store_1 =
+        DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> store_2 =
                 getStoreOfValueType(CipherAction.class, detectionStore.getChildren());
-        assertThat(store_1.getDetectionValues()).hasSize(1);
-        assertThat(store_1.getDetectionValueContext()).isInstanceOf(CipherContext.class);
-        IValue<Tree> value0_1 = store_1.getDetectionValues().get(0);
-        assertThat(value0_1).isInstanceOf(CipherAction.class);
-        assertThat(value0_1.asString()).isEqualTo("DECRYPT");
+        assertThat(store_2.getDetectionValues()).hasSize(1);
+        assertThat(store_2.getDetectionValueContext()).isInstanceOf(CipherContext.class);
+        IValue<Tree> value0_2 = store_2.getDetectionValues().get(0);
+        assertThat(value0_2).isInstanceOf(CipherAction.class);
+        assertThat(value0_2.asString())
+                .satisfiesAnyOf(
+                        s -> assertThat(s).isEqualTo("ENCRYPT"),
+                        s -> assertThat(s).isEqualTo("DECRYPT"));
 
         /*
          * Translation
@@ -91,14 +95,8 @@ public class PycaFernetDecryptTest extends TestBase {
         // SecretKey
         INode secretKeyNode = nodes.get(0);
         assertThat(secretKeyNode.getKind()).isEqualTo(SecretKey.class);
-        assertThat(secretKeyNode.getChildren()).hasSize(3);
+        assertThat(secretKeyNode.getChildren()).hasSize(4);
         assertThat(secretKeyNode.asString()).isEqualTo("Fernet");
-
-        // KeyGeneration under SecretKey
-        INode keyGenerationNode = secretKeyNode.getChildren().get(KeyGeneration.class);
-        assertThat(keyGenerationNode).isNotNull();
-        assertThat(keyGenerationNode.getChildren()).isEmpty();
-        assertThat(keyGenerationNode.asString()).isEqualTo("KEYGENERATION");
 
         // Decrypt under SecretKey
         INode decryptNode = secretKeyNode.getChildren().get(Decrypt.class);
@@ -112,6 +110,42 @@ public class PycaFernetDecryptTest extends TestBase {
         assertThat(authenticatedEncryptionNode).isNotNull();
         assertThat(authenticatedEncryptionNode.getChildren()).hasSize(2);
         assertThat(authenticatedEncryptionNode.asString()).isEqualTo("Fernet");
+
+        // BlockCipher under AuthenticatedEncryption under SecretKey
+        INode blockCipherNode = authenticatedEncryptionNode.getChildren().get(BlockCipher.class);
+        assertThat(blockCipherNode).isNotNull();
+        assertThat(blockCipherNode.getChildren()).hasSize(5);
+        assertThat(blockCipherNode.asString()).isEqualTo("AES");
+
+        // BlockSize under BlockCipher under AuthenticatedEncryption under SecretKey
+        INode blockSizeNode = blockCipherNode.getChildren().get(BlockSize.class);
+        assertThat(blockSizeNode).isNotNull();
+        assertThat(blockSizeNode.getChildren()).isEmpty();
+        assertThat(blockSizeNode.asString()).isEqualTo("128");
+
+        // KeyLength under BlockCipher under AuthenticatedEncryption under SecretKey
+        INode keyLengthNode = blockCipherNode.getChildren().get(KeyLength.class);
+        assertThat(keyLengthNode).isNotNull();
+        assertThat(keyLengthNode.getChildren()).isEmpty();
+        assertThat(keyLengthNode.asString()).isEqualTo("128");
+
+        // Oid under BlockCipher under AuthenticatedEncryption under SecretKey
+        INode oidNode = blockCipherNode.getChildren().get(Oid.class);
+        assertThat(oidNode).isNotNull();
+        assertThat(oidNode.getChildren()).isEmpty();
+        assertThat(oidNode.asString()).isEqualTo("2.16.840.1.101.3.4.1.2");
+
+        // Mode under BlockCipher under AuthenticatedEncryption under SecretKey
+        INode modeNode = blockCipherNode.getChildren().get(Mode.class);
+        assertThat(modeNode).isNotNull();
+        assertThat(modeNode.getChildren()).isEmpty();
+        assertThat(modeNode.asString()).isEqualTo("CBC");
+
+        // Padding under BlockCipher under AuthenticatedEncryption under SecretKey
+        INode paddingNode = blockCipherNode.getChildren().get(Padding.class);
+        assertThat(paddingNode).isNotNull();
+        assertThat(paddingNode.getChildren()).isEmpty();
+        assertThat(paddingNode.asString()).isEqualTo("PKCS7");
 
         // Mac under AuthenticatedEncryption under SecretKey
         INode macNode = authenticatedEncryptionNode.getChildren().get(Mac.class);
@@ -131,6 +165,18 @@ public class PycaFernetDecryptTest extends TestBase {
         assertThat(messageDigestNode.getChildren()).hasSize(4);
         assertThat(messageDigestNode.asString()).isEqualTo("SHA256");
 
+        // BlockSize under MessageDigest under Mac under AuthenticatedEncryption under SecretKey
+        INode blockSizeNode1 = messageDigestNode.getChildren().get(BlockSize.class);
+        assertThat(blockSizeNode1).isNotNull();
+        assertThat(blockSizeNode1.getChildren()).isEmpty();
+        assertThat(blockSizeNode1.asString()).isEqualTo("512");
+
+        // Oid under MessageDigest under Mac under AuthenticatedEncryption under SecretKey
+        INode oidNode1 = messageDigestNode.getChildren().get(Oid.class);
+        assertThat(oidNode1).isNotNull();
+        assertThat(oidNode1.getChildren()).isEmpty();
+        assertThat(oidNode1.asString()).isEqualTo("2.16.840.1.101.3.4.2.1");
+
         // DigestSize under MessageDigest under Mac under AuthenticatedEncryption under
         // SecretKey
         INode digestSizeNode = messageDigestNode.getChildren().get(DigestSize.class);
@@ -138,58 +184,22 @@ public class PycaFernetDecryptTest extends TestBase {
         assertThat(digestSizeNode.getChildren()).isEmpty();
         assertThat(digestSizeNode.asString()).isEqualTo("256");
 
-        // BlockSize under MessageDigest under Mac under AuthenticatedEncryption under SecretKey
-        INode blockSizeNode = messageDigestNode.getChildren().get(BlockSize.class);
-        assertThat(blockSizeNode).isNotNull();
-        assertThat(blockSizeNode.getChildren()).isEmpty();
-        assertThat(blockSizeNode.asString()).isEqualTo("512");
-
-        // Oid under MessageDigest under Mac under AuthenticatedEncryption under SecretKey
-        INode oidNode = messageDigestNode.getChildren().get(Oid.class);
-        assertThat(oidNode).isNotNull();
-        assertThat(oidNode.getChildren()).isEmpty();
-        assertThat(oidNode.asString()).isEqualTo("2.16.840.1.101.3.4.2.1");
-
         // Digest under MessageDigest under Mac under AuthenticatedEncryption under SecretKey
         INode digestNode = messageDigestNode.getChildren().get(Digest.class);
         assertThat(digestNode).isNotNull();
         assertThat(digestNode.getChildren()).isEmpty();
         assertThat(digestNode.asString()).isEqualTo("DIGEST");
 
-        // BlockCipher under AuthenticatedEncryption under SecretKey
-        INode blockCipherNode = authenticatedEncryptionNode.getChildren().get(BlockCipher.class);
-        assertThat(blockCipherNode).isNotNull();
-        assertThat(blockCipherNode.getChildren()).hasSize(5);
-        assertThat(blockCipherNode.asString()).isEqualTo("AES");
+        // Encrypt under SecretKey
+        INode encryptNode = secretKeyNode.getChildren().get(Encrypt.class);
+        assertThat(encryptNode).isNotNull();
+        assertThat(encryptNode.getChildren()).isEmpty();
+        assertThat(encryptNode.asString()).isEqualTo("ENCRYPT");
 
-        // KeyLength under BlockCipher under AuthenticatedEncryption under SecretKey
-        INode keyLengthNode = blockCipherNode.getChildren().get(KeyLength.class);
-        assertThat(keyLengthNode).isNotNull();
-        assertThat(keyLengthNode.getChildren()).isEmpty();
-        assertThat(keyLengthNode.asString()).isEqualTo("128");
-
-        // Padding under BlockCipher under AuthenticatedEncryption under SecretKey
-        INode paddingNode = blockCipherNode.getChildren().get(Padding.class);
-        assertThat(paddingNode).isNotNull();
-        assertThat(paddingNode.getChildren()).isEmpty();
-        assertThat(paddingNode.asString()).isEqualTo("PKCS7");
-
-        // BlockSize under BlockCipher under AuthenticatedEncryption under SecretKey
-        INode blockSizeNode1 = blockCipherNode.getChildren().get(BlockSize.class);
-        assertThat(blockSizeNode1).isNotNull();
-        assertThat(blockSizeNode1.getChildren()).isEmpty();
-        assertThat(blockSizeNode1.asString()).isEqualTo("128");
-
-        // Mode under BlockCipher under AuthenticatedEncryption under SecretKey
-        INode modeNode = blockCipherNode.getChildren().get(Mode.class);
-        assertThat(modeNode).isNotNull();
-        assertThat(modeNode.getChildren()).isEmpty();
-        assertThat(modeNode.asString()).isEqualTo("CBC");
-
-        // Oid under BlockCipher under AuthenticatedEncryption under SecretKey
-        INode oidNode1 = blockCipherNode.getChildren().get(Oid.class);
-        assertThat(oidNode1).isNotNull();
-        assertThat(oidNode1.getChildren()).isEmpty();
-        assertThat(oidNode1.asString()).isEqualTo("2.16.840.1.101.3.4.1.2");
+        // KeyGeneration under SecretKey
+        INode keyGenerationNode = secretKeyNode.getChildren().get(KeyGeneration.class);
+        assertThat(keyGenerationNode).isNotNull();
+        assertThat(keyGenerationNode.getChildren()).isEmpty();
+        assertThat(keyGenerationNode.asString()).isEqualTo("KEYGENERATION");
     }
 }

@@ -22,7 +22,7 @@ package com.ibm.plugin.rules.detection.fernet;
 import com.ibm.engine.model.CipherAction;
 import com.ibm.engine.model.KeyAction;
 import com.ibm.engine.model.context.CipherContext;
-import com.ibm.engine.model.context.PrivateKeyContext;
+import com.ibm.engine.model.context.KeyContext;
 import com.ibm.engine.model.factory.CipherActionFactory;
 import com.ibm.engine.model.factory.KeyActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
@@ -76,7 +76,7 @@ public final class PycaFernet {
                     .forMethods("generate_key")
                     .shouldBeDetectedAs(new KeyActionFactory<>(KeyAction.Action.GENERATION))
                     .withAnyParameters()
-                    .buildForContext(new PrivateKeyContext(Map.of("algorithm", "Fernet")))
+                    .buildForContext(new KeyContext(Map.of("algorithm", "Fernet")))
                     .inBundle(() -> "Pyca")
                     .withDependingDetectionRules(encryptDecryptFernet());
 

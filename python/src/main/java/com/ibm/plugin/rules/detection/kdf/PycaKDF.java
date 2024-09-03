@@ -27,6 +27,7 @@ import com.ibm.engine.model.context.KeyDerivationFunctionContext;
 import com.ibm.engine.model.factory.AlgorithmFactory;
 import com.ibm.engine.model.factory.AlgorithmParameterFactory;
 import com.ibm.engine.model.factory.KeySizeFactory;
+import com.ibm.engine.model.factory.ModeFactory;
 import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
@@ -57,7 +58,7 @@ public final class PycaKDF {
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BYTE))
                     .asChildOfParameterWithId(0)
                     .withMethodParameter(ANY)
-                    .buildForContext(new KeyDerivationFunctionContext(Map.of("algorithm", "x963")))
+                    .buildForContext(new KeyDerivationFunctionContext(Map.of("kind", "x963")))
                     .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
@@ -68,7 +69,9 @@ public final class PycaKDF {
                     .forMethods("KBKDFCMAC")
                     .withMethodParameter("cryptography.hazmat.primitives.ciphers.algorithms.*")
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
-                    .withMethodParameter(ANY) // TODO: a Mode could be detected here
+                    .withMethodParameter(ANY)
+                    .shouldBeDetectedAs(new ModeFactory<>())
+                    .asChildOfParameterWithId(0)
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BYTE))
                     .asChildOfParameterWithId(0)
@@ -89,7 +92,9 @@ public final class PycaKDF {
                     .forMethods("KBKDFHMAC")
                     .withMethodParameter(HASH_TYPE) // Accepts only hashes (not pre-hashes)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
-                    .withMethodParameter(ANY) // TODO: a Mode could be detected here
+                    .withMethodParameter(ANY)
+                    .shouldBeDetectedAs(new ModeFactory<>())
+                    .asChildOfParameterWithId(0)
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BYTE))
                     .asChildOfParameterWithId(0)
@@ -149,7 +154,7 @@ public final class PycaKDF {
                     .buildForContext(
                             new KeyDerivationFunctionContext(
                                     Map.of(
-                                            "kind", "mac",
+                                            "kind", "hmac",
                                             "spec", "concat")))
                     .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
@@ -178,7 +183,7 @@ public final class PycaKDF {
                     .createDetectionRule()
                     .forObjectTypes(KDF_TYPE_PREFIX + "scrypt")
                     .forMethods("Scrypt")
-                    .shouldBeDetectedAs(new ValueActionFactory<>("scrypt"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>("Scrypt"))
                     .withMethodParameter(ANY)
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BYTE))
@@ -186,8 +191,7 @@ public final class PycaKDF {
                     .withMethodParameter("int")
                     .withMethodParameter("int")
                     .withMethodParameter("int")
-                    .buildForContext(
-                            new KeyDerivationFunctionContext(Map.of("algorithm", "scrypt")))
+                    .buildForContext(new KeyDerivationFunctionContext())
                     .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
@@ -205,8 +209,8 @@ public final class PycaKDF {
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(
                             new AlgorithmParameterFactory<>(AlgorithmParameter.Kind.ITERATIONS))
-                    .buildForContext(
-                            new KeyDerivationFunctionContext(Map.of("algorithm", "pbkdf2")))
+                    .asChildOfParameterWithId(0)
+                    .buildForContext(new KeyDerivationFunctionContext(Map.of("kind", "pbkdf2")))
                     .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
