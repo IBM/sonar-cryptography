@@ -100,6 +100,17 @@ public class PycaKeyDerivationContextTranslator implements IContextTranslation<T
                                             return kdf;
                                         });
                     }
+                    case "pbkdf2" -> {
+                        final PycaDigestMapper digestMapper = new PycaDigestMapper();
+                        yield digestMapper
+                                .parse(algorithm.asString(), detectionLocation)
+                                .map(
+                                        kdf -> {
+                                            final PBKDF2 pbkdf2 = new PBKDF2(kdf);
+                                            pbkdf2.put(new KeyDerivation(detectionLocation));
+                                            return pbkdf2;
+                                        });
+                    }
                     default -> Optional.empty();
                 };
             }

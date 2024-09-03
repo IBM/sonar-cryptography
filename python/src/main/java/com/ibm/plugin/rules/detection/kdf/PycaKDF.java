@@ -210,8 +210,8 @@ public final class PycaKDF {
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(
                             new AlgorithmParameterFactory<>(AlgorithmParameter.Kind.ITERATIONS))
-                    .buildForContext(
-                            new KeyDerivationFunctionContext(Map.of("algorithm", "pbkdf2")))
+                    .asChildOfParameterWithId(0)
+                    .buildForContext(new KeyDerivationFunctionContext(Map.of("kind", "pbkdf2")))
                     .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
