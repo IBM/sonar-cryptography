@@ -19,6 +19,8 @@
  */
 package com.ibm.plugin.rules.detection.fernet;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.CipherAction;
 import com.ibm.engine.model.IValue;
@@ -42,17 +44,14 @@ import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
+import java.util.List;
+import javax.annotation.Nonnull;
 import org.junit.Test;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
 import org.sonar.plugins.python.api.tree.Tree;
 import org.sonar.python.checks.utils.PythonCheckVerifier;
-
-import javax.annotation.Nonnull;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class PycaFernetDecryptTest extends TestBase {
 
@@ -67,260 +66,130 @@ public class PycaFernetDecryptTest extends TestBase {
             int findingId,
             @Nonnull DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> detectionStore,
             @Nonnull List<INode> nodes) {
-        if (findingId == 0) {
-            /*
-             * Detection Store
-             */
-            assertThat(detectionStore.getDetectionValues()).hasSize(1);
-            assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(KeyContext.class);
-            IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
-            assertThat(value0).isInstanceOf(KeyAction.class);
-            assertThat(value0.asString()).isEqualTo("GENERATION");
+        /*
+         * Detection Store
+         */
+        assertThat(detectionStore.getDetectionValues()).hasSize(1);
+        assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(KeyContext.class);
+        IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
+        assertThat(value0).isInstanceOf(KeyAction.class);
+        assertThat(value0.asString()).isEqualTo("GENERATION");
 
-            DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> store_1 =
-                    getStoreOfValueType(CipherAction.class, detectionStore.getChildren());
-            assertThat(store_1.getDetectionValues()).hasSize(1);
-            assertThat(store_1.getDetectionValueContext()).isInstanceOf(CipherContext.class);
-            IValue<Tree> value0_1 = store_1.getDetectionValues().get(0);
-            assertThat(value0_1).isInstanceOf(CipherAction.class);
-            assertThat(value0_1.asString()).isEqualTo("DECRYPT");
+        DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> store_1 =
+                getStoreOfValueType(CipherAction.class, detectionStore.getChildren());
+        assertThat(store_1.getDetectionValues()).hasSize(1);
+        assertThat(store_1.getDetectionValueContext()).isInstanceOf(CipherContext.class);
+        IValue<Tree> value0_1 = store_1.getDetectionValues().get(0);
+        assertThat(value0_1).isInstanceOf(CipherAction.class);
+        assertThat(value0_1.asString()).isEqualTo("DECRYPT");
 
-            /*
-             * Translation
-             */
-            assertThat(nodes).hasSize(1);
+        /*
+         * Translation
+         */
+        assertThat(nodes).hasSize(1);
 
-            // SecretKey
-            INode secretKeyNode = nodes.get(0);
-            assertThat(secretKeyNode.getKind()).isEqualTo(SecretKey.class);
-            assertThat(secretKeyNode.getChildren()).hasSize(3);
-            assertThat(secretKeyNode.asString()).isEqualTo("Fernet");
+        // SecretKey
+        INode secretKeyNode = nodes.get(0);
+        assertThat(secretKeyNode.getKind()).isEqualTo(SecretKey.class);
+        assertThat(secretKeyNode.getChildren()).hasSize(3);
+        assertThat(secretKeyNode.asString()).isEqualTo("Fernet");
 
-            // KeyGeneration under SecretKey
-            INode keyGenerationNode = secretKeyNode.getChildren().get(KeyGeneration.class);
-            assertThat(keyGenerationNode).isNotNull();
-            assertThat(keyGenerationNode.getChildren()).isEmpty();
-            assertThat(keyGenerationNode.asString()).isEqualTo("KEYGENERATION");
+        // KeyGeneration under SecretKey
+        INode keyGenerationNode = secretKeyNode.getChildren().get(KeyGeneration.class);
+        assertThat(keyGenerationNode).isNotNull();
+        assertThat(keyGenerationNode.getChildren()).isEmpty();
+        assertThat(keyGenerationNode.asString()).isEqualTo("KEYGENERATION");
 
-            // Decrypt under SecretKey
-            INode decryptNode = secretKeyNode.getChildren().get(Decrypt.class);
-            assertThat(decryptNode).isNotNull();
-            assertThat(decryptNode.getChildren()).isEmpty();
-            assertThat(decryptNode.asString()).isEqualTo("DECRYPT");
+        // Decrypt under SecretKey
+        INode decryptNode = secretKeyNode.getChildren().get(Decrypt.class);
+        assertThat(decryptNode).isNotNull();
+        assertThat(decryptNode.getChildren()).isEmpty();
+        assertThat(decryptNode.asString()).isEqualTo("DECRYPT");
 
-            // AuthenticatedEncryption under SecretKey
-            INode authenticatedEncryptionNode =
-                    secretKeyNode.getChildren().get(AuthenticatedEncryption.class);
-            assertThat(authenticatedEncryptionNode).isNotNull();
-            assertThat(authenticatedEncryptionNode.getChildren()).hasSize(2);
-            assertThat(authenticatedEncryptionNode.asString()).isEqualTo("Fernet");
+        // AuthenticatedEncryption under SecretKey
+        INode authenticatedEncryptionNode =
+                secretKeyNode.getChildren().get(AuthenticatedEncryption.class);
+        assertThat(authenticatedEncryptionNode).isNotNull();
+        assertThat(authenticatedEncryptionNode.getChildren()).hasSize(2);
+        assertThat(authenticatedEncryptionNode.asString()).isEqualTo("Fernet");
 
-            // Mac under AuthenticatedEncryption under SecretKey
-            INode macNode = authenticatedEncryptionNode.getChildren().get(Mac.class);
-            assertThat(macNode).isNotNull();
-            assertThat(macNode.getChildren()).hasSize(2);
-            assertThat(macNode.asString()).isEqualTo("HMAC-SHA256");
+        // Mac under AuthenticatedEncryption under SecretKey
+        INode macNode = authenticatedEncryptionNode.getChildren().get(Mac.class);
+        assertThat(macNode).isNotNull();
+        assertThat(macNode.getChildren()).hasSize(2);
+        assertThat(macNode.asString()).isEqualTo("HMAC-SHA256");
 
-            // Tag under Mac under AuthenticatedEncryption under SecretKey
-            INode tagNode = macNode.getChildren().get(Tag.class);
-            assertThat(tagNode).isNotNull();
-            assertThat(tagNode.getChildren()).isEmpty();
-            assertThat(tagNode.asString()).isEqualTo("TAG");
+        // Tag under Mac under AuthenticatedEncryption under SecretKey
+        INode tagNode = macNode.getChildren().get(Tag.class);
+        assertThat(tagNode).isNotNull();
+        assertThat(tagNode.getChildren()).isEmpty();
+        assertThat(tagNode.asString()).isEqualTo("TAG");
 
-            // MessageDigest under Mac under AuthenticatedEncryption under SecretKey
-            INode messageDigestNode = macNode.getChildren().get(MessageDigest.class);
-            assertThat(messageDigestNode).isNotNull();
-            assertThat(messageDigestNode.getChildren()).hasSize(4);
-            assertThat(messageDigestNode.asString()).isEqualTo("SHA256");
+        // MessageDigest under Mac under AuthenticatedEncryption under SecretKey
+        INode messageDigestNode = macNode.getChildren().get(MessageDigest.class);
+        assertThat(messageDigestNode).isNotNull();
+        assertThat(messageDigestNode.getChildren()).hasSize(4);
+        assertThat(messageDigestNode.asString()).isEqualTo("SHA256");
 
-            // DigestSize under MessageDigest under Mac under AuthenticatedEncryption under
-            // SecretKey
-            INode digestSizeNode = messageDigestNode.getChildren().get(DigestSize.class);
-            assertThat(digestSizeNode).isNotNull();
-            assertThat(digestSizeNode.getChildren()).isEmpty();
-            assertThat(digestSizeNode.asString()).isEqualTo("256");
+        // DigestSize under MessageDigest under Mac under AuthenticatedEncryption under
+        // SecretKey
+        INode digestSizeNode = messageDigestNode.getChildren().get(DigestSize.class);
+        assertThat(digestSizeNode).isNotNull();
+        assertThat(digestSizeNode.getChildren()).isEmpty();
+        assertThat(digestSizeNode.asString()).isEqualTo("256");
 
-            // BlockSize under MessageDigest under Mac under AuthenticatedEncryption under SecretKey
-            INode blockSizeNode = messageDigestNode.getChildren().get(BlockSize.class);
-            assertThat(blockSizeNode).isNotNull();
-            assertThat(blockSizeNode.getChildren()).isEmpty();
-            assertThat(blockSizeNode.asString()).isEqualTo("512");
+        // BlockSize under MessageDigest under Mac under AuthenticatedEncryption under SecretKey
+        INode blockSizeNode = messageDigestNode.getChildren().get(BlockSize.class);
+        assertThat(blockSizeNode).isNotNull();
+        assertThat(blockSizeNode.getChildren()).isEmpty();
+        assertThat(blockSizeNode.asString()).isEqualTo("512");
 
-            // Oid under MessageDigest under Mac under AuthenticatedEncryption under SecretKey
-            INode oidNode = messageDigestNode.getChildren().get(Oid.class);
-            assertThat(oidNode).isNotNull();
-            assertThat(oidNode.getChildren()).isEmpty();
-            assertThat(oidNode.asString()).isEqualTo("2.16.840.1.101.3.4.2.1");
+        // Oid under MessageDigest under Mac under AuthenticatedEncryption under SecretKey
+        INode oidNode = messageDigestNode.getChildren().get(Oid.class);
+        assertThat(oidNode).isNotNull();
+        assertThat(oidNode.getChildren()).isEmpty();
+        assertThat(oidNode.asString()).isEqualTo("2.16.840.1.101.3.4.2.1");
 
-            // Digest under MessageDigest under Mac under AuthenticatedEncryption under SecretKey
-            INode digestNode = messageDigestNode.getChildren().get(Digest.class);
-            assertThat(digestNode).isNotNull();
-            assertThat(digestNode.getChildren()).isEmpty();
-            assertThat(digestNode.asString()).isEqualTo("DIGEST");
+        // Digest under MessageDigest under Mac under AuthenticatedEncryption under SecretKey
+        INode digestNode = messageDigestNode.getChildren().get(Digest.class);
+        assertThat(digestNode).isNotNull();
+        assertThat(digestNode.getChildren()).isEmpty();
+        assertThat(digestNode.asString()).isEqualTo("DIGEST");
 
-            // BlockCipher under AuthenticatedEncryption under SecretKey
-            INode blockCipherNode =
-                    authenticatedEncryptionNode.getChildren().get(BlockCipher.class);
-            assertThat(blockCipherNode).isNotNull();
-            assertThat(blockCipherNode.getChildren()).hasSize(5);
-            assertThat(blockCipherNode.asString()).isEqualTo("AES");
+        // BlockCipher under AuthenticatedEncryption under SecretKey
+        INode blockCipherNode = authenticatedEncryptionNode.getChildren().get(BlockCipher.class);
+        assertThat(blockCipherNode).isNotNull();
+        assertThat(blockCipherNode.getChildren()).hasSize(5);
+        assertThat(blockCipherNode.asString()).isEqualTo("AES");
 
-            // KeyLength under BlockCipher under AuthenticatedEncryption under SecretKey
-            INode keyLengthNode = blockCipherNode.getChildren().get(KeyLength.class);
-            assertThat(keyLengthNode).isNotNull();
-            assertThat(keyLengthNode.getChildren()).isEmpty();
-            assertThat(keyLengthNode.asString()).isEqualTo("128");
+        // KeyLength under BlockCipher under AuthenticatedEncryption under SecretKey
+        INode keyLengthNode = blockCipherNode.getChildren().get(KeyLength.class);
+        assertThat(keyLengthNode).isNotNull();
+        assertThat(keyLengthNode.getChildren()).isEmpty();
+        assertThat(keyLengthNode.asString()).isEqualTo("128");
 
-            // Padding under BlockCipher under AuthenticatedEncryption under SecretKey
-            INode paddingNode = blockCipherNode.getChildren().get(Padding.class);
-            assertThat(paddingNode).isNotNull();
-            assertThat(paddingNode.getChildren()).isEmpty();
-            assertThat(paddingNode.asString()).isEqualTo("PKCS7");
+        // Padding under BlockCipher under AuthenticatedEncryption under SecretKey
+        INode paddingNode = blockCipherNode.getChildren().get(Padding.class);
+        assertThat(paddingNode).isNotNull();
+        assertThat(paddingNode.getChildren()).isEmpty();
+        assertThat(paddingNode.asString()).isEqualTo("PKCS7");
 
-            // BlockSize under BlockCipher under AuthenticatedEncryption under SecretKey
-            INode blockSizeNode1 = blockCipherNode.getChildren().get(BlockSize.class);
-            assertThat(blockSizeNode1).isNotNull();
-            assertThat(blockSizeNode1.getChildren()).isEmpty();
-            assertThat(blockSizeNode1.asString()).isEqualTo("128");
+        // BlockSize under BlockCipher under AuthenticatedEncryption under SecretKey
+        INode blockSizeNode1 = blockCipherNode.getChildren().get(BlockSize.class);
+        assertThat(blockSizeNode1).isNotNull();
+        assertThat(blockSizeNode1.getChildren()).isEmpty();
+        assertThat(blockSizeNode1.asString()).isEqualTo("128");
 
-            // Mode under BlockCipher under AuthenticatedEncryption under SecretKey
-            INode modeNode = blockCipherNode.getChildren().get(Mode.class);
-            assertThat(modeNode).isNotNull();
-            assertThat(modeNode.getChildren()).isEmpty();
-            assertThat(modeNode.asString()).isEqualTo("CBC");
+        // Mode under BlockCipher under AuthenticatedEncryption under SecretKey
+        INode modeNode = blockCipherNode.getChildren().get(Mode.class);
+        assertThat(modeNode).isNotNull();
+        assertThat(modeNode.getChildren()).isEmpty();
+        assertThat(modeNode.asString()).isEqualTo("CBC");
 
-            // Oid under BlockCipher under AuthenticatedEncryption under SecretKey
-            INode oidNode1 = blockCipherNode.getChildren().get(Oid.class);
-            assertThat(oidNode1).isNotNull();
-            assertThat(oidNode1.getChildren()).isEmpty();
-            assertThat(oidNode1.asString()).isEqualTo("2.16.840.1.101.3.4.1.2");
-        } else if (findingId == 1) {
-            /*
-             * Detection Store
-             */
-            assertThat(detectionStore.getDetectionValues()).hasSize(1);
-            assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(KeyContext.class);
-            IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
-            assertThat(value0).isInstanceOf(KeyAction.class);
-            assertThat(value0.asString()).isEqualTo("GENERATION");
-
-            DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> store_1 =
-                    getStoreOfValueType(CipherAction.class, detectionStore.getChildren());
-            assertThat(store_1.getDetectionValues()).hasSize(1);
-            assertThat(store_1.getDetectionValueContext()).isInstanceOf(CipherContext.class);
-            IValue<Tree> value0_1 = store_1.getDetectionValues().get(0);
-            assertThat(value0_1).isInstanceOf(CipherAction.class);
-            assertThat(value0_1.asString()).isEqualTo("DECRYPT");
-
-            /*
-             * Translation
-             */
-            assertThat(nodes).hasSize(1);
-
-            // SecretKey
-            INode secretKeyNode = nodes.get(0);
-            assertThat(secretKeyNode.getKind()).isEqualTo(SecretKey.class);
-            assertThat(secretKeyNode.getChildren()).hasSize(3);
-            assertThat(secretKeyNode.asString()).isEqualTo("Fernet");
-
-            // KeyGeneration under SecretKey
-            INode keyGenerationNode = secretKeyNode.getChildren().get(KeyGeneration.class);
-            assertThat(keyGenerationNode).isNotNull();
-            assertThat(keyGenerationNode.getChildren()).isEmpty();
-            assertThat(keyGenerationNode.asString()).isEqualTo("KEYGENERATION");
-
-            // Decrypt under SecretKey
-            INode decryptNode = secretKeyNode.getChildren().get(Decrypt.class);
-            assertThat(decryptNode).isNotNull();
-            assertThat(decryptNode.getChildren()).isEmpty();
-            assertThat(decryptNode.asString()).isEqualTo("DECRYPT");
-
-            // AuthenticatedEncryption under SecretKey
-            INode authenticatedEncryptionNode =
-                    secretKeyNode.getChildren().get(AuthenticatedEncryption.class);
-            assertThat(authenticatedEncryptionNode).isNotNull();
-            assertThat(authenticatedEncryptionNode.getChildren()).hasSize(2);
-            assertThat(authenticatedEncryptionNode.asString()).isEqualTo("Fernet");
-
-            // Mac under AuthenticatedEncryption under SecretKey
-            INode macNode = authenticatedEncryptionNode.getChildren().get(Mac.class);
-            assertThat(macNode).isNotNull();
-            assertThat(macNode.getChildren()).hasSize(2);
-            assertThat(macNode.asString()).isEqualTo("HMAC-SHA256");
-
-            // Tag under Mac under AuthenticatedEncryption under SecretKey
-            INode tagNode = macNode.getChildren().get(Tag.class);
-            assertThat(tagNode).isNotNull();
-            assertThat(tagNode.getChildren()).isEmpty();
-            assertThat(tagNode.asString()).isEqualTo("TAG");
-
-            // MessageDigest under Mac under AuthenticatedEncryption under SecretKey
-            INode messageDigestNode = macNode.getChildren().get(MessageDigest.class);
-            assertThat(messageDigestNode).isNotNull();
-            assertThat(messageDigestNode.getChildren()).hasSize(4);
-            assertThat(messageDigestNode.asString()).isEqualTo("SHA256");
-
-            // DigestSize under MessageDigest under Mac under AuthenticatedEncryption under
-            // SecretKey
-            INode digestSizeNode = messageDigestNode.getChildren().get(DigestSize.class);
-            assertThat(digestSizeNode).isNotNull();
-            assertThat(digestSizeNode.getChildren()).isEmpty();
-            assertThat(digestSizeNode.asString()).isEqualTo("256");
-
-            // BlockSize under MessageDigest under Mac under AuthenticatedEncryption under SecretKey
-            INode blockSizeNode = messageDigestNode.getChildren().get(BlockSize.class);
-            assertThat(blockSizeNode).isNotNull();
-            assertThat(blockSizeNode.getChildren()).isEmpty();
-            assertThat(blockSizeNode.asString()).isEqualTo("512");
-
-            // Oid under MessageDigest under Mac under AuthenticatedEncryption under SecretKey
-            INode oidNode = messageDigestNode.getChildren().get(Oid.class);
-            assertThat(oidNode).isNotNull();
-            assertThat(oidNode.getChildren()).isEmpty();
-            assertThat(oidNode.asString()).isEqualTo("2.16.840.1.101.3.4.2.1");
-
-            // Digest under MessageDigest under Mac under AuthenticatedEncryption under SecretKey
-            INode digestNode = messageDigestNode.getChildren().get(Digest.class);
-            assertThat(digestNode).isNotNull();
-            assertThat(digestNode.getChildren()).isEmpty();
-            assertThat(digestNode.asString()).isEqualTo("DIGEST");
-
-            // BlockCipher under AuthenticatedEncryption under SecretKey
-            INode blockCipherNode =
-                    authenticatedEncryptionNode.getChildren().get(BlockCipher.class);
-            assertThat(blockCipherNode).isNotNull();
-            assertThat(blockCipherNode.getChildren()).hasSize(5);
-            assertThat(blockCipherNode.asString()).isEqualTo("AES");
-
-            // KeyLength under BlockCipher under AuthenticatedEncryption under SecretKey
-            INode keyLengthNode = blockCipherNode.getChildren().get(KeyLength.class);
-            assertThat(keyLengthNode).isNotNull();
-            assertThat(keyLengthNode.getChildren()).isEmpty();
-            assertThat(keyLengthNode.asString()).isEqualTo("128");
-
-            // Padding under BlockCipher under AuthenticatedEncryption under SecretKey
-            INode paddingNode = blockCipherNode.getChildren().get(Padding.class);
-            assertThat(paddingNode).isNotNull();
-            assertThat(paddingNode.getChildren()).isEmpty();
-            assertThat(paddingNode.asString()).isEqualTo("PKCS7");
-
-            // BlockSize under BlockCipher under AuthenticatedEncryption under SecretKey
-            INode blockSizeNode1 = blockCipherNode.getChildren().get(BlockSize.class);
-            assertThat(blockSizeNode1).isNotNull();
-            assertThat(blockSizeNode1.getChildren()).isEmpty();
-            assertThat(blockSizeNode1.asString()).isEqualTo("128");
-
-            // Mode under BlockCipher under AuthenticatedEncryption under SecretKey
-            INode modeNode = blockCipherNode.getChildren().get(Mode.class);
-            assertThat(modeNode).isNotNull();
-            assertThat(modeNode.getChildren()).isEmpty();
-            assertThat(modeNode.asString()).isEqualTo("CBC");
-
-            // Oid under BlockCipher under AuthenticatedEncryption under SecretKey
-            INode oidNode1 = blockCipherNode.getChildren().get(Oid.class);
-            assertThat(oidNode1).isNotNull();
-            assertThat(oidNode1.getChildren()).isEmpty();
-            assertThat(oidNode1.asString()).isEqualTo("2.16.840.1.101.3.4.1.2");
-        }
+        // Oid under BlockCipher under AuthenticatedEncryption under SecretKey
+        INode oidNode1 = blockCipherNode.getChildren().get(Oid.class);
+        assertThat(oidNode1).isNotNull();
+        assertThat(oidNode1.getChildren()).isEmpty();
+        assertThat(oidNode1.asString()).isEqualTo("2.16.840.1.101.3.4.1.2");
     }
 }
