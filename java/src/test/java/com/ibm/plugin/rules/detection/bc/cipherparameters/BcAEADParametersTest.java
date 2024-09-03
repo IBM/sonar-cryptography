@@ -106,7 +106,7 @@ class BcAEADParametersTest extends TestBase {
         // BlockCipher
         INode blockCipherNode = nodes.get(0);
         assertThat(blockCipherNode.getKind()).isEqualTo(BlockCipher.class);
-        assertThat(blockCipherNode.getChildren()).hasSize(4);
+        assertThat(blockCipherNode.getChildren()).hasSize(5);
         assertThat(blockCipherNode.asString()).isEqualTo("AES");
 
         // Encrypt under BlockCipher
