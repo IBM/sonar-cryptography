@@ -24,12 +24,9 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.MacSize;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.IDetectionContext;
-import com.ibm.engine.model.context.MacContext;
-import com.ibm.mapper.mapper.bc.BcDigestMapper;
 import com.ibm.mapper.mapper.bc.BcMacMapper;
 import com.ibm.mapper.mapper.jca.JcaMacMapper;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
@@ -66,16 +63,9 @@ public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslato
             @NotNull IValue<Tree> value,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
-        final MacContext.Kind kind = ((MacContext) detectionContext).kind();
         if (value instanceof ValueAction<Tree> valueAction) {
-            switch (kind) {
-                case HMAC:
-                    BcDigestMapper bcDigestsMapper = new BcDigestMapper(Mac.class);
-                    return bcDigestsMapper.parse(value.asString(), detectionLocation).map(f -> f);
-                default:
-                    BcMacMapper bcMacMapper = new BcMacMapper();
-                    return bcMacMapper.parse(value.asString(), detectionLocation).map(f -> f);
-            }
+            BcMacMapper bcMacMapper = new BcMacMapper();
+            return bcMacMapper.parse(valueAction.asString(), detectionLocation).map(f -> f);
         } else if (value instanceof MacSize<Tree> macSize) {
             TagLength tagLength = new TagLength(macSize.getValue(), detectionLocation);
             return Optional.of(tagLength);
