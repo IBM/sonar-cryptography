@@ -19,11 +19,14 @@
  */
 package com.ibm.plugin.translation.reorganizer;
 
+import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.mapper.reorganizer.rules.KeyAgreementReorganizer;
+import com.ibm.mapper.reorganizer.rules.KeyDerivationReorganizer;
 import com.ibm.mapper.reorganizer.rules.PaddingReorganizer;
 import com.ibm.mapper.reorganizer.rules.SignatureReorganizer;
 import java.util.List;
@@ -46,6 +49,8 @@ public final class PythonReorganizerRules {
                         SignatureReorganizer.MERGE_SIGNATURE_WITH_PKE_UNDER_PRIVATE_KEY,
                         SignatureReorganizer.MOVE_PSS_FROM_UNDER_SIGN_FUNCTION_TO_UNDER_KEY,
                         SignatureReorganizer.MAKE_RSA_TO_SIGNATURE,
+                        KeyDerivationReorganizer.moveModeFromParentToNode(BlockCipher.class),
+                        KeyDerivationReorganizer.moveModeFromParentToNode(MessageDigest.class),
                         KeyAgreementReorganizer.MERGE_KEYAGREEMENT_WITH_PKE_UNDER_PRIVATE_KEY,
                         PaddingReorganizer.MOVE_OAEP_UNDER_ALGORITHM)
                 .toList();
