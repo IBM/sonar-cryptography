@@ -20,12 +20,14 @@
 package com.ibm.plugin.translation.translator.contexts;
 
 import com.ibm.engine.model.IValue;
-import com.ibm.engine.model.ValueAction;
+import com.ibm.engine.model.context.DetectionContext;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.rule.IBundle;
 import com.ibm.mapper.IContextTranslation;
-import com.ibm.mapper.mapper.pyca.PycaMacMapper;
+import com.ibm.mapper.mapper.pyca.PycaCipherMapper;
+import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.algorithms.CMAC;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
@@ -40,10 +42,29 @@ public final class PycaMacContextTranslator implements IContextTranslation<Tree>
             @NotNull IValue<Tree> value,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
-        final PycaMacMapper pycaMacMapper = new PycaMacMapper();
-        if (value instanceof com.ibm.engine.model.Algorithm<Tree>
-                || value instanceof ValueAction<Tree>) {
-            return pycaMacMapper.parse(value.asString(), detectionLocation).map(i -> i);
+
+        if (value instanceof com.ibm.engine.model.Algorithm<Tree> algorithm
+                && detectionContext instanceof DetectionContext context) {
+            // hash algorithm
+            Optional<String> possibleKind = context.get("kind");
+            if (possibleKind.isPresent()) {
+                final String kind = possibleKind.get();
+                return switch (kind) {
+                    case "cmac" -> {
+                        final PycaCipherMapper cipherMapper = new PycaCipherMapper();
+                        yield cipherMapper
+                                .parse(algorithm.asString(), detectionLocation)
+                                .map(
+                                        c -> {
+                                            if (c instanceof Cipher cipher) {
+                                                return new CMAC(cipher);
+                                            }
+                                            return null;
+                                        });
+                    }
+                    default -> Optional.empty();
+                };
+            }
         }
         return Optional.empty();
     }
