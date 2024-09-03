@@ -17,33 +17,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms;
+package com.ibm.engine.model.factory;
 
-import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.BlockCipher;
-import com.ibm.mapper.model.Cipher;
-import com.ibm.mapper.model.Mac;
-import com.ibm.mapper.utils.DetectionLocation;
-import javax.annotation.Nonnull;
+import com.ibm.engine.detection.ResolvedValue;
+import com.ibm.engine.model.IValue;
+import com.ibm.engine.model.Mode;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
-public final class CMAC extends Algorithm implements Mac {
-    // https://en.wikipedia.org/wiki/One-key_MAC
-    private static final String NAME = "CMAC";
-
-    public CMAC(@NotNull DetectionLocation detectionLocation) {
-        super(NAME, Mac.class, detectionLocation);
-    }
-
-    public CMAC(@Nonnull Cipher cipher) {
-        super(NAME, Mac.class, cipher.getDetectionContext());
-        this.put(cipher);
-    }
+public class ModeFactory<T> implements IValueFactory<T> {
 
     @Override
-    public @NotNull String getName() {
-        return this.hasChildOfType(BlockCipher.class)
-                .map(node -> node.asString() + "-" + this.name)
-                .orElse(this.name);
+    public Optional<IValue<T>> apply(@NotNull ResolvedValue<Object, T> objectTResolvedValue) {
+        if (objectTResolvedValue.value() instanceof String s) {
+            return Optional.of(new Mode<>(s, objectTResolvedValue.tree()));
+        }
+        return Optional.empty();
     }
 }

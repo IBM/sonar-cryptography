@@ -5,7 +5,7 @@ from cryptography.hazmat.primitives.kdf.hkdf import HKDF
 salt = os.urandom(16)
 info = b"hkdf-example"
 
-hkdf = HKDF( # Noncompliant {{KDF}} {{SHA256}} {{32}}
+hkdf = HKDF( # Noncompliant {{SHA256}}
     algorithm=hashes.SHA256(),
     length=32,
     salt=salt,

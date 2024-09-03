@@ -6,7 +6,7 @@ from cryptography.hazmat.primitives.kdf.kbkdf import (
 label = b"KBKDF CMAC Label"
 context = b"KBKDF CMAC Context"
 
-kdf = KBKDFCMAC( # Noncompliant {{KDF}} {{AES}} {{32}}
+kdf = KBKDFCMAC( # Noncompliant {{AES}}
     algorithm=algorithms.AES,
     mode=Mode.CounterMode,
     length=32,

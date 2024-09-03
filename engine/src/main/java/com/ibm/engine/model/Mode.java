@@ -17,33 +17,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms;
+package com.ibm.engine.model;
 
-import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.BlockCipher;
-import com.ibm.mapper.model.Cipher;
-import com.ibm.mapper.model.Mac;
-import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class CMAC extends Algorithm implements Mac {
-    // https://en.wikipedia.org/wiki/One-key_MAC
-    private static final String NAME = "CMAC";
+public class Mode<T> extends AbstractValue<T> {
 
-    public CMAC(@NotNull DetectionLocation detectionLocation) {
-        super(NAME, Mac.class, detectionLocation);
+    @Nonnull private final String value;
+    @Nonnull private final T location;
+
+    public Mode(@Nonnull String value, @Nonnull T location) {
+        this.location = location;
+        this.value = value;
     }
 
-    public CMAC(@Nonnull Cipher cipher) {
-        super(NAME, Mac.class, cipher.getDetectionContext());
-        this.put(cipher);
+    @Nonnull
+    public String getValue() {
+        return value;
     }
 
     @Override
-    public @NotNull String getName() {
-        return this.hasChildOfType(BlockCipher.class)
-                .map(node -> node.asString() + "-" + this.name)
-                .orElse(this.name);
+    public @NotNull T getLocation() {
+        return this.location;
+    }
+
+    @Override
+    public @NotNull String asString() {
+        return this.value;
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Mode<?> mode)) return false;
+
+        return value.equals(mode.value) && location.equals(mode.location);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = value.hashCode();
+        result = 31 * result + location.hashCode();
+        return result;
     }
 }

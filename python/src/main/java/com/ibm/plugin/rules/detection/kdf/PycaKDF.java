@@ -27,6 +27,7 @@ import com.ibm.engine.model.context.KeyDerivationFunctionContext;
 import com.ibm.engine.model.factory.AlgorithmFactory;
 import com.ibm.engine.model.factory.AlgorithmParameterFactory;
 import com.ibm.engine.model.factory.KeySizeFactory;
+import com.ibm.engine.model.factory.ModeFactory;
 import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
@@ -68,7 +69,9 @@ public final class PycaKDF {
                     .forMethods("KBKDFCMAC")
                     .withMethodParameter("cryptography.hazmat.primitives.ciphers.algorithms.*")
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
-                    .withMethodParameter(ANY) // TODO: a Mode could be detected here
+                    .withMethodParameter(ANY)
+                    .shouldBeDetectedAs(new ModeFactory<>())
+                    .asChildOfParameterWithId(0)
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BYTE))
                     .asChildOfParameterWithId(0)
@@ -89,7 +92,9 @@ public final class PycaKDF {
                     .forMethods("KBKDFHMAC")
                     .withMethodParameter(HASH_TYPE) // Accepts only hashes (not pre-hashes)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
-                    .withMethodParameter(ANY) // TODO: a Mode could be detected here
+                    .withMethodParameter(ANY)
+                    .shouldBeDetectedAs(new ModeFactory<>())
+                    .asChildOfParameterWithId(0)
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BYTE))
                     .asChildOfParameterWithId(0)
