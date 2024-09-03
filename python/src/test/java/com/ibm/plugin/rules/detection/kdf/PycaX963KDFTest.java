@@ -51,7 +51,7 @@ public class PycaX963KDFTest extends TestBase {
     @Test
     public void test() {
         PythonCheckVerifier.verify(
-                "src/test/files/rules/detection/kdf/CryptographyX963KDFTestFile.py", this);
+                "src/test/files/rules/detection/kdf/PycaX963KDFTestFile.py", this);
     }
 
     @Override
