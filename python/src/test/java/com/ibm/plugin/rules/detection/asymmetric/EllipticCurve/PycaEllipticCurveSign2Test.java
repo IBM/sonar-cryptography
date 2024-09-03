@@ -160,8 +160,8 @@ public class PycaEllipticCurveSign2Test extends TestBase {
             INode messageDigestNode =
                     signatureNode.getChildren().get(ExtendableOutputFunction.class);
             assertThat(messageDigestNode).isNotNull();
-            assertThat(messageDigestNode.getChildren()).hasSize(1);
-            assertThat(messageDigestNode.asString()).isEqualTo("SHAKE");
+            assertThat(messageDigestNode.getChildren()).hasSize(2);
+            assertThat(messageDigestNode.asString()).isEqualTo("SHAKE256");
 
             // Digest under MessageDigest under Signature under PrivateKey
             INode digestNode = messageDigestNode.getChildren().get(Digest.class);
