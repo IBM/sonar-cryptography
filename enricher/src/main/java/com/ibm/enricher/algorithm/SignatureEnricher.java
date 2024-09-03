@@ -38,26 +38,21 @@ import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
 public class SignatureEnricher implements IEnricher {
+
     @Override
     public @NotNull INode enrich(@NotNull INode node) {
-        if (node instanceof Signature signature && signature.is(Signature.class)) {
-            return enrich(signature);
+        if (node.is(Signature.class)) {
+            if (node instanceof DSA dsa) {
+                return enrichDSA(dsa);
+            }
+            if (node instanceof ECDSA ecdsa) {
+                return enrichECDSA(ecdsa);
+            }
+            if (node instanceof RSA rsa) {
+                return enrichRSA(rsa);
+            }
         }
         return node;
-    }
-
-    @Nonnull
-    private Signature enrich(@NotNull Signature signature) {
-        if (signature instanceof DSA dsa) {
-            return enrichDSA(dsa);
-        }
-        if (signature instanceof ECDSA ecdsa) {
-            return enrichECDSA(ecdsa);
-        }
-        if (signature instanceof RSA rsa) {
-            return enrichRSA(rsa);
-        }
-        return signature;
     }
 
     @SuppressWarnings("java:S3776")
