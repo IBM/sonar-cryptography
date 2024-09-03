@@ -68,7 +68,6 @@ public class BcMacMapper implements IMapper {
                     Optional.of(Utils.unknownWithMode(new CBC(detectionLocation), Mac.class));
             case "CFBBlockCipherMac" ->
                     Optional.of(Utils.unknownWithMode(new CFB(detectionLocation), Mac.class));
-            /* TODO: Shouldn't CMAC be a mode of the BlockCipher it takes as parameter? */
             case "CMac", "CMacWithIV" -> Optional.of(new CMAC(detectionLocation));
             case "DSTU7564Mac" -> Optional.of(new Kupyna(Mac.class, new Kupyna(detectionLocation)));
             case "DSTU7624Mac" -> {
