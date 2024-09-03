@@ -25,6 +25,7 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.algorithms.CMAC;
+import com.ibm.mapper.model.algorithms.HMAC;
 import com.ibm.mapper.model.algorithms.KMAC;
 import com.ibm.mapper.model.algorithms.Kalyna;
 import com.ibm.mapper.model.algorithms.Kupyna;
@@ -60,6 +61,8 @@ public class BcMacMapper implements IMapper {
     private Optional<? extends INode> map(
             @Nonnull String macString, @Nonnull DetectionLocation detectionLocation) {
         return switch (macString) {
+            case "HMac" -> Optional.of(new HMAC(detectionLocation));
+            case "OldHMac" -> Optional.of(new HMAC(detectionLocation));
             case "Blake3Mac" -> Optional.of(new BLAKE3(Mac.class, new BLAKE3(detectionLocation)));
             case "BlockCipherMac", "CBCBlockCipherMac", "ISO9797Alg3Mac" ->
                     Optional.of(Utils.unknownWithMode(new CBC(detectionLocation), Mac.class));
