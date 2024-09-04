@@ -5,7 +5,7 @@ from cryptography.hazmat.primitives.padding import PKCS7
 key = os.urandom(32)
 iv = os.urandom(16)
 # Create a cipher object
-cipher = Cipher(algorithms.Camellia(key), modes.OFB(iv)) # Noncompliant {{Camellia}} {{OFB}}
+cipher = Cipher(algorithms.Camellia(key), modes.OFB(iv)) # Noncompliant {{Camellia}}
 
 # Encrypt
 encryptor = cipher.encryptor()

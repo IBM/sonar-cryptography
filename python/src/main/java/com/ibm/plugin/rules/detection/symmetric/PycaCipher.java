@@ -23,6 +23,7 @@ import com.ibm.engine.model.CipherAction;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.factory.AlgorithmFactory;
 import com.ibm.engine.model.factory.CipherActionFactory;
+import com.ibm.engine.model.factory.ModeFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import com.ibm.plugin.rules.detection.padding.PycaPadding;
@@ -95,10 +96,9 @@ public final class PycaCipher {
                     .withMethodParameter("cryptography.hazmat.primitives.ciphers.algorithms.*")
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .addDependingDetectionRules(followingNewCipherRules())
-                    // TODO: If it is written as `algorithms.AES(os.urandom(32))`, we can obtain the
-                    //  key size
                     .withMethodParameter("cryptography.hazmat.primitives.ciphers.modes.*")
-                    .shouldBeDetectedAs(new AlgorithmFactory<>())
+                    .shouldBeDetectedAs(new ModeFactory<>())
+                    .asChildOfParameterWithId(0)
                     .buildForContext(new CipherContext())
                     .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();

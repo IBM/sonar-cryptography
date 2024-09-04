@@ -24,8 +24,8 @@ import com.ibm.mapper.model.INode;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
@@ -39,7 +39,7 @@ public class ResolveImportedStructTest extends TestBase {
     // want.
     // To use several rules, create a `rules()` method to call in the constructor.
 
-    protected ResolveImportedStructTest() {
+    public ResolveImportedStructTest() {
         super(ResolveImportedStruct.rules());
     }
 
@@ -51,11 +51,9 @@ public class ResolveImportedStructTest extends TestBase {
         // nothing
     }
 
-    @Disabled("feature not supported/implemented")
+    @Ignore("feature not supported/implemented")
     @Test
-    void test() {
-        // TODO: Resolution between multiple files does not work for now
-
+    public void test() {
         PythonCheckVerifier.verify(
                 List.of(
                         "src/test/files/rules/resolve/ResolveImportedStructTestFile.py",

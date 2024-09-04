@@ -22,6 +22,7 @@ package com.ibm.plugin.translation.translator.contexts;
 import com.ibm.engine.model.CipherAction;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.KeySize;
+import com.ibm.engine.model.Mode;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.DetectionContext;
 import com.ibm.engine.model.context.IDetectionContext;
@@ -32,14 +33,21 @@ import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.algorithms.AES;
+import com.ibm.mapper.model.algorithms.AESWrap;
 import com.ibm.mapper.model.functionality.Decrypt;
 import com.ibm.mapper.model.functionality.Encapsulate;
 import com.ibm.mapper.model.functionality.Encrypt;
+import com.ibm.mapper.model.mode.CBC;
 import com.ibm.mapper.model.mode.CCM;
+import com.ibm.mapper.model.mode.CFB;
+import com.ibm.mapper.model.mode.CTR;
+import com.ibm.mapper.model.mode.ECB;
 import com.ibm.mapper.model.mode.GCM;
 import com.ibm.mapper.model.mode.GCMSIV;
 import com.ibm.mapper.model.mode.OCB;
+import com.ibm.mapper.model.mode.OFB;
 import com.ibm.mapper.model.mode.SIV;
+import com.ibm.mapper.model.mode.XTS;
 import com.ibm.mapper.model.padding.ANSIX923;
 import com.ibm.mapper.model.padding.OAEP;
 import com.ibm.mapper.model.padding.PKCS7;
@@ -86,11 +94,37 @@ public final class PycaCipherContextTranslator implements IContextTranslation<Tr
                 case "OAEP" -> Optional.of(new OAEP(detectionLocation));
                 default -> Optional.empty();
             };
-        } else if (value instanceof CipherAction<Tree> cipherAction) {
+        } else if (value instanceof Mode<Tree> mode) {
+            return switch (mode.asString().toUpperCase().trim()) {
+                case "CBC" -> Optional.of(new CBC(detectionLocation));
+                case "CTR" -> Optional.of(new CTR(detectionLocation));
+                case "OFB" -> Optional.of(new OFB(detectionLocation));
+                case "CFB" -> Optional.of(new CFB(detectionLocation));
+                case "CFB8" -> Optional.of(new CFB(8, detectionLocation));
+                case "GCM" -> Optional.of(new GCM(detectionLocation));
+                case "XTS" -> Optional.of(new XTS(detectionLocation));
+                case "ECB" -> Optional.of(new ECB(detectionLocation));
+                default -> Optional.empty();
+            };
+        } else if (value instanceof CipherAction<Tree> cipherAction
+                && detectionContext instanceof DetectionContext context) {
             return switch (cipherAction.getAction()) {
                 case DECRYPT -> Optional.of(new Decrypt(detectionLocation));
                 case ENCRYPT -> Optional.of(new Encrypt(detectionLocation));
-                case WRAP -> Optional.of(new Encapsulate(detectionLocation));
+                case WRAP ->
+                        context.get("algorithm")
+                                .map(
+                                        str ->
+                                                switch (str.toUpperCase().trim()) {
+                                                    case "AES" ->
+                                                            new AESWrap(128, detectionLocation);
+                                                    default -> null;
+                                                })
+                                .map(
+                                        algo -> {
+                                            algo.put(new Encapsulate(detectionLocation));
+                                            return algo;
+                                        });
                 default -> Optional.empty();
             };
         } else if (value instanceof com.ibm.engine.model.BlockSize<Tree> blockSize) {

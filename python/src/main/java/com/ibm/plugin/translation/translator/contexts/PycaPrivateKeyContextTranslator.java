@@ -124,7 +124,6 @@ public final class PycaPrivateKeyContextTranslator implements IContextTranslatio
                                 return privateKey;
                             });
         }
-
         return Optional.empty();
     }
 

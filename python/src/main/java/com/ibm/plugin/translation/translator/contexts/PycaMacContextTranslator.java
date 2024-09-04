@@ -20,14 +20,18 @@
 package com.ibm.plugin.translation.translator.contexts;
 
 import com.ibm.engine.model.IValue;
+import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.DetectionContext;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.rule.IBundle;
 import com.ibm.mapper.IContextTranslation;
 import com.ibm.mapper.mapper.pyca.PycaCipherMapper;
+import com.ibm.mapper.mapper.pyca.PycaDigestMapper;
 import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.algorithms.CMAC;
+import com.ibm.mapper.model.algorithms.HMAC;
+import com.ibm.mapper.model.algorithms.Poly1305;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
@@ -62,8 +66,18 @@ public final class PycaMacContextTranslator implements IContextTranslation<Tree>
                                             return null;
                                         });
                     }
+                    case "hmac" -> {
+                        final PycaDigestMapper digestMapper = new PycaDigestMapper();
+                        yield digestMapper
+                                .parse(algorithm.asString(), detectionLocation)
+                                .map(HMAC::new);
+                    }
                     default -> Optional.empty();
                 };
+            }
+        } else if (value instanceof ValueAction<Tree> action) {
+            if (action.asString().equalsIgnoreCase("poly1305")) {
+                return Optional.of(new HMAC(new Poly1305(detectionLocation)));
             }
         }
         return Optional.empty();

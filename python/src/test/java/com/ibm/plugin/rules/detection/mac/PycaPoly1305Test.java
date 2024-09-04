@@ -22,26 +22,30 @@ package com.ibm.plugin.rules.detection.mac;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.engine.detection.DetectionStore;
-import com.ibm.engine.model.CipherAction;
 import com.ibm.engine.model.IValue;
+import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.MacContext;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mac;
+import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.functionality.Digest;
+import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
 import org.sonar.plugins.python.api.tree.Tree;
 import org.sonar.python.checks.utils.PythonCheckVerifier;
 
-public class CryptographyPoly1305Test extends TestBase {
+public class PycaPoly1305Test extends TestBase {
+
     @Test
-    void test() {
+    public void test() {
         PythonCheckVerifier.verify(
-                "src/test/files/rules/detection/mac/CryptographyPoly1305TestFile.py", this);
+                "src/test/files/rules/detection/mac/PycaPoly1305TestFile.py", this);
     }
 
     @Override
@@ -54,19 +58,37 @@ public class CryptographyPoly1305Test extends TestBase {
          */
         assertThat(detectionStore.getDetectionValues()).hasSize(1);
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(MacContext.class);
-
-        // First entry
-        IValue<Tree> value1 = detectionStore.getDetectionValues().get(0);
-        assertThat(value1).isInstanceOf(CipherAction.class);
-        assertThat(value1.asString()).isEqualTo("MAC");
+        IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
+        assertThat(value0).isInstanceOf(ValueAction.class);
+        assertThat(value0.asString()).isEqualTo("Poly1305");
 
         /*
          * Translation
          */
         assertThat(nodes).hasSize(1);
 
+        // Mac
         INode macNode = nodes.get(0);
-        assertThat(macNode).isInstanceOf(Mac.class);
-        assertThat(macNode.asString()).isEqualTo("Poly1305");
+        assertThat(macNode.getKind()).isEqualTo(Mac.class);
+        assertThat(macNode.getChildren()).hasSize(2);
+        assertThat(macNode.asString()).isEqualTo("HMAC-Poly1305");
+
+        // Tag under Mac
+        INode tagNode = macNode.getChildren().get(Tag.class);
+        assertThat(tagNode).isNotNull();
+        assertThat(tagNode.getChildren()).isEmpty();
+        assertThat(tagNode.asString()).isEqualTo("TAG");
+
+        // MessageDigest under Mac
+        INode messageDigestNode = macNode.getChildren().get(MessageDigest.class);
+        assertThat(messageDigestNode).isNotNull();
+        assertThat(messageDigestNode.getChildren()).hasSize(1);
+        assertThat(messageDigestNode.asString()).isEqualTo("Poly1305");
+
+        // Digest under MessageDigest under Mac
+        INode digestNode = messageDigestNode.getChildren().get(Digest.class);
+        assertThat(digestNode).isNotNull();
+        assertThat(digestNode.getChildren()).isEmpty();
+        assertThat(digestNode.asString()).isEqualTo("DIGEST");
     }
 }

@@ -64,12 +64,6 @@ public final class PycaMAC {
                     .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
-    // Here, the hash is simply detected with a `AlgorithmFactory()`, and then the check of
-    // whether it is an acceptable value is done in the translation. I should probably do it like
-    // this in RSA/DSA/EC. Challenge: they also can use a `Preshashed` containing a hash. In this
-    // case, one should create two duplicate rules (one capturing an immediate hash with
-    // `AlgorithmFactory()`)
-    // and the other a `Prehashed`.
     private static final IDetectionRule<Tree> NEW_POLY1305 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
