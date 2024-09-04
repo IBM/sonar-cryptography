@@ -27,12 +27,13 @@ import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public final class PBKDF2 extends Algorithm implements PasswordBasedKeyDerivationFunction {
     private static final String NAME = "PBKDF2";
 
     @Override
-    public String asString() {
+    public @NotNull String asString() {
         final StringBuilder sb = new StringBuilder(this.name + "-");
 
         final Optional<INode> mac = this.hasChildOfType(Mac.class);
