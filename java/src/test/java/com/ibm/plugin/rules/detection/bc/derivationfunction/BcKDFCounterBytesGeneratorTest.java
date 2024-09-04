@@ -35,6 +35,7 @@ import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.functionality.Digest;
+import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
 import java.util.List;
@@ -112,8 +113,14 @@ class BcKDFCounterBytesGeneratorTest extends TestBase {
         // Mac under KeyDerivationFunction
         INode macNode = keyDerivationFunctionNode.getChildren().get(Mac.class);
         assertThat(macNode).isNotNull();
-        assertThat(macNode.getChildren()).hasSize(1);
+        assertThat(macNode.getChildren()).hasSize(2);
         assertThat(macNode.asString()).isEqualTo("HMAC-SHA256");
+
+        // Tag under Mac under KeyDerivationFunction
+        INode tagNode = macNode.getChildren().get(Tag.class);
+        assertThat(tagNode).isNotNull();
+        assertThat(tagNode.getChildren()).isEmpty();
+        assertThat(tagNode.asString()).isEqualTo("TAG");
 
         // MessageDigest under Mac under KeyDerivationFunction
         INode messageDigestNode = macNode.getChildren().get(MessageDigest.class);
