@@ -41,7 +41,7 @@ public final class CMAC extends Algorithm implements Mac {
     }
 
     @Override
-    public @NotNull String getName() {
+    public String asString() {
         return this.hasChildOfType(BlockCipher.class)
                 .map(node -> node.asString() + "-" + this.name)
                 .orElse(this.name);
