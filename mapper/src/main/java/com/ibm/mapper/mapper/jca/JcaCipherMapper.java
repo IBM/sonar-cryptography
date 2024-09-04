@@ -77,9 +77,9 @@ public final class JcaCipherMapper implements IMapper {
         JcaPasswordBasedEncryptionMapper pbeMapper = new JcaPasswordBasedEncryptionMapper();
         Optional<PasswordBasedEncryption> pbeOptional =
                 pbeMapper.parse(algorithmStr, detectionLocation);
-        if (pbeOptional.isPresent()) {
+        if (pbeOptional.isPresent() && pbeOptional.get() instanceof Algorithm pbe) {
             // pbe
-            return pbeOptional;
+            return Optional.of(pbe);
         }
 
         Optional<? extends Algorithm> possibleCipher = map(algorithmStr, detectionLocation);

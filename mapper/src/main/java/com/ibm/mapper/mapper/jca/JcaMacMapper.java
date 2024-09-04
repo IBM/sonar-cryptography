@@ -46,9 +46,9 @@ public class JcaMacMapper implements IMapper {
         // check if it is pbe
         JcaPasswordBasedEncryptionMapper pbeMapper = new JcaPasswordBasedEncryptionMapper();
         Optional<PasswordBasedEncryption> pbeOptional = pbeMapper.parse(str, detectionLocation);
-        if (pbeOptional.isPresent()) {
+        if (pbeOptional.isPresent() && pbeOptional.get() instanceof Algorithm pbe) {
             // pbe
-            return pbeOptional;
+            return Optional.of(pbe);
         }
 
         if (str.toLowerCase().contains("with") || !str.toLowerCase().contains("hmac")) {
