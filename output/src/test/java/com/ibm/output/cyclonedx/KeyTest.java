@@ -32,7 +32,13 @@ import com.ibm.mapper.model.functionality.Decrypt;
 import com.ibm.mapper.model.functionality.Encrypt;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.model.mode.GCM;
+import org.cyclonedx.model.Component;
+import org.cyclonedx.model.component.crypto.AlgorithmProperties;
 import org.cyclonedx.model.component.crypto.CryptoProperties;
+import org.cyclonedx.model.component.crypto.RelatedCryptoMaterialProperties;
+import org.cyclonedx.model.component.crypto.enums.AssetType;
+import org.cyclonedx.model.component.crypto.enums.CryptoFunction;
+import org.cyclonedx.model.component.crypto.enums.Primitive;
 import org.cyclonedx.model.component.crypto.enums.RelatedCryptoMaterialType;
 import org.junit.jupiter.api.Test;
 
@@ -74,6 +80,40 @@ class KeyTest extends TestBase {
                     secretKey.put(new Decrypt(detectionLocation));
                     return secretKey;
                 },
-                bom -> {});
+                bom -> {
+                    assertThat(bom.getComponents()).hasSize(2);
+                    for (Component component : bom.getComponents()) {
+                        asserts(component.getEvidence());
+                        assertThat(component.getCryptoProperties()).isNotNull();
+                        final CryptoProperties cryptoProperties = component.getCryptoProperties();
+
+                        if (cryptoProperties.getAssetType().equals(AssetType.ALGORITHM)) {
+                            assertThat(cryptoProperties.getAlgorithmProperties()).isNotNull();
+                            final AlgorithmProperties algorithmProperties =
+                                    cryptoProperties.getAlgorithmProperties();
+                            assertThat(algorithmProperties.getPrimitive()).isEqualTo(Primitive.AE);
+                            assertThat(algorithmProperties.getParameterSetIdentifier())
+                                    .isEqualTo("128");
+                            assertThat(algorithmProperties.getCryptoFunctions())
+                                    .contains(
+                                            CryptoFunction.DECRYPT,
+                                            CryptoFunction.ENCRYPT,
+                                            CryptoFunction.KEYGEN);
+                            assertThat(cryptoProperties.getOid())
+                                    .isEqualTo("2.16.840.1.101.3.4.1.6");
+                        } else if (cryptoProperties
+                                .getAssetType()
+                                .equals(AssetType.RELATED_CRYPTO_MATERIAL)) {
+                            assertThat(cryptoProperties.getRelatedCryptoMaterialProperties())
+                                    .isNotNull();
+                            final RelatedCryptoMaterialProperties relatedCryptoMaterialProperties =
+                                    cryptoProperties.getRelatedCryptoMaterialProperties();
+                            assertThat(relatedCryptoMaterialProperties.getType())
+                                    .isEqualTo(RelatedCryptoMaterialType.SECRET_KEY);
+                        } else {
+                            throw new AssertionError();
+                        }
+                    }
+                });
     }
 }

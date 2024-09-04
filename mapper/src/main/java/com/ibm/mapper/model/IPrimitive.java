@@ -19,4 +19,33 @@
  */
 package com.ibm.mapper.model;
 
-public interface IPrimitive extends IAlgorithm {}
+import java.util.List;
+import javax.annotation.Nonnull;
+import org.jetbrains.annotations.Unmodifiable;
+
+public interface IPrimitive extends IAlgorithm {
+
+    @Nonnull
+    @Unmodifiable
+    static List<Class<? extends INode>> getKinds() {
+        return List.of(
+                AuthenticatedEncryption.class,
+                BlockCipher.class,
+                Cipher.class,
+                EllipticCurveAlgorithm.class,
+                ExtendableOutputFunction.class,
+                KeyAgreement.class,
+                KeyDerivationFunction.class,
+                KeyEncapsulationMechanism.class,
+                Mac.class,
+                MaskGenerationFunction.class,
+                MessageDigest.class,
+                PasswordBasedKeyDerivationFunction.class,
+                PasswordBasedEncryption.class,
+                ProbabilisticSignatureScheme.class,
+                PseudorandomNumberGenerator.class,
+                PublicKeyEncryption.class,
+                Signature.class,
+                StreamCipher.class);
+    }
+}

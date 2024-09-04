@@ -25,6 +25,7 @@ import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.EllipticCurve;
 import com.ibm.mapper.model.IAsset;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.IProperty;
 import com.ibm.mapper.model.Key;
 import com.ibm.mapper.model.KeyLength;
@@ -41,6 +42,7 @@ import com.ibm.mapper.model.functionality.Decrypt;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Encapsulate;
 import com.ibm.mapper.model.functionality.Encrypt;
+import com.ibm.mapper.model.functionality.Functionality;
 import com.ibm.mapper.model.functionality.Generate;
 import com.ibm.mapper.model.functionality.KeyDerivation;
 import com.ibm.mapper.model.functionality.KeyGeneration;
@@ -161,6 +163,9 @@ public class CBOMOutputFile implements IOutputFile {
     }
 
     private void createKeyComponent(@Nullable String parentBomRef, @Nonnull Key node) {
+        // if functionality nodes are placed under the key node,
+        // they will be moved under the corresponding primitive node
+        Utils.pushNodesDownToFirstMatch(node, IPrimitive.getKinds(), Functionality.getKinds());
         createRelatedCryptoMaterialComponent(parentBomRef, node);
     }
 
@@ -241,7 +246,6 @@ public class CBOMOutputFile implements IOutputFile {
         if (parentBomRef != null) {
             Dependency newDependency = new Dependency(componentIdentify.getBomRef());
             if (dependencies.get(parentBomRef) == null) {
-
                 Dependency parent = new Dependency(parentBomRef);
                 parent.addDependency(newDependency);
                 this.dependencies.putIfAbsent(parentBomRef, parent);

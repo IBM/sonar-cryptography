@@ -21,7 +21,10 @@ package com.ibm.output.util;
 
 import com.ibm.mapper.model.INode;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public final class Utils {
@@ -42,5 +45,37 @@ public final class Utils {
             return null;
         }
         return Arrays.stream(nodes).filter(Objects::nonNull).toArray(INode[]::new);
+    }
+
+    public static void pushNodesDownToFirstMatch(
+            @Nonnull INode root,
+            @Nonnull List<Class<? extends INode>> pushToNodeOfFirstMatchClazz,
+            @Nonnull List<Class<? extends INode>> kindsOfNodesToPushDown) {
+        for (Class<? extends INode> kind : pushToNodeOfFirstMatchClazz) {
+            if (root.hasChildOfType(kind).isPresent()) {
+                pushNodesDown(root, kind, kindsOfNodesToPushDown);
+                return;
+            }
+        }
+    }
+
+    public static void pushNodesDown(
+            @Nonnull INode root,
+            @Nonnull Class<? extends INode> pushToNodeOfClazz,
+            @Nonnull List<Class<? extends INode>> kindsOfNodesToPushDown) {
+        final Optional<INode> possiblePushToNode = root.hasChildOfType(pushToNodeOfClazz);
+        if (possiblePushToNode.isEmpty()) {
+            return;
+        }
+
+        final INode pushToNode = possiblePushToNode.get();
+        for (Class<? extends INode> kind : kindsOfNodesToPushDown) {
+            root.hasChildOfType(kind)
+                    .ifPresent(
+                            n -> {
+                                pushToNode.put(n);
+                                root.removeChildOfType(kind);
+                            });
+        }
     }
 }
