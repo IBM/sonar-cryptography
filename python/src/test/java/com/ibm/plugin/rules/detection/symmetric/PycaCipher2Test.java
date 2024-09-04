@@ -33,7 +33,7 @@ import com.ibm.mapper.model.functionality.Encrypt;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
@@ -41,10 +41,11 @@ import org.sonar.plugins.python.api.tree.Tree;
 import org.sonar.python.checks.utils.PythonCheckVerifier;
 
 public class PycaCipher2Test extends TestBase {
+
     @Test
-    void test() {
+    public void test() {
         PythonCheckVerifier.verify(
-                "src/test/files/rules/detection/symmetric/CryptographyCipher2TestFile.py", this);
+                "src/test/files/rules/detection/symmetric/PycaCipher2TestFile.py", this);
     }
 
     @Override
@@ -55,46 +56,49 @@ public class PycaCipher2Test extends TestBase {
         /*
          * Detection Store
          */
-        assertThat(detectionStore.getDetectionValues()).hasSize(2);
+        assertThat(detectionStore.getDetectionValues()).hasSize(1);
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(CipherContext.class);
+        IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
+        assertThat(value0).isInstanceOf(Algorithm.class);
+        assertThat(value0.asString()).isEqualTo("Camellia");
 
-        // First entry
-        IValue<Tree> value1 = detectionStore.getDetectionValues().get(0);
-        assertThat(value1).isInstanceOf(Algorithm.class);
-        assertThat(value1.asString()).isEqualTo("Camellia");
-
-        // Second entry
-        IValue<Tree> value2 = detectionStore.getDetectionValues().get(1);
-        assertThat(value2).isInstanceOf(Algorithm.class);
-        assertThat(value2.asString()).isEqualTo("OFB");
-
-        // Child
-        DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> child =
+        DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> store_1 =
                 getStoreOfValueType(CipherAction.class, detectionStore.getChildren());
-        assertThat(child).isNotNull();
-        assertThat(child.getDetectionValues()).hasSize(1);
-        assertThat(child.getDetectionValueContext()).isInstanceOf(CipherContext.class);
-        IValue<Tree> keySizeValue = child.getDetectionValues().get(0);
-        assertThat(keySizeValue.asString()).isEqualTo("ENCRYPT");
+        assertThat(store_1.getDetectionValues()).hasSize(1);
+        assertThat(store_1.getDetectionValueContext()).isInstanceOf(CipherContext.class);
+        IValue<Tree> value0_1 = store_1.getDetectionValues().get(0);
+        assertThat(value0_1).isInstanceOf(CipherAction.class);
+        assertThat(value0_1.asString()).isEqualTo("ENCRYPT");
+
+        DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> store_2 =
+                getStoreOfValueType(com.ibm.engine.model.Mode.class, detectionStore.getChildren());
+        assertThat(store_2.getDetectionValues()).hasSize(1);
+        assertThat(store_2.getDetectionValueContext()).isInstanceOf(CipherContext.class);
+        IValue<Tree> value0_2 = store_2.getDetectionValues().get(0);
+        assertThat(value0_2).isInstanceOf(com.ibm.engine.model.Mode.class);
+        assertThat(value0_2.asString()).isEqualTo("OFB");
 
         /*
          * Translation
          */
         assertThat(nodes).hasSize(1);
 
+        // BlockCipher
         INode blockCipherNode = nodes.get(0);
-        assertThat(blockCipherNode).isInstanceOf(BlockCipher.class);
+        assertThat(blockCipherNode.getKind()).isEqualTo(BlockCipher.class);
+        assertThat(blockCipherNode.getChildren()).hasSize(2);
         assertThat(blockCipherNode.asString()).isEqualTo("Camellia");
-        // assertThat(blockCipherNode.getChildren()).hasSize(6);
 
-        // Mode
-        INode modeNode = blockCipherNode.getChildren().get(Mode.class);
-        assertThat(modeNode).isNotNull();
-        assertThat(modeNode.asString()).isEqualTo("OFB");
-
-        // Encrypt
+        // Encrypt under BlockCipher
         INode encryptNode = blockCipherNode.getChildren().get(Encrypt.class);
         assertThat(encryptNode).isNotNull();
+        assertThat(encryptNode.getChildren()).isEmpty();
         assertThat(encryptNode.asString()).isEqualTo("ENCRYPT");
+
+        // Mode under BlockCipher
+        INode modeNode = blockCipherNode.getChildren().get(Mode.class);
+        assertThat(modeNode).isNotNull();
+        assertThat(modeNode.getChildren()).isEmpty();
+        assertThat(modeNode.asString()).isEqualTo("OFB");
     }
 }
