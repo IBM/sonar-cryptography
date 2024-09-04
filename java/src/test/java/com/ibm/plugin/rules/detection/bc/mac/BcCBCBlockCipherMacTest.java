@@ -35,6 +35,7 @@ import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.model.functionality.Encrypt;
+import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
 import java.util.List;
@@ -137,7 +138,7 @@ class BcCBCBlockCipherMacTest extends TestBase {
         // Mac
         INode macNode3 = nodes.get(0);
         assertThat(macNode3.getKind()).isEqualTo(Mac.class);
-        assertThat(macNode3.getChildren()).hasSize(findingId == 7 ? 5 : 4);
+        assertThat(macNode3.getChildren()).hasSize(findingId == 7 ? 6 : 5);
         assertThat(macNode3.asString()).isEqualTo("AES");
 
         if (findingId == 1 || findingId == 5 || findingId == 7) {
@@ -168,10 +169,10 @@ class BcCBCBlockCipherMacTest extends TestBase {
             assertThat(paddingNode1.asString()).isEqualTo("PKCS7");
         }
 
-        // // Tag under Mac
-        // INode tagNode3 = macNode3.getChildren().get(Tag.class);
-        // assertThat(tagNode3).isNotNull();
-        // assertThat(tagNode3.getChildren()).isEmpty();
-        // assertThat(tagNode3.asString()).isEqualTo("TAG");
+        // Tag under Mac
+        INode tagNode3 = macNode3.getChildren().get(Tag.class);
+        assertThat(tagNode3).isNotNull();
+        assertThat(tagNode3.getChildren()).isEmpty();
+        assertThat(tagNode3.asString()).isEqualTo("TAG");
     }
 }

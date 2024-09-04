@@ -20,27 +20,17 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.Mac;
-import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.KeyAgreement;
+import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.utils.DetectionLocation;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
-public final class HMAC extends Algorithm implements Mac {
-    private static final String NAME = "HMAC";
+public class SM2 extends Algorithm implements PublicKeyEncryption, KeyAgreement {
+    // https://datatracker.ietf.org/doc/html/draft-shen-sm2-ecdsa-02
 
-    public HMAC(@Nonnull DetectionLocation detectionLocation) {
-        super(NAME, Mac.class, detectionLocation);
-    }
+    private static final String NAME = "SM2";
 
-    public HMAC(@Nonnull MessageDigest messageDigest) {
-        super(NAME, Mac.class, messageDigest.getDetectionContext());
-        this.put(messageDigest);
-    }
-
-    @Override
-    public String asString() {
-        return this.hasChildOfType(MessageDigest.class)
-                .map(digest -> this.name + "-" + digest.asString())
-                .orElse(this.name);
+    public SM2(@NotNull DetectionLocation detectionLocation) {
+        super(NAME, PublicKeyEncryption.class, detectionLocation);
     }
 }

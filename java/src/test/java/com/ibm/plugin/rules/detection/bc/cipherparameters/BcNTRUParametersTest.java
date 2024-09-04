@@ -93,7 +93,7 @@ class BcNTRUParametersTest extends TestBase {
         // BlockCipher
         INode blockCipherNode5 = nodes.get(0);
         assertThat(blockCipherNode5.getKind()).isEqualTo(BlockCipher.class);
-        assertThat(blockCipherNode5.getChildren()).hasSize(3);
+        assertThat(blockCipherNode5.getChildren()).hasSize(4);
         assertThat(blockCipherNode5.asString()).isEqualTo("AES");
 
         // MessageDigest under BlockCipher

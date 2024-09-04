@@ -23,11 +23,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.IValue;
+import com.ibm.engine.model.ParameterIdentifier;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.MacContext;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.ParameterSetIdentifier;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
@@ -56,6 +58,7 @@ class BcKMACTest extends TestBase {
             int findingId,
             @NotNull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
             @NotNull List<INode> nodes) {
+
         /*
          * Detection Store
          */
@@ -65,6 +68,14 @@ class BcKMACTest extends TestBase {
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
         assertThat(value0.asString()).isEqualTo("KMAC");
+
+        DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
+                getStoreOfValueType(ParameterIdentifier.class, detectionStore.getChildren());
+        assertThat(store_1.getDetectionValues()).hasSize(1);
+        assertThat(store_1.getDetectionValueContext()).isInstanceOf(MacContext.class);
+        IValue<Tree> value0_1 = store_1.getDetectionValues().get(0);
+        assertThat(value0_1).isInstanceOf(ParameterIdentifier.class);
+        assertThat(value0_1.asString()).isEqualTo("256");
 
         /*
          * Translation
@@ -76,13 +87,7 @@ class BcKMACTest extends TestBase {
         INode macNode = nodes.get(0);
         assertThat(macNode.getKind()).isEqualTo(Mac.class);
         assertThat(macNode.getChildren()).hasSize(3);
-        assertThat(macNode.asString()).isEqualTo("KMAC");
-
-        // MessageDigest under Mac
-        INode messageDigestNode = macNode.getChildren().get(MessageDigest.class);
-        assertThat(messageDigestNode).isNotNull();
-        assertThat(messageDigestNode.getChildren()).isEmpty();
-        assertThat(messageDigestNode.asString()).isEqualTo("Keccak");
+        assertThat(macNode.asString()).isEqualTo("KMAC256");
 
         // Tag under Mac
         INode tagNode = macNode.getChildren().get(Tag.class);
@@ -90,10 +95,23 @@ class BcKMACTest extends TestBase {
         assertThat(tagNode.getChildren()).isEmpty();
         assertThat(tagNode.asString()).isEqualTo("TAG");
 
-        // Digest under Mac
-        INode digestNode = macNode.getChildren().get(Digest.class);
+        // MessageDigest under Mac
+        INode messageDigestNode = macNode.getChildren().get(MessageDigest.class);
+        assertThat(messageDigestNode).isNotNull();
+        assertThat(messageDigestNode.getChildren()).hasSize(1);
+        assertThat(messageDigestNode.asString()).isEqualTo("cSHAKE");
+        /* TODO: optimally, we would capture cSHAKE256 here (using enrichment) */
+
+        // Digest under MessageDigest under Mac
+        INode digestNode = messageDigestNode.getChildren().get(Digest.class);
         assertThat(digestNode).isNotNull();
         assertThat(digestNode.getChildren()).isEmpty();
         assertThat(digestNode.asString()).isEqualTo("DIGEST");
+
+        // ParameterSetIdentifier under Mac
+        INode parameterSetIdentifierNode = macNode.getChildren().get(ParameterSetIdentifier.class);
+        assertThat(parameterSetIdentifierNode).isNotNull();
+        assertThat(parameterSetIdentifierNode.getChildren()).isEmpty();
+        assertThat(parameterSetIdentifierNode.asString()).isEqualTo("256");
     }
 }

@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms;
+package com.ibm.mapper.model.algorithms.shake;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.ExtendableOutputFunction;
@@ -38,7 +38,7 @@ public final class SHAKE extends Algorithm implements ExtendableOutputFunction {
     /** Returns a name of the form "SHAKEXXX" where XXX is the parameter set identifer */
     @Override
     @Nonnull
-    public String getName() {
+    public String asString() {
         final StringBuilder builtName = new StringBuilder(this.name);
         final Optional<INode> parameterSetIdentifier =
                 this.hasChildOfType(ParameterSetIdentifier.class);

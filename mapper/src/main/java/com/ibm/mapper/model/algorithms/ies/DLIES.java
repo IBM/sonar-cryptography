@@ -17,30 +17,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms;
+package com.ibm.mapper.model.algorithms.ies;
 
-import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.Mac;
-import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.PublicKeyEncryption;
+import com.ibm.mapper.model.algorithms.DH;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public final class HMAC extends Algorithm implements Mac {
-    private static final String NAME = "HMAC";
+public class DLIES extends IES {
+    // https://en.wikipedia.org/wiki/Integrated_Encryption_Scheme
 
-    public HMAC(@Nonnull DetectionLocation detectionLocation) {
-        super(NAME, Mac.class, detectionLocation);
-    }
+    private static final String NAME = "DLIES";
 
-    public HMAC(@Nonnull MessageDigest messageDigest) {
-        super(NAME, Mac.class, messageDigest.getDetectionContext());
-        this.put(messageDigest);
-    }
-
-    @Override
-    public String asString() {
-        return this.hasChildOfType(MessageDigest.class)
-                .map(digest -> this.name + "-" + digest.asString())
-                .orElse(this.name);
+    public DLIES(@Nonnull DetectionLocation detectionLocation) {
+        super(NAME, PublicKeyEncryption.class, detectionLocation);
+        this.put(new DH(detectionLocation));
     }
 }

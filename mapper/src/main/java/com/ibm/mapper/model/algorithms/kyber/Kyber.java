@@ -40,7 +40,7 @@ public class Kyber extends Algorithm implements KeyEncapsulationMechanism {
      */
     @Override
     @Nonnull
-    public String getName() {
+    public String asString() {
         StringBuilder builtName = new StringBuilder(this.name);
 
         Optional<INode> parameterSetIdentifier = this.hasChildOfType(ParameterSetIdentifier.class);

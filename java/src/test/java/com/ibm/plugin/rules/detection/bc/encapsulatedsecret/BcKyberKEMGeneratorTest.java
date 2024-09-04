@@ -76,6 +76,6 @@ class BcKyberKEMGeneratorTest extends TestBase {
         assertThat(keyEncapsulationMechanismNode.getKind())
                 .isEqualTo(KeyEncapsulationMechanism.class);
         assertThat(keyEncapsulationMechanismNode.getChildren()).isEmpty();
-        assertThat(keyEncapsulationMechanismNode.asString()).isEqualTo("ML-KEM");
+        assertThat(keyEncapsulationMechanismNode.asString()).isEqualTo("Kyber");
     }
 }

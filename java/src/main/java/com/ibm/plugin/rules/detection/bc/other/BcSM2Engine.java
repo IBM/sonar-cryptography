@@ -35,12 +35,15 @@ public final class BcSM2Engine {
         // nothing
     }
 
+    private static final String ENGINE_NAME = "SM2Engine";
+    private static final String ENGINE_TYPE = "org.bouncycastle.crypto.engines.SM2Engine";
+
     private static final IDetectionRule<Tree> CONSTRUCTOR_1 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.engines.SM2Engine")
+                    .forObjectTypes(ENGINE_TYPE)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("SM2"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(ENGINE_NAME))
                     .withoutParameters()
                     .buildForContext(new CipherContext(CipherContext.Kind.ASYMMETRIC_CIPHER_ENGINE))
                     .inBundle(() -> "Bc")
@@ -49,9 +52,9 @@ public final class BcSM2Engine {
     private static final IDetectionRule<Tree> CONSTRUCTOR_2 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.engines.SM2Engine")
+                    .forObjectTypes(ENGINE_TYPE)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("SM2"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(ENGINE_NAME))
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
                     .buildForContext(new CipherContext(CipherContext.Kind.ASYMMETRIC_CIPHER_ENGINE))
@@ -61,9 +64,9 @@ public final class BcSM2Engine {
     private static final IDetectionRule<Tree> CONSTRUCTOR_3 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.engines.SM2Engine")
+                    .forObjectTypes(ENGINE_TYPE)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("SM2"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(ENGINE_NAME))
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
                     .withMethodParameter("org.bouncycastle.crypto.engines.SM2Engine$Mode")
@@ -74,9 +77,9 @@ public final class BcSM2Engine {
     private static final IDetectionRule<Tree> CONSTRUCTOR_4 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.engines.SM2Engine")
+                    .forObjectTypes(ENGINE_TYPE)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("SM2"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(ENGINE_NAME))
                     .withMethodParameter("org.bouncycastle.crypto.engines.SM2Engine$Mode")
                     .buildForContext(new CipherContext(CipherContext.Kind.ASYMMETRIC_CIPHER_ENGINE))
                     .inBundle(() -> "Bc")

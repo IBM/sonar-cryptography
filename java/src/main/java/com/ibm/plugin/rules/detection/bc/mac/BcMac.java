@@ -25,6 +25,7 @@ import com.ibm.engine.model.Size;
 import com.ibm.engine.model.context.MacContext;
 import com.ibm.engine.model.factory.BlockSizeFactory;
 import com.ibm.engine.model.factory.MacSizeFactory;
+import com.ibm.engine.model.factory.ParameterIdentifierFactory;
 import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
@@ -203,10 +204,9 @@ public final class BcMac {
                             .createDetectionRule()
                             .forObjectTypes("org.bouncycastle.crypto.macs." + macClass)
                             .forConstructor()
-                            //     .shouldBeDetectedAs(new ValueActionFactory<>(macClass))
+                            .shouldBeDetectedAs(new ValueActionFactory<>(macClass))
                             .withMethodParameter("org.bouncycastle.crypto.Digest")
-                            .addDependingDetectionRules(
-                                    BcDigests.rules(new MacContext(MacContext.Kind.HMAC)))
+                            .addDependingDetectionRules(BcDigests.rules())
                             .buildForContext(new MacContext())
                             .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcMacInit.rules()));
@@ -355,11 +355,8 @@ public final class BcMac {
                         .forObjectTypes("org.bouncycastle.crypto.macs.KMAC")
                         .forConstructor()
                         .shouldBeDetectedAs(new ValueActionFactory<>("KMAC"))
-                        // TODO: "bit length of the underlying SHAKE function" -> should I
-                        // capture?
                         .withMethodParameter("int")
-                        .shouldBeDetectedAs(
-                                new MacSizeFactory<>(Size.UnitType.BIT) /* use something else */)
+                        .shouldBeDetectedAs(new ParameterIdentifierFactory<>())
                         .asChildOfParameterWithId(-1)
                         .withMethodParameter(BYTE_ARRAY_TYPE)
                         .buildForContext(new MacContext())

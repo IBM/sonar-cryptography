@@ -93,7 +93,7 @@ class BcCramerShoupParametersTest extends TestBase {
         // BlockCipher
         INode blockCipherNode2 = nodes.get(0);
         assertThat(blockCipherNode2.getKind()).isEqualTo(BlockCipher.class);
-        assertThat(blockCipherNode2.getChildren()).hasSize(3);
+        assertThat(blockCipherNode2.getChildren()).hasSize(4);
         assertThat(blockCipherNode2.asString()).isEqualTo("AES");
 
         // Encrypt under BlockCipher

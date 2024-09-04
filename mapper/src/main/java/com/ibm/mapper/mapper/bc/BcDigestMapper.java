@@ -21,9 +21,7 @@ package com.ibm.mapper.mapper.bc;
 
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.IAlgorithm;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.algorithms.HarakaV2;
@@ -41,7 +39,6 @@ import com.ibm.mapper.model.algorithms.RIPEMD;
 import com.ibm.mapper.model.algorithms.SHA;
 import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.model.algorithms.SHA3;
-import com.ibm.mapper.model.algorithms.SHAKE;
 import com.ibm.mapper.model.algorithms.SM3;
 import com.ibm.mapper.model.algorithms.Skein;
 import com.ibm.mapper.model.algorithms.Tiger;
@@ -58,6 +55,7 @@ import com.ibm.mapper.model.algorithms.gost.GOST341194;
 import com.ibm.mapper.model.algorithms.gost.GOSTR341112;
 import com.ibm.mapper.model.algorithms.isap.Isap;
 import com.ibm.mapper.model.algorithms.photonbeetle.PhotonBeetleHash;
+import com.ibm.mapper.model.algorithms.shake.SHAKE;
 import com.ibm.mapper.model.algorithms.sparkle.Esch;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
@@ -66,12 +64,6 @@ import javax.annotation.Nullable;
 
 public class BcDigestMapper implements IMapper {
 
-    private final Class<? extends IPrimitive> asKind;
-
-    public BcDigestMapper(Class<? extends IPrimitive> asKind) {
-        this.asKind = asKind;
-    }
-
     @Override
     @Nonnull
     public Optional<? extends INode> parse(
@@ -79,15 +71,7 @@ public class BcDigestMapper implements IMapper {
         if (str == null) {
             return Optional.empty();
         }
-        Optional<? extends INode> node = map(str, detectionLocation);
-        // TODO: Change this to not use the `new Algorithm` hack to change the kind
-        if (node.isPresent()) {
-            if (asKind == MessageDigest.class) {
-                return node;
-            }
-            return Optional.of(new Algorithm((IAlgorithm) node.get(), asKind));
-        }
-        return Optional.empty();
+        return map(str, detectionLocation);
     }
 
     @Nonnull

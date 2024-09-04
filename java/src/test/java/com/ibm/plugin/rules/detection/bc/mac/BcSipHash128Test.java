@@ -27,9 +27,8 @@ import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.MacContext;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mac;
-import com.ibm.mapper.model.MessageDigest;
-import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
@@ -65,7 +64,7 @@ class BcSipHash128Test extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(MacContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo(findingId == 1 ? "SipHash128" : "SipHash");
+        assertThat(value0.asString()).isEqualTo(findingId == 0 ? "SipHash" : "SipHash128");
 
         /*
          * Translation
@@ -74,35 +73,27 @@ class BcSipHash128Test extends TestBase {
         assertThat(nodes).hasSize(1);
 
         // Mac
-        INode macNode1 = nodes.get(0);
-        assertThat(macNode1.getKind()).isEqualTo(Mac.class);
-        assertThat(macNode1.getChildren()).hasSize(3);
-        assertThat(macNode1.asString()).isEqualTo("SipHash");
+        INode macNode = nodes.get(0);
+        assertThat(macNode.getKind()).isEqualTo(Mac.class);
+        assertThat(macNode.getChildren()).hasSize(3);
+        assertThat(macNode.asString()).isEqualTo("SipHash");
 
         // Tag under Mac
-        INode tagNode1 = macNode1.getChildren().get(Tag.class);
-        assertThat(tagNode1).isNotNull();
-        assertThat(tagNode1.getChildren()).isEmpty();
-        assertThat(tagNode1.asString()).isEqualTo("TAG");
+        INode tagNode = macNode.getChildren().get(Tag.class);
+        assertThat(tagNode).isNotNull();
+        assertThat(tagNode.getChildren()).isEmpty();
+        assertThat(tagNode.asString()).isEqualTo("TAG");
 
-        // MessageDigest under Mac
-        INode messageDigestNode1 = macNode1.getChildren().get(MessageDigest.class);
-        assertThat(messageDigestNode1).isNotNull();
-        assertThat(messageDigestNode1.getChildren()).hasSize(findingId == 1 ? 1 : 0);
-        assertThat(messageDigestNode1.asString()).isEqualTo("SipHash");
+        // DigestSize under Mac
+        INode digestSizeNode = macNode.getChildren().get(DigestSize.class);
+        assertThat(digestSizeNode).isNotNull();
+        assertThat(digestSizeNode.getChildren()).isEmpty();
+        assertThat(digestSizeNode.asString()).isEqualTo(findingId == 0 ? "64" : "128");
 
-        // Digest under Mac
-        INode digestNode1 = macNode1.getChildren().get(Digest.class);
-        assertThat(digestNode1).isNotNull();
-        assertThat(digestNode1.getChildren()).isEmpty();
-        assertThat(digestNode1.asString()).isEqualTo("DIGEST");
-
-        if (findingId == 1) {
-            // DigestSize under MessageDigest under Mac
-            INode digestSizeNode = messageDigestNode1.getChildren().get(DigestSize.class);
-            assertThat(digestSizeNode).isNotNull();
-            assertThat(digestSizeNode.getChildren()).isEmpty();
-            assertThat(digestSizeNode.asString()).isEqualTo("128");
-        }
+        // KeyLength under Mac
+        INode keyLengthNode = macNode.getChildren().get(KeyLength.class);
+        assertThat(keyLengthNode).isNotNull();
+        assertThat(keyLengthNode.getChildren()).isEmpty();
+        assertThat(keyLengthNode.asString()).isEqualTo("128");
     }
 }

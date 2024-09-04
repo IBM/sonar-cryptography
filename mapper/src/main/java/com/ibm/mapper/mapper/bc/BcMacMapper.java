@@ -25,16 +25,17 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.algorithms.CMAC;
+import com.ibm.mapper.model.algorithms.HMAC;
 import com.ibm.mapper.model.algorithms.KMAC;
 import com.ibm.mapper.model.algorithms.Kalyna;
 import com.ibm.mapper.model.algorithms.Kupyna;
 import com.ibm.mapper.model.algorithms.Poly1305;
 import com.ibm.mapper.model.algorithms.SipHash;
 import com.ibm.mapper.model.algorithms.Skein;
-import com.ibm.mapper.model.algorithms.VMPCMAC;
 import com.ibm.mapper.model.algorithms.ZUC;
 import com.ibm.mapper.model.algorithms.blake.BLAKE3;
 import com.ibm.mapper.model.algorithms.gost.GOST28147;
+import com.ibm.mapper.model.algorithms.vmpc.VMPCMAC;
 import com.ibm.mapper.model.mode.CBC;
 import com.ibm.mapper.model.mode.CFB;
 import com.ibm.mapper.model.mode.GMAC;
@@ -60,16 +61,17 @@ public class BcMacMapper implements IMapper {
     private Optional<? extends INode> map(
             @Nonnull String macString, @Nonnull DetectionLocation detectionLocation) {
         return switch (macString) {
+            case "HMac" -> Optional.of(new HMAC(detectionLocation));
+            case "OldHMac" -> Optional.of(new HMAC(detectionLocation));
             case "Blake3Mac" -> Optional.of(new BLAKE3(Mac.class, new BLAKE3(detectionLocation)));
             case "BlockCipherMac", "CBCBlockCipherMac", "ISO9797Alg3Mac" ->
                     Optional.of(Utils.unknownWithMode(new CBC(detectionLocation), Mac.class));
             case "CFBBlockCipherMac" ->
                     Optional.of(Utils.unknownWithMode(new CFB(detectionLocation), Mac.class));
-            /* TODO: Shouldn't CMAC be a mode of the BlockCipher it takes as parameter? */
             case "CMac", "CMacWithIV" -> Optional.of(new CMAC(detectionLocation));
             case "DSTU7564Mac" -> Optional.of(new Kupyna(Mac.class, new Kupyna(detectionLocation)));
             case "DSTU7624Mac" -> {
-                /* what is the "Mac mode" of DSTU7624? It should be appended */
+                /* TODO: what is the "Mac mode" of DSTU7624? It should be appended */
                 yield Optional.of(new Kalyna(Mac.class, new Kalyna(detectionLocation)));
             }
             case "GMac" ->

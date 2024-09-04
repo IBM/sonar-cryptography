@@ -17,30 +17,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms;
+package com.ibm.mapper.model.algorithms.vmpc;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.Mac;
-import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.utils.DetectionLocation;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
-public final class HMAC extends Algorithm implements Mac {
-    private static final String NAME = "HMAC";
+public class VMPC extends Algorithm implements StreamCipher {
+    // https://en.wikipedia.org/wiki/Variably_Modified_Permutation_Composition
 
-    public HMAC(@Nonnull DetectionLocation detectionLocation) {
-        super(NAME, Mac.class, detectionLocation);
-    }
+    private static final String NAME = "VMPC"; // Variably Modified Permutation Composition
 
-    public HMAC(@Nonnull MessageDigest messageDigest) {
-        super(NAME, Mac.class, messageDigest.getDetectionContext());
-        this.put(messageDigest);
-    }
-
-    @Override
-    public String asString() {
-        return this.hasChildOfType(MessageDigest.class)
-                .map(digest -> this.name + "-" + digest.asString())
-                .orElse(this.name);
+    public VMPC(@NotNull DetectionLocation detectionLocation) {
+        super(NAME, StreamCipher.class, detectionLocation);
     }
 }

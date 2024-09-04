@@ -31,6 +31,7 @@ import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.TagLength;
+import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
 import java.util.List;
@@ -100,14 +101,14 @@ class BcCMACTest extends TestBase {
         // Mac
         INode macNode = nodes.get(0);
         assertThat(macNode.getKind()).isEqualTo(Mac.class);
-        assertThat(macNode.getChildren()).hasSize(2);
-        assertThat(macNode.asString()).isEqualTo("CMAC");
+        assertThat(macNode.getChildren()).hasSize(3);
+        assertThat(macNode.asString()).isEqualTo("AES-CMAC");
 
-        // // Tag under Mac
-        // INode tagNode = macNode.getChildren().get(Tag.class);
-        // assertThat(tagNode).isNotNull();
-        // assertThat(tagNode.getChildren()).isEmpty();
-        // assertThat(tagNode.asString()).isEqualTo("TAG");
+        // Tag under Mac
+        INode tagNode = macNode.getChildren().get(Tag.class);
+        assertThat(tagNode).isNotNull();
+        assertThat(tagNode.getChildren()).isEmpty();
+        assertThat(tagNode.asString()).isEqualTo("TAG");
 
         // TagLength under Mac
         INode tagLengthNode = macNode.getChildren().get(TagLength.class);
@@ -118,7 +119,7 @@ class BcCMACTest extends TestBase {
         // BlockCipher under Mac
         INode blockCipherNode = macNode.getChildren().get(BlockCipher.class);
         assertThat(blockCipherNode).isNotNull();
-        assertThat(blockCipherNode.getChildren()).hasSize(1);
+        assertThat(blockCipherNode.getChildren()).hasSize(2);
         assertThat(blockCipherNode.asString()).isEqualTo("AES");
     }
 }

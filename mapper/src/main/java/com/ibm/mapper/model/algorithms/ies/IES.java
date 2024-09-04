@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms;
+package com.ibm.mapper.model.algorithms.ies;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.IPrimitive;
@@ -26,33 +26,19 @@ import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class HQC extends Algorithm implements KeyEncapsulationMechanism, PublicKeyEncryption {
-    // https://pqc-hqc.org/doc/hqc-specification_2023-04-30.pdf
+public class IES extends Algorithm implements PublicKeyEncryption, KeyEncapsulationMechanism {
+    // https://en.wikipedia.org/wiki/Integrated_Encryption_Scheme
 
-    private static final String NAME = "HQC"; // Hamming Quasi-Cyclic
+    private static final String NAME = "IES";
 
-    /** Returns a more specific name "HQC.KEM" or "HQC.PKE" length */
-    @Override
-    @Nonnull
-    public String asString() {
-        StringBuilder builtName = new StringBuilder(this.name);
-
-        if (this.getKind() == KeyEncapsulationMechanism.class) {
-            builtName.append(".KEM");
-        } else if (this.getKind() == PublicKeyEncryption.class) {
-            builtName.append(".PKE");
-        }
-
-        return builtName.toString();
+    public IES(@Nonnull DetectionLocation detectionLocation) {
+        super(NAME, PublicKeyEncryption.class, detectionLocation);
     }
 
-    // public HQC(@Nonnull DetectionLocation detectionLocation) {
-    //     this(KeyEncapsulationMechanism.class, detectionLocation);
-    // }
-
-    public HQC(
+    protected IES(
+            @Nonnull String name,
             @Nonnull final Class<? extends IPrimitive> asKind,
             @Nonnull DetectionLocation detectionLocation) {
-        super(NAME, asKind, detectionLocation);
+        super(name, asKind, detectionLocation);
     }
 }

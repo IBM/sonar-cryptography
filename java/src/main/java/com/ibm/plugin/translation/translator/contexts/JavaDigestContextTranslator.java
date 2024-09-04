@@ -28,7 +28,6 @@ import com.ibm.mapper.mapper.bc.BcDigestMapper;
 import com.ibm.mapper.mapper.jca.JcaMessageDigestMapper;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
@@ -65,7 +64,7 @@ public final class JavaDigestContextTranslator extends JavaAbstractLibraryTransl
             switch (kind) {
                 case MGF1, MGF -> Optional.empty(); /* TODO: */
                 default -> {
-                    BcDigestMapper bcDigestsMapper = new BcDigestMapper(MessageDigest.class);
+                    BcDigestMapper bcDigestsMapper = new BcDigestMapper();
                     return bcDigestsMapper.parse(value.asString(), detectionLocation).map(f -> f);
                 }
             }

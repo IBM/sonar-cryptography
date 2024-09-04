@@ -35,7 +35,7 @@ public final class RIPEMD extends Algorithm implements MessageDigest {
     /** Returns a name of the form "RIPEMD-XXX" where XXX is the digest size */
     @Override
     @Nonnull
-    public String getName() {
+    public String asString() {
         StringBuilder builtName = new StringBuilder(this.name);
 
         Optional<INode> digestSize = this.hasChildOfType(DigestSize.class);

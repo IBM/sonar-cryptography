@@ -32,6 +32,7 @@ import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.TagLength;
+import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
 import java.util.List;
@@ -111,7 +112,7 @@ class BcISO9797Alg3MacTest extends TestBase {
         // Mac
         INode macNode = nodes.get(0);
         assertThat(macNode.getKind()).isEqualTo(Mac.class);
-        assertThat(macNode.getChildren()).hasSize(4);
+        assertThat(macNode.getChildren()).hasSize(5);
         assertThat(macNode.asString()).isEqualTo("AES");
 
         // Mode under Mac
@@ -126,11 +127,11 @@ class BcISO9797Alg3MacTest extends TestBase {
         assertThat(paddingNode.getChildren()).isEmpty();
         assertThat(paddingNode.asString()).isEqualTo("ISO 7816");
 
-        // // Tag under Mac
-        // INode tagNode = macNode.getChildren().get(Tag.class);
-        // assertThat(tagNode).isNotNull();
-        // assertThat(tagNode.getChildren()).isEmpty();
-        // assertThat(tagNode.asString()).isEqualTo("TAG");
+        // Tag under Mac
+        INode tagNode = macNode.getChildren().get(Tag.class);
+        assertThat(tagNode).isNotNull();
+        assertThat(tagNode.getChildren()).isEmpty();
+        assertThat(tagNode.asString()).isEqualTo("TAG");
 
         // TagLength under Mac
         INode tagLengthNode = macNode.getChildren().get(TagLength.class);

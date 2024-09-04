@@ -29,7 +29,6 @@ import com.ibm.engine.model.context.MacContext;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mac;
-import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
@@ -83,7 +82,7 @@ class BcPoly1305Test extends TestBase {
             assertThat(store_1.getDetectionValueContext()).isInstanceOf(CipherContext.class);
             IValue<Tree> value0_1 = store_1.getDetectionValues().get(0);
             assertThat(value0_1).isInstanceOf(ValueAction.class);
-            assertThat(value0_1.asString()).isEqualTo("AES");
+            assertThat(value0_1.asString()).isEqualTo("AESEngine");
         }
 
         /*
@@ -95,7 +94,7 @@ class BcPoly1305Test extends TestBase {
         // Mac
         INode macNode = nodes.get(0);
         assertThat(macNode.getKind()).isEqualTo(Mac.class);
-        assertThat(macNode.getChildren()).hasSize(findingId == 1 ? 3 : 2);
+        assertThat(macNode.getChildren()).hasSize(findingId == 1 ? 2 : 1);
         assertThat(macNode.asString()).isEqualTo("Poly1305");
 
         // Tag under Mac
@@ -104,17 +103,11 @@ class BcPoly1305Test extends TestBase {
         assertThat(tagNode.getChildren()).isEmpty();
         assertThat(tagNode.asString()).isEqualTo("TAG");
 
-        // Digest under Mac
-        INode digestNode = macNode.getChildren().get(Digest.class);
-        assertThat(digestNode).isNotNull();
-        assertThat(digestNode.getChildren()).isEmpty();
-        assertThat(digestNode.asString()).isEqualTo("DIGEST");
-
         if (findingId == 1) {
             // BlockCipher under Mac
             INode blockCipherNode = macNode.getChildren().get(BlockCipher.class);
             assertThat(blockCipherNode).isNotNull();
-            assertThat(blockCipherNode.getChildren()).hasSize(1);
+            assertThat(blockCipherNode.getChildren()).hasSize(2);
             assertThat(blockCipherNode.asString()).isEqualTo("AES");
         }
     }

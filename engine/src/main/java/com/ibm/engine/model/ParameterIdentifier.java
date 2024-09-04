@@ -22,12 +22,17 @@ package com.ibm.engine.model;
 import javax.annotation.Nonnull;
 
 public class ParameterIdentifier<T> extends AbstractValue<T> {
-    @Nonnull private final Integer value;
+    @Nonnull private final String value;
     @Nonnull private final T location;
 
-    public ParameterIdentifier(@Nonnull Integer value, @Nonnull T location) {
+    public ParameterIdentifier(@Nonnull String value, @Nonnull T location) {
         this.location = location;
         this.value = value;
+    }
+
+    public ParameterIdentifier(@Nonnull Integer number, @Nonnull T location) {
+        this.location = location;
+        this.value = number.toString();
     }
 
     @Override
@@ -37,14 +42,9 @@ public class ParameterIdentifier<T> extends AbstractValue<T> {
     }
 
     @Nonnull
-    public Integer get() {
-        return value;
-    }
-
-    @Nonnull
     @Override
     public String asString() {
-        return value.toString();
+        return value;
     }
 
     @Override

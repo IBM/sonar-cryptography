@@ -17,17 +17,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms;
+package com.ibm.mapper.model.algorithms.ies;
 
-import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.Mac;
+import com.ibm.mapper.model.PublicKeyEncryption;
+import com.ibm.mapper.model.algorithms.DH;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
-public final class VMPCMAC extends Algorithm implements Mac {
-    // https://eprint.iacr.org/2004/301.pdf
+public class ECIES extends IES {
+    // https://en.wikipedia.org/wiki/Integrated_Encryption_Scheme
 
-    public VMPCMAC(@NotNull DetectionLocation detectionLocation) {
-        super("VMPC-MAC", Mac.class, detectionLocation);
+    private static final String NAME = "ECIES";
+
+    public ECIES(@Nonnull DetectionLocation detectionLocation) {
+        super(NAME, PublicKeyEncryption.class, detectionLocation);
+        this.put(new DH(detectionLocation));
     }
 }

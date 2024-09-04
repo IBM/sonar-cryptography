@@ -53,7 +53,11 @@ public final class BcChaCha20Poly1305 {
                     .createDetectionRule()
                     .forObjectTypes("org.bouncycastle.crypto.modes." + AEAD)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>(AEAD))
+                    /*
+                     * With this constructor of `ChaCha20Poly1305`, the provided Mac is not necessarily Poly1305,
+                     * which we represent (for the translation) by capturing the value `ChaCha20Poly1305[WITH_MAC]`
+                     */
+                    .shouldBeDetectedAs(new ValueActionFactory<>(AEAD + "[WITH_MAC]"))
                     .withMethodParameter("org.bouncycastle.crypto.Mac")
                     .addDependingDetectionRules(BcMac.rules())
                     .buildForContext(new CipherContext(CipherContext.Kind.CHACHA20POLY1305))

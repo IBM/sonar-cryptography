@@ -17,30 +17,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms;
+package com.ibm.mapper.model.algorithms.ies;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.Mac;
-import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.KeyEncapsulationMechanism;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public final class HMAC extends Algorithm implements Mac {
-    private static final String NAME = "HMAC";
+public class ECIESKEM extends Algorithm implements KeyEncapsulationMechanism {
+    // See 10.2 of https://www.shoup.net/iso/std6.pdf (ISO 18033)
 
-    public HMAC(@Nonnull DetectionLocation detectionLocation) {
-        super(NAME, Mac.class, detectionLocation);
-    }
+    private static final String NAME = "ECIES-KEM";
 
-    public HMAC(@Nonnull MessageDigest messageDigest) {
-        super(NAME, Mac.class, messageDigest.getDetectionContext());
-        this.put(messageDigest);
-    }
-
-    @Override
-    public String asString() {
-        return this.hasChildOfType(MessageDigest.class)
-                .map(digest -> this.name + "-" + digest.asString())
-                .orElse(this.name);
+    public ECIESKEM(@Nonnull DetectionLocation detectionLocation) {
+        super(NAME, KeyEncapsulationMechanism.class, detectionLocation);
     }
 }

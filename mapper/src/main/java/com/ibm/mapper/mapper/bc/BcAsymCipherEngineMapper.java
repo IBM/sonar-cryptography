@@ -27,6 +27,8 @@ import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.algorithms.ElGamal;
 import com.ibm.mapper.model.algorithms.NaccacheStern;
 import com.ibm.mapper.model.algorithms.RSA;
+import com.ibm.mapper.model.algorithms.SM2;
+import com.ibm.mapper.model.algorithms.ies.IES;
 import com.ibm.mapper.model.algorithms.ntru.NTRUEncrypt;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
@@ -49,12 +51,17 @@ public class BcAsymCipherEngineMapper implements IMapper {
     private Optional<? extends INode> map(
             @Nonnull String cipherString, @Nonnull DetectionLocation detectionLocation) {
         return switch (cipherString) {
+            /* From asymmetricblockcipher.BcAsymCipherEngine */
             case "ElGamalEngine" -> Optional.of(new ElGamal(detectionLocation));
             case "NaccacheSternEngine" -> Optional.of(new NaccacheStern(detectionLocation));
             case "NTRUEngine" -> Optional.of(new NTRUEncrypt(detectionLocation));
             case "RSABlindedEngine" -> Optional.of(new RSA(detectionLocation));
             case "RSABlindingEngine" -> Optional.of(new RSA(detectionLocation));
             case "RSAEngine" -> Optional.of(new RSA(detectionLocation));
+            /* From other.BcIESEngine */
+            case "IESEngine" -> Optional.of(new IES(detectionLocation));
+            /* From other.BcSM2Engine */
+            case "SM2Engine" -> Optional.of(new SM2(detectionLocation));
             default -> {
                 final Algorithm algorithm =
                         new Algorithm(cipherString, PublicKeyEncryption.class, detectionLocation);

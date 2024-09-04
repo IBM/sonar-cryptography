@@ -27,6 +27,7 @@ import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.MacContext;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mac;
+import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
 import java.util.List;
@@ -72,14 +73,13 @@ class BcGOST28147MacTest extends TestBase {
         // Mac
         INode macNode = nodes.get(0);
         assertThat(macNode.getKind()).isEqualTo(Mac.class);
-        assertThat(macNode.getChildren()).hasSize(2);
+        assertThat(macNode.getChildren()).hasSize(3);
         assertThat(macNode.asString()).isEqualTo("GOST28147");
 
-        // // Tag under Mac
-        // INode tagNode = macNode.getChildren().get(Tag.class);
-        // assertThat(tagNode).isNotNull();
-        // assertThat(tagNode.getChildren()).isEmpty();
-        // assertThat(tagNode.asString()).isEqualTo("TAG");
-
+        // Tag under Mac
+        INode tagNode = macNode.getChildren().get(Tag.class);
+        assertThat(tagNode).isNotNull();
+        assertThat(tagNode.getChildren()).isEmpty();
+        assertThat(tagNode.asString()).isEqualTo("TAG");
     }
 }

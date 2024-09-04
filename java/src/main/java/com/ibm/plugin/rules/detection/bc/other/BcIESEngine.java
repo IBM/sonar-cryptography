@@ -38,12 +38,15 @@ public final class BcIESEngine {
         // nothing
     }
 
+    private static final String ENGINE_NAME = "IESEngine";
+    private static final String ENGINE_TYPE = "org.bouncycastle.crypto.engines.IESEngine";
+
     private static final IDetectionRule<Tree> CONSTRUCTOR_1 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.engines.IESEngine")
+                    .forObjectTypes(ENGINE_TYPE)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("IES"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(ENGINE_NAME))
                     .withMethodParameter("org.bouncycastle.crypto.BasicAgreement")
                     .addDependingDetectionRules(BcBasicAgreement.rules())
                     .withMethodParameter("org.bouncycastle.crypto.DerivationFunction")
@@ -57,9 +60,9 @@ public final class BcIESEngine {
     private static final IDetectionRule<Tree> CONSTRUCTOR_2 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.engines.IESEngine")
+                    .forObjectTypes(ENGINE_TYPE)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("IES"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(ENGINE_NAME))
                     .withMethodParameter("org.bouncycastle.crypto.BasicAgreement")
                     .addDependingDetectionRules(BcBasicAgreement.rules())
                     .withMethodParameter("org.bouncycastle.crypto.DerivationFunction")

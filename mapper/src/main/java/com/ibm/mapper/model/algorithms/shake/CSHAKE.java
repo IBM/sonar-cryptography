@@ -17,48 +17,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms;
+package com.ibm.mapper.model.algorithms.shake;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.ClassicalBitSecurityLevel;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.IPrimitive;
-import com.ibm.mapper.model.Mac;
-import com.ibm.mapper.model.StreamCipher;
+import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.ParameterSetIdentifier;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
-public final class ZUC extends Algorithm implements StreamCipher, Mac {
-    // http://www.is.cas.cn/ztzl2016/zouchongzhi/201801/W020180416526664982687.pdf
+public final class CSHAKE extends Algorithm implements MessageDigest {
+    // https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-185.pdf
 
-    private static final String NAME = "ZUC";
+    private static final String NAME = "cSHAKE"; // customizable SHAKE
 
-    public ZUC(@Nonnull DetectionLocation detectionLocation) {
-        super(NAME, StreamCipher.class, detectionLocation);
+    public CSHAKE(@Nonnull DetectionLocation detectionLocation) {
+        super(NAME, MessageDigest.class, detectionLocation);
     }
 
-    /** Returns a name of the form "ZUC-XXX" where XXX is the bit security level */
+    /** Returns a name of the form "cSHAKEXXX" where XXX is the parameter set identifer */
     @Override
     @Nonnull
     public String asString() {
-        StringBuilder builtName = new StringBuilder(this.name);
-
-        Optional<INode> securityLevel = this.hasChildOfType(ClassicalBitSecurityLevel.class);
-
-        if (securityLevel.isPresent()) {
-            builtName.append("-").append(securityLevel.get().asString());
-        }
-
+        final StringBuilder builtName = new StringBuilder(this.name);
+        final Optional<INode> parameterSetIdentifier =
+                this.hasChildOfType(ParameterSetIdentifier.class);
+        parameterSetIdentifier.ifPresent(node -> builtName.append(node.asString()));
         return builtName.toString();
     }
 
-    public ZUC(int securityLevel, @Nonnull DetectionLocation detectionLocation) {
+    public CSHAKE(int parameterSetIdentifier, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
-        this.put(new ClassicalBitSecurityLevel(securityLevel, detectionLocation));
+        this.put(
+                new ParameterSetIdentifier(
+                        String.valueOf(parameterSetIdentifier), detectionLocation));
     }
 
-    public ZUC(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull ZUC zuc) {
-        super(zuc, asKind);
+    public CSHAKE(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull CSHAKE cSHAKE) {
+        super(cSHAKE, asKind);
     }
 }

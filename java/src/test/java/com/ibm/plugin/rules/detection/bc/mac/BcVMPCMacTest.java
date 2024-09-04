@@ -28,7 +28,6 @@ import com.ibm.engine.model.context.MacContext;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.StreamCipher;
-import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
@@ -75,14 +74,8 @@ class BcVMPCMacTest extends TestBase {
         // Mac
         INode macNode = nodes.get(0);
         assertThat(macNode.getKind()).isEqualTo(Mac.class);
-        assertThat(macNode.getChildren()).hasSize(3);
-        assertThat(macNode.asString()).isEqualTo("VMPC");
-
-        // Digest under Mac
-        INode digestNode = macNode.getChildren().get(Digest.class);
-        assertThat(digestNode).isNotNull();
-        assertThat(digestNode.getChildren()).isEmpty();
-        assertThat(digestNode.asString()).isEqualTo("DIGEST");
+        assertThat(macNode.getChildren()).hasSize(2);
+        assertThat(macNode.asString()).isEqualTo("VMPC-MAC");
 
         // Tag under Mac
         INode tagNode = macNode.getChildren().get(Tag.class);

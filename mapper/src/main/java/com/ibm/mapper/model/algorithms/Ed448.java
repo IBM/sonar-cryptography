@@ -21,6 +21,7 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.Signature;
+import com.ibm.mapper.model.algorithms.shake.SHAKE;
 import com.ibm.mapper.model.curves.Edwards448;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
