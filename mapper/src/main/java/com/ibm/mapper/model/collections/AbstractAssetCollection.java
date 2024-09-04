@@ -64,7 +64,7 @@ public abstract class AbstractAssetCollection<K extends INode> implements IAsset
 
     @Override
     public boolean is(@NotNull Class<? extends INode> type) {
-        return false;
+        return this.getKind().equals(type);
     }
 
     @NotNull @Override

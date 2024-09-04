@@ -105,14 +105,14 @@ class JcaPBEKeySpecTest extends TestBase {
         INode secretKeyNode = nodes.get(0);
         assertThat(secretKeyNode.getKind()).isEqualTo(SecretKey.class);
         assertThat(secretKeyNode.getChildren()).hasSize(4);
-        assertThat(secretKeyNode.asString()).isEqualTo("PBKDF2");
+        assertThat(secretKeyNode.asString()).isEqualTo("PBKDF2-SHA1");
 
         // PasswordBasedKeyDerivationFunction under SecretKey
         INode passwordBasedKeyDerivationFunctionNode =
                 secretKeyNode.getChildren().get(PasswordBasedKeyDerivationFunction.class);
         assertThat(passwordBasedKeyDerivationFunctionNode).isNotNull();
         assertThat(passwordBasedKeyDerivationFunctionNode.getChildren()).hasSize(3);
-        assertThat(passwordBasedKeyDerivationFunctionNode.asString()).isEqualTo("PBKDF2");
+        assertThat(passwordBasedKeyDerivationFunctionNode.asString()).isEqualTo("PBKDF2-SHA1");
 
         // Mac under PasswordBasedKeyDerivationFunction under SecretKey
         INode macNode = passwordBasedKeyDerivationFunctionNode.getChildren().get(Mac.class);

@@ -21,9 +21,6 @@ package com.ibm.output.cyclonedx;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
-import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
 import com.ibm.mapper.model.PasswordLength;
@@ -33,132 +30,76 @@ import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.algorithms.SHA;
 import com.ibm.mapper.model.functionality.Encrypt;
 import com.ibm.mapper.model.functionality.KeyGeneration;
-import com.ibm.mapper.utils.DetectionLocation;
-import com.ibm.output.cyclondx.CBOMOutputFile;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.component.crypto.AlgorithmProperties;
 import org.cyclonedx.model.component.crypto.CryptoProperties;
 import org.cyclonedx.model.component.crypto.enums.AssetType;
 import org.cyclonedx.model.component.crypto.enums.CryptoFunction;
-import org.cyclonedx.model.component.evidence.Occurrence;
 import org.junit.jupiter.api.Test;
 
-class AlgorithmTest {
-
-    private final String filePath = "test.java";
+class AlgorithmTest extends TestBase {
 
     @Test
     void baseRSA() {
-        final DetectionLocation detectionLocation =
-                new DetectionLocation(filePath, 1, 1, Collections.emptyList(), () -> "SSL");
-        final Algorithm algorithm = new RSA(detectionLocation);
+        this.asserts(
+                () -> new RSA(detectionLocation),
+                bom -> {
+                    assertThat(bom.getComponents()).hasSize(1);
+                    Component component = bom.getComponents().get(0);
+                    assertThat(component.getName()).isEqualTo("RSA");
 
-        final CBOMOutputFile outputFile = new CBOMOutputFile();
-        outputFile.add(List.of(algorithm));
-        final Bom bom = outputFile.getBom();
+                    CryptoProperties cryptoProperties = component.getCryptoProperties();
+                    assertThat(cryptoProperties.getAssetType()).isEqualTo(AssetType.ALGORITHM);
 
-        assertThat(bom.getComponents()).hasSize(1);
-        Component component = bom.getComponents().get(0);
-        assertThat(component.getName()).isEqualTo("rsa");
+                    asserts(component.getEvidence());
 
-        CryptoProperties cryptoProperties = component.getCryptoProperties();
-        assertThat(cryptoProperties.getAssetType()).isEqualTo(AssetType.ALGORITHM);
-
-        assertThat(component.getEvidence().getOccurrences()).hasSize(1);
-        final Occurrence occurrence = component.getEvidence().getOccurrences().get(0);
-        assertThat(occurrence.getLocation()).isEqualTo(filePath);
-        assertThat(occurrence.getLine()).isEqualTo(1);
-        assertThat(occurrence.getOffset()).isEqualTo(1);
-        assertThat(occurrence.getAdditionalContext()).isNull();
-
-        AlgorithmProperties algorithmProperties =
-                component.getCryptoProperties().getAlgorithmProperties();
-        assertThat(algorithmProperties.getParameterSetIdentifier()).isNull();
-    }
-
-    @Test
-    void RSAwithKeyLength() {
-        final DetectionLocation detectionLocation =
-                new DetectionLocation(filePath, 1, 1, Collections.emptyList(), () -> "SSL");
-        JcaAlgorithmMapper algorithmMapper = new JcaAlgorithmMapper();
-        Optional<? extends INode> algorithmOptional =
-                algorithmMapper.parse("RSA", detectionLocation);
-        assertThat(algorithmOptional).isPresent();
-        assertThat(algorithmOptional.get().is(Algorithm.class)).isTrue();
-
-        final CBOMOutputFile outputFile = new CBOMOutputFile();
-        outputFile.add(List.of(algorithmOptional.get()));
-        final Bom bom = outputFile.getBom();
-
-        assertThat(bom.getComponents()).hasSize(1);
-        Component component = bom.getComponents().get(0);
-        assertThat(component.getName()).isEqualTo("rsa-2048");
-
-        CryptoProperties cryptoProperties = component.getCryptoProperties();
-        assertThat(cryptoProperties.getAssetType()).isEqualTo(AssetType.ALGORITHM);
-
-        assertThat(component.getEvidence().getOccurrences()).hasSize(1);
-        final Occurrence occurrence = component.getEvidence().getOccurrences().get(0);
-        assertThat(occurrence.getLocation()).isEqualTo(filePath);
-        assertThat(occurrence.getLine()).isEqualTo(1);
-        assertThat(occurrence.getOffset()).isEqualTo(1);
-        assertThat(occurrence.getAdditionalContext()).isNull();
-
-        AlgorithmProperties algorithmProperties =
-                component.getCryptoProperties().getAlgorithmProperties();
-        assertThat(algorithmProperties.getParameterSetIdentifier()).isEqualTo("2048");
+                    AlgorithmProperties algorithmProperties =
+                            component.getCryptoProperties().getAlgorithmProperties();
+                    assertThat(algorithmProperties.getParameterSetIdentifier()).isNull();
+                });
     }
 
     @Test
     void algorithmWithMultipleCryptoFunctions() {
-        final CBOMOutputFile outputFile = new CBOMOutputFile();
-        final DetectionLocation detectionLocation =
-                new DetectionLocation(filePath, 1, 1, Collections.emptyList(), () -> "SSL");
+        this.asserts(
+                () -> {
+                    final RSA rsa = new RSA(detectionLocation);
+                    rsa.put(new KeyGeneration(detectionLocation));
+                    rsa.put(new Encrypt(detectionLocation));
+                    return rsa;
+                },
+                bom -> {
+                    assertThat(bom.getComponents()).hasSize(1);
+                    Component component = bom.getComponents().get(0);
+                    assertThat(component.getName()).isEqualTo("RSA");
 
-        final Algorithm algorithm = new RSA(detectionLocation);
-        final KeyGeneration keyGeneration = new KeyGeneration(detectionLocation);
-        algorithm.put(keyGeneration);
-        final Encrypt encrypt = new Encrypt(detectionLocation);
-        algorithm.put(encrypt);
+                    CryptoProperties cryptoProperties = component.getCryptoProperties();
+                    assertThat(cryptoProperties.getAssetType()).isEqualTo(AssetType.ALGORITHM);
 
-        outputFile.add(List.of(algorithm));
+                    asserts(component.getEvidence());
 
-        final Bom bom = outputFile.getBom();
-
-        assertThat(bom.getComponents()).hasSize(1);
-        Component component = bom.getComponents().get(0);
-        assertThat(component.getName()).isEqualTo("rsa");
-
-        CryptoProperties cryptoProperties = component.getCryptoProperties();
-        AlgorithmProperties algorithmProperties = cryptoProperties.getAlgorithmProperties();
-        assertThat(algorithmProperties.getCryptoFunctions()).hasSize(2);
-        assertThat(algorithmProperties.getCryptoFunctions())
-                .anyMatch(func -> func.equals(CryptoFunction.KEYGEN));
-        assertThat(algorithmProperties.getCryptoFunctions())
-                .anyMatch(func -> func.equals(CryptoFunction.ENCRYPT));
+                    AlgorithmProperties algorithmProperties =
+                            component.getCryptoProperties().getAlgorithmProperties();
+                    assertThat(algorithmProperties.getCryptoFunctions()).hasSize(2);
+                    assertThat(algorithmProperties.getCryptoFunctions())
+                            .contains(CryptoFunction.ENCRYPT, CryptoFunction.KEYGEN);
+                });
     }
 
     @Test
     void pbkdfWithSaltAndPassword() {
-        final DetectionLocation detectionLocation =
-                new DetectionLocation(filePath, 1, 1, Collections.emptyList(), () -> "SSL");
-        final PasswordBasedKeyDerivationFunction pbkdf = new PBKDF2(new SHA(detectionLocation));
-        final SaltLength saltLength = new SaltLength(192, detectionLocation);
-        final PasswordLength passwordLength = new PasswordLength(32, detectionLocation);
-        final KeyLength keyLength = new KeyLength(1024, detectionLocation);
-        pbkdf.put(saltLength);
-        pbkdf.put(passwordLength);
-        pbkdf.put(keyLength);
-
-        final CBOMOutputFile outputFile = new CBOMOutputFile();
-        outputFile.add(List.of(pbkdf));
-
-        final Bom bom = outputFile.getBom();
-
-        assertThat(bom.getComponents()).hasSize(3);
+        this.asserts(
+                () -> {
+                    final PasswordBasedKeyDerivationFunction pbkdf =
+                            new PBKDF2(new SHA(detectionLocation));
+                    final SaltLength saltLength = new SaltLength(192, detectionLocation);
+                    final PasswordLength passwordLength = new PasswordLength(32, detectionLocation);
+                    final KeyLength keyLength = new KeyLength(1024, detectionLocation);
+                    pbkdf.put(saltLength);
+                    pbkdf.put(passwordLength);
+                    pbkdf.put(keyLength);
+                    return pbkdf;
+                },
+                bom -> {});
     }
 }

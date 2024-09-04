@@ -45,7 +45,7 @@ class JcaPBKDFMapperTest {
         assertThat(pbkdfOptional).isPresent();
         assertThat(pbkdfOptional.get()).isInstanceOf(PBKDF2.class);
         assertThat(pbkdfOptional.get().is(PasswordBasedKeyDerivationFunction.class)).isTrue();
-        assertThat(pbkdfOptional.get().getName()).isEqualTo("PBKDF2");
+        assertThat(pbkdfOptional.get().getName()).isEqualTo("PBKDF2-SHA256");
         assertThat(pbkdfOptional.get().getIterations()).isEmpty();
         assertThat(pbkdfOptional.get().getSalt()).isEmpty();
         assertThat(pbkdfOptional.get().hasChildren()).isTrue();
