@@ -21,75 +21,58 @@ package com.ibm.output.cyclonedx;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.utils.DetectionLocation;
-import com.ibm.output.cyclondx.CBOMOutputFile;
 import java.util.Collections;
 import java.util.List;
-import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.component.crypto.CryptoProperties;
 import org.cyclonedx.model.component.crypto.enums.AssetType;
+import org.cyclonedx.model.component.evidence.Occurrence;
 import org.junit.jupiter.api.Test;
 
-class MergeDetectionLocationTest {
+class MergeDetectionLocationTest extends TestBase {
 
     @Test
     void differentContexts() {
-        final CBOMOutputFile outputFile = new CBOMOutputFile();
-        // asset 1
-        DetectionLocation detectionLocation =
-                new DetectionLocation("test1.java", 1, 1, Collections.emptyList(), () -> "SSL");
-        Algorithm algorithm = new RSA(detectionLocation);
-        outputFile.add(List.of(algorithm));
-        // asset 2
-        detectionLocation =
-                new DetectionLocation("test2.java", 2, 2, Collections.emptyList(), () -> "SSL");
-        algorithm = new RSA(detectionLocation);
-        outputFile.add(List.of(algorithm));
+        this.assertsNodes(
+                () -> {
+                    DetectionLocation detectionLocation2 =
+                            new DetectionLocation(
+                                    "test2.java", 2, 2, Collections.emptyList(), () -> "SSL");
+                    return List.of(new RSA(detectionLocation), new RSA(detectionLocation2));
+                },
+                bom -> {
+                    assertThat(bom.getComponents()).hasSize(1);
+                    Component component = bom.getComponents().get(0);
+                    assertThat(component.getName()).isEqualTo("RSA");
 
-        final Bom bom = outputFile.getBom();
+                    CryptoProperties cryptoProperties = component.getCryptoProperties();
+                    assertThat(cryptoProperties.getAssetType()).isEqualTo(AssetType.ALGORITHM);
 
-        assertThat(bom.getComponents()).hasSize(1);
-        Component component = bom.getComponents().get(0);
-        assertThat(component.getName()).isEqualTo("rsa");
-
-        CryptoProperties cryptoProperties = component.getCryptoProperties();
-        assertThat(cryptoProperties.getAssetType()).isEqualTo(AssetType.ALGORITHM);
-
-        assertThat(component.getEvidence().getOccurrences()).hasSize(2);
-        assertThat(component.getEvidence().getOccurrences())
-                .anyMatch(o -> o.getLocation().equals("test1.java"));
-        assertThat(component.getEvidence().getOccurrences())
-                .anyMatch(o -> o.getLocation().equals("test2.java"));
+                    assertThat(component.getEvidence().getOccurrences()).hasSize(2);
+                    assertThat(
+                                    component.getEvidence().getOccurrences().stream()
+                                            .map(Occurrence::getLocation))
+                            .contains("test.java", "test2.java");
+                });
     }
 
     @Test
     void sameContexts() {
-        final CBOMOutputFile outputFile = new CBOMOutputFile();
-        // asset 1
-        DetectionLocation detectionLocation =
-                new DetectionLocation("test1.java", 1, 1, Collections.emptyList(), () -> "SSL");
-        Algorithm algorithm = new RSA(detectionLocation);
-        outputFile.add(List.of(algorithm));
-        // asset 2
-        detectionLocation =
-                new DetectionLocation("test1.java", 1, 1, Collections.emptyList(), () -> "SSL");
-        algorithm = new RSA(detectionLocation);
-        outputFile.add(List.of(algorithm));
+        this.assertsNodes(
+                () -> List.of(new RSA(detectionLocation), new RSA(detectionLocation)),
+                bom -> {
+                    assertThat(bom.getComponents()).hasSize(1);
+                    Component component = bom.getComponents().get(0);
+                    assertThat(component.getName()).isEqualTo("RSA");
 
-        final Bom bom = outputFile.getBom();
+                    CryptoProperties cryptoProperties = component.getCryptoProperties();
+                    assertThat(cryptoProperties.getAssetType()).isEqualTo(AssetType.ALGORITHM);
 
-        assertThat(bom.getComponents()).hasSize(1);
-        Component component = bom.getComponents().get(0);
-        assertThat(component.getName()).isEqualTo("rsa");
-
-        CryptoProperties cryptoProperties = component.getCryptoProperties();
-        assertThat(cryptoProperties.getAssetType()).isEqualTo(AssetType.ALGORITHM);
-
-        assertThat(component.getEvidence().getOccurrences()).hasSize(1);
-        assertThat(component.getEvidence().getOccurrences())
-                .anyMatch(o -> o.getLocation().equals("test1.java"));
+                    assertThat(component.getEvidence().getOccurrences()).hasSize(1);
+                    assertThat(component.getEvidence().getOccurrences().get(0).getLocation())
+                            .isEqualTo("test.java");
+                });
     }
 }

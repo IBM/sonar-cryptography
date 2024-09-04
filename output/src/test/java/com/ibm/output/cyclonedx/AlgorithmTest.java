@@ -33,16 +33,18 @@ import com.ibm.mapper.model.functionality.KeyGeneration;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.component.crypto.AlgorithmProperties;
 import org.cyclonedx.model.component.crypto.CryptoProperties;
+import org.cyclonedx.model.component.crypto.RelatedCryptoMaterialProperties;
 import org.cyclonedx.model.component.crypto.enums.AssetType;
 import org.cyclonedx.model.component.crypto.enums.CryptoFunction;
 import org.cyclonedx.model.component.crypto.enums.Primitive;
+import org.cyclonedx.model.component.crypto.enums.RelatedCryptoMaterialType;
 import org.junit.jupiter.api.Test;
 
 class AlgorithmTest extends TestBase {
 
     @Test
     void baseRSA() {
-        this.asserts(
+        this.assertsNode(
                 () -> new RSA(detectionLocation),
                 bom -> {
                     assertThat(bom.getComponents()).hasSize(1);
@@ -52,7 +54,7 @@ class AlgorithmTest extends TestBase {
                     CryptoProperties cryptoProperties = component.getCryptoProperties();
                     assertThat(cryptoProperties.getAssetType()).isEqualTo(AssetType.ALGORITHM);
 
-                    asserts(component.getEvidence());
+                    assertsNode(component.getEvidence());
 
                     AlgorithmProperties algorithmProperties =
                             component.getCryptoProperties().getAlgorithmProperties();
@@ -62,7 +64,7 @@ class AlgorithmTest extends TestBase {
 
     @Test
     void algorithmWithMultipleCryptoFunctions() {
-        this.asserts(
+        this.assertsNode(
                 () -> {
                     final RSA rsa = new RSA(detectionLocation);
                     rsa.put(new KeyGeneration(detectionLocation));
@@ -77,7 +79,7 @@ class AlgorithmTest extends TestBase {
                     CryptoProperties cryptoProperties = component.getCryptoProperties();
                     assertThat(cryptoProperties.getAssetType()).isEqualTo(AssetType.ALGORITHM);
 
-                    asserts(component.getEvidence());
+                    assertsNode(component.getEvidence());
 
                     AlgorithmProperties algorithmProperties =
                             component.getCryptoProperties().getAlgorithmProperties();
@@ -89,7 +91,7 @@ class AlgorithmTest extends TestBase {
 
     @Test
     void pbkdfWithSaltAndPassword() {
-        this.asserts(
+        this.assertsNode(
                 () -> {
                     final PasswordBasedKeyDerivationFunction pbkdf =
                             new PBKDF2(new SHA(detectionLocation));
@@ -107,11 +109,11 @@ class AlgorithmTest extends TestBase {
                             .contains("PBKDF2-SHA1", "SHA1");
 
                     for (Component component : bom.getComponents()) {
-                        asserts(component.getEvidence());
+                        assertsNode(component.getEvidence());
+                        assertThat(component.getCryptoProperties()).isNotNull();
+                        final CryptoProperties cryptoProperties = component.getCryptoProperties();
+
                         if (component.getName().equalsIgnoreCase("PBKDF2-SHA1")) {
-                            assertThat(component.getCryptoProperties()).isNotNull();
-                            final CryptoProperties cryptoProperties =
-                                    component.getCryptoProperties();
                             assertThat(cryptoProperties.getAssetType())
                                     .isEqualTo(AssetType.ALGORITHM);
                             assertThat(cryptoProperties.getAlgorithmProperties()).isNotNull();
@@ -120,6 +122,31 @@ class AlgorithmTest extends TestBase {
                             assertThat(algorithmProperties.getPrimitive()).isEqualTo(Primitive.KDF);
                             assertThat(algorithmProperties.getParameterSetIdentifier())
                                     .isEqualTo("1024");
+                        } else if (component.getName().equalsIgnoreCase("SHA1")) {
+                            assertThat(cryptoProperties.getAssetType())
+                                    .isEqualTo(AssetType.ALGORITHM);
+                            assertThat(cryptoProperties.getAlgorithmProperties()).isNotNull();
+                            final AlgorithmProperties algorithmProperties =
+                                    cryptoProperties.getAlgorithmProperties();
+                            assertThat(algorithmProperties.getPrimitive())
+                                    .isEqualTo(Primitive.HASH);
+                            assertThat(algorithmProperties.getParameterSetIdentifier())
+                                    .isEqualTo("160");
+                        } else if (cryptoProperties
+                                .getAssetType()
+                                .equals(AssetType.RELATED_CRYPTO_MATERIAL)) {
+                            assertThat(cryptoProperties.getRelatedCryptoMaterialProperties())
+                                    .isNotNull();
+                            final RelatedCryptoMaterialProperties relatedCryptoMaterialProperties =
+                                    cryptoProperties.getRelatedCryptoMaterialProperties();
+                            if (relatedCryptoMaterialProperties
+                                    .getType()
+                                    .equals(RelatedCryptoMaterialType.PASSWORD)) {
+                                assertThat(relatedCryptoMaterialProperties.getSize()).isEqualTo(32);
+                            } else {
+                                assertThat(relatedCryptoMaterialProperties.getSize())
+                                        .isEqualTo(192);
+                            }
                         }
                     }
                 });

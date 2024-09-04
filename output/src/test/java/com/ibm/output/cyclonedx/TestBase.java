@@ -27,6 +27,7 @@ import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.mapper.utils.Utils;
 import com.ibm.output.Constants;
 import com.ibm.output.cyclondx.CBOMOutputFile;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
@@ -55,12 +56,17 @@ public abstract class TestBase {
     protected final DetectionLocation detectionLocation =
             new DetectionLocation(filePath, lineNumber, offset, Collections.emptyList(), bundle);
 
-    public void asserts(@Nonnull Supplier<INode> nodeSupplier, @Nonnull Consumer<Bom> assertThat) {
-        final List<INode> nodes = List.of(nodeSupplier.get());
-        Utils.printNodeTree("tree", nodes);
+    public void assertsNode(
+            @Nonnull Supplier<INode> nodeSupplier, @Nonnull Consumer<Bom> assertThat) {
+        this.assertsNodes(() -> List.of(nodeSupplier.get()), assertThat);
+    }
+
+    public void assertsNodes(
+            @Nonnull Supplier<Collection<INode>> nodeSupplier, @Nonnull Consumer<Bom> assertThat) {
+        Utils.printNodeTree("tree", nodeSupplier.get().stream().toList());
         // create bom
         final CBOMOutputFile outputFile = new CBOMOutputFile();
-        outputFile.add(nodes);
+        nodeSupplier.get().forEach(node -> outputFile.add(List.of(node)));
         final Bom bom = outputFile.getBom();
         this.printBom(bom);
         // check bom header
@@ -76,7 +82,7 @@ public abstract class TestBase {
         assertThat.accept(bom);
     }
 
-    protected void asserts(@Nonnull Evidence evidence) {
+    protected void assertsNode(@Nonnull Evidence evidence) {
         assertThat(evidence.getOccurrences()).hasSize(1);
         final Occurrence occurrence = evidence.getOccurrences().get(0);
         assertThat(occurrence.getLocation()).isEqualTo(filePath);
