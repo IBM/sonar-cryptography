@@ -19,8 +19,14 @@
  */
 package com.ibm.output.cyclondx.builder;
 
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Key;
+import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.PrivateKey;
+import com.ibm.mapper.model.PublicKey;
+import com.ibm.mapper.model.SecretKey;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -163,15 +169,14 @@ public class KeyComponentBuilder implements IKeyComponentBuilder {
 
     @Override
     public @NotNull Component build() {
-        AlgorithmVariant variant = new AlgorithmVariant(keyAlgoName, keySize, null, null, null);
-
         this.cryptoProperties.setAssetType(AssetType.RELATED_CRYPTO_MATERIAL);
         this.cryptoProperties.setRelatedCryptoMaterialProperties(relatedCryptoMaterialProperties);
 
         this.component.setCryptoProperties(this.cryptoProperties);
         this.component.setType(Component.Type.CRYPTOGRAPHIC_ASSET);
         this.component.setBomRef(UUID.randomUUID().toString());
-        this.component.setName("key:" + variant);
+        this.component.setName(
+                Optional.ofNullable(keyAlgoName).map(INode::asString).orElse("Unknown"));
 
         return this.component;
     }

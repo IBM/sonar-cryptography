@@ -382,8 +382,7 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
 
     @Override
     public @NotNull Component build() {
-        AlgorithmVariant variant =
-                new AlgorithmVariant(algorithm, parameterSetIdentifier, mode, padding, curve);
+
         if (parameterSetIdentifier != null) {
             this.algorithmProperties.setParameterSetIdentifier(parameterSetIdentifier.asString());
         }
@@ -393,7 +392,8 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
         this.component.setCryptoProperties(this.cryptoProperties);
         this.component.setType(Component.Type.CRYPTOGRAPHIC_ASSET);
         this.component.setBomRef(UUID.randomUUID().toString());
-        this.component.setName(variant.toString());
+        this.component.setName(
+                Optional.ofNullable(algorithm).map(INode::asString).orElse("Unknown"));
 
         return this.component;
     }
