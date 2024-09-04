@@ -40,7 +40,7 @@ public class PBES1 extends Algorithm implements PasswordBasedEncryption {
 
         Optional<INode> messageDigest = this.hasChildOfType(MessageDigest.class);
         Optional<INode> mac = this.hasChildOfType(Mac.class);
-        Optional<INode> cipher = this.hasChildOfType(Cipher.class);
+        Optional<INode> cipher = this.hasChildOfType(BlockCipher.class);
 
         if (messageDigest.isPresent() && cipher.isPresent()) {
             return "pbeWith" + messageDigest.get().asString() + "And" + cipher.get().asString();
