@@ -21,41 +21,33 @@ package com.ibm.output.cyclonedx;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.ibm.mapper.model.Key;
 import com.ibm.mapper.model.PublicKey;
 import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.algorithms.RSA;
-import com.ibm.mapper.utils.DetectionLocation;
-import com.ibm.output.cyclondx.CBOMOutputFile;
-import java.util.Collections;
-import java.util.List;
-import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.component.crypto.CryptoProperties;
 import org.cyclonedx.model.component.crypto.enums.RelatedCryptoMaterialType;
 import org.junit.jupiter.api.Test;
 
-class KeyTest {
+class KeyTest extends TestBase {
 
     @Test
     void base() {
-        DetectionLocation detectionLocation =
-                new DetectionLocation("test.java", 1, 1, Collections.emptyList(), () -> "SSL");
-
-        final CBOMOutputFile outputFile = new CBOMOutputFile();
-
-        final Key key = new PublicKey((PublicKeyEncryption) new RSA(detectionLocation));
-        outputFile.add(List.of(key));
-
-        final Bom bom = outputFile.getBom();
-        assertThat(bom.getComponents()).hasSize(2);
-        assertThat(bom.getComponents())
-                .anyMatch(
-                        component -> {
-                            CryptoProperties c = component.getCryptoProperties();
-                            return component.getName().equals("key:rsa")
-                                    && c.getRelatedCryptoMaterialProperties()
-                                            .getType()
-                                            .equals(RelatedCryptoMaterialType.SECRET_KEY);
-                        });
+        this.assertsNode(
+                () -> new PublicKey((PublicKeyEncryption) new RSA(detectionLocation)),
+                bom -> {
+                    assertThat(bom.getComponents()).hasSize(1);
+                    assertThat(bom.getComponents())
+                            .anyMatch(
+                                    component -> {
+                                        asserts(component.getEvidence());
+                                        CryptoProperties c = component.getCryptoProperties();
+                                        return component.getName().equals("RSA")
+                                                && c.getRelatedCryptoMaterialProperties()
+                                                        .getType()
+                                                        .equals(
+                                                                RelatedCryptoMaterialType
+                                                                        .PUBLIC_KEY);
+                                    });
+                });
     }
 }

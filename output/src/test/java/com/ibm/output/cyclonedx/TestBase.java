@@ -25,7 +25,9 @@ import com.ibm.engine.rule.IBundle;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.mapper.utils.Utils;
+import com.ibm.output.Constants;
 import com.ibm.output.cyclondx.CBOMOutputFile;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
@@ -37,7 +39,10 @@ import org.cyclonedx.generators.BomGeneratorFactory;
 import org.cyclonedx.generators.json.BomJsonGenerator;
 import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.Evidence;
+import org.cyclonedx.model.OrganizationalEntity;
+import org.cyclonedx.model.Service;
 import org.cyclonedx.model.component.evidence.Occurrence;
+import org.cyclonedx.model.metadata.ToolInformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,15 +56,29 @@ public abstract class TestBase {
     protected final DetectionLocation detectionLocation =
             new DetectionLocation(filePath, lineNumber, offset, Collections.emptyList(), bundle);
 
-    public void asserts(@Nonnull Supplier<INode> nodeSupplier, @Nonnull Consumer<Bom> assertThat) {
-        final List<INode> nodes = List.of(nodeSupplier.get());
-        Utils.printNodeTree("tree", nodes);
+    public void assertsNode(
+            @Nonnull Supplier<INode> nodeSupplier, @Nonnull Consumer<Bom> assertThat) {
+        this.assertsNodes(() -> List.of(nodeSupplier.get()), assertThat);
+    }
 
+    public void assertsNodes(
+            @Nonnull Supplier<Collection<INode>> nodeSupplier, @Nonnull Consumer<Bom> assertThat) {
+        Utils.printNodeTree("tree", nodeSupplier.get().stream().toList());
+        // create bom
         final CBOMOutputFile outputFile = new CBOMOutputFile();
-        outputFile.add(nodes);
+        nodeSupplier.get().forEach(node -> outputFile.add(List.of(node)));
         final Bom bom = outputFile.getBom();
         this.printBom(bom);
-
+        // check bom header
+        assertThat(bom.getMetadata().getToolChoice()).isNotNull();
+        final ToolInformation toolInformation = bom.getMetadata().getToolChoice();
+        assertThat(toolInformation.getServices()).hasSize(1);
+        final Service service = toolInformation.getServices().get(0);
+        assertThat(service.getName()).isEqualTo(Constants.SCANNER_NAME);
+        assertThat(service.getProvider()).isNotNull();
+        final OrganizationalEntity entity = service.getProvider();
+        assertThat(entity.getName()).isEqualTo(Constants.SCANNER_VENDOR);
+        // assert bom content
         assertThat.accept(bom);
     }
 
