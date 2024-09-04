@@ -23,37 +23,31 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.mapper.model.Version;
 import com.ibm.mapper.model.protocol.TLS;
-import com.ibm.mapper.utils.DetectionLocation;
-import com.ibm.output.cyclondx.CBOMOutputFile;
-import java.util.Collections;
-import java.util.List;
-import org.cyclonedx.model.Bom;
 import org.cyclonedx.model.component.crypto.CryptoProperties;
 import org.cyclonedx.model.component.crypto.enums.ProtocolType;
 import org.junit.jupiter.api.Test;
 
-class ProtocolTest {
+class ProtocolTest extends TestBase {
 
     @Test
     void base() {
-        DetectionLocation detectionLocation =
-                new DetectionLocation("test.java", 1, 1, Collections.emptyList(), () -> "SSL");
-
-        final CBOMOutputFile outputFile = new CBOMOutputFile();
-
-        final TLS tlsProtocol = new TLS(new Version("1.3", detectionLocation));
-
-        outputFile.add(List.of(tlsProtocol));
-
-        final Bom bom = outputFile.getBom();
-        assertThat(bom.getComponents()).hasSize(1);
-        assertThat(bom.getComponents())
-                .anyMatch(
-                        component -> {
-                            CryptoProperties c = component.getCryptoProperties();
-                            return component.getName().equals("TLSv1.3")
-                                    && c.getProtocolProperties().getType().equals(ProtocolType.TLS)
-                                    && c.getProtocolProperties().getVersion().equals("1.3");
-                        });
+        this.assertsNode(
+                () -> new TLS(new Version("1.3", detectionLocation)),
+                bom -> {
+                    assertThat(bom.getComponents()).hasSize(1);
+                    assertThat(bom.getComponents())
+                            .anyMatch(
+                                    component -> {
+                                        asserts(component.getEvidence());
+                                        CryptoProperties c = component.getCryptoProperties();
+                                        return component.getName().equals("TLSv1.3")
+                                                && c.getProtocolProperties()
+                                                        .getType()
+                                                        .equals(ProtocolType.TLS)
+                                                && c.getProtocolProperties()
+                                                        .getVersion()
+                                                        .equals("1.3");
+                                    });
+                });
     }
 }

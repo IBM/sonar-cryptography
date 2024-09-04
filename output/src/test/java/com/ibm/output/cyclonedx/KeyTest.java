@@ -39,7 +39,7 @@ class KeyTest extends TestBase {
                     assertThat(bom.getComponents())
                             .anyMatch(
                                     component -> {
-                                        assertsNode(component.getEvidence());
+                                        asserts(component.getEvidence());
                                         CryptoProperties c = component.getCryptoProperties();
                                         return component.getName().equals("RSA")
                                                 && c.getRelatedCryptoMaterialProperties()

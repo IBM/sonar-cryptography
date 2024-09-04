@@ -54,7 +54,7 @@ class AlgorithmTest extends TestBase {
                     CryptoProperties cryptoProperties = component.getCryptoProperties();
                     assertThat(cryptoProperties.getAssetType()).isEqualTo(AssetType.ALGORITHM);
 
-                    assertsNode(component.getEvidence());
+                    asserts(component.getEvidence());
 
                     AlgorithmProperties algorithmProperties =
                             component.getCryptoProperties().getAlgorithmProperties();
@@ -79,7 +79,7 @@ class AlgorithmTest extends TestBase {
                     CryptoProperties cryptoProperties = component.getCryptoProperties();
                     assertThat(cryptoProperties.getAssetType()).isEqualTo(AssetType.ALGORITHM);
 
-                    assertsNode(component.getEvidence());
+                    asserts(component.getEvidence());
 
                     AlgorithmProperties algorithmProperties =
                             component.getCryptoProperties().getAlgorithmProperties();
@@ -109,7 +109,7 @@ class AlgorithmTest extends TestBase {
                             .contains("PBKDF2-SHA1", "SHA1");
 
                     for (Component component : bom.getComponents()) {
-                        assertsNode(component.getEvidence());
+                        asserts(component.getEvidence());
                         assertThat(component.getCryptoProperties()).isNotNull();
                         final CryptoProperties cryptoProperties = component.getCryptoProperties();
 

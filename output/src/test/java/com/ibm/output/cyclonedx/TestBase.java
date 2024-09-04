@@ -82,7 +82,7 @@ public abstract class TestBase {
         assertThat.accept(bom);
     }
 
-    protected void assertsNode(@Nonnull Evidence evidence) {
+    protected void asserts(@Nonnull Evidence evidence) {
         assertThat(evidence.getOccurrences()).hasSize(1);
         final Occurrence occurrence = evidence.getOccurrences().get(0);
         assertThat(occurrence.getLocation()).isEqualTo(filePath);
