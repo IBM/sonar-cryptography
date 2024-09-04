@@ -25,10 +25,9 @@ import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.MacContext;
+import com.ibm.mapper.model.ClassicalBitSecurityLevel;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mac;
-import com.ibm.mapper.model.StreamCipher;
-import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
@@ -75,20 +74,15 @@ class BcZuc256MacTest extends TestBase {
         // Mac
         INode macNode = nodes.get(0);
         assertThat(macNode.getKind()).isEqualTo(Mac.class);
-        assertThat(macNode.getChildren()).hasSize(3);
+        assertThat(macNode.getChildren()).hasSize(2);
         assertThat(macNode.asString()).isEqualTo("ZUC-256");
 
-        // StreamCipher under Mac
-        INode streamCipherNode = macNode.getChildren().get(StreamCipher.class);
-        assertThat(streamCipherNode).isNotNull();
-        assertThat(streamCipherNode.getChildren()).isEmpty();
-        assertThat(streamCipherNode.asString()).isEqualTo("ZUC-256");
-
-        // Digest under Mac
-        INode digestNode = macNode.getChildren().get(Digest.class);
-        assertThat(digestNode).isNotNull();
-        assertThat(digestNode.getChildren()).isEmpty();
-        assertThat(digestNode.asString()).isEqualTo("DIGEST");
+        // ClassicalBitSecurityLevel under Mac
+        INode classicalBitSecurityLevelNode =
+                macNode.getChildren().get(ClassicalBitSecurityLevel.class);
+        assertThat(classicalBitSecurityLevelNode).isNotNull();
+        assertThat(classicalBitSecurityLevelNode.getChildren()).isEmpty();
+        assertThat(classicalBitSecurityLevelNode.asString()).isEqualTo("256");
 
         // Tag under Mac
         INode tagNode = macNode.getChildren().get(Tag.class);
