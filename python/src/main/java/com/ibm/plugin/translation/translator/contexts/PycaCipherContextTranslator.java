@@ -33,6 +33,7 @@ import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.algorithms.AES;
+import com.ibm.mapper.model.algorithms.AESWrap;
 import com.ibm.mapper.model.functionality.Decrypt;
 import com.ibm.mapper.model.functionality.Encapsulate;
 import com.ibm.mapper.model.functionality.Encrypt;
@@ -105,11 +106,25 @@ public final class PycaCipherContextTranslator implements IContextTranslation<Tr
                 case "ECB" -> Optional.of(new ECB(detectionLocation));
                 default -> Optional.empty();
             };
-        } else if (value instanceof CipherAction<Tree> cipherAction) {
+        } else if (value instanceof CipherAction<Tree> cipherAction
+                && detectionContext instanceof DetectionContext context) {
             return switch (cipherAction.getAction()) {
                 case DECRYPT -> Optional.of(new Decrypt(detectionLocation));
                 case ENCRYPT -> Optional.of(new Encrypt(detectionLocation));
-                case WRAP -> Optional.of(new Encapsulate(detectionLocation));
+                case WRAP ->
+                        context.get("algorithm")
+                                .map(
+                                        str ->
+                                                switch (str.toUpperCase().trim()) {
+                                                    case "AES" ->
+                                                            new AESWrap(128, detectionLocation);
+                                                    default -> null;
+                                                })
+                                .map(
+                                        algo -> {
+                                            algo.put(new Encapsulate(detectionLocation));
+                                            return algo;
+                                        });
                 default -> Optional.empty();
             };
         } else if (value instanceof com.ibm.engine.model.BlockSize<Tree> blockSize) {

@@ -19,32 +19,33 @@
  */
 package com.ibm.plugin.rules.detection.wrapping;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.CipherAction;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.SecretKey;
+import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.functionality.Encapsulate;
-import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.plugin.TestBase;
-import java.util.List;
-import javax.annotation.Nonnull;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
 import org.sonar.plugins.python.api.tree.Tree;
 import org.sonar.python.checks.utils.PythonCheckVerifier;
 
+import javax.annotation.Nonnull;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class PycaWrappingTest extends TestBase {
+
     @Test
-    void test() {
+    public void test() {
         PythonCheckVerifier.verify(
-                "src/test/files/rules/detection/wrapping/CryptographyWrappingTestFile.py", this);
+                "src/test/files/rules/detection/wrapping/PycaWrappingTestFile.py", this);
     }
 
     @Override
@@ -57,34 +58,31 @@ public class PycaWrappingTest extends TestBase {
          */
         assertThat(detectionStore.getDetectionValues()).hasSize(1);
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(CipherContext.class);
-
-        // First entry
-        IValue<Tree> value1 = detectionStore.getDetectionValues().get(0);
-        assertThat(value1).isInstanceOf(CipherAction.class);
-        assertThat(value1.asString()).isEqualTo("WRAP");
+        IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
+        assertThat(value0).isInstanceOf(CipherAction.class);
+        assertThat(value0.asString()).isEqualTo("WRAP");
 
         /*
          * Translation
          */
         assertThat(nodes).hasSize(1);
 
-        INode encapsulateNode = nodes.get(0);
-        assertThat(encapsulateNode).isInstanceOf(Encapsulate.class);
-        assertThat(encapsulateNode.asString()).isEqualTo("ENCAPSULATE");
-
-        // Secret key
-        INode secretKeyNode = encapsulateNode.getChildren().get(SecretKey.class);
-        assertThat(secretKeyNode).isNotNull();
-        assertThat(secretKeyNode.asString()).isEqualTo("AES");
-
         // BlockCipher
-        INode blockCipherNode = secretKeyNode.getChildren().get(BlockCipher.class);
-        assertThat(blockCipherNode).isNotNull();
-        assertThat(blockCipherNode.asString()).isEqualTo("AES");
+        INode blockCipherNode = nodes.get(0);
+        assertThat(blockCipherNode.getKind()).isEqualTo(BlockCipher.class);
+        assertThat(blockCipherNode.getChildren()).hasSize(2);
+        assertThat(blockCipherNode.asString()).isEqualTo("AESWrap");
 
-        // KeyGeneration
-        INode keyGenNode = blockCipherNode.getChildren().get(KeyGeneration.class);
-        assertThat(keyGenNode).isNotNull();
-        assertThat(keyGenNode.asString()).isEqualTo("KEYGENERATION");
+        // KeyLength under BlockCipher
+        INode keyLengthNode = blockCipherNode.getChildren().get(KeyLength.class);
+        assertThat(keyLengthNode).isNotNull();
+        assertThat(keyLengthNode.getChildren()).isEmpty();
+        assertThat(keyLengthNode.asString()).isEqualTo("128");
+
+        // Encapsulate under BlockCipher
+        INode encapsulateNode = blockCipherNode.getChildren().get(Encapsulate.class);
+        assertThat(encapsulateNode).isNotNull();
+        assertThat(encapsulateNode.getChildren()).isEmpty();
+        assertThat(encapsulateNode.asString()).isEqualTo("ENCAPSULATE");
     }
 }
