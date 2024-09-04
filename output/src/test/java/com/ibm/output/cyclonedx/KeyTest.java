@@ -49,19 +49,32 @@ class KeyTest extends TestBase {
         this.assertsNode(
                 () -> new PublicKey((PublicKeyEncryption) new RSA(detectionLocation)),
                 bom -> {
-                    assertThat(bom.getComponents()).hasSize(1);
-                    assertThat(bom.getComponents())
-                            .anyMatch(
-                                    component -> {
-                                        asserts(component.getEvidence());
-                                        CryptoProperties c = component.getCryptoProperties();
-                                        return component.getName().equals("RSA")
-                                                && c.getRelatedCryptoMaterialProperties()
-                                                        .getType()
-                                                        .equals(
-                                                                RelatedCryptoMaterialType
-                                                                        .PUBLIC_KEY);
-                                    });
+                    assertThat(bom.getComponents()).hasSize(2);
+                    for (Component component : bom.getComponents()) {
+                        asserts(component.getEvidence());
+                        assertThat(component.getCryptoProperties()).isNotNull();
+                        final CryptoProperties cryptoProperties = component.getCryptoProperties();
+
+                        if (cryptoProperties.getAssetType().equals(AssetType.ALGORITHM)) {
+                            assertThat(component.getName()).isEqualTo("RSA");
+                            assertThat(cryptoProperties.getAlgorithmProperties()).isNotNull();
+                            final AlgorithmProperties algorithmProperties =
+                                    cryptoProperties.getAlgorithmProperties();
+                            assertThat(algorithmProperties.getPrimitive()).isEqualTo(Primitive.PKE);
+                            assertThat(cryptoProperties.getOid()).isEqualTo("1.2.840.113549.1.1.1");
+                        } else if (cryptoProperties
+                                .getAssetType()
+                                .equals(AssetType.RELATED_CRYPTO_MATERIAL)) {
+                            assertThat(cryptoProperties.getRelatedCryptoMaterialProperties())
+                                    .isNotNull();
+                            final RelatedCryptoMaterialProperties relatedCryptoMaterialProperties =
+                                    cryptoProperties.getRelatedCryptoMaterialProperties();
+                            assertThat(relatedCryptoMaterialProperties.getType())
+                                    .isEqualTo(RelatedCryptoMaterialType.PUBLIC_KEY);
+                        } else {
+                            throw new AssertionError();
+                        }
+                    }
                 });
     }
 
@@ -88,6 +101,7 @@ class KeyTest extends TestBase {
                         final CryptoProperties cryptoProperties = component.getCryptoProperties();
 
                         if (cryptoProperties.getAssetType().equals(AssetType.ALGORITHM)) {
+                            assertThat(component.getName()).isEqualTo("AES128-GCM");
                             assertThat(cryptoProperties.getAlgorithmProperties()).isNotNull();
                             final AlgorithmProperties algorithmProperties =
                                     cryptoProperties.getAlgorithmProperties();
