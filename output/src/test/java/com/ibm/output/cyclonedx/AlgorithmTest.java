@@ -35,6 +35,7 @@ import org.cyclonedx.model.component.crypto.AlgorithmProperties;
 import org.cyclonedx.model.component.crypto.CryptoProperties;
 import org.cyclonedx.model.component.crypto.enums.AssetType;
 import org.cyclonedx.model.component.crypto.enums.CryptoFunction;
+import org.cyclonedx.model.component.crypto.enums.Primitive;
 import org.junit.jupiter.api.Test;
 
 class AlgorithmTest extends TestBase {
@@ -100,6 +101,27 @@ class AlgorithmTest extends TestBase {
                     pbkdf.put(keyLength);
                     return pbkdf;
                 },
-                bom -> {});
+                bom -> {
+                    assertThat(bom.getComponents()).hasSize(4);
+                    assertThat(bom.getComponents().stream().map(Component::getName))
+                            .contains("PBKDF2-SHA1", "SHA1");
+
+                    for (Component component : bom.getComponents()) {
+                        asserts(component.getEvidence());
+                        if (component.getName().equalsIgnoreCase("PBKDF2-SHA1")) {
+                            assertThat(component.getCryptoProperties()).isNotNull();
+                            final CryptoProperties cryptoProperties =
+                                    component.getCryptoProperties();
+                            assertThat(cryptoProperties.getAssetType())
+                                    .isEqualTo(AssetType.ALGORITHM);
+                            assertThat(cryptoProperties.getAlgorithmProperties()).isNotNull();
+                            final AlgorithmProperties algorithmProperties =
+                                    cryptoProperties.getAlgorithmProperties();
+                            assertThat(algorithmProperties.getPrimitive()).isEqualTo(Primitive.KDF);
+                            assertThat(algorithmProperties.getParameterSetIdentifier())
+                                    .isEqualTo("1024");
+                        }
+                    }
+                });
     }
 }
