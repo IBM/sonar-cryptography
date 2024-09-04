@@ -19,10 +19,10 @@
  */
 package com.ibm.plugin.translation.translator.contexts;
 
-import com.ibm.engine.model.AlgorithmParameter;
 import com.ibm.engine.model.BlockSize;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.MacSize;
+import com.ibm.engine.model.ParameterIdentifier;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.mapper.mapper.bc.BcMacMapper;
@@ -76,9 +76,9 @@ public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslato
                     new com.ibm.mapper.model.BlockSize(
                             blockSizeDetection.getValue(), detectionLocation);
             return Optional.of(blockSize);
-        } else if (value instanceof AlgorithmParameter<Tree> algorithmParameter) {
+        } else if (value instanceof ParameterIdentifier<Tree> parameterIdentifier) {
             ParameterSetIdentifier parameterSetIdentifier =
-                    new ParameterSetIdentifier(algorithmParameter.asString(), detectionLocation);
+                    new ParameterSetIdentifier(parameterIdentifier.asString(), detectionLocation);
             return Optional.of(parameterSetIdentifier);
         }
         return Optional.empty();

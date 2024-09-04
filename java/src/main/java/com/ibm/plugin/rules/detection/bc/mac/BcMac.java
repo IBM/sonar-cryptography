@@ -21,12 +21,11 @@ package com.ibm.plugin.rules.detection.bc.mac;
 
 import static com.ibm.plugin.rules.detection.TypeShortcuts.BYTE_ARRAY_TYPE;
 
-import com.ibm.engine.model.AlgorithmParameter;
 import com.ibm.engine.model.Size;
 import com.ibm.engine.model.context.MacContext;
-import com.ibm.engine.model.factory.AlgorithmParameterFactory;
 import com.ibm.engine.model.factory.BlockSizeFactory;
 import com.ibm.engine.model.factory.MacSizeFactory;
+import com.ibm.engine.model.factory.ParameterIdentifierFactory;
 import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
@@ -357,8 +356,7 @@ public final class BcMac {
                         .forConstructor()
                         .shouldBeDetectedAs(new ValueActionFactory<>("KMAC"))
                         .withMethodParameter("int")
-                        .shouldBeDetectedAs(
-                                new AlgorithmParameterFactory<>(AlgorithmParameter.Kind.IDENTIFIER))
+                        .shouldBeDetectedAs(new ParameterIdentifierFactory<>())
                         .asChildOfParameterWithId(-1)
                         .withMethodParameter(BYTE_ARRAY_TYPE)
                         .buildForContext(new MacContext())

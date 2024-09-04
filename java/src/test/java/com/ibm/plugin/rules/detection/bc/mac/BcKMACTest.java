@@ -22,8 +22,8 @@ package com.ibm.plugin.rules.detection.bc.mac;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.engine.detection.DetectionStore;
-import com.ibm.engine.model.AlgorithmParameter;
 import com.ibm.engine.model.IValue;
+import com.ibm.engine.model.ParameterIdentifier;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.MacContext;
 import com.ibm.mapper.model.INode;
@@ -70,11 +70,11 @@ class BcKMACTest extends TestBase {
         assertThat(value0.asString()).isEqualTo("KMAC");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
-                getStoreOfValueType(AlgorithmParameter.class, detectionStore.getChildren());
+                getStoreOfValueType(ParameterIdentifier.class, detectionStore.getChildren());
         assertThat(store_1.getDetectionValues()).hasSize(1);
         assertThat(store_1.getDetectionValueContext()).isInstanceOf(MacContext.class);
         IValue<Tree> value0_1 = store_1.getDetectionValues().get(0);
-        assertThat(value0_1).isInstanceOf(AlgorithmParameter.class);
+        assertThat(value0_1).isInstanceOf(ParameterIdentifier.class);
         assertThat(value0_1.asString()).isEqualTo("256");
 
         /*

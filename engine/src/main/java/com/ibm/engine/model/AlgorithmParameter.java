@@ -30,8 +30,7 @@ public class AlgorithmParameter<T> extends AbstractValue<T> {
         B, // EC: B
         P, // EC: P
         M, // EC: M
-        ITERATIONS,
-        IDENTIFIER
+        ITERATIONS
     }
 
     @Nonnull private final Kind kind;

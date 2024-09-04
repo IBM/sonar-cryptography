@@ -22,15 +22,19 @@ package com.ibm.engine.model.factory;
 import com.ibm.engine.detection.ResolvedValue;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.ParameterIdentifier;
-import com.ibm.engine.utils.Utils;
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class ParameterIdentifierFactory<T> implements IValueFactory<T> {
     @Nonnull
     @Override
-    public Optional<IValue<T>> apply(@Nonnull ResolvedValue<Object, T> objectTResolvedValue) {
-        return Utils.byteSizeValueToBitSizeInteger(objectTResolvedValue)
-                .map(value -> new ParameterIdentifier<>(value, objectTResolvedValue.tree()));
+    public Optional<IValue<T>> apply(@NotNull ResolvedValue<Object, T> objectTResolvedValue) {
+        if (objectTResolvedValue.value() instanceof String str) {
+            return Optional.of(new ParameterIdentifier<>(str, objectTResolvedValue.tree()));
+        } else if (objectTResolvedValue.value() instanceof Integer number) {
+            return Optional.of(new ParameterIdentifier<>(number, objectTResolvedValue.tree()));
+        }
+        return Optional.empty();
     }
 }
