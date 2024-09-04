@@ -42,7 +42,7 @@ public class Kalyna extends Algorithm implements BlockCipher, Mac {
      */
     @Override
     @Nonnull
-    public String getName() {
+    public String asString() {
         StringBuilder builtName = new StringBuilder(this.name);
 
         Optional<INode> blockSize = this.hasChildOfType(BlockSize.class);

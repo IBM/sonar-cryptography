@@ -38,7 +38,7 @@ public final class HarakaV2 extends Algorithm implements MessageDigest {
     /** Returns a name of the form "Haraka-XXX v2" where XXX is the block size */
     @Override
     @Nonnull
-    public String getName() {
+    public String asString() {
         StringBuilder builtName = new StringBuilder(this.name);
 
         Optional<INode> blockSize = this.hasChildOfType(BlockSize.class);

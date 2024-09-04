@@ -38,7 +38,7 @@ public final class SHAKE extends Algorithm implements ExtendableOutputFunction {
     /** Returns a name of the form "SHAKEXXX" where XXX is the parameter set identifer */
     @Override
     @Nonnull
-    public String getName() {
+    public String asString() {
         final StringBuilder builtName = new StringBuilder(this.name);
         final Optional<INode> parameterSetIdentifier =
                 this.hasChildOfType(ParameterSetIdentifier.class);

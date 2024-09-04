@@ -40,7 +40,7 @@ public final class CSHAKE extends Algorithm implements MessageDigest {
     /** Returns a name of the form "cSHAKEXXX" where XXX is the parameter set identifer */
     @Override
     @Nonnull
-    public String getName() {
+    public String asString() {
         final StringBuilder builtName = new StringBuilder(this.name);
         final Optional<INode> parameterSetIdentifier =
                 this.hasChildOfType(ParameterSetIdentifier.class);

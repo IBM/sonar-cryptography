@@ -36,7 +36,7 @@ public class MLKEM extends Algorithm implements KeyEncapsulationMechanism {
     /** Returns a name of the form "ML-KEM-XXX" where XXX is the parameter set identifer */
     @Override
     @Nonnull
-    public String getName() {
+    public String asString() {
         StringBuilder builtName = new StringBuilder(this.name);
 
         Optional<INode> parameterSetIdentifier = this.hasChildOfType(ParameterSetIdentifier.class);

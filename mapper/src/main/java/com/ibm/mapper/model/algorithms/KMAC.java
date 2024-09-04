@@ -39,7 +39,7 @@ public final class KMAC extends Algorithm implements MessageDigest {
     /** Returns a name of the form "KMACXXX" where XXX is the parameter set identifer */
     @Override
     @Nonnull
-    public String getName() {
+    public String asString() {
         StringBuilder builtName = new StringBuilder(this.name);
 
         Optional<INode> parameterSetIdentifier = this.hasChildOfType(ParameterSetIdentifier.class);

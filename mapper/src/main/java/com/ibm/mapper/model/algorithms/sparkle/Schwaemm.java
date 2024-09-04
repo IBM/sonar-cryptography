@@ -41,7 +41,7 @@ public class Schwaemm extends Algorithm implements AuthenticatedEncryption, Bloc
      */
     @Override
     @Nonnull
-    public String getName() {
+    public String asString() {
         StringBuilder builtName = new StringBuilder(this.name);
 
         Optional<INode> nonceLength /* rate */ = this.hasChildOfType(NonceLength.class);

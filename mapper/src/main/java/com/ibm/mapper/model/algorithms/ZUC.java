@@ -41,7 +41,7 @@ public final class ZUC extends Algorithm implements StreamCipher, Mac {
     /** Returns a name of the form "ZUC-XXX" where XXX is the bit security level */
     @Override
     @Nonnull
-    public String getName() {
+    public String asString() {
         StringBuilder builtName = new StringBuilder(this.name);
 
         Optional<INode> securityLevel = this.hasChildOfType(ClassicalBitSecurityLevel.class);

@@ -34,7 +34,7 @@ public class HQC extends Algorithm implements KeyEncapsulationMechanism, PublicK
     /** Returns a more specific name "HQC.KEM" or "HQC.PKE" length */
     @Override
     @Nonnull
-    public String getName() {
+    public String asString() {
         StringBuilder builtName = new StringBuilder(this.name);
 
         if (this.getKind() == KeyEncapsulationMechanism.class) {
