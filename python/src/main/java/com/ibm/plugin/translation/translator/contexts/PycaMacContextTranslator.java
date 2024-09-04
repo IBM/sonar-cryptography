@@ -33,10 +33,9 @@ import com.ibm.mapper.model.algorithms.CMAC;
 import com.ibm.mapper.model.algorithms.HMAC;
 import com.ibm.mapper.model.algorithms.Poly1305;
 import com.ibm.mapper.utils.DetectionLocation;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.python.api.tree.Tree;
-
-import java.util.Optional;
 
 @SuppressWarnings("java:S1301")
 public final class PycaMacContextTranslator implements IContextTranslation<Tree> {

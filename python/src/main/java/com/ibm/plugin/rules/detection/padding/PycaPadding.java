@@ -21,7 +21,6 @@ package com.ibm.plugin.rules.detection.padding;
 
 import com.ibm.engine.model.Size;
 import com.ibm.engine.model.context.CipherContext;
-import com.ibm.engine.model.factory.AlgorithmFactory;
 import com.ibm.engine.model.factory.BlockSizeFactory;
 import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
@@ -57,6 +56,7 @@ public final class PycaPadding {
                             .shouldBeDetectedAs(new ValueActionFactory<>(padding))
                             .withMethodParameter("int")
                             .shouldBeDetectedAs(new BlockSizeFactory<>(Size.UnitType.BIT))
+                            .asChildOfParameterWithId(0)
                             .buildForContext(new CipherContext(Map.of("kind", "padding")))
                             .inBundle(() -> "Pyca")
                             .withoutDependingDetectionRules());
@@ -74,7 +74,8 @@ public final class PycaPadding {
                                         "cryptography.hazmat.primitives.ciphers.algorithms."
                                                 + cipherAlgorithm
                                                 + ".block_size")
-                                .shouldBeDetectedAs(new AlgorithmFactory<>(cipherAlgorithm))
+                                .shouldBeDetectedAs(new BlockSizeFactory<>(Size.UnitType.BIT))
+                                .asChildOfParameterWithId(0)
                                 .buildForContext(new CipherContext(Map.of("kind", "padding")))
                                 .inBundle(() -> "Pyca")
                                 .withoutDependingDetectionRules());

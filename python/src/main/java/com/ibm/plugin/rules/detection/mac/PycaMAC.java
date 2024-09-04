@@ -19,19 +19,18 @@
  */
 package com.ibm.plugin.rules.detection.mac;
 
+import static com.ibm.engine.detection.MethodMatcher.ANY;
+
 import com.ibm.engine.model.context.MacContext;
 import com.ibm.engine.model.factory.AlgorithmFactory;
 import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
-import org.jetbrains.annotations.Unmodifiable;
-import org.sonar.plugins.python.api.tree.Tree;
-
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
-
-import static com.ibm.engine.detection.MethodMatcher.ANY;
+import javax.annotation.Nonnull;
+import org.jetbrains.annotations.Unmodifiable;
+import org.sonar.plugins.python.api.tree.Tree;
 
 @SuppressWarnings("java:S1192")
 public final class PycaMAC {
