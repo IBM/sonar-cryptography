@@ -113,7 +113,7 @@ public class PycaKBKDFCMACTest extends TestBase {
         INode blockCipherNode = macNode.getChildren().get(BlockCipher.class);
         assertThat(blockCipherNode).isNotNull();
         assertThat(blockCipherNode.getChildren()).hasSize(3);
-        assertThat(blockCipherNode.asString()).isEqualTo("AES");
+        assertThat(blockCipherNode.asString()).isEqualTo("AES-CTR");
 
         // BlockSize under BlockCipher under Mac
         INode blockSizeNode = blockCipherNode.getChildren().get(BlockSize.class);

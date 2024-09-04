@@ -23,8 +23,14 @@ import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public final class ChaCha20Poly1305 extends Algorithm implements AuthenticatedEncryption {
+
+    @Override
+    public @NotNull String asString() {
+        return "ChaCha20Poly1305";
+    }
 
     public ChaCha20Poly1305(@Nonnull DetectionLocation detectionLocation) {
         super(new ChaCha20(detectionLocation), AuthenticatedEncryption.class);

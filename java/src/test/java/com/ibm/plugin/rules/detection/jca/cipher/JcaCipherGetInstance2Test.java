@@ -71,7 +71,7 @@ class JcaCipherGetInstance2Test extends TestBase {
         assertThat(nodes).hasSize(1);
         INode node = nodes.get(0);
         assertThat(node).isInstanceOf(BlockCipher.class);
-        assertThat(node.asString()).isEqualTo("AES");
+        assertThat(node.asString()).isEqualTo("AES128-ECB-PKCS5");
 
         INode mode = node.getChildren().get(Mode.class);
         assertThat(mode).isNotNull();

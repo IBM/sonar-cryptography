@@ -105,7 +105,7 @@ class JcaPBEKeySpecTest extends TestBase {
         INode secretKeyNode = nodes.get(0);
         assertThat(secretKeyNode.getKind()).isEqualTo(SecretKey.class);
         assertThat(secretKeyNode.getChildren()).hasSize(4);
-        assertThat(secretKeyNode.asString()).isEqualTo("PBKDF2-SHA1");
+        assertThat(secretKeyNode.asString()).isEqualTo("PBKDF2");
 
         // PasswordBasedKeyDerivationFunction under SecretKey
         INode passwordBasedKeyDerivationFunctionNode =

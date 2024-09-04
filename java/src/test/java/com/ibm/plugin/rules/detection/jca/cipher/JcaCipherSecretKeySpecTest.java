@@ -107,7 +107,7 @@ class JcaCipherSecretKeySpecTest extends TestBase {
             INode blockCipherNode = nodes.get(0);
             assertThat(blockCipherNode.getKind()).isEqualTo(BlockCipher.class);
             assertThat(blockCipherNode.getChildren()).hasSize(7);
-            assertThat(blockCipherNode.asString()).isEqualTo("AES");
+            assertThat(blockCipherNode.asString()).isEqualTo("AES128-CBC-PKCS1");
 
             // KeyLength under BlockCipher
             INode keyLengthNode = blockCipherNode.getChildren().get(KeyLength.class);
@@ -149,7 +149,7 @@ class JcaCipherSecretKeySpecTest extends TestBase {
             INode blockCipherNode1 = secretKeyNode.getChildren().get(BlockCipher.class);
             assertThat(blockCipherNode1).isNotNull();
             assertThat(blockCipherNode1.getChildren()).hasSize(4);
-            assertThat(blockCipherNode1.asString()).isEqualTo("AES");
+            assertThat(blockCipherNode1.asString()).isEqualTo("AES128");
 
             // KeyGeneration under BlockCipher under SecretKey under BlockCipher
             INode keyGenerationNode = blockCipherNode1.getChildren().get(KeyGeneration.class);
@@ -201,7 +201,7 @@ class JcaCipherSecretKeySpecTest extends TestBase {
 
             INode blockCipher = node.getChildren().get(BlockCipher.class);
             assertThat(blockCipher).isNotNull();
-            assertThat(blockCipher.asString()).isEqualTo("AES");
+            assertThat(blockCipher.asString()).isEqualTo("AES128");
 
             INode keyLength = node.getChildren().get(KeyLength.class);
             assertThat(keyLength).isNotNull();
