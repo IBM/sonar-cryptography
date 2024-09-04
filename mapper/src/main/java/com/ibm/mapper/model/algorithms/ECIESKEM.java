@@ -24,12 +24,12 @@ import com.ibm.mapper.model.KeyEncapsulationMechanism;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class ECIES extends Algorithm implements KeyEncapsulationMechanism {
+public class ECIESKEM extends Algorithm implements KeyEncapsulationMechanism {
     // See 10.2 of https://www.shoup.net/iso/std6.pdf (ISO 18033)
 
-    private static final String NAME = "ECIES"; // Elliptic Curve Integrated Encryption Scheme
+    private static final String NAME = "ECIES-KEM";
 
-    public ECIES(@Nonnull DetectionLocation detectionLocation) {
+    public ECIESKEM(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, KeyEncapsulationMechanism.class, detectionLocation);
     }
 }
