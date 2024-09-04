@@ -20,8 +20,12 @@
 package com.ibm.output.cyclondx.builder;
 
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Key;
 import com.ibm.mapper.model.PasswordLength;
+import com.ibm.mapper.model.PrivateKey;
+import com.ibm.mapper.model.PublicKey;
 import com.ibm.mapper.model.SaltLength;
+import com.ibm.mapper.model.SecretKey;
 import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nonnull;
@@ -74,11 +78,22 @@ public class RelatedCryptoMaterialComponentBuilder
                     component, cryptoProperties, relatedCryptoMaterialProperties, uuid);
         }
 
+        final StringBuilder stringBuilder = new StringBuilder();
         if (name instanceof SaltLength) {
-            this.component.setName("salt-" + this.uuid);
+            stringBuilder.append("salt");
         } else if (name instanceof PasswordLength) {
-            this.component.setName("password-" + this.uuid);
+            stringBuilder.append("password");
+        } else if (name instanceof PrivateKey) {
+            stringBuilder.append("private-key");
+        } else if (name instanceof PublicKey) {
+            stringBuilder.append("public-key");
+        } else if (name instanceof SecretKey) {
+            stringBuilder.append("secret-key");
+        } else if (name instanceof Key) {
+            stringBuilder.append("key");
         }
+        stringBuilder.append("@").append(this.uuid);
+        this.component.setName(stringBuilder.toString());
 
         return new RelatedCryptoMaterialComponentBuilder(
                 component, cryptoProperties, relatedCryptoMaterialProperties, uuid);
@@ -97,6 +112,12 @@ public class RelatedCryptoMaterialComponentBuilder
             types = RelatedCryptoMaterialType.SALT;
         } else if (type instanceof PasswordLength) {
             types = RelatedCryptoMaterialType.PASSWORD;
+        } else if (type.is(SecretKey.class) || type.is(Key.class)) {
+            types = RelatedCryptoMaterialType.SECRET_KEY;
+        } else if (type.is(PrivateKey.class)) {
+            types = RelatedCryptoMaterialType.PRIVATE_KEY;
+        } else if (type.is(PublicKey.class)) {
+            types = RelatedCryptoMaterialType.PUBLIC_KEY;
         }
 
         if (types != null) {

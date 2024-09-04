@@ -21,9 +21,17 @@ package com.ibm.output.cyclonedx;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.ibm.mapper.model.AuthenticatedEncryption;
+import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.PublicKey;
 import com.ibm.mapper.model.PublicKeyEncryption;
+import com.ibm.mapper.model.SecretKey;
+import com.ibm.mapper.model.algorithms.AES;
 import com.ibm.mapper.model.algorithms.RSA;
+import com.ibm.mapper.model.functionality.Decrypt;
+import com.ibm.mapper.model.functionality.Encrypt;
+import com.ibm.mapper.model.functionality.KeyGeneration;
+import com.ibm.mapper.model.mode.GCM;
 import org.cyclonedx.model.component.crypto.CryptoProperties;
 import org.cyclonedx.model.component.crypto.enums.RelatedCryptoMaterialType;
 import org.junit.jupiter.api.Test;
@@ -49,5 +57,23 @@ class KeyTest extends TestBase {
                                                                         .PUBLIC_KEY);
                                     });
                 });
+    }
+
+    @Test
+    void secretKey() {
+        this.assertsNode(
+                () -> {
+                    final AES aes =
+                            new AES(
+                                    AuthenticatedEncryption.class,
+                                    new AES(128, new GCM(detectionLocation), detectionLocation));
+                    aes.put(new Oid("2.16.840.1.101.3.4.1.6", detectionLocation));
+                    final SecretKey secretKey = new SecretKey(aes);
+                    secretKey.put(new KeyGeneration(detectionLocation));
+                    secretKey.put(new Encrypt(detectionLocation));
+                    secretKey.put(new Decrypt(detectionLocation));
+                    return secretKey;
+                },
+                bom -> {});
     }
 }
