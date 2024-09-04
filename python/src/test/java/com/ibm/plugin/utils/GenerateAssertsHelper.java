@@ -88,7 +88,7 @@ public class GenerateAssertsHelper {
                     * Translation
                     */
                     """);
-            generateNodeAssertions(writer, translationRoots, initialTranslationNodesVariableName);
+            generateNodeAssertions(writer, translationRoots);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -103,8 +103,8 @@ public class GenerateAssertsHelper {
     }
 
     private static void generateDetectionStoreAssertions(
-            FileWriter writer,
-            DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> detectionStore,
+            @NotNull FileWriter writer,
+            @NotNull DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> detectionStore,
             String detectionStoreVarName)
             throws IOException {
         writer.write(
@@ -178,12 +178,20 @@ public class GenerateAssertsHelper {
     }
 
     private static void generateNodeAssertions(
-            FileWriter writer, List<INode> nodes, String nodeVarName) throws IOException {
-        writer.write(String.format("assertThat(%s).hasSize(%d);%n%n", nodeVarName, nodes.size()));
+            @NotNull FileWriter writer, @NotNull List<INode> nodes) throws IOException {
+        writer.write(
+                String.format(
+                        "assertThat(%s).hasSize(%d);%n%n",
+                        GenerateAssertsHelper.initialTranslationNodesVariableName, nodes.size()));
 
         for (int i = 0; i < nodes.size(); i++) {
             INode node = nodes.get(i);
-            generateNodeAssertionsRecursive(writer, node, nodeVarName, i, null);
+            generateNodeAssertionsRecursive(
+                    writer,
+                    node,
+                    GenerateAssertsHelper.initialTranslationNodesVariableName,
+                    i,
+                    null);
         }
     }
 
@@ -191,7 +199,7 @@ public class GenerateAssertsHelper {
 
     private static void generateNodeAssertionsRecursive(
             FileWriter writer,
-            INode node,
+            @NotNull INode node,
             String previousNodeVarName,
             int index,
             String previousTitle)
@@ -200,7 +208,7 @@ public class GenerateAssertsHelper {
         String kindName = node.getKind().getSimpleName();
 
         usedKindNames.computeIfPresent(kindName, (key, value) -> value + 1);
-        usedKindNames.computeIfAbsent(kindName, key -> 0);
+        usedKindNames.putIfAbsent(kindName, 0);
 
         String number =
                 usedKindNames.get(kindName) > 0
@@ -210,12 +218,8 @@ public class GenerateAssertsHelper {
                 Character.toLowerCase(kindName.charAt(0)) + kindName.substring(1) + "Node" + number;
 
         if (kindName.equals("Algorithm")) {
-            // Remove the confusion between the engine's and the mapper's Algorithm
             kindName = node.getKind().getName();
-        } /* else if (kindName.equals("Oid")) {
-              // Don't put Oids in assert statements
-              return;
-          } */
+        }
 
         String title;
         if (index >= 0) {

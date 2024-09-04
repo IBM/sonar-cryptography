@@ -2,7 +2,7 @@ from cryptography.hazmat.primitives.poly1305 import Poly1305
 
 def generate_poly1305(key, data):
     # Create a Poly1305 context with the given key
-    poly1305_ctx = Poly1305(key) # Noncompliant {{MAC}}
+    poly1305_ctx = Poly1305(key) # Noncompliant {{Poly1305}}
 
     # Update the context with the data
     poly1305_ctx.update(data)

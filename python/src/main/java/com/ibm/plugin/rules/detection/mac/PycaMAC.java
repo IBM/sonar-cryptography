@@ -19,18 +19,19 @@
  */
 package com.ibm.plugin.rules.detection.mac;
 
-import static com.ibm.engine.detection.MethodMatcher.ANY;
-
 import com.ibm.engine.model.context.MacContext;
 import com.ibm.engine.model.factory.AlgorithmFactory;
 import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
-import java.util.List;
-import java.util.Map;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.python.api.tree.Tree;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Map;
+
+import static com.ibm.engine.detection.MethodMatcher.ANY;
 
 @SuppressWarnings("java:S1192")
 public final class PycaMAC {
@@ -64,12 +65,6 @@ public final class PycaMAC {
                     .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
-    // Here, the hash is simply detected with a `AlgorithmFactory()`, and then the check of
-    // whether it is an acceptable value is done in the translation. I should probably do it like
-    // this in RSA/DSA/EC. Challenge: they also can use a `Preshashed` containing a hash. In this
-    // case, one should create two duplicate rules (one capturing an immediate hash with
-    // `AlgorithmFactory()`)
-    // and the other a `Prehashed`.
     private static final IDetectionRule<Tree> NEW_POLY1305 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
