@@ -27,9 +27,9 @@ import com.ibm.engine.model.OperationMode;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.DigestContext;
-import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.functionality.Encrypt;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
@@ -69,7 +69,7 @@ class BcSM2EngineTest extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("SM2");
+        assertThat(value0.asString()).isEqualTo("SM2Engine");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
                 getStoreOfValueType(OperationMode.class, detectionStore.getChildren());
@@ -85,7 +85,7 @@ class BcSM2EngineTest extends TestBase {
         assertThat(store_2.getDetectionValueContext()).isInstanceOf(DigestContext.class);
         IValue<Tree> value0_2 = store_2.getDetectionValues().get(0);
         assertThat(value0_2).isInstanceOf(ValueAction.class);
-        assertThat(value0_2.asString()).isEqualTo("SHA-256");
+        assertThat(value0_2.asString()).isEqualTo("SHA256Digest");
 
         /*
          * Translation
@@ -95,7 +95,7 @@ class BcSM2EngineTest extends TestBase {
 
         // BlockCipher
         INode blockCipherNode = nodes.get(0);
-        assertThat(blockCipherNode.getKind()).isEqualTo(BlockCipher.class);
+        assertThat(blockCipherNode.getKind()).isEqualTo(PublicKeyEncryption.class);
         assertThat(blockCipherNode.getChildren()).hasSize(2);
         assertThat(blockCipherNode.asString()).isEqualTo("SM2");
 
@@ -108,7 +108,7 @@ class BcSM2EngineTest extends TestBase {
         // MessageDigest under BlockCipher
         INode messageDigestNode = blockCipherNode.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode).isNotNull();
-        assertThat(messageDigestNode.getChildren()).hasSize(1);
-        assertThat(messageDigestNode.asString()).isEqualTo("SHA-256");
+        assertThat(messageDigestNode.getChildren()).hasSize(4);
+        assertThat(messageDigestNode.asString()).isEqualTo("SHA256");
     }
 }

@@ -17,19 +17,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms;
+package com.ibm.mapper.model.algorithms.ies;
 
-import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.KeyEncapsulationMechanism;
+import com.ibm.mapper.model.PublicKeyEncryption;
+import com.ibm.mapper.model.algorithms.DH;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class ECIESKEM extends Algorithm implements KeyEncapsulationMechanism {
-    // See 10.2 of https://www.shoup.net/iso/std6.pdf (ISO 18033)
+public class ECIES extends IES {
+    // https://en.wikipedia.org/wiki/Integrated_Encryption_Scheme
 
-    private static final String NAME = "ECIES-KEM";
+    private static final String NAME = "ECIES";
 
-    public ECIESKEM(@Nonnull DetectionLocation detectionLocation) {
-        super(NAME, KeyEncapsulationMechanism.class, detectionLocation);
+    public ECIES(@Nonnull DetectionLocation detectionLocation) {
+        super(NAME, PublicKeyEncryption.class, detectionLocation);
+        this.put(new DH(detectionLocation));
     }
 }
