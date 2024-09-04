@@ -24,21 +24,21 @@ import com.ibm.mapper.model.INode;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
 import org.sonar.plugins.python.api.tree.Tree;
 import org.sonar.python.checks.utils.PythonCheckVerifier;
 
-class ResolveInnerFunctionCallTest extends TestBase {
+public class ResolveInnerFunctionCallTest extends TestBase {
     // This Test class structure allows testing a single class of rules instead of all rules defined
     // in PythonDetectionRules.
     // To do so, add `extends PythonBaseDetectionRule` and define a constructor using the rules you
     // want.
     // To use several rules, create a `rules()` method to call in the constructor.
 
-    protected ResolveInnerFunctionCallTest() {
+    public ResolveInnerFunctionCallTest() {
         super(ResolveInnerFunctionCall.rules());
     }
 
@@ -51,7 +51,7 @@ class ResolveInnerFunctionCallTest extends TestBase {
     }
 
     @Test
-    void test() {
+    public void test() {
         PythonCheckVerifier.verify(
                 "src/test/files/rules/resolve/ResolveInnerFunctionCallTestFile.py", this);
     }
