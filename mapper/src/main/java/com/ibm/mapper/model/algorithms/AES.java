@@ -34,6 +34,15 @@ import org.jetbrains.annotations.NotNull;
 public final class AES extends Algorithm implements BlockCipher, AuthenticatedEncryption {
     private static final String NAME = "AES"; // Rijndael
 
+    @Override
+    public @NotNull String asString() {
+        final StringBuilder sb = new StringBuilder(this.name);
+        this.hasChildOfType(KeyLength.class).ifPresent(k -> sb.append(k.asString()));
+        this.hasChildOfType(Mode.class).ifPresent(m -> sb.append("-").append(m.asString()));
+        this.hasChildOfType(Padding.class).ifPresent(p -> sb.append("-").append(p.asString()));
+        return sb.toString();
+    }
+
     public AES(@NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
         this.put(new BlockSize(128, detectionLocation));

@@ -19,9 +19,12 @@
  */
 package com.ibm.mapper.model.functionality;
 
+import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Property;
 import com.ibm.mapper.utils.DetectionLocation;
+import java.util.List;
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.Unmodifiable;
 
 public abstract class Functionality extends Property {
 
@@ -39,5 +42,22 @@ public abstract class Functionality extends Property {
     @Override
     public String asString() {
         return type.getSimpleName().toUpperCase();
+    }
+
+    @Unmodifiable
+    @Nonnull
+    public static List<Class<? extends INode>> getKinds() {
+        return List.of(
+                Decrypt.class,
+                Decapsulate.class,
+                Digest.class,
+                Encrypt.class,
+                Encapsulate.class,
+                Generate.class,
+                KeyDerivation.class,
+                KeyGeneration.class,
+                Sign.class,
+                Tag.class,
+                Verify.class);
     }
 }

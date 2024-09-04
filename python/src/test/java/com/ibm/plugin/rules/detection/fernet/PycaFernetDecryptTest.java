@@ -160,7 +160,7 @@ public class PycaFernetDecryptTest extends TestBase {
         INode blockCipherNode = authenticatedEncryptionNode.getChildren().get(BlockCipher.class);
         assertThat(blockCipherNode).isNotNull();
         assertThat(blockCipherNode.getChildren()).hasSize(5);
-        assertThat(blockCipherNode.asString()).isEqualTo("AES");
+        assertThat(blockCipherNode.asString()).isEqualTo("AES128-CBC-PKCS7");
 
         // KeyLength under BlockCipher under AuthenticatedEncryption under SecretKey
         INode keyLengthNode = blockCipherNode.getChildren().get(KeyLength.class);

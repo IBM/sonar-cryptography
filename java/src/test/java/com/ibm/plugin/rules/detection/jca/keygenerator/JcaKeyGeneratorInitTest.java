@@ -93,7 +93,7 @@ class JcaKeyGeneratorInitTest extends TestBase {
 
         INode blockCipher = node.getChildren().get(BlockCipher.class);
         assertThat(blockCipher).isNotNull();
-        assertThat(blockCipher.asString()).isEqualTo("AES");
+        assertThat(blockCipher.asString()).isEqualTo("AES128");
 
         keyLength = blockCipher.getChildren().get(KeyLength.class);
         assertThat(keyLength).isNotNull();

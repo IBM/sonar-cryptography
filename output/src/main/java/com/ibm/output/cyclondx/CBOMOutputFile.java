@@ -23,7 +23,9 @@ import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.EllipticCurve;
+import com.ibm.mapper.model.IAsset;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.IProperty;
 import com.ibm.mapper.model.Key;
 import com.ibm.mapper.model.KeyLength;
@@ -40,6 +42,7 @@ import com.ibm.mapper.model.functionality.Decrypt;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Encapsulate;
 import com.ibm.mapper.model.functionality.Encrypt;
+import com.ibm.mapper.model.functionality.Functionality;
 import com.ibm.mapper.model.functionality.Generate;
 import com.ibm.mapper.model.functionality.KeyDerivation;
 import com.ibm.mapper.model.functionality.KeyGeneration;
@@ -51,7 +54,6 @@ import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.output.Constants;
 import com.ibm.output.IOutputFile;
 import com.ibm.output.cyclondx.builder.AlgorithmComponentBuilder;
-import com.ibm.output.cyclondx.builder.KeyComponentBuilder;
 import com.ibm.output.cyclondx.builder.ProtocolComponentBuilder;
 import com.ibm.output.cyclondx.builder.RelatedCryptoMaterialComponentBuilder;
 import com.ibm.output.util.Utils;
@@ -161,22 +163,10 @@ public class CBOMOutputFile implements IOutputFile {
     }
 
     private void createKeyComponent(@Nullable String parentBomRef, @Nonnull Key node) {
-        Map<Class<? extends INode>, INode> children = node.getChildren();
-        Component key =
-                KeyComponentBuilder.create()
-                        .name(node)
-                        .size(
-                                Utils.oneOf(
-                                        children.get(KeyLength.class),
-                                        children.get(ParameterSetIdentifier.class)))
-                        .type(node)
-                        .occurrences(createOccurrenceForm(node.getDetectionContext()))
-                        .build();
-        final Optional<String> optionalId = getIdentifierFunction().apply(key);
-        if (optionalId.isEmpty()) {
-            return;
-        }
-        addComponentAndDependencies(key, optionalId.get(), parentBomRef, node);
+        // if functionality nodes are placed under the key node,
+        // they will be moved under the corresponding primitive node
+        Utils.pushNodesDownToFirstMatch(node, IPrimitive.getKinds(), Functionality.getKinds());
+        createRelatedCryptoMaterialComponent(parentBomRef, node);
     }
 
     private void createProtocolComponent(@Nullable String parentBomRef, @Nonnull Protocol node) {
@@ -197,19 +187,27 @@ public class CBOMOutputFile implements IOutputFile {
     }
 
     private void createRelatedCryptoMaterialComponent(
-            @Nullable String parentBomRef, @Nonnull IProperty node) {
-        Component key =
+            @Nullable String parentBomRef, @Nonnull INode node) {
+        final DetectionLocation detectionLocation;
+        if (node instanceof IProperty property) {
+            detectionLocation = property.getDetectionContext();
+        } else if (node instanceof IAsset iAsset) {
+            detectionLocation = iAsset.getDetectionContext();
+        } else {
+            return;
+        }
+        Component rcm =
                 RelatedCryptoMaterialComponentBuilder.create()
                         .name(node)
                         .size(node)
                         .type(node)
-                        .occurrences(createOccurrenceForm(node.getDetectionContext()))
+                        .occurrences(createOccurrenceForm(detectionLocation))
                         .build();
-        final Optional<String> optionalId = getIdentifierFunction().apply(key);
+        final Optional<String> optionalId = getIdentifierFunction().apply(rcm);
         if (optionalId.isEmpty()) {
             return;
         }
-        addComponentAndDependencies(key, optionalId.get(), parentBomRef, node);
+        addComponentAndDependencies(rcm, optionalId.get(), parentBomRef, node);
     }
 
     private void addComponentAndDependencies(
@@ -248,7 +246,6 @@ public class CBOMOutputFile implements IOutputFile {
         if (parentBomRef != null) {
             Dependency newDependency = new Dependency(componentIdentify.getBomRef());
             if (dependencies.get(parentBomRef) == null) {
-
                 Dependency parent = new Dependency(parentBomRef);
                 parent.addDependency(newDependency);
                 this.dependencies.putIfAbsent(parentBomRef, parent);

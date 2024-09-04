@@ -114,7 +114,7 @@ public class PycaCipher1Test extends TestBase {
         INode blockCipherNode = nodes.get(0);
         assertThat(blockCipherNode.getKind()).isEqualTo(BlockCipher.class);
         assertThat(blockCipherNode.getChildren()).hasSize(6);
-        assertThat(blockCipherNode.asString()).isEqualTo("AES");
+        assertThat(blockCipherNode.asString()).isEqualTo("AES-CBC-PKCS7");
 
         // Mode under BlockCipher
         INode modeNode = blockCipherNode.getChildren().get(Mode.class);
