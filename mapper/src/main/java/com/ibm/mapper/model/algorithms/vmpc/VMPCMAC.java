@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms;
+package com.ibm.mapper.model.algorithms.vmpc;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.Mac;
@@ -29,5 +29,6 @@ public final class VMPCMAC extends Algorithm implements Mac {
 
     public VMPCMAC(@NotNull DetectionLocation detectionLocation) {
         super("VMPC-MAC", Mac.class, detectionLocation);
+        this.put(new VMPC(detectionLocation));
     }
 }

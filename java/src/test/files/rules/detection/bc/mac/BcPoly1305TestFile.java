@@ -10,7 +10,7 @@ public class BcPoly1305TestFile {
         byte[] key = "0123456789abcdef".getBytes(StandardCharsets.UTF_8);
 
         // Initialize AES cipher
-        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AES}}
+        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
 
         // Initialize Poly1305 with the block cipher
         Poly1305 poly1305 = new Poly1305(aesEngine); // Noncompliant {{Poly1305}}

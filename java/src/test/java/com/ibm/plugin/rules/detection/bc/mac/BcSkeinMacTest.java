@@ -31,7 +31,6 @@ import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.TagLength;
-import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
@@ -94,14 +93,8 @@ class BcSkeinMacTest extends TestBase {
         // Mac
         INode macNode = nodes.get(0);
         assertThat(macNode.getKind()).isEqualTo(Mac.class);
-        assertThat(macNode.getChildren()).hasSize(4);
+        assertThat(macNode.getChildren()).hasSize(3);
         assertThat(macNode.asString()).isEqualTo("Skein");
-
-        // Digest under Mac
-        INode digestNode = macNode.getChildren().get(Digest.class);
-        assertThat(digestNode).isNotNull();
-        assertThat(digestNode.getChildren()).isEmpty();
-        assertThat(digestNode.asString()).isEqualTo("DIGEST");
 
         // BlockCipher under Mac
         INode blockCipherNode = macNode.getChildren().get(BlockCipher.class);
