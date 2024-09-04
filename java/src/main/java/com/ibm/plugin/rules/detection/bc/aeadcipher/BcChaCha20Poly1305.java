@@ -54,9 +54,8 @@ public final class BcChaCha20Poly1305 {
                     .forObjectTypes("org.bouncycastle.crypto.modes." + AEAD)
                     .forConstructor()
                     /*
-                     * We do use the `ChaCha20Poly1305` translation mapping (because the
-                     * provided Mac is not necessarily Poly1305), which we represent by
-                     * capturing the value `ChaCha20Poly1305[WITH_MAC]`
+                     * With this constructor of `ChaCha20Poly1305`, the provided Mac is not necessarily Poly1305,
+                     * which we represent (for the translation) by capturing the value `ChaCha20Poly1305[WITH_MAC]`
                      */
                     .shouldBeDetectedAs(new ValueActionFactory<>(AEAD + "[WITH_MAC]"))
                     .withMethodParameter("org.bouncycastle.crypto.Mac")
