@@ -117,7 +117,7 @@ class BcGCMBlockCipherTest extends TestBase {
         INode authenticatedEncryptionNode = nodes.get(0);
         assertThat(authenticatedEncryptionNode.getKind()).isEqualTo(AuthenticatedEncryption.class);
         assertThat(authenticatedEncryptionNode.getChildren()).hasSize(5);
-        assertThat(authenticatedEncryptionNode.asString()).isEqualTo("AES");
+        assertThat(authenticatedEncryptionNode.asString()).isEqualTo("AES-GCM");
 
         // Mode under AuthenticatedEncryption
         INode modeNode = authenticatedEncryptionNode.getChildren().get(Mode.class);

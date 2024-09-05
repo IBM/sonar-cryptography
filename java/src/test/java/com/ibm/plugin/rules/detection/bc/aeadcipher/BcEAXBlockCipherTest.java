@@ -113,7 +113,7 @@ class BcEAXBlockCipherTest extends TestBase {
         INode authenticatedEncryptionNode = nodes.get(0);
         assertThat(authenticatedEncryptionNode.getKind()).isEqualTo(AuthenticatedEncryption.class);
         assertThat(authenticatedEncryptionNode.getChildren()).hasSize(5);
-        assertThat(authenticatedEncryptionNode.asString()).isEqualTo("AES");
+        assertThat(authenticatedEncryptionNode.asString()).isEqualTo("AES-EAX");
 
         // Encrypt under AuthenticatedEncryption
         INode encryptNode = authenticatedEncryptionNode.getChildren().get(Encrypt.class);
