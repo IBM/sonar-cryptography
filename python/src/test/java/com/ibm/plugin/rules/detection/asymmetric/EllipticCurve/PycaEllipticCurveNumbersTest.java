@@ -24,8 +24,8 @@ import com.ibm.mapper.model.INode;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import javax.annotation.Nonnull;
+import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.jupiter.api.Disabled;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
@@ -34,7 +34,7 @@ import org.sonar.python.checks.utils.PythonCheckVerifier;
 
 public class PycaEllipticCurveNumbersTest extends TestBase {
 
-    @Disabled
+    @Ignore("In this testcase the name of a var is resolved, but not teh actual value.")
     @Test
     public void test() {
         PythonCheckVerifier.verify(
@@ -46,5 +46,7 @@ public class PycaEllipticCurveNumbersTest extends TestBase {
     public void asserts(
             int findingId,
             @Nonnull DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> detectionStore,
-            @Nonnull List<INode> nodes) {}
+            @Nonnull List<INode> nodes) {
+        // TODO:
+    }
 }

@@ -29,13 +29,12 @@ import com.ibm.engine.model.context.KeyDerivationFunctionContext;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.KeyDerivationFunction;
 import com.ibm.mapper.model.KeyLength;
-import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.KeyDerivation;
-import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -85,15 +84,9 @@ public class PycaConcatKDFHMACTest extends TestBase {
 
         // Mac
         INode macNode = nodes.get(0);
-        assertThat(macNode.getKind()).isEqualTo(Mac.class);
-        assertThat(macNode.getChildren()).hasSize(4);
-        assertThat(macNode.asString()).isEqualTo("HMAC-SHA256");
-
-        // Tag under Mac
-        INode tagNode = macNode.getChildren().get(Tag.class);
-        assertThat(tagNode).isNotNull();
-        assertThat(tagNode.getChildren()).isEmpty();
-        assertThat(tagNode.asString()).isEqualTo("TAG");
+        assertThat(macNode.getKind()).isEqualTo(KeyDerivationFunction.class);
+        assertThat(macNode.getChildren()).hasSize(3);
+        assertThat(macNode.asString()).isEqualTo("ConcatenationKDF");
 
         // MessageDigest under Mac
         INode messageDigestNode = macNode.getChildren().get(MessageDigest.class);

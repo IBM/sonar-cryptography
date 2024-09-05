@@ -41,10 +41,7 @@ public class MLKEM extends Algorithm implements KeyEncapsulationMechanism {
 
         Optional<INode> parameterSetIdentifier = this.hasChildOfType(ParameterSetIdentifier.class);
 
-        if (parameterSetIdentifier.isPresent()) {
-            builtName.append("-").append(parameterSetIdentifier.get().asString());
-        }
-
+        parameterSetIdentifier.ifPresent(node -> builtName.append("-").append(node.asString()));
         return builtName.toString();
     }
 

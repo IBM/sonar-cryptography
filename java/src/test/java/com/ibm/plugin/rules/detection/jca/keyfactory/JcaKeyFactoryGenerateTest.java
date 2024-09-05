@@ -104,7 +104,7 @@ class JcaKeyFactoryGenerateTest extends TestBase {
 
         INode algorithm = node.getChildren().get(com.ibm.mapper.model.PublicKeyEncryption.class);
         assertThat(algorithm).isNotNull();
-        assertThat(algorithm.asString()).isEqualTo("RSA");
+        assertThat(algorithm.asString()).isEqualTo("RSA-2048");
 
         INode defaultKeyLength = algorithm.getChildren().get(KeyLength.class);
         assertThat(defaultKeyLength).isNotNull();

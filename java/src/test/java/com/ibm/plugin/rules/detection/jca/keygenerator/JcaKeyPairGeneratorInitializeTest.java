@@ -88,7 +88,7 @@ class JcaKeyPairGeneratorInitializeTest extends TestBase {
 
         INode blockCipher = node.getChildren().get(PublicKeyEncryption.class);
         assertThat(blockCipher).isNotNull();
-        assertThat(blockCipher.asString()).isEqualTo("RSA");
+        assertThat(blockCipher.asString()).isEqualTo("RSA-2048");
 
         INode keyLength = blockCipher.getChildren().get(KeyLength.class);
         assertThat(keyLength).isNotNull();

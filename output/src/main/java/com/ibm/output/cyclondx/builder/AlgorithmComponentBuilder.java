@@ -21,6 +21,8 @@ package com.ibm.output.cyclondx.builder;
 
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.EllipticCurve;
+import com.ibm.mapper.model.ExtendableOutputFunction;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyAgreement;
 import com.ibm.mapper.model.KeyDerivationFunction;
@@ -28,7 +30,7 @@ import com.ibm.mapper.model.KeyEncapsulationMechanism;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Oid;
-import com.ibm.mapper.model.Padding;
+import com.ibm.mapper.model.PasswordBasedEncryption;
 import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
 import com.ibm.mapper.model.ProbabilisticSignatureScheme;
 import com.ibm.mapper.model.PseudorandomNumberGenerator;
@@ -47,7 +49,6 @@ import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.mapper.model.functionality.Verify;
-import com.ibm.mapper.model.padding.OAEP;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -186,7 +187,8 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
         } else if (primitive.is(MessageDigest.class)) {
             primitives = Primitive.HASH;
         } else if (primitive.is(KeyDerivationFunction.class)
-                || primitive.is(PasswordBasedKeyDerivationFunction.class)) {
+                || primitive.is(PasswordBasedKeyDerivationFunction.class)
+                || primitive.is(PasswordBasedEncryption.class)) {
             primitives = Primitive.KDF;
         } else if (primitive.is(PseudorandomNumberGenerator.class)) {
             primitives = Primitive.DRBG;
@@ -201,6 +203,8 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
             primitives = Primitive.KEY_AGREE;
         } else if (primitive.is(KeyEncapsulationMechanism.class)) {
             primitives = Primitive.KEM;
+        } else if (primitive.is(ExtendableOutputFunction.class)) {
+            primitives = Primitive.XOF;
         } else {
             primitives = Primitive.OTHER;
         }
@@ -230,26 +234,10 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
                     curve);
         }
 
-        org.cyclonedx.model.component.crypto.enums.Padding p;
-        if (padding.is(OAEP.class)) {
-            p = org.cyclonedx.model.component.crypto.enums.Padding.OAEP;
-        } else if (padding.is(Padding.class)) {
-            final String paddingStr = padding.asString().toLowerCase();
-            p =
-                    switch (paddingStr) {
-                        case "no" -> org.cyclonedx.model.component.crypto.enums.Padding.RAW;
-                        case "pkcs1" -> org.cyclonedx.model.component.crypto.enums.Padding.PKCS1V15;
-                        // ISO10126Padding
-                        // PKCS5Padding
-                        // SSL3Padding
-                        case "pkcs5" -> org.cyclonedx.model.component.crypto.enums.Padding.PKCS5;
-                        case "pkcs7" -> org.cyclonedx.model.component.crypto.enums.Padding.PKCS7;
-                        default -> org.cyclonedx.model.component.crypto.enums.Padding.OTHER;
-                    };
-        } else {
-            p = org.cyclonedx.model.component.crypto.enums.Padding.OTHER;
-        }
-        this.algorithmProperties.setPadding(p);
+        this.padding = padding;
+        Optional<org.cyclonedx.model.component.crypto.enums.Padding> p =
+                Utils.parseStringToPadding(padding.asString().toLowerCase());
+        p.ifPresent(this.algorithmProperties::setPadding);
         return new AlgorithmComponentBuilder(
                 component,
                 cryptoProperties,
@@ -264,6 +252,9 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
     @Override
     public @NotNull IAlgorithmComponentBuilder curve(@Nullable INode curve) {
         this.curve = curve;
+        if (curve instanceof EllipticCurve ellipticCurve) {
+            this.algorithmProperties.setCurve(ellipticCurve.asString());
+        }
         return new AlgorithmComponentBuilder(
                 component,
                 cryptoProperties,

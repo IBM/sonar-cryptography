@@ -20,7 +20,10 @@
 package com.ibm.output.cyclondx.builder;
 
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.InitializationVectorLength;
 import com.ibm.mapper.model.Key;
+import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.NonceLength;
 import com.ibm.mapper.model.PasswordLength;
 import com.ibm.mapper.model.PrivateKey;
 import com.ibm.mapper.model.PublicKey;
@@ -91,6 +94,10 @@ public class RelatedCryptoMaterialComponentBuilder
             stringBuilder.append("secret-key");
         } else if (name instanceof Key) {
             stringBuilder.append("key");
+        } else if (name instanceof NonceLength) {
+            stringBuilder.append("nonce");
+        } else if (name instanceof InitializationVectorLength) {
+            stringBuilder.append("iv");
         }
         stringBuilder.append("@").append(this.uuid);
         this.component.setName(stringBuilder.toString());
@@ -118,6 +125,10 @@ public class RelatedCryptoMaterialComponentBuilder
             types = RelatedCryptoMaterialType.PRIVATE_KEY;
         } else if (type.is(PublicKey.class)) {
             types = RelatedCryptoMaterialType.PUBLIC_KEY;
+        } else if (type instanceof NonceLength) {
+            types = RelatedCryptoMaterialType.NONCE;
+        } else if (type instanceof InitializationVectorLength) {
+            types = RelatedCryptoMaterialType.INITIALIZATION_VECTOR;
         }
 
         if (types != null) {
@@ -140,6 +151,12 @@ public class RelatedCryptoMaterialComponentBuilder
             this.relatedCryptoMaterialProperties.setSize(saltLength.getValue());
         } else if (size instanceof PasswordLength passwordLength) {
             this.relatedCryptoMaterialProperties.setSize(passwordLength.getValue());
+        } else if (size instanceof KeyLength keyLength) {
+            this.relatedCryptoMaterialProperties.setSize(keyLength.getValue());
+        } else if (size instanceof NonceLength nonceLength) {
+            this.relatedCryptoMaterialProperties.setSize(nonceLength.getValue());
+        } else if (size instanceof InitializationVectorLength initializationVectorLength) {
+            this.relatedCryptoMaterialProperties.setSize(initializationVectorLength.getValue());
         }
 
         return new RelatedCryptoMaterialComponentBuilder(

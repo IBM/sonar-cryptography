@@ -25,7 +25,8 @@ import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.context.KeyAgreementContext;
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.KeyLength;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -67,7 +68,7 @@ class JcaKeyAgreementGetInstanceTest extends TestBase {
         assertThat(nodes).hasSize(1);
         INode node = nodes.get(0);
         assertThat(node).isNotNull();
-        assertThat(node.asString()).isEqualTo("DH");
+        assertThat(node.asString()).isEqualTo("DH-3072");
 
         INode keyLength = node.getChildren().get(KeyLength.class);
         assertThat(keyLength).isNotNull();

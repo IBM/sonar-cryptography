@@ -23,7 +23,6 @@ import com.ibm.enricher.IEnricher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.Padding;
-import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.padding.OAEP;
 import java.util.Optional;
@@ -39,9 +38,8 @@ public class RSAoaepEnricher implements IEnricher {
                 return node;
             }
             if (padding.get() instanceof OAEP) {
-                final RSA newRSA = new RSA(Signature.class, rsa);
-                newRSA.put(new Oid("1.2.840.113549.1.1.7", rsa.getDetectionContext()));
-                return newRSA;
+                rsa.put(new Oid("1.2.840.113549.1.1.7", rsa.getDetectionContext()));
+                return rsa;
             }
         }
         return node;

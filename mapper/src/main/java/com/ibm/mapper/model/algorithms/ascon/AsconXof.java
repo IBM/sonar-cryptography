@@ -20,15 +20,15 @@
 package com.ibm.mapper.model.algorithms.ascon;
 
 import com.ibm.mapper.model.BlockSize;
-import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.ExtendableOutputFunction;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
-public final class AsconXof extends Ascon implements MessageDigest {
+public final class AsconXof extends Ascon implements ExtendableOutputFunction {
     private static final String NAME = "Ascon-Xof";
 
     public AsconXof(@NotNull DetectionLocation detectionLocation) {
-        super(NAME, MessageDigest.class, detectionLocation);
+        super(NAME, ExtendableOutputFunction.class, detectionLocation);
         this.put(new BlockSize(64, detectionLocation));
     }
 }

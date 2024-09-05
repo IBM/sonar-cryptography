@@ -35,10 +35,8 @@ public final class ECDH extends Algorithm implements KeyAgreement {
         this.put(new Oid("1.3.132.1.12", detectionLocation));
     }
 
-    public ECDH(
-            @Nonnull EllipticCurve ellipticCurve, @Nonnull DetectionLocation detectionLocation) {
-        super(NAME, KeyAgreement.class, detectionLocation);
-        this.put(new Oid("1.3.132.1.12", detectionLocation));
+    public ECDH(@Nonnull EllipticCurve ellipticCurve) {
+        this(ellipticCurve.getDetectionContext());
         this.put(ellipticCurve);
     }
 }

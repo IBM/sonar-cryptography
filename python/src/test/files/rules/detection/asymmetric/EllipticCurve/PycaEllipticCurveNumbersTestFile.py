@@ -51,4 +51,3 @@ class Key(object):
     
 some_var = b'ecdsa-sha2-nistp256'
 Key._fromECComponents(None, None, None, some_var, None) # Noncompliant {{ecdsa-sha2-nistp256}}
-# TODO: The exact correct resolution should actually be {{SECP256R1}}

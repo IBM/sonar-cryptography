@@ -39,7 +39,7 @@ import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.PrivateKey;
-import com.ibm.mapper.model.Signature;
+import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.functionality.Decrypt;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.KeyGeneration;
@@ -139,20 +139,20 @@ public class PycaRSADecryptTest extends TestBase {
             assertThat(keyGenerationNode.getChildren()).isEmpty();
             assertThat(keyGenerationNode.asString()).isEqualTo("KEYGENERATION");
 
-            // Signature under PrivateKey
-            INode signatureNode = privateKeyNode.getChildren().get(Signature.class);
-            assertThat(signatureNode).isNotNull();
-            assertThat(signatureNode.getChildren()).hasSize(2);
-            assertThat(signatureNode.asString()).isEqualTo("RSA");
+            // PublicKeyEncryption under PrivateKey
+            INode pke = privateKeyNode.getChildren().get(PublicKeyEncryption.class);
+            assertThat(pke).isNotNull();
+            assertThat(pke.getChildren()).hasSize(2);
+            assertThat(pke.asString()).isEqualTo("RSA-OAEP");
 
             // Oid under Signature under PrivateKey
-            INode oidNode = signatureNode.getChildren().get(Oid.class);
+            INode oidNode = pke.getChildren().get(Oid.class);
             assertThat(oidNode).isNotNull();
             assertThat(oidNode.getChildren()).isEmpty();
             assertThat(oidNode.asString()).isEqualTo("1.2.840.113549.1.1.7");
 
             // Padding under Signature under PrivateKey
-            INode paddingNode = signatureNode.getChildren().get(Padding.class);
+            INode paddingNode = pke.getChildren().get(Padding.class);
             assertThat(paddingNode).isNotNull();
             assertThat(paddingNode.getChildren()).hasSize(2);
             assertThat(paddingNode.asString()).isEqualTo("OAEP");

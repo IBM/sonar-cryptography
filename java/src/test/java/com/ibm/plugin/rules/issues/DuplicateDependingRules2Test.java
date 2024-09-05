@@ -90,14 +90,13 @@ public class DuplicateDependingRules2Test extends TestBase {
          */
 
         assertThat(detectionStore.getDetectionValues()).hasSize(1);
-        // assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
         assertThat(value0.asString()).isEqualTo("ExampleObject");
 
         List<DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext>> stores =
                 getStoresOfValueType(Algorithm.class, detectionStore.getChildren());
-        assertThat(stores).hasSize(2);
+        assertThat(stores).hasSize(3);
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 = stores.get(0);
         assertThat(store_1.getDetectionValues()).hasSize(1);

@@ -29,7 +29,6 @@ import com.ibm.engine.model.context.KeyDerivationFunctionContext;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.KeyAgreement;
 import com.ibm.mapper.model.KeyDerivationFunction;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.MessageDigest;
@@ -86,7 +85,7 @@ public class PycaX963KDFTest extends TestBase {
         // KeyDerivationFunction
         INode keyDerivationFunctionNode = nodes.get(0);
         assertThat(keyDerivationFunctionNode.getKind()).isEqualTo(KeyDerivationFunction.class);
-        assertThat(keyDerivationFunctionNode.getChildren()).hasSize(4);
+        assertThat(keyDerivationFunctionNode.getChildren()).hasSize(3);
         assertThat(keyDerivationFunctionNode.asString()).isEqualTo("ANSI X9.63");
 
         // KeyDerivation under KeyDerivationFunction
@@ -130,17 +129,5 @@ public class PycaX963KDFTest extends TestBase {
         assertThat(digestNode).isNotNull();
         assertThat(digestNode.getChildren()).isEmpty();
         assertThat(digestNode.asString()).isEqualTo("DIGEST");
-
-        // KeyAgreement under KeyDerivationFunction
-        INode keyAgreementNode = keyDerivationFunctionNode.getChildren().get(KeyAgreement.class);
-        assertThat(keyAgreementNode).isNotNull();
-        assertThat(keyAgreementNode.getChildren()).hasSize(1);
-        assertThat(keyAgreementNode.asString()).isEqualTo("ECDH");
-
-        // Oid under KeyAgreement under KeyDerivationFunction
-        INode oidNode1 = keyAgreementNode.getChildren().get(Oid.class);
-        assertThat(oidNode1).isNotNull();
-        assertThat(oidNode1.getChildren()).isEmpty();
-        assertThat(oidNode1.asString()).isEqualTo("1.3.132.1.12");
     }
 }

@@ -20,6 +20,7 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -27,6 +28,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class DSA extends Algorithm implements Signature {
     private static final String NAME = "DSA";
+
+    @Override
+    public @NotNull String asString() {
+        return this.hasChildOfType(MessageDigest.class)
+                .map(node -> node.asString() + "with" + this.name)
+                .orElse(this.name);
+    }
 
     public DSA(@NotNull DetectionLocation detectionLocation) {
         super(NAME, Signature.class, detectionLocation);

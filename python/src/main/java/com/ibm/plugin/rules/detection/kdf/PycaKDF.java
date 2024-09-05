@@ -119,7 +119,7 @@ public final class PycaKDF {
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BYTE))
                     .asChildOfParameterWithId(0)
                     .withMethodParameter(ANY)
-                    .buildForContext(new KeyDerivationFunctionContext(Map.of("kind", "hash")))
+                    .buildForContext(new KeyDerivationFunctionContext(Map.of("kind", "hkdf")))
                     .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
@@ -135,7 +135,7 @@ public final class PycaKDF {
                     .asChildOfParameterWithId(0)
                     .withMethodParameter(ANY)
                     .withMethodParameter(ANY)
-                    .buildForContext(new KeyDerivationFunctionContext(Map.of("kind", "hash")))
+                    .buildForContext(new KeyDerivationFunctionContext(Map.of("kind", "hkdf")))
                     .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
@@ -151,11 +151,7 @@ public final class PycaKDF {
                     .asChildOfParameterWithId(0)
                     .withMethodParameter(ANY)
                     .withMethodParameter(ANY)
-                    .buildForContext(
-                            new KeyDerivationFunctionContext(
-                                    Map.of(
-                                            "kind", "hmac",
-                                            "spec", "concat")))
+                    .buildForContext(new KeyDerivationFunctionContext(Map.of("kind", "concatkdf")))
                     .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
@@ -170,11 +166,7 @@ public final class PycaKDF {
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BYTE))
                     .asChildOfParameterWithId(0)
                     .withMethodParameter(ANY)
-                    .buildForContext(
-                            new KeyDerivationFunctionContext(
-                                    Map.of(
-                                            "kind", "hash",
-                                            "spec", "concat")))
+                    .buildForContext(new KeyDerivationFunctionContext(Map.of("kind", "concatkdf")))
                     .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 

@@ -103,7 +103,7 @@ public class PycaDSASignTest extends TestBase {
         INode signatureNode = privateKeyNode.getChildren().get(Signature.class);
         assertThat(signatureNode).isNotNull();
         assertThat(signatureNode.getChildren()).hasSize(2);
-        assertThat(signatureNode.asString()).isEqualTo("DSA");
+        assertThat(signatureNode.asString()).isEqualTo("SHA256withDSA");
 
         // Oid under Signature under PrivateKey
         INode oidNode = signatureNode.getChildren().get(Oid.class);

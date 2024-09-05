@@ -36,8 +36,10 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyAgreement;
 import com.ibm.mapper.model.KeyDerivationFunction;
 import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.PrivateKey;
+import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.KeyDerivation;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.plugin.TestBase;
@@ -153,20 +155,8 @@ public class PycaEllipticCurveKeyExchangeTest extends TestBase {
             // KeyDerivationFunction
             INode keyDerivationFunctionNode = nodes.get(0);
             assertThat(keyDerivationFunctionNode.getKind()).isEqualTo(KeyDerivationFunction.class);
-            assertThat(keyDerivationFunctionNode.getChildren()).hasSize(5);
-            assertThat(keyDerivationFunctionNode.asString()).isEqualTo("SHA256");
-
-            // BlockSize under KeyDerivationFunction
-            INode blockSizeNode = keyDerivationFunctionNode.getChildren().get(BlockSize.class);
-            assertThat(blockSizeNode).isNotNull();
-            assertThat(blockSizeNode.getChildren()).isEmpty();
-            assertThat(blockSizeNode.asString()).isEqualTo("512");
-
-            // DigestSize under KeyDerivationFunction
-            INode digestSizeNode = keyDerivationFunctionNode.getChildren().get(DigestSize.class);
-            assertThat(digestSizeNode).isNotNull();
-            assertThat(digestSizeNode.getChildren()).isEmpty();
-            assertThat(digestSizeNode.asString()).isEqualTo("256");
+            assertThat(keyDerivationFunctionNode.getChildren()).hasSize(3);
+            assertThat(keyDerivationFunctionNode.asString()).isEqualTo("HKDF-SHA256");
 
             // KeyDerivation under KeyDerivationFunction
             INode keyDerivationNode =
@@ -181,11 +171,36 @@ public class PycaEllipticCurveKeyExchangeTest extends TestBase {
             assertThat(keyLengthNode.getChildren()).isEmpty();
             assertThat(keyLengthNode.asString()).isEqualTo("256");
 
-            // Oid under KeyDerivationFunction
-            INode oidNode = keyDerivationFunctionNode.getChildren().get(Oid.class);
+            // MessageDigest under KeyDerivationFunction
+            INode messageDigestNode =
+                    keyDerivationFunctionNode.getChildren().get(MessageDigest.class);
+            assertThat(messageDigestNode).isNotNull();
+            assertThat(messageDigestNode.getChildren()).hasSize(4);
+            assertThat(messageDigestNode.asString()).isEqualTo("SHA256");
+
+            // Digest under MessageDigest under KeyDerivationFunction
+            INode digestNode = messageDigestNode.getChildren().get(Digest.class);
+            assertThat(digestNode).isNotNull();
+            assertThat(digestNode.getChildren()).isEmpty();
+            assertThat(digestNode.asString()).isEqualTo("DIGEST");
+
+            // BlockSize under MessageDigest under KeyDerivationFunction
+            INode blockSizeNode = messageDigestNode.getChildren().get(BlockSize.class);
+            assertThat(blockSizeNode).isNotNull();
+            assertThat(blockSizeNode.getChildren()).isEmpty();
+            assertThat(blockSizeNode.asString()).isEqualTo("512");
+
+            // Oid under MessageDigest under KeyDerivationFunction
+            INode oidNode = messageDigestNode.getChildren().get(Oid.class);
             assertThat(oidNode).isNotNull();
             assertThat(oidNode.getChildren()).isEmpty();
             assertThat(oidNode.asString()).isEqualTo("2.16.840.1.101.3.4.2.1");
+
+            // DigestSize under MessageDigest under KeyDerivationFunction
+            INode digestSizeNode = messageDigestNode.getChildren().get(DigestSize.class);
+            assertThat(digestSizeNode).isNotNull();
+            assertThat(digestSizeNode.getChildren()).isEmpty();
+            assertThat(digestSizeNode.asString()).isEqualTo("256");
         }
     }
 }
