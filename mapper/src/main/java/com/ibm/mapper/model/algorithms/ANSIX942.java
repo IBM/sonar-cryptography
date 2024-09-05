@@ -24,13 +24,12 @@ import com.ibm.mapper.model.KeyDerivationFunction;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
-public class ANSIX942 extends Algorithm implements KeyDerivationFunction {
+public final class ANSIX942 extends Algorithm implements KeyDerivationFunction {
     // https://www.cryptsoft.com/pkcs11doc/v220/group__SEC__12__4__14__X9__42__DIFFIE__HELLMAN__KEY__DERIVATION.html
 
     private static final String NAME = "ANSI X9.42";
 
     public ANSIX942(@NotNull DetectionLocation detectionLocation) {
         super(NAME, KeyDerivationFunction.class, detectionLocation);
-        this.put(new DH(detectionLocation));
     }
 }

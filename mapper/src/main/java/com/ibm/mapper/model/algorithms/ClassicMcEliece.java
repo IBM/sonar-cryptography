@@ -24,7 +24,7 @@ import com.ibm.mapper.model.KeyEncapsulationMechanism;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class ClassicMcEliece extends Algorithm implements KeyEncapsulationMechanism {
+public final class ClassicMcEliece extends Algorithm implements KeyEncapsulationMechanism {
     // https://classic.mceliece.org/index.html
 
     private static final String NAME = "Classic McEliece"; // CMCE

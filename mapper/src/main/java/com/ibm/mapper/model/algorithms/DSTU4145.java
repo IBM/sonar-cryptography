@@ -24,7 +24,7 @@ import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class DSTU4145 extends Algorithm implements Signature {
+public final class DSTU4145 extends Algorithm implements Signature {
     private static final String NAME = "DSTU 4145-2002";
 
     public DSTU4145(@Nonnull DetectionLocation detectionLocation) {

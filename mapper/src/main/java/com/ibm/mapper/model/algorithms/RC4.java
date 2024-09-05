@@ -37,12 +37,12 @@ public final class RC4 extends Algorithm implements StreamCipher {
     }
 
     public RC4(int keyLength, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, StreamCipher.class, detectionLocation);
+        this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
     }
 
     public RC4(int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, StreamCipher.class, detectionLocation);
+        this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
     }
@@ -52,7 +52,7 @@ public final class RC4 extends Algorithm implements StreamCipher {
             @Nonnull Mode mode,
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
-        super(NAME, StreamCipher.class, detectionLocation);
+        this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
         this.put(padding);

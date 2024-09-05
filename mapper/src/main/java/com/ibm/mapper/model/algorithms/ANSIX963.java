@@ -25,7 +25,7 @@ import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
-public class ANSIX963 extends Algorithm implements KeyDerivationFunction {
+public final class ANSIX963 extends Algorithm implements KeyDerivationFunction {
     // https://csrc.nist.gov/CSRC/media/Events/Key-Management-Workshop-2000/documents/x963_overview.pdf
 
     private static final String NAME = "ANSI X9.63";

@@ -44,24 +44,23 @@ public final class AES extends Algorithm implements BlockCipher, AuthenticatedEn
     }
 
     public AES(@NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
-        this.put(new BlockSize(128, detectionLocation));
+        this(BlockCipher.class, detectionLocation);
     }
 
     public AES(int keyLength, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+        this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(new BlockSize(128, detectionLocation));
     }
 
     public AES(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+        this(detectionLocation);
         this.put(new BlockSize(128, detectionLocation));
         this.put(mode);
     }
 
     public AES(int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+        this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(new BlockSize(128, detectionLocation));
         this.put(mode);
@@ -72,7 +71,7 @@ public final class AES extends Algorithm implements BlockCipher, AuthenticatedEn
             @Nonnull Mode mode,
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+        this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(new BlockSize(128, detectionLocation));
         this.put(mode);
@@ -87,5 +86,6 @@ public final class AES extends Algorithm implements BlockCipher, AuthenticatedEn
             @Nonnull final Class<? extends IPrimitive> asKind,
             @NotNull DetectionLocation detectionLocation) {
         super(NAME, asKind, detectionLocation);
+        this.put(new BlockSize(128, detectionLocation));
     }
 }

@@ -29,7 +29,7 @@ import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class Xoodyak extends Algorithm
+public final class Xoodyak extends Algorithm
         implements MessageDigest, StreamCipher, AuthenticatedEncryption {
     // https://csrc.nist.gov/CSRC/media/Projects/lightweight-cryptography/documents/finalist-round/updated-spec-doc/xoodyak-spec-final.pdf
 

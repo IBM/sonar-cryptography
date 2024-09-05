@@ -33,6 +33,6 @@ public class EdDSA extends Algorithm implements Signature {
     }
 
     public EdDSA(@NotNull DetectionLocation detectionLocation) {
-        super(NAME, Signature.class, detectionLocation);
+        this(NAME, detectionLocation);
     }
 }

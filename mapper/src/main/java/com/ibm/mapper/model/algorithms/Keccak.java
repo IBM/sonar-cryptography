@@ -27,7 +27,7 @@ import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class Keccak extends Algorithm implements MessageDigest, AuthenticatedEncryption {
+public final class Keccak extends Algorithm implements MessageDigest, AuthenticatedEncryption {
     // https://keccak.team/keccak.html
 
     private static final String NAME = "Keccak";

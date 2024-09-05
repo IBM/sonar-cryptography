@@ -30,15 +30,15 @@ import javax.annotation.Nonnull;
 public final class SHA extends Algorithm implements MessageDigest {
 
     public SHA(@Nonnull DetectionLocation detectionLocation) {
-        super("SHA1", MessageDigest.class, detectionLocation);
-        this.put(new BlockSize(512, detectionLocation));
-        this.put(new DigestSize(160, detectionLocation));
+        this(MessageDigest.class, detectionLocation);
     }
 
     public SHA(
             @Nonnull final Class<? extends IPrimitive> asKind,
             @Nonnull DetectionLocation detectionLocation) {
         super("SHA1", asKind, detectionLocation);
+        this.put(new BlockSize(512, detectionLocation));
+        this.put(new DigestSize(160, detectionLocation));
     }
 
     public SHA(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull SHA sha) {
