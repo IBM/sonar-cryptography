@@ -22,7 +22,7 @@ package com.ibm.mapper.mapper.bc;
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.PublicKeyEncryption;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.algorithms.ElGamal;
 import com.ibm.mapper.model.algorithms.NaccacheStern;
@@ -36,6 +36,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class BcAsymCipherEngineMapper implements IMapper {
+
+    private final Class<? extends IPrimitive> asKind;
+
+    public BcAsymCipherEngineMapper(Class<? extends IPrimitive> asKind) {
+        this.asKind = asKind;
+    }
 
     @Override
     @Nonnull
@@ -52,19 +58,21 @@ public class BcAsymCipherEngineMapper implements IMapper {
             @Nonnull String cipherString, @Nonnull DetectionLocation detectionLocation) {
         return switch (cipherString) {
             /* From asymmetricblockcipher.BcAsymCipherEngine */
-            case "ElGamalEngine" -> Optional.of(new ElGamal(detectionLocation));
-            case "NaccacheSternEngine" -> Optional.of(new NaccacheStern(detectionLocation));
-            case "NTRUEngine" -> Optional.of(new NTRUEncrypt(detectionLocation));
-            case "RSABlindedEngine" -> Optional.of(new RSA(detectionLocation));
-            case "RSABlindingEngine" -> Optional.of(new RSA(detectionLocation));
-            case "RSAEngine" -> Optional.of(new RSA(detectionLocation));
+            case "ElGamalEngine" ->
+                    Optional.of(new ElGamal(asKind, new ElGamal(detectionLocation)));
+            case "NaccacheSternEngine" ->
+                    Optional.of(new NaccacheStern(asKind, new NaccacheStern(detectionLocation)));
+            case "NTRUEngine" ->
+                    Optional.of(new NTRUEncrypt(asKind, new NTRUEncrypt(detectionLocation)));
+            case "RSABlindedEngine" -> Optional.of(new RSA(asKind, new RSA(detectionLocation)));
+            case "RSABlindingEngine" -> Optional.of(new RSA(asKind, new RSA(detectionLocation)));
+            case "RSAEngine" -> Optional.of(new RSA(asKind, new RSA(detectionLocation)));
             /* From other.BcIESEngine */
-            case "IESEngine" -> Optional.of(new IES(detectionLocation));
+            case "IESEngine" -> Optional.of(new IES(asKind, new IES(detectionLocation)));
             /* From other.BcSM2Engine */
-            case "SM2Engine" -> Optional.of(new SM2(detectionLocation));
+            case "SM2Engine" -> Optional.of(new SM2(asKind, new SM2(detectionLocation)));
             default -> {
-                final Algorithm algorithm =
-                        new Algorithm(cipherString, PublicKeyEncryption.class, detectionLocation);
+                final Algorithm algorithm = new Algorithm(cipherString, asKind, detectionLocation);
                 algorithm.put(new Unknown(detectionLocation));
                 yield Optional.of(algorithm);
             }

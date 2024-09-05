@@ -21,8 +21,8 @@ package com.ibm.mapper.mapper.bc;
 
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.Padding;
-import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.padding.ISO9796Padding;
 import com.ibm.mapper.model.padding.OAEP;
@@ -34,6 +34,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class BcAsymCipherEncodingMapper implements IMapper {
+
+    private final Class<? extends IPrimitive> asKind;
+
+    public BcAsymCipherEncodingMapper(Class<? extends IPrimitive> asKind) {
+        this.asKind = asKind;
+    }
 
     @Override
     @Nonnull
@@ -52,20 +58,15 @@ public class BcAsymCipherEncodingMapper implements IMapper {
             case "ISO9796d1Encoding" ->
                     Optional.of(
                             Utils.unknownWithPadding(
-                                    new ISO9796Padding(detectionLocation),
-                                    PublicKeyEncryption.class));
+                                    new ISO9796Padding(detectionLocation), asKind));
             case "OAEPEncoding" ->
-                    Optional.of(
-                            Utils.unknownWithPadding(
-                                    new OAEP(detectionLocation), PublicKeyEncryption.class));
+                    Optional.of(Utils.unknownWithPadding(new OAEP(detectionLocation), asKind));
             case "PKCS1Encoding" ->
-                    Optional.of(
-                            Utils.unknownWithPadding(
-                                    new PKCS1(detectionLocation), PublicKeyEncryption.class));
+                    Optional.of(Utils.unknownWithPadding(new PKCS1(detectionLocation), asKind));
             default -> {
                 Padding padding = new Padding(blockCipherString, detectionLocation);
                 padding.put(new Unknown(detectionLocation));
-                yield Optional.of(Utils.unknownWithPadding(padding, PublicKeyEncryption.class));
+                yield Optional.of(Utils.unknownWithPadding(padding, asKind));
             }
         };
     }

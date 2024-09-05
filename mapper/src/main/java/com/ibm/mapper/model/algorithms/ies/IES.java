@@ -41,4 +41,8 @@ public class IES extends Algorithm implements PublicKeyEncryption, KeyEncapsulat
             @Nonnull DetectionLocation detectionLocation) {
         super(name, asKind, detectionLocation);
     }
+
+    public IES(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull IES ies) {
+        super(ies, asKind);
+    }
 }

@@ -19,7 +19,9 @@
  */
 package com.ibm.mapper.reorganizer;
 
+import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.utils.Function3;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +61,38 @@ public final class UsualPerformActions {
                 }
                 return roots;
             };
+
+    @Nonnull
+    public static final IFunctionPerformReorganization performMergeParentAndChildOfSameKind(
+            Class<? extends IPrimitive> kind) {
+        return (node, parent, roots) -> {
+            Algorithm newKindNode = (Algorithm) node.getChildren().get(kind);
+
+            for (Map.Entry<Class<? extends INode>, INode> childKeyValue :
+                    node.getChildren().entrySet()) {
+                if (!childKeyValue.getKey().equals(kind)) {
+                    newKindNode.put(childKeyValue.getValue());
+                }
+            }
+
+            if (parent == null) {
+                // `node` is a root node
+                // Create a copy of the roots list
+                List<INode> rootsCopy = new ArrayList<>(roots);
+                for (int i = 0; i < rootsCopy.size(); i++) {
+                    if (rootsCopy.get(i).equals(node)) {
+                        rootsCopy.set(i, newKindNode);
+                        break;
+                    }
+                }
+                return rootsCopy;
+            } else {
+                // Replace the previous `kind` node
+                parent.put(newKindNode);
+                return roots;
+            }
+        };
+    }
 
     /**
      * This action is a helper function to replace a node: provide a {@code Function3} that returns

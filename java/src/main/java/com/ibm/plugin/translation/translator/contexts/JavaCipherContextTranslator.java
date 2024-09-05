@@ -45,6 +45,7 @@ import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.PublicKeyEncryption;
+import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.functionality.Encapsulate;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.mapper.utils.Utils;
@@ -130,10 +131,16 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                     return bcBlockCipherModeMapper
                             .parse(valueAction.asString(), detectionLocation)
                             .map(f -> f);
-                case ASYMMETRIC_CIPHER_ENGINE, ASYMMETRIC_CIPHER_ENGINE_SIGNATURE:
+                case ASYMMETRIC_CIPHER_ENGINE:
                     BcAsymCipherEngineMapper bcAsymCipherEngineMapper =
-                            new BcAsymCipherEngineMapper();
+                            new BcAsymCipherEngineMapper(PublicKeyEncryption.class);
                     return bcAsymCipherEngineMapper
+                            .parse(valueAction.asString(), detectionLocation)
+                            .map(f -> f);
+                case ASYMMETRIC_CIPHER_ENGINE_SIGNATURE:
+                    BcAsymCipherEngineMapper bcAsymCipherEngineSignatureMapper =
+                            new BcAsymCipherEngineMapper(Signature.class);
+                    return bcAsymCipherEngineSignatureMapper
                             .parse(valueAction.asString(), detectionLocation)
                             .map(f -> f);
                 case BUFFERED_BLOCK_CIPHER:
@@ -213,11 +220,16 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                     return bcAeadMapper
                             .parse(valueAction.asString(), detectionLocation)
                             .map(f -> f);
-                case ENCODING, ENCODING_SIGNATURE:
-                    /* TODO: the Signature distinction does not seem necessary */
+                case ENCODING:
                     BcAsymCipherEncodingMapper bcAsymCipherEncodingMapper =
-                            new BcAsymCipherEncodingMapper();
+                            new BcAsymCipherEncodingMapper(PublicKeyEncryption.class);
                     return bcAsymCipherEncodingMapper
+                            .parse(valueAction.asString(), detectionLocation)
+                            .map(f -> f);
+                case ENCODING_SIGNATURE:
+                    BcAsymCipherEncodingMapper bcAsymCipherEncodingSignatureMapper =
+                            new BcAsymCipherEncodingMapper(Signature.class);
+                    return bcAsymCipherEncodingSignatureMapper
                             .parse(valueAction.asString(), detectionLocation)
                             .map(f -> f);
 
