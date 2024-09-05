@@ -41,7 +41,7 @@ public final class RSA extends Algorithm implements KeyAgreement, Signature, Pub
     public @NotNull String asString() {
         if (this.is(Signature.class)) {
             return this.hasChildOfType(MessageDigest.class)
-                    .map(node -> this.name + "with" + node.asString())
+                    .map(node -> node.asString() + "with" + this.name)
                     .orElse(this.name);
         } else if (this.is(PublicKeyEncryption.class)) {
             if (this.hasChildOfType(Padding.class).map(OAEP.class::isInstance).orElse(false)) {

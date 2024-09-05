@@ -30,6 +30,7 @@ import com.ibm.mapper.model.PrivateKey;
 import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.SaltLength;
 import com.ibm.mapper.model.algorithms.DSA;
+import com.ibm.mapper.model.algorithms.ECDH;
 import com.ibm.mapper.model.algorithms.MGF1;
 import com.ibm.mapper.model.algorithms.PBKDF2;
 import com.ibm.mapper.model.algorithms.RSA;
@@ -37,6 +38,7 @@ import com.ibm.mapper.model.algorithms.RSAssaPSS;
 import com.ibm.mapper.model.algorithms.SHA;
 import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.model.curves.Secp256r1;
+import com.ibm.mapper.model.curves.Secp384r1;
 import com.ibm.mapper.model.functionality.Decrypt;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Encrypt;
@@ -384,6 +386,28 @@ class AlgorithmTest extends TestBase {
                             component.getCryptoProperties().getAlgorithmProperties();
                     assertThat(algorithmProperties.getPrimitive()).isEqualTo(Primitive.PKE);
                     assertThat(algorithmProperties.getCurve()).isEqualTo("secp256r1");
+                });
+    }
+
+    @Test
+    void eccKeyAgree() {
+        this.assertsNode(
+                () -> new ECDH(new Secp384r1(detectionLocation)),
+                bom -> {
+                    assertThat(bom.getComponents()).hasSize(1);
+                    Component component = bom.getComponents().get(0);
+                    assertThat(component.getName()).isEqualTo("ECDH");
+
+                    CryptoProperties cryptoProperties = component.getCryptoProperties();
+                    assertThat(cryptoProperties.getAssetType()).isEqualTo(AssetType.ALGORITHM);
+
+                    asserts(component.getEvidence());
+
+                    final AlgorithmProperties algorithmProperties =
+                            component.getCryptoProperties().getAlgorithmProperties();
+                    assertThat(algorithmProperties.getPrimitive()).isEqualTo(Primitive.KEY_AGREE);
+                    assertThat(algorithmProperties.getCurve()).isEqualTo("secp384r1");
+                    assertThat(cryptoProperties.getOid()).isEqualTo("1.3.132.1.12");
                 });
     }
 }

@@ -32,7 +32,7 @@ public class DSA extends Algorithm implements Signature {
     @Override
     public @NotNull String asString() {
         return this.hasChildOfType(MessageDigest.class)
-                .map(node -> this.name + "with" + node.asString())
+                .map(node -> node.asString() + "with" + this.name)
                 .orElse(this.name);
     }
 
