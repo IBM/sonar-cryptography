@@ -84,7 +84,8 @@ class BcHKDFBytesGeneratorTest extends TestBase {
         INode keyDerivationFunctionNode1 = nodes.get(0);
         assertThat(keyDerivationFunctionNode1.getKind()).isEqualTo(KeyDerivationFunction.class);
         assertThat(keyDerivationFunctionNode1.getChildren()).hasSize(1);
-        assertThat(keyDerivationFunctionNode1.asString()).isEqualTo("HKDF");
+        assertThat(keyDerivationFunctionNode1.asString())
+                .isEqualTo(findingId == 0 ? "HKDF-SHA256" : "HKDF-SHA512");
 
         // MessageDigest under KeyDerivationFunction
         INode messageDigestNode1 =

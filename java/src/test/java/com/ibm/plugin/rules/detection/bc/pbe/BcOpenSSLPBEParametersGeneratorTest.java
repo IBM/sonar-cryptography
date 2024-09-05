@@ -97,7 +97,7 @@ class BcOpenSSLPBEParametersGeneratorTest extends TestBase {
         INode messageDigestNode1 =
                 passwordBasedEncryptionNode1.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode1).isNotNull();
-        assertThat(messageDigestNode1.getChildren()).hasSize(findingId == 0 ? 2 : 4);
+        assertThat(messageDigestNode1.getChildren()).hasSize(findingId == 0 ? 3 : 4);
         assertThat(messageDigestNode1.asString()).isEqualTo(findingId == 0 ? "MD5" : "SHA256");
     }
 }

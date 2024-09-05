@@ -125,7 +125,7 @@ class BcECIESKEMExtractorTest extends TestBase {
                 keyEncapsulationMechanismNode.getChildren().get(KeyDerivationFunction.class);
         assertThat(keyDerivationFunctionNode1).isNotNull();
         assertThat(keyDerivationFunctionNode1.getChildren()).hasSize(1);
-        assertThat(keyDerivationFunctionNode1.asString()).isEqualTo("HKDF");
+        assertThat(keyDerivationFunctionNode1.asString()).isEqualTo("HKDF-SHA256");
 
         // MessageDigest under KeyDerivationFunction under KeyEncapsulationMechanism
         INode messageDigestNode1 =
