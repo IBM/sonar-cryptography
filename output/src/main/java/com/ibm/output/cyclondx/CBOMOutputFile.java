@@ -188,6 +188,7 @@ public class CBOMOutputFile implements IOutputFile {
 
     private void createRelatedCryptoMaterialComponent(
             @Nullable String parentBomRef, @Nonnull INode node) {
+        Map<Class<? extends INode>, INode> children = node.getChildren();
         final DetectionLocation detectionLocation;
         if (node instanceof IProperty property) {
             detectionLocation = property.getDetectionContext();
@@ -199,7 +200,7 @@ public class CBOMOutputFile implements IOutputFile {
         Component rcm =
                 RelatedCryptoMaterialComponentBuilder.create()
                         .name(node)
-                        .size(node)
+                        .size(Utils.oneOf(children.get(KeyLength.class), node))
                         .type(node)
                         .occurrences(createOccurrenceForm(detectionLocation))
                         .build();

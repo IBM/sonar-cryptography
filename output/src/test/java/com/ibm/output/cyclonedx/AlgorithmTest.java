@@ -19,6 +19,8 @@
  */
 package com.ibm.output.cyclonedx;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
@@ -43,8 +45,6 @@ import org.cyclonedx.model.component.crypto.enums.CryptoFunction;
 import org.cyclonedx.model.component.crypto.enums.Primitive;
 import org.cyclonedx.model.component.crypto.enums.RelatedCryptoMaterialType;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class AlgorithmTest extends TestBase {
 
@@ -160,20 +160,66 @@ class AlgorithmTest extends TestBase {
 
     @Test
     void signature() {
-        this.assertsNode(() -> {
-            final DSA dsa = new DSA(detectionLocation);
-            dsa.put(new Oid("2.16.840.1.101.3.4.3.2", detectionLocation));
-            final SHA2 sha256 = new SHA2(256, detectionLocation);
-            sha256.put(new Digest(detectionLocation));
-            sha256.put(new Oid("2.16.840.1.101.3.4.2.1", detectionLocation));
-            dsa.put(sha256);
-            final PrivateKey privateKey = new PrivateKey(dsa);
-            privateKey.put(new Sign(detectionLocation));
-            privateKey.put(new KeyGeneration(detectionLocation));
-            privateKey.put(new KeyLength(1024, detectionLocation));
-            return privateKey;
-        }, bom -> {
+        this.assertsNode(
+                () -> {
+                    final DSA dsa = new DSA(detectionLocation);
+                    dsa.put(new Oid("2.16.840.1.101.3.4.3.2", detectionLocation));
+                    final SHA2 sha256 = new SHA2(256, detectionLocation);
+                    sha256.put(new Digest(detectionLocation));
+                    sha256.put(new Oid("2.16.840.1.101.3.4.2.1", detectionLocation));
+                    dsa.put(sha256);
+                    final PrivateKey privateKey = new PrivateKey(dsa);
+                    privateKey.put(new Sign(detectionLocation));
+                    privateKey.put(new KeyGeneration(detectionLocation));
+                    privateKey.put(new KeyLength(1024, detectionLocation));
+                    return privateKey;
+                },
+                bom -> {
+                    assertThat(bom.getComponents()).hasSize(3);
+                    assertThat(bom.getComponents().stream().map(Component::getName))
+                            .contains("DSAwithSHA256", "SHA256");
 
-        });
+                    for (Component component : bom.getComponents()) {
+                        asserts(component.getEvidence());
+                        assertThat(component.getCryptoProperties()).isNotNull();
+                        final CryptoProperties cryptoProperties = component.getCryptoProperties();
+
+                        if (cryptoProperties
+                                .getAssetType()
+                                .equals(AssetType.RELATED_CRYPTO_MATERIAL)) {
+                            assertThat(cryptoProperties.getRelatedCryptoMaterialProperties())
+                                    .isNotNull();
+                            final RelatedCryptoMaterialProperties relatedCryptoMaterialProperties =
+                                    cryptoProperties.getRelatedCryptoMaterialProperties();
+                            assertThat(relatedCryptoMaterialProperties.getType())
+                                    .isEqualTo(RelatedCryptoMaterialType.PRIVATE_KEY);
+                            assertThat(relatedCryptoMaterialProperties.getSize()).isEqualTo(1024);
+                        } else if (cryptoProperties.getAssetType().equals(AssetType.ALGORITHM)) {
+                            assertThat(cryptoProperties.getAlgorithmProperties()).isNotNull();
+                            final AlgorithmProperties algorithmProperties =
+                                    cryptoProperties.getAlgorithmProperties();
+                            if (algorithmProperties.getPrimitive().equals(Primitive.SIGNATURE)) {
+                                assertThat(component.getName()).isEqualTo("DSAwithSHA256");
+                                assertThat(cryptoProperties.getOid())
+                                        .isEqualTo("2.16.840.1.101.3.4.3.2");
+                                assertThat(algorithmProperties.getCryptoFunctions())
+                                        .contains(CryptoFunction.SIGN, CryptoFunction.KEYGEN);
+                            } else if (algorithmProperties.getPrimitive().equals(Primitive.HASH)) {
+                                assertThat(component.getName()).isEqualTo("SHA256");
+                                assertThat(cryptoProperties.getOid())
+                                        .isEqualTo("2.16.840.1.101.3.4.2.1");
+                                assertThat(algorithmProperties.getParameterSetIdentifier())
+                                        .isEqualTo("256");
+                                assertThat(algorithmProperties.getCryptoFunctions())
+                                        .contains(CryptoFunction.DIGEST);
+                            } else {
+                                throw new AssertionError();
+                            }
+                        } else {
+                            throw new AssertionError(
+                                    "Unexpected asset type: " + cryptoProperties.getAssetType());
+                        }
+                    }
+                });
     }
 }

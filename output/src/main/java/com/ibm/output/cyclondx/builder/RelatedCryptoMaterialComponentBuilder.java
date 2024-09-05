@@ -21,6 +21,7 @@ package com.ibm.output.cyclondx.builder;
 
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Key;
+import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.PasswordLength;
 import com.ibm.mapper.model.PrivateKey;
 import com.ibm.mapper.model.PublicKey;
@@ -140,6 +141,8 @@ public class RelatedCryptoMaterialComponentBuilder
             this.relatedCryptoMaterialProperties.setSize(saltLength.getValue());
         } else if (size instanceof PasswordLength passwordLength) {
             this.relatedCryptoMaterialProperties.setSize(passwordLength.getValue());
+        } else if (size instanceof KeyLength keyLength) {
+            this.relatedCryptoMaterialProperties.setSize(keyLength.getValue());
         }
 
         return new RelatedCryptoMaterialComponentBuilder(
