@@ -36,21 +36,18 @@ public class PBES1 extends Algorithm implements PasswordBasedEncryption {
     @Override
     @Nonnull
     public String asString() {
-        StringBuilder builtName = new StringBuilder(this.name);
-
-        Optional<INode> messageDigest = this.hasChildOfType(MessageDigest.class);
-        Optional<INode> mac = this.hasChildOfType(Mac.class);
-        Optional<INode> cipher = this.hasChildOfType(BlockCipher.class);
+        final Optional<INode> messageDigest = this.hasChildOfType(MessageDigest.class);
+        final Optional<INode> mac = this.hasChildOfType(Mac.class);
+        final Optional<INode> cipher = this.hasChildOfType(BlockCipher.class);
 
         if (messageDigest.isPresent() && cipher.isPresent()) {
-            return "pbeWith" + messageDigest.get().asString() + "And" + cipher.get().asString();
+            return "PBEWith" + messageDigest.get().asString() + "And" + cipher.get().asString();
         } else if (mac.isPresent() && cipher.isPresent()) {
-            return "pbeWith" + mac.get().asString() + "And" + cipher.get().asString();
+            return "PBEWith" + mac.get().asString() + "And" + cipher.get().asString();
         } else if (mac.isPresent()) {
-            return "pbeWith" + mac.get().asString();
+            return "PBEWith" + mac.get().asString();
         }
-
-        return builtName.toString();
+        return this.name;
     }
 
     public PBES1(@Nonnull DetectionLocation detectionLocation) {

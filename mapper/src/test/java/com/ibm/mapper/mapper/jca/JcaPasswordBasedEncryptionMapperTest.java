@@ -46,7 +46,7 @@ class JcaPasswordBasedEncryptionMapperTest {
         assertThat(pbeOpt).isPresent();
         PasswordBasedEncryption pbe = pbeOpt.get();
         assertThat(pbe.getName()).isEqualTo("PBES1");
-        assertThat(pbe.asString()).isEqualTo("pbeWithSHA256AndAES");
+        assertThat(pbe.asString()).isEqualTo("PBEWithSHA256AndAES");
 
         assertThat(pbe.getChildren()).hasSize(2);
         assertThat(pbe.getDigest()).isEmpty();
