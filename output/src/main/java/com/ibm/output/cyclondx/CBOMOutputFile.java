@@ -164,8 +164,14 @@ public class CBOMOutputFile implements IOutputFile {
 
     private void createKeyComponent(@Nullable String parentBomRef, @Nonnull Key node) {
         // if functionality nodes are placed under the key node,
-        // they will be moved under the corresponding primitive node
+        // they will be moved under the corresponding primitive node.
         Utils.pushNodesDownToFirstMatch(node, IPrimitive.getKinds(), Functionality.getKinds());
+        // if a key length is defined under the key node, this function makes sure that the
+        // underlying primitive
+        // will get the same key length associated.
+        Utils.pushNodesDownToFirstMatch(
+                node, IPrimitive.getKinds(), List.of(KeyLength.class), false);
+
         createRelatedCryptoMaterialComponent(parentBomRef, node);
     }
 
