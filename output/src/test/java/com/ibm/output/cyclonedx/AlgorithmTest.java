@@ -21,6 +21,7 @@ package com.ibm.output.cyclonedx;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.ibm.mapper.model.EllipticCurveAlgorithm;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
@@ -35,6 +36,7 @@ import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.algorithms.RSAssaPSS;
 import com.ibm.mapper.model.algorithms.SHA;
 import com.ibm.mapper.model.algorithms.SHA2;
+import com.ibm.mapper.model.curves.Secp256r1;
 import com.ibm.mapper.model.functionality.Decrypt;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Encrypt;
@@ -361,6 +363,27 @@ class AlgorithmTest extends TestBase {
                             throw new AssertionError();
                         }
                     }
+                });
+    }
+
+    @Test
+    void ecc() {
+        this.assertsNode(
+                () -> new EllipticCurveAlgorithm(new Secp256r1(detectionLocation)),
+                bom -> {
+                    assertThat(bom.getComponents()).hasSize(1);
+                    Component component = bom.getComponents().get(0);
+                    assertThat(component.getName()).isEqualTo("EC-secp256r1");
+
+                    CryptoProperties cryptoProperties = component.getCryptoProperties();
+                    assertThat(cryptoProperties.getAssetType()).isEqualTo(AssetType.ALGORITHM);
+
+                    asserts(component.getEvidence());
+
+                    final AlgorithmProperties algorithmProperties =
+                            component.getCryptoProperties().getAlgorithmProperties();
+                    assertThat(algorithmProperties.getPrimitive()).isEqualTo(Primitive.PKE);
+                    assertThat(algorithmProperties.getCurve()).isEqualTo("secp256r1");
                 });
     }
 }

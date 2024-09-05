@@ -21,6 +21,7 @@ package com.ibm.output.cyclondx.builder;
 
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.EllipticCurve;
 import com.ibm.mapper.model.ExtendableOutputFunction;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyAgreement;
@@ -251,6 +252,9 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
     @Override
     public @NotNull IAlgorithmComponentBuilder curve(@Nullable INode curve) {
         this.curve = curve;
+        if (curve instanceof EllipticCurve ellipticCurve) {
+            this.algorithmProperties.setCurve(ellipticCurve.asString());
+        }
         return new AlgorithmComponentBuilder(
                 component,
                 cryptoProperties,
