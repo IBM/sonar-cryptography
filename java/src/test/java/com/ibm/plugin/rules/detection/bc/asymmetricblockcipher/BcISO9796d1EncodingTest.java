@@ -117,7 +117,7 @@ class BcISO9796d1EncodingTest extends TestBase {
         INode paddingNode = blockCipherNode1.getChildren().get(Padding.class);
         assertThat(paddingNode).isNotNull();
         assertThat(paddingNode.getChildren()).isEmpty();
-        assertThat(paddingNode.asString()).isEqualTo("ISO 9796-1");
+        assertThat(paddingNode.asString()).isEqualTo("ISO 9796");
 
         // Encrypt under BlockCipher
         INode encryptNode1 = blockCipherNode1.getChildren().get(Encrypt.class);

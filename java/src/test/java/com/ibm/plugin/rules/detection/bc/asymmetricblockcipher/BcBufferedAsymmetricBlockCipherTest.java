@@ -28,6 +28,7 @@ import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.DigestContext;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.functionality.Encrypt;
@@ -110,7 +111,7 @@ class BcBufferedAsymmetricBlockCipherTest extends TestBase {
         assertThat(store_2_2.getDetectionValueContext()).isInstanceOf(DigestContext.class);
         IValue<Tree> value0_2_2 = store_2_2.getDetectionValues().get(0);
         assertThat(value0_2_2).isInstanceOf(ValueAction.class);
-        // assertThat(value0_2_2.asString()).isEqualTo("SHA-3"); // TODO
+        assertThat(value0_2_2.asString()).isEqualTo("SHA3Digest");
 
         /*
          * Translation
@@ -121,7 +122,7 @@ class BcBufferedAsymmetricBlockCipherTest extends TestBase {
         // PublicKeyEncryption
         INode pkeNode = nodes.get(0);
         assertThat(pkeNode.getKind()).isEqualTo(PublicKeyEncryption.class);
-        assertThat(pkeNode.getChildren()).hasSize(3);
+        assertThat(pkeNode.getChildren()).hasSize(4);
         assertThat(pkeNode.asString()).isEqualTo("RSA");
 
         // Encrypt under PublicKeyEncryption
@@ -130,17 +131,16 @@ class BcBufferedAsymmetricBlockCipherTest extends TestBase {
         assertThat(encryptNode.getChildren()).isEmpty();
         assertThat(encryptNode.asString()).isEqualTo("ENCRYPT");
 
+        // Encrypt under PublicKeyEncryption
+        INode digestNode = pkeNode.getChildren().get(MessageDigest.class);
+        assertThat(digestNode).isNotNull();
+        assertThat(digestNode.getChildren()).hasSize(1);
+        assertThat(digestNode.asString()).isEqualTo("SHA3");
+
         // OptimalAsymmetricEncryptionPadding under PublicKeyEncryption
         INode optimalAsymmetricEncryptionPaddingNode = pkeNode.getChildren().get(Padding.class);
         assertThat(optimalAsymmetricEncryptionPaddingNode).isNotNull();
         assertThat(optimalAsymmetricEncryptionPaddingNode.getChildren()).isEmpty();
         assertThat(optimalAsymmetricEncryptionPaddingNode.asString()).isEqualTo("OAEP");
-
-        // MessageDigest under OptimalAsymmetricEncryptionPadding under PublicKeyEncryption
-        // INode messageDigestNode =
-        //         optimalAsymmetricEncryptionPaddingNode.getChildren().get(MessageDigest.class);
-        // assertThat(messageDigestNode).isNotNull();
-        // assertThat(messageDigestNode.getChildren()).isEmpty();
-        // assertThat(messageDigestNode.asString()).isEqualTo("SHA-3");
     }
 }
