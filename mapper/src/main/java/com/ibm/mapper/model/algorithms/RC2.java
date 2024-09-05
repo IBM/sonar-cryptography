@@ -37,12 +37,12 @@ public final class RC2 extends Algorithm implements BlockCipher {
     }
 
     public RC2(int keyLength, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+        this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
     }
 
     public RC2(int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+        this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
     }
@@ -52,7 +52,7 @@ public final class RC2 extends Algorithm implements BlockCipher {
             @Nonnull Mode mode,
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+        this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
         this.put(padding);

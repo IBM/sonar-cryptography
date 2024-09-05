@@ -36,7 +36,7 @@ public final class SM4 extends Algorithm implements BlockCipher, AuthenticatedEn
     }
 
     public SM4(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+        this(detectionLocation);
         this.put(mode);
     }
 

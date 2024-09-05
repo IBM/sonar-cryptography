@@ -27,7 +27,7 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
 // Hash Based Signature (HBS)
-public class XMSS extends Algorithm implements Signature, MessageDigest {
+public final class XMSS extends Algorithm implements Signature, MessageDigest {
     // https://eprint.iacr.org/2017/349.pdf
 
     private static final String NAME = "XMSS";

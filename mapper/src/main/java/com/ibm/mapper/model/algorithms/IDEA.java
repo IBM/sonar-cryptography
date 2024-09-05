@@ -36,7 +36,7 @@ public final class IDEA extends Algorithm implements BlockCipher {
     }
 
     public IDEA(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+        this(detectionLocation);
         this.put(mode);
     }
 

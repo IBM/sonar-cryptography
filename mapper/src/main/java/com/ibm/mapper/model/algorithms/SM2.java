@@ -25,7 +25,7 @@ import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
-public class SM2 extends Algorithm implements PublicKeyEncryption, KeyAgreement {
+public final class SM2 extends Algorithm implements PublicKeyEncryption, KeyAgreement {
     // https://datatracker.ietf.org/doc/html/draft-shen-sm2-ecdsa-02
 
     private static final String NAME = "SM2";

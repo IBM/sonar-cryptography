@@ -26,7 +26,7 @@ import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class HQC extends Algorithm implements KeyEncapsulationMechanism, PublicKeyEncryption {
+public final class HQC extends Algorithm implements KeyEncapsulationMechanism, PublicKeyEncryption {
     // https://pqc-hqc.org/doc/hqc-specification_2023-04-30.pdf
 
     private static final String NAME = "HQC"; // Hamming Quasi-Cyclic
@@ -45,10 +45,6 @@ public class HQC extends Algorithm implements KeyEncapsulationMechanism, PublicK
 
         return builtName.toString();
     }
-
-    // public HQC(@Nonnull DetectionLocation detectionLocation) {
-    //     this(KeyEncapsulationMechanism.class, detectionLocation);
-    // }
 
     public HQC(
             @Nonnull final Class<? extends IPrimitive> asKind,

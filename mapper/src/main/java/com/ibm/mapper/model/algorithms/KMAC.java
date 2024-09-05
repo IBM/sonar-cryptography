@@ -44,10 +44,7 @@ public final class KMAC extends Algorithm implements MessageDigest {
 
         Optional<INode> parameterSetIdentifier = this.hasChildOfType(ParameterSetIdentifier.class);
 
-        if (parameterSetIdentifier.isPresent()) {
-            builtName.append(parameterSetIdentifier.get().asString());
-        }
-
+        parameterSetIdentifier.ifPresent(node -> builtName.append(node.asString()));
         return builtName.toString();
     }
 

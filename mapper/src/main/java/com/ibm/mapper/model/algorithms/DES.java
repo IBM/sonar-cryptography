@@ -55,14 +55,17 @@ public final class DES extends Algorithm implements BlockCipher {
     public DES(int keyLength, @NotNull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
-        this.put(new BlockSize(64, detectionLocation));
     }
 
     public DES(int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
-        this.put(new BlockSize(64, detectionLocation));
+    }
+
+    public DES(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+        this(detectionLocation);
+        this.put(mode);
     }
 
     public DES(
@@ -74,13 +77,6 @@ public final class DES extends Algorithm implements BlockCipher {
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
         this.put(padding);
-        this.put(new BlockSize(64, detectionLocation));
-    }
-
-    public DES(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        this(detectionLocation);
-        this.put(mode);
-        this.put(new BlockSize(64, detectionLocation));
     }
 
     public DES(
@@ -90,7 +86,6 @@ public final class DES extends Algorithm implements BlockCipher {
         this(detectionLocation);
         this.put(mode);
         this.put(padding);
-        this.put(new BlockSize(64, detectionLocation));
     }
 
     public DES(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull DES des) {

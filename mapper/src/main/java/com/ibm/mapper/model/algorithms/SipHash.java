@@ -26,7 +26,7 @@ import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class SipHash extends Algorithm implements Mac {
+public final class SipHash extends Algorithm implements Mac {
     // https://en.wikipedia.org/wiki/SipHash
 
     private static final String NAME = "SipHash";

@@ -30,7 +30,7 @@ import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
-public class Kalyna extends Algorithm implements BlockCipher, Mac {
+public final class Kalyna extends Algorithm implements BlockCipher, Mac {
     // https://en.wikipedia.org/wiki/Kalyna_(cipher)
     // https://eprint.iacr.org/2015/650.pdf
 

@@ -25,15 +25,27 @@ import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 // Hash Based Signature (HBS)
-public class LMS extends Algorithm implements Signature, MessageDigest {
+public final class LMS extends Algorithm implements Signature, MessageDigest {
     // https://eprint.iacr.org/2017/349.pdf
 
     private static final String NAME = "LMS";
 
+    @Override
+    public @NotNull String asString() {
+        return this.hasChildOfType(MessageDigest.class)
+                .map(node -> node.asString() + "with" + this.name)
+                .orElse(this.name);
+    }
+
     public LMS(@Nonnull DetectionLocation detectionLocation) {
         this(Signature.class, detectionLocation);
+    }
+
+    public LMS(@Nonnull MessageDigest messageDigest) {
+        this(messageDigest.getDetectionContext());
     }
 
     public LMS(

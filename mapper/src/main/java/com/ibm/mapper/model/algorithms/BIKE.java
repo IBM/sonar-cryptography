@@ -24,7 +24,7 @@ import com.ibm.mapper.model.KeyEncapsulationMechanism;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public class BIKE extends Algorithm implements KeyEncapsulationMechanism {
+public final class BIKE extends Algorithm implements KeyEncapsulationMechanism {
     // https://hal.science/hal-01671903/document
 
     private static final String NAME = "BIKE";

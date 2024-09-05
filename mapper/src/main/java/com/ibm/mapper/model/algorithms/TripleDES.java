@@ -40,17 +40,15 @@ public final class TripleDES extends Algorithm implements BlockCipher {
     }
 
     public TripleDES(int keyLength, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+        this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
-        this.put(new BlockSize(64, detectionLocation));
     }
 
     public TripleDES(
             int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+        this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
-        this.put(new BlockSize(64, detectionLocation));
     }
 
     public TripleDES(
@@ -58,27 +56,24 @@ public final class TripleDES extends Algorithm implements BlockCipher {
             @Nonnull Mode mode,
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+        this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
         this.put(padding);
-        this.put(new BlockSize(64, detectionLocation));
     }
 
     public TripleDES(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+        this(detectionLocation);
         this.put(mode);
-        this.put(new BlockSize(64, detectionLocation));
     }
 
     public TripleDES(
             @Nonnull Mode mode,
             @Nonnull Padding padding,
             @NotNull DetectionLocation detectionLocation) {
-        super(NAME, BlockCipher.class, detectionLocation);
+        this(detectionLocation);
         this.put(mode);
         this.put(padding);
-        this.put(new BlockSize(64, detectionLocation));
     }
 
     public TripleDES(

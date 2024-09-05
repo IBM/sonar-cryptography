@@ -36,13 +36,13 @@ public final class ChaCha20 extends Algorithm implements StreamCipher {
     }
 
     public ChaCha20(int keyLength, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, StreamCipher.class, detectionLocation);
+        this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
     }
 
     public ChaCha20(
             int keyLength, @Nonnull Padding padding, @NotNull DetectionLocation detectionLocation) {
-        super(NAME, StreamCipher.class, detectionLocation);
+        this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(padding);
     }
