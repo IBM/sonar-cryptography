@@ -21,6 +21,7 @@ package com.ibm.output.cyclondx.builder;
 
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.ExtendableOutputFunction;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyAgreement;
 import com.ibm.mapper.model.KeyDerivationFunction;
@@ -28,6 +29,7 @@ import com.ibm.mapper.model.KeyEncapsulationMechanism;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Oid;
+import com.ibm.mapper.model.PasswordBasedEncryption;
 import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
 import com.ibm.mapper.model.ProbabilisticSignatureScheme;
 import com.ibm.mapper.model.PseudorandomNumberGenerator;
@@ -184,7 +186,8 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
         } else if (primitive.is(MessageDigest.class)) {
             primitives = Primitive.HASH;
         } else if (primitive.is(KeyDerivationFunction.class)
-                || primitive.is(PasswordBasedKeyDerivationFunction.class)) {
+                || primitive.is(PasswordBasedKeyDerivationFunction.class)
+                || primitive.is(PasswordBasedEncryption.class)) {
             primitives = Primitive.KDF;
         } else if (primitive.is(PseudorandomNumberGenerator.class)) {
             primitives = Primitive.DRBG;
@@ -199,6 +202,8 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
             primitives = Primitive.KEY_AGREE;
         } else if (primitive.is(KeyEncapsulationMechanism.class)) {
             primitives = Primitive.KEM;
+        } else if (primitive.is(ExtendableOutputFunction.class)) {
+            primitives = Primitive.XOF;
         } else {
             primitives = Primitive.OTHER;
         }

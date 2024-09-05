@@ -315,6 +315,52 @@ class AlgorithmTest extends TestBase {
                     privateKey.put(new Sign(detectionLocation));
                     return privateKey;
                 },
-                bom -> {});
+                bom -> {
+                    assertThat(bom.getComponents()).hasSize(5);
+                    assertThat(bom.getComponents().stream().map(Component::getName))
+                            .contains("RSASSA-PSS", "SHA256", "MGF1", "SHA384");
+
+                    for (Component component : bom.getComponents()) {
+                        asserts(component.getEvidence());
+                        assertThat(component.getCryptoProperties()).isNotNull();
+                        final CryptoProperties cryptoProperties = component.getCryptoProperties();
+
+                        if (cryptoProperties
+                                .getAssetType()
+                                .equals(AssetType.RELATED_CRYPTO_MATERIAL)) {
+                            assertThat(cryptoProperties.getRelatedCryptoMaterialProperties())
+                                    .isNotNull();
+                            final RelatedCryptoMaterialProperties relatedCryptoMaterialProperties =
+                                    cryptoProperties.getRelatedCryptoMaterialProperties();
+                            assertThat(relatedCryptoMaterialProperties.getType())
+                                    .isEqualTo(RelatedCryptoMaterialType.PRIVATE_KEY);
+                            assertThat(relatedCryptoMaterialProperties.getSize()).isEqualTo(2048);
+                        } else if (cryptoProperties.getAssetType().equals(AssetType.ALGORITHM)) {
+                            assertThat(cryptoProperties.getAlgorithmProperties()).isNotNull();
+                            final AlgorithmProperties algorithmProperties =
+                                    cryptoProperties.getAlgorithmProperties();
+                            if (algorithmProperties.getPrimitive().equals(Primitive.SIGNATURE)) {
+                                assertThat(component.getName()).isEqualTo("RSASSA-PSS");
+                                assertThat(cryptoProperties.getOid())
+                                        .isEqualTo("1.2.840.113549.1.1.10");
+                                assertThat(algorithmProperties.getCryptoFunctions())
+                                        .contains(CryptoFunction.SIGN, CryptoFunction.KEYGEN);
+                            } else if (algorithmProperties.getPrimitive().equals(Primitive.HASH)) {
+                                assertThat(component.getName())
+                                        .satisfiesAnyOf(
+                                                s -> assertThat(s).isEqualTo("SHA256"),
+                                                s -> assertThat(s).isEqualTo("SHA384"));
+                            } else if (algorithmProperties.getPrimitive().equals(Primitive.OTHER)) {
+                                assertThat(component.getName()).isEqualTo("MGF1");
+                                assertThat(cryptoProperties.getOid())
+                                        .isEqualTo("1.2.840.113549.1.1.8");
+                            } else {
+                                throw new AssertionError();
+                            }
+                        } else {
+                            throw new AssertionError();
+                        }
+                    }
+                });
     }
 }
