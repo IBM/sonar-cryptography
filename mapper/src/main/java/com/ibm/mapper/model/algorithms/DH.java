@@ -22,6 +22,7 @@ package com.ibm.mapper.model.algorithms;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyAgreement;
+import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.Signature;
@@ -31,6 +32,16 @@ import org.jetbrains.annotations.NotNull;
 
 public final class DH extends Algorithm implements Signature, KeyAgreement, PublicKeyEncryption {
     private static final String NAME = "DH"; // DiffieHellman
+
+    @Override
+    public @NotNull String asString() {
+        final StringBuilder sb = new StringBuilder(this.name);
+        if (this.is(PublicKeyEncryption.class)) {
+            this.hasChildOfType(KeyLength.class)
+                    .ifPresent(k -> sb.append("-").append(k.asString()));
+        }
+        return sb.toString();
+    }
 
     public DH(@NotNull DetectionLocation detectionLocation) {
         super(NAME, PublicKeyEncryption.class, detectionLocation);

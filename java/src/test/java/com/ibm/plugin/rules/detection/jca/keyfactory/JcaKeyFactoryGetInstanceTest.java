@@ -25,7 +25,10 @@ import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.context.KeyContext;
-import com.ibm.mapper.model.*;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Key;
+import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -75,7 +78,7 @@ class JcaKeyFactoryGetInstanceTest extends TestBase {
 
         INode blockCipher = node.getChildren().get(PublicKeyEncryption.class);
         assertThat(blockCipher).isNotNull();
-        assertThat(blockCipher.asString()).isEqualTo("RSA");
+        assertThat(blockCipher.asString()).isEqualTo("RSA-2048");
 
         INode defaultKeyLength = blockCipher.getChildren().get(KeyLength.class);
         assertThat(defaultKeyLength).isNotNull();

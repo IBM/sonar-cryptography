@@ -20,7 +20,6 @@
 package com.ibm.mapper.model.algorithms.blake;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.ClassicalBitSecurityLevel;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyDerivationFunction;
@@ -36,7 +35,6 @@ public final class BLAKE3 extends Algorithm implements MessageDigest, KeyDerivat
     public BLAKE3(int digestSize, @Nonnull DetectionLocation detectionLocation) {
         super(NAME, MessageDigest.class, detectionLocation);
         this.put(new DigestSize(digestSize, detectionLocation));
-        this.put(new ClassicalBitSecurityLevel(128, detectionLocation));
     }
 
     public BLAKE3(@Nonnull DetectionLocation detectionLocation) {

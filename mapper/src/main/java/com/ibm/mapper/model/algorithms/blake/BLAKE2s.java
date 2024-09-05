@@ -32,6 +32,10 @@ public final class BLAKE2s extends Algorithm implements MessageDigest {
 
     private static final String NAME = "BLAKE2s";
 
+    public BLAKE2s(@Nonnull DetectionLocation detectionLocation) {
+        this(false, detectionLocation);
+    }
+
     public BLAKE2s(boolean isParallel, @Nonnull DetectionLocation detectionLocation) {
         super(NAME + (isParallel ? "p" : ""), MessageDigest.class, detectionLocation);
         this.put(new SaltLength(64, detectionLocation));

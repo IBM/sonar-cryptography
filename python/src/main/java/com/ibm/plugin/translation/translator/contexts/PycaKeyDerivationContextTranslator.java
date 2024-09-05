@@ -30,12 +30,13 @@ import com.ibm.engine.rule.IBundle;
 import com.ibm.mapper.IContextTranslation;
 import com.ibm.mapper.mapper.pyca.PycaCipherMapper;
 import com.ibm.mapper.mapper.pyca.PycaDigestMapper;
-import com.ibm.mapper.mapper.pyca.PycaHashBasedKeyDerivationMapper;
 import com.ibm.mapper.model.Cipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.algorithms.ANSIX963;
 import com.ibm.mapper.model.algorithms.CMAC;
+import com.ibm.mapper.model.algorithms.ConcatenationKDF;
+import com.ibm.mapper.model.algorithms.HKDF;
 import com.ibm.mapper.model.algorithms.HMAC;
 import com.ibm.mapper.model.algorithms.PBKDF2;
 import com.ibm.mapper.model.algorithms.Scrypt;
@@ -61,11 +62,11 @@ public class PycaKeyDerivationContextTranslator implements IContextTranslation<T
             if (possibleKind.isPresent()) {
                 final String kind = possibleKind.get();
                 return switch (kind) {
-                    case "hash" -> {
-                        final PycaHashBasedKeyDerivationMapper pycaHashBasedKeyDerivationMapper =
-                                new PycaHashBasedKeyDerivationMapper();
-                        yield pycaHashBasedKeyDerivationMapper
+                    case "hkdf" -> {
+                        final PycaDigestMapper digestMapper = new PycaDigestMapper();
+                        yield digestMapper
                                 .parse(algorithm.asString(), detectionLocation)
+                                .map(HKDF::new)
                                 .map(
                                         kdf -> {
                                             kdf.put(new KeyDerivation(detectionLocation));
@@ -109,6 +110,19 @@ public class PycaKeyDerivationContextTranslator implements IContextTranslation<T
                                             final PBKDF2 pbkdf2 = new PBKDF2(kdf);
                                             pbkdf2.put(new KeyDerivation(detectionLocation));
                                             return pbkdf2;
+                                        });
+                    }
+                    case "concatkdf" -> {
+                        final PycaDigestMapper digestMapper = new PycaDigestMapper();
+                        yield digestMapper
+                                .parse(algorithm.asString(), detectionLocation)
+                                .map(
+                                        digest -> {
+                                            final ConcatenationKDF concatenationKDF =
+                                                    new ConcatenationKDF(digest);
+                                            concatenationKDF.put(
+                                                    new KeyDerivation(detectionLocation));
+                                            return concatenationKDF;
                                         });
                     }
                     case "x963" -> {

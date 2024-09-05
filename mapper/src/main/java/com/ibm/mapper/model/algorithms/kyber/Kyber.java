@@ -46,13 +46,9 @@ public class Kyber extends Algorithm implements KeyEncapsulationMechanism {
         Optional<INode> parameterSetIdentifier = this.hasChildOfType(ParameterSetIdentifier.class);
         Optional<INode> version = this.hasChildOfType(Version.class);
 
-        if (parameterSetIdentifier.isPresent()) {
-            builtName.append("-").append(parameterSetIdentifier.get().asString());
-        }
-        if (version.isPresent()) {
-            builtName.append(" (version ").append(version.get().asString()).append(")");
-        }
-
+        parameterSetIdentifier.ifPresent(node -> builtName.append("-").append(node.asString()));
+        version.ifPresent(
+                node -> builtName.append(" (version ").append(node.asString()).append(")"));
         return builtName.toString();
     }
 

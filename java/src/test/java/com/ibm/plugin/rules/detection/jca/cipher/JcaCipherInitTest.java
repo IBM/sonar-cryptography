@@ -30,6 +30,7 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
+import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.functionality.Decrypt;
 import com.ibm.plugin.TestBase;
 import java.util.List;
@@ -78,8 +79,8 @@ class JcaCipherInitTest extends TestBase {
          */
         assertThat(nodes).hasSize(1);
         INode node = nodes.get(0);
-        assertThat(node).isInstanceOf(com.ibm.mapper.model.Algorithm.class);
-        assertThat(node.asString()).isEqualTo("RSA");
+        assertThat(node).isInstanceOf(PublicKeyEncryption.class);
+        assertThat(node.asString()).isEqualTo("RSA-2048");
 
         INode mode = node.getChildren().get(Mode.class);
         assertThat(mode).isNotNull();

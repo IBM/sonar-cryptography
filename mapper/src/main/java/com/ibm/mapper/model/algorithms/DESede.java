@@ -35,6 +35,15 @@ public final class DESede extends Algorithm implements BlockCipher {
 
     private static final String NAME = "DESede"; // TripleDES, 3DES, TDES
 
+    @Override
+    public @NotNull String asString() {
+        final StringBuilder sb = new StringBuilder(this.name);
+        this.hasChildOfType(KeyLength.class).ifPresent(k -> sb.append(k.asString()));
+        this.hasChildOfType(Mode.class).ifPresent(m -> sb.append("-").append(m.asString()));
+        this.hasChildOfType(Padding.class).ifPresent(p -> sb.append("-").append(p.asString()));
+        return sb.toString();
+    }
+
     public DESede(@NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
         this.put(new BlockSize(64, detectionLocation));
