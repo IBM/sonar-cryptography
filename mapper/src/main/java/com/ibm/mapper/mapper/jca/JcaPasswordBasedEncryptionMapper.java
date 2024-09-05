@@ -20,9 +20,8 @@
 package com.ibm.mapper.mapper.jca;
 
 import com.ibm.mapper.mapper.IMapper;
-import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.Cipher;
-import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.IAlgorithm;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PBES1;
@@ -63,7 +62,7 @@ public class JcaPasswordBasedEncryptionMapper implements IMapper {
         }
 
         // cipher
-        Optional<? extends INode> cipherOptional = Optional.empty();
+        Optional<? extends IAlgorithm> cipherOptional = Optional.empty();
         if (cipherStr != null) {
             JcaCipherMapper cipherMapper = new JcaCipherMapper();
             cipherOptional = cipherMapper.parse(cipherStr, detectionLocation);
@@ -71,7 +70,7 @@ public class JcaPasswordBasedEncryptionMapper implements IMapper {
 
         // hmac
         JcaMacMapper macMapper = new JcaMacMapper();
-        Optional<? extends Algorithm> macOptional =
+        Optional<? extends IAlgorithm> macOptional =
                 macMapper.parse(hmacOrDigestStr, detectionLocation);
         if (macOptional.isPresent() && macOptional.get() instanceof Mac mac) {
             if (cipherOptional.isPresent() && cipherOptional.get() instanceof Cipher cipher) {

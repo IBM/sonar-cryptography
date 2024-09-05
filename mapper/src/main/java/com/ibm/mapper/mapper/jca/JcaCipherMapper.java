@@ -21,7 +21,7 @@ package com.ibm.mapper.mapper.jca;
 
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.IAlgorithm;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.PasswordBasedEncryption;
@@ -45,7 +45,7 @@ public final class JcaCipherMapper implements IMapper {
 
     @Nonnull
     @Override
-    public Optional<? extends INode> parse(
+    public Optional<? extends IAlgorithm> parse(
             @Nullable final String str, @Nonnull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();

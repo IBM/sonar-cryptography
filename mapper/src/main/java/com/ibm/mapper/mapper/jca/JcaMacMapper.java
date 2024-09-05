@@ -20,7 +20,7 @@
 package com.ibm.mapper.mapper.jca;
 
 import com.ibm.mapper.mapper.IMapper;
-import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.IAlgorithm;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.PasswordBasedEncryption;
 import com.ibm.mapper.model.algorithms.MD2;
@@ -37,7 +37,7 @@ public class JcaMacMapper implements IMapper {
 
     @Nonnull
     @Override
-    public Optional<? extends Algorithm> parse(
+    public Optional<? extends IAlgorithm> parse(
             @Nullable final String str, @Nonnull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
@@ -46,9 +46,9 @@ public class JcaMacMapper implements IMapper {
         // check if it is pbe
         JcaPasswordBasedEncryptionMapper pbeMapper = new JcaPasswordBasedEncryptionMapper();
         Optional<PasswordBasedEncryption> pbeOptional = pbeMapper.parse(str, detectionLocation);
-        if (pbeOptional.isPresent() && pbeOptional.get() instanceof Algorithm pbe) {
+        if (pbeOptional.isPresent()) {
             // pbe
-            return Optional.of(pbe);
+            return pbeOptional;
         }
 
         if (str.toLowerCase().contains("with") || !str.toLowerCase().contains("hmac")) {

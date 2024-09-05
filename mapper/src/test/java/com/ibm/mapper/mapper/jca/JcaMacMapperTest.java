@@ -21,7 +21,7 @@ package com.ibm.mapper.mapper.jca;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.IAlgorithm;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.MessageDigest;
@@ -41,7 +41,7 @@ class JcaMacMapperTest {
                 new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaMacMapper jcaMacMapper = new JcaMacMapper();
-        Optional<? extends Algorithm> macOptional =
+        Optional<? extends IAlgorithm> macOptional =
                 jcaMacMapper.parse("HmacSHA512/224", testDetectionLocation);
 
         assertThat(macOptional).isPresent();
@@ -65,7 +65,7 @@ class JcaMacMapperTest {
                 new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaMacMapper jcaMacMapper = new JcaMacMapper();
-        Optional<? extends Algorithm> macOptional =
+        Optional<? extends IAlgorithm> macOptional =
                 jcaMacMapper.parse("HmacMD5", testDetectionLocation);
 
         assertThat(macOptional).isPresent();
@@ -90,7 +90,7 @@ class JcaMacMapperTest {
                 new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaMacMapper jcaMacMapper = new JcaMacMapper();
-        Optional<? extends Algorithm> macOptional =
+        Optional<? extends IAlgorithm> macOptional =
                 jcaMacMapper.parse("PBEWithHmacSHA256", testDetectionLocation);
 
         assertThat(macOptional).isPresent();

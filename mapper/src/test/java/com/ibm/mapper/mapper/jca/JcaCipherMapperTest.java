@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.Cipher;
-import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.IAlgorithm;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Mode;
@@ -47,7 +47,7 @@ class JcaCipherMapperTest {
                 new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaCipherMapper jcaCipherMapper = new JcaCipherMapper();
-        Optional<? extends INode> cipherOptional =
+        Optional<? extends IAlgorithm> cipherOptional =
                 jcaCipherMapper.parse("AES/ECB/PKCS5Padding", testDetectionLocation);
 
         assertThat(cipherOptional).isPresent();
@@ -71,7 +71,7 @@ class JcaCipherMapperTest {
                 new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaCipherMapper jcaCipherMapper = new JcaCipherMapper();
-        Optional<? extends INode> cipherOptional =
+        Optional<? extends IAlgorithm> cipherOptional =
                 jcaCipherMapper.parse("PBEWithMD5AndDES", testDetectionLocation);
 
         assertThat(cipherOptional).isPresent();
@@ -103,7 +103,7 @@ class JcaCipherMapperTest {
                 new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaCipherMapper jcaCipherMapper = new JcaCipherMapper();
-        Optional<? extends INode> cipherOptional =
+        Optional<? extends IAlgorithm> cipherOptional =
                 jcaCipherMapper.parse("AES/CFB8/NoPadding", testDetectionLocation);
 
         assertThat(cipherOptional).isPresent();
@@ -127,7 +127,7 @@ class JcaCipherMapperTest {
                 new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaCipherMapper jcaAlgorithmMapper = new JcaCipherMapper();
-        Optional<? extends INode> algorithm =
+        Optional<? extends IAlgorithm> algorithm =
                 jcaAlgorithmMapper.parse("RSA", testDetectionLocation);
 
         assertThat(algorithm).isPresent();
