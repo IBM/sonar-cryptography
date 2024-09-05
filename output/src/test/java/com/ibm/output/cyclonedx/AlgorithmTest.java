@@ -19,17 +19,21 @@
  */
 package com.ibm.output.cyclonedx;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
 import com.ibm.mapper.model.PasswordLength;
+import com.ibm.mapper.model.PrivateKey;
 import com.ibm.mapper.model.SaltLength;
+import com.ibm.mapper.model.algorithms.DSA;
 import com.ibm.mapper.model.algorithms.PBKDF2;
 import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.algorithms.SHA;
+import com.ibm.mapper.model.algorithms.SHA2;
+import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Encrypt;
 import com.ibm.mapper.model.functionality.KeyGeneration;
+import com.ibm.mapper.model.functionality.Sign;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.component.crypto.AlgorithmProperties;
 import org.cyclonedx.model.component.crypto.CryptoProperties;
@@ -39,6 +43,8 @@ import org.cyclonedx.model.component.crypto.enums.CryptoFunction;
 import org.cyclonedx.model.component.crypto.enums.Primitive;
 import org.cyclonedx.model.component.crypto.enums.RelatedCryptoMaterialType;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class AlgorithmTest extends TestBase {
 
@@ -150,5 +156,24 @@ class AlgorithmTest extends TestBase {
                         }
                     }
                 });
+    }
+
+    @Test
+    void signature() {
+        this.assertsNode(() -> {
+            final DSA dsa = new DSA(detectionLocation);
+            dsa.put(new Oid("2.16.840.1.101.3.4.3.2", detectionLocation));
+            final SHA2 sha256 = new SHA2(256, detectionLocation);
+            sha256.put(new Digest(detectionLocation));
+            sha256.put(new Oid("2.16.840.1.101.3.4.2.1", detectionLocation));
+            dsa.put(sha256);
+            final PrivateKey privateKey = new PrivateKey(dsa);
+            privateKey.put(new Sign(detectionLocation));
+            privateKey.put(new KeyGeneration(detectionLocation));
+            privateKey.put(new KeyLength(1024, detectionLocation));
+            return privateKey;
+        }, bom -> {
+
+        });
     }
 }
