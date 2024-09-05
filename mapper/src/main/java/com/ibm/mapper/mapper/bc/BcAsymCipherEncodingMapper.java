@@ -24,7 +24,7 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.Unknown;
-import com.ibm.mapper.model.padding.ISO9796;
+import com.ibm.mapper.model.padding.ISO9796Padding;
 import com.ibm.mapper.model.padding.OAEP;
 import com.ibm.mapper.model.padding.PKCS1;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -52,7 +52,8 @@ public class BcAsymCipherEncodingMapper implements IMapper {
             case "ISO9796d1Encoding" ->
                     Optional.of(
                             Utils.unknownWithPadding(
-                                    new ISO9796(detectionLocation), PublicKeyEncryption.class));
+                                    new ISO9796Padding(detectionLocation),
+                                    PublicKeyEncryption.class));
             case "OAEPEncoding" ->
                     Optional.of(
                             Utils.unknownWithPadding(

@@ -23,9 +23,9 @@ import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
-public final class ISO9796 extends Padding {
+public final class ISO9796Padding extends Padding {
 
-    public ISO9796(@NotNull DetectionLocation detectionLocation) {
+    public ISO9796Padding(@NotNull DetectionLocation detectionLocation) {
         super("ISO 9796", detectionLocation);
     }
 }
