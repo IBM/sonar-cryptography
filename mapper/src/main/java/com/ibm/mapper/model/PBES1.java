@@ -41,11 +41,10 @@ public class PBES1 extends Algorithm implements PasswordBasedEncryption {
         final Optional<INode> cipher = this.hasChildOfType(BlockCipher.class);
 
         if (messageDigest.isPresent() && cipher.isPresent()) {
-            return "PBEWith" + messageDigest.get().asString() + "And" + cipher.get().asString();
-        } else if (mac.isPresent() && cipher.isPresent()) {
-            return "PBEWith" + mac.get().asString() + "And" + cipher.get().asString();
+            return "pbeWith" + messageDigest.get().asString() + "And" + cipher.get().asString();
         } else if (mac.isPresent()) {
-            return "PBEWith" + mac.get().asString();
+            String n = "pbeWith" + changeHMACNameing(mac.get().asString());
+            return cipher.map(node -> n + "And" + node.asString()).orElse(n);
         }
         return this.name;
     }
@@ -77,5 +76,12 @@ public class PBES1 extends Algorithm implements PasswordBasedEncryption {
     public PBES1(@Nonnull Mac mac) {
         this(mac.getDetectionContext());
         this.put(mac);
+    }
+
+    private @Nonnull String changeHMACNameing(@Nonnull String hmacName) {
+        if (!hmacName.contains("HMAC-")) {
+            return hmacName;
+        }
+        return hmacName.replace("HMAC-", "Hmac");
     }
 }

@@ -49,11 +49,6 @@ public final class PBKDF1 extends Algorithm implements PasswordBasedKeyDerivatio
         return this.name;
     }
 
-    @Override
-    public @NotNull String getName() {
-        return asString();
-    }
-
     public PBKDF1(@Nonnull Mac mac) {
         super(NAME, PasswordBasedKeyDerivationFunction.class, mac.getDetectionContext());
         this.put(mac);
