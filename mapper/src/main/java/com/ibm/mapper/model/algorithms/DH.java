@@ -45,7 +45,6 @@ public final class DH extends Algorithm implements Signature, KeyAgreement, Publ
 
     public DH(@NotNull DetectionLocation detectionLocation) {
         this(PublicKeyEncryption.class, detectionLocation);
-        this.put(new Oid("1.2.840.113549.1.3.1", detectionLocation));
     }
 
     public DH(

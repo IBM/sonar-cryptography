@@ -50,19 +50,16 @@ public final class AES extends Algorithm implements BlockCipher, AuthenticatedEn
     public AES(int keyLength, @NotNull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
-        this.put(new BlockSize(128, detectionLocation));
     }
 
     public AES(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
         this(detectionLocation);
-        this.put(new BlockSize(128, detectionLocation));
         this.put(mode);
     }
 
     public AES(int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
-        this.put(new BlockSize(128, detectionLocation));
         this.put(mode);
     }
 
@@ -73,7 +70,6 @@ public final class AES extends Algorithm implements BlockCipher, AuthenticatedEn
             @NotNull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
-        this.put(new BlockSize(128, detectionLocation));
         this.put(mode);
         this.put(padding);
     }
