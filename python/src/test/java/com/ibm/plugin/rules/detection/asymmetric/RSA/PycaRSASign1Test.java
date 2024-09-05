@@ -38,7 +38,6 @@ import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.PrivateKey;
 import com.ibm.mapper.model.ProbabilisticSignatureScheme;
-import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.model.functionality.Sign;
@@ -135,21 +134,8 @@ public class PycaRSASign1Test extends TestBase {
         INode probabilisticSignatureSchemeNode =
                 privateKeyNode.getChildren().get(ProbabilisticSignatureScheme.class);
         assertThat(probabilisticSignatureSchemeNode).isNotNull();
-        assertThat(probabilisticSignatureSchemeNode.getChildren()).hasSize(4);
+        assertThat(probabilisticSignatureSchemeNode.getChildren()).hasSize(3);
         assertThat(probabilisticSignatureSchemeNode.asString()).isEqualTo("RSASSA-PSS");
-
-        // PublicKeyEncryption under ProbabilisticSignatureScheme under PrivateKey
-        INode publicKeyEncryptionNode =
-                probabilisticSignatureSchemeNode.getChildren().get(PublicKeyEncryption.class);
-        assertThat(publicKeyEncryptionNode).isNotNull();
-        assertThat(publicKeyEncryptionNode.getChildren()).hasSize(1);
-        assertThat(publicKeyEncryptionNode.asString()).isEqualTo("RSA");
-
-        // Oid under PublicKeyEncryption under ProbabilisticSignatureScheme under PrivateKey
-        INode oidNode = publicKeyEncryptionNode.getChildren().get(Oid.class);
-        assertThat(oidNode).isNotNull();
-        assertThat(oidNode.getChildren()).isEmpty();
-        assertThat(oidNode.asString()).isEqualTo("1.2.840.113549.1.1.1");
 
         // MaskGenerationFunction under ProbabilisticSignatureScheme under PrivateKey
         INode maskGenerationFunctionNode =

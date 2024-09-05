@@ -32,6 +32,7 @@ import com.ibm.mapper.model.algorithms.DSA;
 import com.ibm.mapper.model.algorithms.MGF1;
 import com.ibm.mapper.model.algorithms.PBKDF2;
 import com.ibm.mapper.model.algorithms.RSA;
+import com.ibm.mapper.model.algorithms.RSAssaPSS;
 import com.ibm.mapper.model.algorithms.SHA;
 import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.model.functionality.Decrypt;
@@ -295,5 +296,25 @@ class AlgorithmTest extends TestBase {
                         }
                     }
                 });
+    }
+
+    @Test
+    void rsaPSS() {
+        this.assertsNode(
+                () -> {
+                    final RSAssaPSS rsaPss = new RSAssaPSS(detectionLocation);
+                    rsaPss.put(new SHA2(384, detectionLocation));
+                    final MGF1 mgf1 = new MGF1(new SHA2(256, detectionLocation));
+                    mgf1.put(new Oid("1.2.840.113549.1.1.8", detectionLocation));
+                    rsaPss.put(mgf1);
+                    rsaPss.put(new Oid("1.2.840.113549.1.1.10", detectionLocation));
+
+                    final PrivateKey privateKey = new PrivateKey(rsaPss);
+                    privateKey.put(new KeyLength(2048, detectionLocation));
+                    privateKey.put(new KeyGeneration(detectionLocation));
+                    privateKey.put(new Sign(detectionLocation));
+                    return privateKey;
+                },
+                bom -> {});
     }
 }

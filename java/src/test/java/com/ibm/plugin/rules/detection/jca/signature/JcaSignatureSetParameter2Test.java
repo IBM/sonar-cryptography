@@ -27,12 +27,10 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.SaltSize;
 import com.ibm.engine.model.context.SignatureContext;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.MaskGenerationFunction;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.ProbabilisticSignatureScheme;
-import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.SaltLength;
 import com.ibm.mapper.model.Signature;
 import com.ibm.plugin.TestBase;
@@ -101,19 +99,7 @@ class JcaSignatureSetParameter2Test extends TestBase {
         assertThat(node.is(ProbabilisticSignatureScheme.class)).isTrue();
         assertThat(node.asString()).isEqualTo("RSASSA-PSS");
 
-        INode algorithm = node.getChildren().get(PublicKeyEncryption.class);
-        assertThat(algorithm).isNotNull();
-        assertThat(algorithm.asString()).isEqualTo("RSA");
-
-        INode oid = algorithm.getChildren().get(Oid.class);
-        assertThat(oid).isNotNull();
-        assertThat(oid.asString()).isEqualTo("1.2.840.113549.1.1.1");
-
-        INode keyLength = algorithm.getChildren().get(KeyLength.class);
-        assertThat(keyLength).isNotNull();
-        assertThat(keyLength.asString()).isEqualTo("2048");
-
-        oid = node.getChildren().get(Oid.class);
+        INode oid = node.getChildren().get(Oid.class);
         assertThat(oid).isNotNull();
         assertThat(oid.asString()).isEqualTo("1.2.840.113549.1.1.10");
 

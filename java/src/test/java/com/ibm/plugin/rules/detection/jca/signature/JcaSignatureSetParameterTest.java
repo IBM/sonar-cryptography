@@ -27,10 +27,8 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.SaltSize;
 import com.ibm.engine.model.context.SignatureContext;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.ProbabilisticSignatureScheme;
-import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.SaltLength;
 import com.ibm.plugin.TestBase;
 import java.util.List;
@@ -53,18 +51,6 @@ class JcaSignatureSetParameterTest extends TestBase {
                 .verifyIssues();
     }
 
-    /**
-     * DEBUG [detectionStore] (SignatureContext, Algorithm) RSASSA-PSS DEBUG [detectionStore] └─
-     * (SignatureContext, SaltSize<bit>) 160 DEBUG [translation] (Signature) RSASSA-PSS DEBUG
-     * [translation] └─ (Algorithm) RSA DEBUG [translation] └─ (Oid) 1.2.840.113549.1.1.1 DEBUG
-     * [translation] └─ (KeyLength) 2048 DEBUG [translation] └─ (Oid) 1.2.840.113549.1.1.10 DEBUG
-     * [translation] └─ (MaskGenerationFunction) MGF1 DEBUG [translation] └─ (MessageDigest) SHA-1
-     * DEBUG [translation] └─ (BlockSize) 512 DEBUG [translation] └─ (KeyLength) 512 DEBUG
-     * [translation] └─ (DigestSize) 160 DEBUG [translation] └─ (ProbabilisticSignatureScheme) PSS
-     * DEBUG [translation] └─ (SaltLength) 160 DEBUG [translation] └─ (MessageDigest) SHA-1 DEBUG
-     * [translation] └─ (BlockSize) 512 DEBUG [translation] └─ (KeyLength) 512 DEBUG [translation]
-     * └─ (DigestSize) 160
-     */
     @Override
     public void asserts(
             int findingId,
@@ -97,7 +83,7 @@ class JcaSignatureSetParameterTest extends TestBase {
         INode probabilisticSignatureSchemeNode = nodes.get(0);
         assertThat(probabilisticSignatureSchemeNode.getKind())
                 .isEqualTo(ProbabilisticSignatureScheme.class);
-        assertThat(probabilisticSignatureSchemeNode.getChildren()).hasSize(3);
+        assertThat(probabilisticSignatureSchemeNode.getChildren()).hasSize(2);
         assertThat(probabilisticSignatureSchemeNode.asString()).isEqualTo("RSASSA-PSS");
 
         // SaltLength under ProbabilisticSignatureScheme
@@ -111,24 +97,5 @@ class JcaSignatureSetParameterTest extends TestBase {
         assertThat(oidNode).isNotNull();
         assertThat(oidNode.getChildren()).isEmpty();
         assertThat(oidNode.asString()).isEqualTo("1.2.840.113549.1.1.10");
-
-        // PublicKeyEncryption under ProbabilisticSignatureScheme
-        INode publicKeyEncryptionNode =
-                probabilisticSignatureSchemeNode.getChildren().get(PublicKeyEncryption.class);
-        assertThat(publicKeyEncryptionNode).isNotNull();
-        assertThat(publicKeyEncryptionNode.getChildren()).hasSize(2);
-        assertThat(publicKeyEncryptionNode.asString()).isEqualTo("RSA");
-
-        // Oid under PublicKeyEncryption under ProbabilisticSignatureScheme
-        INode oidNode1 = publicKeyEncryptionNode.getChildren().get(Oid.class);
-        assertThat(oidNode1).isNotNull();
-        assertThat(oidNode1.getChildren()).isEmpty();
-        assertThat(oidNode1.asString()).isEqualTo("1.2.840.113549.1.1.1");
-
-        // KeyLength under PublicKeyEncryption under ProbabilisticSignatureScheme
-        INode keyLengthNode = publicKeyEncryptionNode.getChildren().get(KeyLength.class);
-        assertThat(keyLengthNode).isNotNull();
-        assertThat(keyLengthNode.getChildren()).isEmpty();
-        assertThat(keyLengthNode.asString()).isEqualTo("2048");
     }
 }

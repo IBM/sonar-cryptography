@@ -29,12 +29,10 @@ import com.ibm.engine.model.context.SignatureContext;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.MaskGenerationFunction;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.ProbabilisticSignatureScheme;
-import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.SaltLength;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.plugin.TestBase;
@@ -104,27 +102,8 @@ class JcaSignatureSetParameter3Test extends TestBase {
         INode probabilisticSignatureSchemeNode = nodes.get(0);
         assertThat(probabilisticSignatureSchemeNode.getKind())
                 .isEqualTo(ProbabilisticSignatureScheme.class);
-        assertThat(probabilisticSignatureSchemeNode.getChildren()).hasSize(5);
+        assertThat(probabilisticSignatureSchemeNode.getChildren()).hasSize(4);
         assertThat(probabilisticSignatureSchemeNode.asString()).isEqualTo("RSASSA-PSS");
-
-        // PublicKeyEncryption under ProbabilisticSignatureScheme
-        INode publicKeyEncryptionNode =
-                probabilisticSignatureSchemeNode.getChildren().get(PublicKeyEncryption.class);
-        assertThat(publicKeyEncryptionNode).isNotNull();
-        assertThat(publicKeyEncryptionNode.getChildren()).hasSize(2);
-        assertThat(publicKeyEncryptionNode.asString()).isEqualTo("RSA");
-
-        // KeyLength under PublicKeyEncryption under ProbabilisticSignatureScheme
-        INode keyLengthNode = publicKeyEncryptionNode.getChildren().get(KeyLength.class);
-        assertThat(keyLengthNode).isNotNull();
-        assertThat(keyLengthNode.getChildren()).isEmpty();
-        assertThat(keyLengthNode.asString()).isEqualTo("2048");
-
-        // Oid under PublicKeyEncryption under ProbabilisticSignatureScheme
-        INode oidNode = publicKeyEncryptionNode.getChildren().get(Oid.class);
-        assertThat(oidNode).isNotNull();
-        assertThat(oidNode.getChildren()).isEmpty();
-        assertThat(oidNode.asString()).isEqualTo("1.2.840.113549.1.1.1");
 
         // SaltLength under ProbabilisticSignatureScheme
         INode saltLengthNode = probabilisticSignatureSchemeNode.getChildren().get(SaltLength.class);
