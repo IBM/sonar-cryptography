@@ -75,8 +75,7 @@ public class JcaOAEPPaddingMapper implements IMapper {
                                 maskGenerationFunction ->
                                         new OAEP(
                                                 messageDigestOptional.get(),
-                                                maskGenerationFunction,
-                                                detectionLocation))
+                                                maskGenerationFunction))
                         .or(
                                 () ->
                                         Optional.of(

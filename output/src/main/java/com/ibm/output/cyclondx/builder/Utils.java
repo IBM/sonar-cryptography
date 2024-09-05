@@ -21,13 +21,13 @@ package com.ibm.output.cyclondx.builder;
 
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 import org.cyclonedx.model.component.crypto.enums.Mode;
+import org.cyclonedx.model.component.crypto.enums.Padding;
 import org.jetbrains.annotations.NotNull;
 
 public final class Utils {
@@ -38,7 +38,13 @@ public final class Utils {
 
     public static @NotNull Optional<Mode> parseStringToMode(@Nonnull String string) {
         return Arrays.stream(org.cyclonedx.model.component.crypto.enums.Mode.values())
-                .filter(k -> Objects.equals(k.name(), string))
+                .filter(k -> k.name().equalsIgnoreCase(string))
+                .findFirst();
+    }
+
+    public static @NotNull Optional<Padding> parseStringToPadding(@Nonnull String string) {
+        return Arrays.stream(org.cyclonedx.model.component.crypto.enums.Padding.values())
+                .filter(k -> k.name().equalsIgnoreCase(string))
                 .findFirst();
     }
 

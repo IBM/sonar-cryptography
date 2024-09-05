@@ -26,22 +26,27 @@ import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
 import com.ibm.mapper.model.PasswordLength;
 import com.ibm.mapper.model.PrivateKey;
+import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.SaltLength;
 import com.ibm.mapper.model.algorithms.DSA;
+import com.ibm.mapper.model.algorithms.MGF1;
 import com.ibm.mapper.model.algorithms.PBKDF2;
 import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.algorithms.SHA;
 import com.ibm.mapper.model.algorithms.SHA2;
+import com.ibm.mapper.model.functionality.Decrypt;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Encrypt;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.model.functionality.Sign;
+import com.ibm.mapper.model.padding.OAEP;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.component.crypto.AlgorithmProperties;
 import org.cyclonedx.model.component.crypto.CryptoProperties;
 import org.cyclonedx.model.component.crypto.RelatedCryptoMaterialProperties;
 import org.cyclonedx.model.component.crypto.enums.AssetType;
 import org.cyclonedx.model.component.crypto.enums.CryptoFunction;
+import org.cyclonedx.model.component.crypto.enums.Padding;
 import org.cyclonedx.model.component.crypto.enums.Primitive;
 import org.cyclonedx.model.component.crypto.enums.RelatedCryptoMaterialType;
 import org.junit.jupiter.api.Test;
@@ -212,6 +217,75 @@ class AlgorithmTest extends TestBase {
                                         .isEqualTo("256");
                                 assertThat(algorithmProperties.getCryptoFunctions())
                                         .contains(CryptoFunction.DIGEST);
+                            } else {
+                                throw new AssertionError();
+                            }
+                        } else {
+                            throw new AssertionError(
+                                    "Unexpected asset type: " + cryptoProperties.getAssetType());
+                        }
+                    }
+                });
+    }
+
+    @Test
+    void rsaOAEP() {
+        this.assertsNode(
+                () -> {
+                    final RSA rsa = new RSA(detectionLocation);
+                    final OAEP oaep =
+                            new OAEP(
+                                    new SHA2(256, detectionLocation),
+                                    new MGF1(new SHA2(384, detectionLocation)));
+                    rsa.put(oaep);
+                    rsa.put(new Oid("1.2.840.113549.1.1.7", detectionLocation));
+                    final PrivateKey privateKey = new PrivateKey((PublicKeyEncryption) rsa);
+                    privateKey.put(new Decrypt(detectionLocation));
+                    privateKey.put(new KeyGeneration(detectionLocation));
+                    privateKey.put(new KeyLength(1024, detectionLocation));
+                    return privateKey;
+                },
+                bom -> {
+                    assertThat(bom.getComponents()).hasSize(5);
+                    assertThat(bom.getComponents().stream().map(Component::getName))
+                            .contains("RSA-OAEP", "SHA256", "MGF1", "SHA384");
+
+                    for (Component component : bom.getComponents()) {
+                        asserts(component.getEvidence());
+                        assertThat(component.getCryptoProperties()).isNotNull();
+                        final CryptoProperties cryptoProperties = component.getCryptoProperties();
+
+                        if (cryptoProperties
+                                .getAssetType()
+                                .equals(AssetType.RELATED_CRYPTO_MATERIAL)) {
+                            assertThat(cryptoProperties.getRelatedCryptoMaterialProperties())
+                                    .isNotNull();
+                            final RelatedCryptoMaterialProperties relatedCryptoMaterialProperties =
+                                    cryptoProperties.getRelatedCryptoMaterialProperties();
+                            assertThat(relatedCryptoMaterialProperties.getType())
+                                    .isEqualTo(RelatedCryptoMaterialType.PRIVATE_KEY);
+                            assertThat(relatedCryptoMaterialProperties.getSize()).isEqualTo(1024);
+                        } else if (cryptoProperties.getAssetType().equals(AssetType.ALGORITHM)) {
+                            assertThat(cryptoProperties.getAlgorithmProperties()).isNotNull();
+                            final AlgorithmProperties algorithmProperties =
+                                    cryptoProperties.getAlgorithmProperties();
+                            if (algorithmProperties.getPrimitive().equals(Primitive.PKE)) {
+                                assertThat(component.getName()).isEqualTo("RSA-OAEP");
+                                assertThat(cryptoProperties.getOid())
+                                        .isEqualTo("1.2.840.113549.1.1.7");
+                                assertThat(algorithmProperties.getPadding())
+                                        .isEqualTo(Padding.OAEP);
+                                assertThat(algorithmProperties.getCryptoFunctions())
+                                        .contains(CryptoFunction.DECRYPT, CryptoFunction.KEYGEN);
+                            } else if (algorithmProperties.getPrimitive().equals(Primitive.HASH)) {
+                                assertThat(component.getName())
+                                        .satisfiesAnyOf(
+                                                s -> assertThat(s).isEqualTo("SHA256"),
+                                                s -> assertThat(s).isEqualTo("SHA384"));
+                            } else if (algorithmProperties.getPrimitive().equals(Primitive.OTHER)) {
+                                assertThat(component.getName()).isEqualTo("MGF1");
+                                assertThat(cryptoProperties.getOid())
+                                        .isEqualTo("1.2.840.113549.1.1.8");
                             } else {
                                 throw new AssertionError();
                             }

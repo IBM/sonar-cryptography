@@ -25,8 +25,10 @@ import com.ibm.mapper.model.KeyAgreement;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Oid;
+import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.Signature;
+import com.ibm.mapper.model.padding.OAEP;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
@@ -41,6 +43,10 @@ public final class RSA extends Algorithm implements KeyAgreement, Signature, Pub
             return this.hasChildOfType(MessageDigest.class)
                     .map(node -> this.name + "with" + node.asString())
                     .orElse(this.name);
+        } else if (this.is(PublicKeyEncryption.class)) {
+            if (this.hasChildOfType(Padding.class).map(OAEP.class::isInstance).orElse(false)) {
+                return this.name + "-OAEP";
+            }
         }
         return this.name;
     }

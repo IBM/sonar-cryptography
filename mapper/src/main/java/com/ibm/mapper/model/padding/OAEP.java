@@ -43,9 +43,8 @@ public final class OAEP extends Padding {
 
     public OAEP(
             @Nonnull MessageDigest messageDigest,
-            @Nonnull MaskGenerationFunction maskGenerationFunction,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(NAME, detectionLocation);
+            @Nonnull MaskGenerationFunction maskGenerationFunction) {
+        super(NAME, messageDigest.getDetectionContext());
         this.put(messageDigest);
         this.put(maskGenerationFunction);
     }
