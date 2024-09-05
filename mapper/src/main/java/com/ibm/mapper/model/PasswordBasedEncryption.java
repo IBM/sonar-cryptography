@@ -19,46 +19,14 @@
  */
 package com.ibm.mapper.model;
 
-import com.ibm.mapper.ITranslator;
-import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
-public class PasswordBasedEncryption extends Algorithm implements IPrimitive {
-
-    public PasswordBasedEncryption(@Nonnull DetectionLocation detectionLocation) {
-        super(ITranslator.UNKNOWN, PasswordBasedEncryption.class, detectionLocation);
-    }
-
-    // example: PBEWithHmacSHA1AndAES_128
-    public PasswordBasedEncryption(@Nonnull Mac mac, @Nonnull Cipher cipher) {
-        super(
-                "PBEWith" + mac.asString() + "And" + cipher.asString(),
-                PasswordBasedEncryption.class,
-                mac.getDetectionContext());
-        this.put(mac);
-        this.put(cipher);
-    }
-
-    // example: PBEWithMD5AndDES
-    public PasswordBasedEncryption(@Nonnull MessageDigest digest, @Nonnull Cipher cipher) {
-        super(
-                "PBEWith" + digest.asString() + "And" + cipher.asString(),
-                PasswordBasedEncryption.class,
-                digest.getDetectionContext());
-        this.put(digest);
-        this.put(cipher);
-    }
-
-    // example: PBEWithHmacSHA1
-    public PasswordBasedEncryption(@Nonnull Mac mac) {
-        super("PBEWith" + mac.asString(), PasswordBasedEncryption.class, mac.getDetectionContext());
-        this.put(mac);
-    }
+public interface PasswordBasedEncryption extends IPrimitive {
 
     @Nonnull
-    public Optional<Mac> getMac() {
+    default Optional<Mac> getMac() {
         INode node = this.getChildren().get(Mac.class);
         if (node == null) {
             return Optional.empty();
@@ -67,7 +35,7 @@ public class PasswordBasedEncryption extends Algorithm implements IPrimitive {
     }
 
     @Nonnull
-    public Optional<MessageDigest> getDigest() {
+    default Optional<MessageDigest> getDigest() {
         INode node = this.getChildren().get(MessageDigest.class);
         if (node == null) {
             return Optional.empty();
@@ -76,7 +44,7 @@ public class PasswordBasedEncryption extends Algorithm implements IPrimitive {
     }
 
     @Nonnull
-    public Optional<Cipher> getCipher() {
+    default Optional<Cipher> getCipher() {
         return this.getChildren().values().stream()
                 .map(
                         n -> {

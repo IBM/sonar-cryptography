@@ -20,10 +20,11 @@
 package com.ibm.mapper.mapper.jca;
 
 import com.ibm.mapper.mapper.IMapper;
-import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.Cipher;
+import com.ibm.mapper.model.IAlgorithm;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.PBES1;
 import com.ibm.mapper.model.PasswordBasedEncryption;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
@@ -61,7 +62,7 @@ public class JcaPasswordBasedEncryptionMapper implements IMapper {
         }
 
         // cipher
-        Optional<? extends Algorithm> cipherOptional = Optional.empty();
+        Optional<? extends IAlgorithm> cipherOptional = Optional.empty();
         if (cipherStr != null) {
             JcaCipherMapper cipherMapper = new JcaCipherMapper();
             cipherOptional = cipherMapper.parse(cipherStr, detectionLocation);
@@ -69,13 +70,13 @@ public class JcaPasswordBasedEncryptionMapper implements IMapper {
 
         // hmac
         JcaMacMapper macMapper = new JcaMacMapper();
-        Optional<? extends Algorithm> macOptional =
+        Optional<? extends IAlgorithm> macOptional =
                 macMapper.parse(hmacOrDigestStr, detectionLocation);
         if (macOptional.isPresent() && macOptional.get() instanceof Mac mac) {
             if (cipherOptional.isPresent() && cipherOptional.get() instanceof Cipher cipher) {
-                return Optional.of(new PasswordBasedEncryption(mac, cipher));
+                return Optional.of(new PBES1(mac, cipher));
             } else {
-                return Optional.of(new PasswordBasedEncryption(mac));
+                return Optional.of(new PBES1(mac));
             }
         }
 
@@ -86,7 +87,7 @@ public class JcaPasswordBasedEncryptionMapper implements IMapper {
         if (messageDigestOptional.isPresent()
                 && cipherOptional.isPresent()
                 && cipherOptional.get() instanceof Cipher cipher) {
-            return Optional.of(new PasswordBasedEncryption(messageDigestOptional.get(), cipher));
+            return Optional.of(new PBES1(messageDigestOptional.get(), cipher));
         }
 
         return Optional.empty();

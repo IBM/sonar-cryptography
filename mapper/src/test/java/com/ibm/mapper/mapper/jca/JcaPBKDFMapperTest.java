@@ -45,7 +45,7 @@ class JcaPBKDFMapperTest {
         assertThat(pbkdfOptional).isPresent();
         assertThat(pbkdfOptional.get()).isInstanceOf(PBKDF2.class);
         assertThat(pbkdfOptional.get().is(PasswordBasedKeyDerivationFunction.class)).isTrue();
-        assertThat(pbkdfOptional.get().asString()).isEqualTo("PBKDF2-SHA256");
+        assertThat(pbkdfOptional.get().asString()).isEqualTo("PBKDF2-HMAC-SHA256");
         assertThat(pbkdfOptional.get().getIterations()).isEmpty();
         assertThat(pbkdfOptional.get().getSalt()).isEmpty();
         assertThat(pbkdfOptional.get().hasChildren()).isTrue();
@@ -56,6 +56,6 @@ class JcaPBKDFMapperTest {
         assertThat(child.is(Mac.class)).isTrue();
 
         Mac mac = (Mac) child;
-        assertThat(mac.getName()).isEqualTo("SHA256");
+        assertThat(mac.asString()).isEqualTo("HMAC-SHA256");
     }
 }

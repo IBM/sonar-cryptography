@@ -29,7 +29,9 @@ import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mac;
+import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Oid;
+import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
 import java.util.List;
@@ -74,29 +76,41 @@ class JcaMacGetInstanceTest extends TestBase {
         // Mac
         INode macNode = nodes.get(0);
         assertThat(macNode.getKind()).isEqualTo(Mac.class);
-        assertThat(macNode.getChildren()).hasSize(4);
-        assertThat(macNode.asString()).isEqualTo("SHA3-384");
+        assertThat(macNode.getChildren()).hasSize(2);
+        assertThat(macNode.asString()).isEqualTo("HMAC-SHA3-384");
 
-        // BlockSize under Mac
-        INode blockSizeNode = macNode.getChildren().get(BlockSize.class);
+        // Tag under Mac
+        INode tagNode = macNode.getChildren().get(Tag.class);
+        assertThat(tagNode).isNotNull();
+        assertThat(tagNode.getChildren()).isEmpty();
+        assertThat(tagNode.asString()).isEqualTo("TAG");
+
+        // MessageDigest under Mac
+        INode messageDigestNode = macNode.getChildren().get(MessageDigest.class);
+        assertThat(messageDigestNode).isNotNull();
+        assertThat(messageDigestNode.getChildren()).hasSize(4);
+        assertThat(messageDigestNode.asString()).isEqualTo("SHA3-384");
+
+        // BlockSize under MessageDigest under Mac
+        INode blockSizeNode = messageDigestNode.getChildren().get(BlockSize.class);
         assertThat(blockSizeNode).isNotNull();
         assertThat(blockSizeNode.getChildren()).isEmpty();
         assertThat(blockSizeNode.asString()).isEqualTo("832");
 
-        // Oid under Mac
-        INode oidNode = macNode.getChildren().get(Oid.class);
+        // Oid under MessageDigest under Mac
+        INode oidNode = messageDigestNode.getChildren().get(Oid.class);
         assertThat(oidNode).isNotNull();
         assertThat(oidNode.getChildren()).isEmpty();
         assertThat(oidNode.asString()).isEqualTo("2.16.840.1.101.3.4.2.9");
 
-        // Digest under Mac
-        INode digestNode = macNode.getChildren().get(Tag.class);
+        // Digest under MessageDigest under Mac
+        INode digestNode = messageDigestNode.getChildren().get(Digest.class);
         assertThat(digestNode).isNotNull();
         assertThat(digestNode.getChildren()).isEmpty();
-        assertThat(digestNode.asString()).isEqualTo("TAG");
+        assertThat(digestNode.asString()).isEqualTo("DIGEST");
 
-        // DigestSize under Mac
-        INode digestSizeNode = macNode.getChildren().get(DigestSize.class);
+        // DigestSize under MessageDigest under Mac
+        INode digestSizeNode = messageDigestNode.getChildren().get(DigestSize.class);
         assertThat(digestSizeNode).isNotNull();
         assertThat(digestSizeNode.getChildren()).isEmpty();
         assertThat(digestSizeNode.asString()).isEqualTo("384");

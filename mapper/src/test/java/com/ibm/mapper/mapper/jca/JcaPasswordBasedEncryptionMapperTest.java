@@ -45,7 +45,8 @@ class JcaPasswordBasedEncryptionMapperTest {
 
         assertThat(pbeOpt).isPresent();
         PasswordBasedEncryption pbe = pbeOpt.get();
-        assertThat(pbe.getName()).isEqualTo("PBEWithSHA256AndAES");
+        assertThat(pbe.getName()).isEqualTo("PBES1");
+        assertThat(pbe.asString()).isEqualTo("pbeWithHmacSHA256AndAES");
 
         assertThat(pbe.getChildren()).hasSize(2);
         assertThat(pbe.getDigest()).isEmpty();
@@ -53,7 +54,7 @@ class JcaPasswordBasedEncryptionMapperTest {
         assertThat(pbe.getMac()).isPresent();
 
         Mac mac = pbe.getMac().get();
-        assertThat(mac.getName()).isEqualTo("SHA256");
+        assertThat(mac.asString()).isEqualTo("HMAC-SHA256");
         assertThat(mac.getChildren()).hasSize(1);
 
         Cipher cipher = pbe.getCipher().get();

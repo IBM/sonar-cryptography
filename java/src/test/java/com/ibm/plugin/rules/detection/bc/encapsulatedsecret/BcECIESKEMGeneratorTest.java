@@ -112,7 +112,7 @@ class BcECIESKEMGeneratorTest extends TestBase {
         assertThat(keyEncapsulationMechanismNode.getKind())
                 .isEqualTo(KeyEncapsulationMechanism.class);
         assertThat(keyEncapsulationMechanismNode.getChildren()).hasSize(2);
-        assertThat(keyEncapsulationMechanismNode.asString()).isEqualTo("ECIES");
+        assertThat(keyEncapsulationMechanismNode.asString()).isEqualTo("ECIES-KEM");
 
         // KeyLength under KeyEncapsulationMechanism
         INode keyLengthNode = keyEncapsulationMechanismNode.getChildren().get(KeyLength.class);

@@ -21,9 +21,9 @@ package com.ibm.mapper.mapper.jca;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.Cipher;
+import com.ibm.mapper.model.IAlgorithm;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Mode;
@@ -47,7 +47,7 @@ class JcaCipherMapperTest {
                 new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaCipherMapper jcaCipherMapper = new JcaCipherMapper();
-        Optional<? extends Algorithm> cipherOptional =
+        Optional<? extends IAlgorithm> cipherOptional =
                 jcaCipherMapper.parse("AES/ECB/PKCS5Padding", testDetectionLocation);
 
         assertThat(cipherOptional).isPresent();
@@ -71,14 +71,15 @@ class JcaCipherMapperTest {
                 new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaCipherMapper jcaCipherMapper = new JcaCipherMapper();
-        Optional<? extends Algorithm> cipherOptional =
+        Optional<? extends IAlgorithm> cipherOptional =
                 jcaCipherMapper.parse("PBEWithMD5AndDES", testDetectionLocation);
 
         assertThat(cipherOptional).isPresent();
         assertThat(cipherOptional.get().is(PasswordBasedEncryption.class)).isTrue();
         PasswordBasedEncryption pbe = (PasswordBasedEncryption) cipherOptional.get();
 
-        assertThat(pbe.getName()).isEqualTo("PBEWithMD5AndDES");
+        assertThat(pbe.getName()).isEqualTo("PBES1");
+        assertThat(pbe.asString()).isEqualTo("pbeWithMD5AndDES");
         assertThat(pbe.hasChildren()).isTrue();
         assertThat(pbe.getChildren().values()).hasSize(2);
 
@@ -102,7 +103,7 @@ class JcaCipherMapperTest {
                 new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaCipherMapper jcaCipherMapper = new JcaCipherMapper();
-        Optional<? extends Algorithm> cipherOptional =
+        Optional<? extends IAlgorithm> cipherOptional =
                 jcaCipherMapper.parse("AES/CFB8/NoPadding", testDetectionLocation);
 
         assertThat(cipherOptional).isPresent();
@@ -126,7 +127,7 @@ class JcaCipherMapperTest {
                 new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
 
         JcaCipherMapper jcaAlgorithmMapper = new JcaCipherMapper();
-        Optional<? extends Algorithm> algorithm =
+        Optional<? extends IAlgorithm> algorithm =
                 jcaAlgorithmMapper.parse("RSA", testDetectionLocation);
 
         assertThat(algorithm).isPresent();

@@ -20,9 +20,9 @@
 package com.ibm.mapper.mapper.jca;
 
 import com.ibm.mapper.mapper.IMapper;
-import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.Mac;
+import com.ibm.mapper.model.IAlgorithm;
 import com.ibm.mapper.model.PasswordBasedEncryption;
+import com.ibm.mapper.model.algorithms.HMAC;
 import com.ibm.mapper.model.algorithms.MD2;
 import com.ibm.mapper.model.algorithms.MD5;
 import com.ibm.mapper.model.algorithms.SHA;
@@ -37,7 +37,7 @@ public class JcaMacMapper implements IMapper {
 
     @Nonnull
     @Override
-    public Optional<? extends Algorithm> parse(
+    public Optional<? extends IAlgorithm> parse(
             @Nullable final String str, @Nonnull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
@@ -58,39 +58,33 @@ public class JcaMacMapper implements IMapper {
         final String messageDigestStr =
                 str.substring(str.toLowerCase().trim().indexOf("Hmac".toLowerCase()) + 4);
 
-        return switch (messageDigestStr.toUpperCase().trim()) {
-            case "MD2" -> Optional.of(new MD2(Mac.class, detectionLocation));
-            case "MD5" -> Optional.of(new MD5(Mac.class, detectionLocation));
-            case "SHA", "SHA1", "SHA-1" -> Optional.of(new SHA(Mac.class, detectionLocation));
-            case "SHA-224", "SHA224" ->
-                    Optional.of(new SHA2(Mac.class, new SHA2(224, detectionLocation)));
-            case "SHA-256", "SHA256" ->
-                    Optional.of(new SHA2(Mac.class, new SHA2(256, detectionLocation)));
-            case "SHA-384", "SHA384" ->
-                    Optional.of(new SHA2(Mac.class, new SHA2(384, detectionLocation)));
-            case "SHA-512", "SHA512" ->
-                    Optional.of(new SHA2(Mac.class, new SHA2(512, detectionLocation)));
-            case "SHA-512/224", "SHA512/224" ->
-                    Optional.of(
-                            new SHA2(
-                                    Mac.class,
-                                    new SHA2(
-                                            224,
-                                            new SHA2(512, detectionLocation),
-                                            detectionLocation)));
-            case "SHA-512/256", "SHA512/256" ->
-                    Optional.of(
-                            new SHA2(
-                                    Mac.class,
-                                    new SHA2(
-                                            256,
-                                            new SHA2(512, detectionLocation),
-                                            detectionLocation)));
-            case "SHA3-224" -> Optional.of(new SHA3(Mac.class, new SHA3(224, detectionLocation)));
-            case "SHA3-256" -> Optional.of(new SHA3(Mac.class, new SHA3(256, detectionLocation)));
-            case "SHA3-384" -> Optional.of(new SHA3(Mac.class, new SHA3(384, detectionLocation)));
-            case "SHA3-512" -> Optional.of(new SHA3(Mac.class, new SHA3(512, detectionLocation)));
-            default -> Optional.empty();
-        };
+        return Optional.of(messageDigestStr.toUpperCase().trim())
+                .map(
+                        s ->
+                                switch (s) {
+                                    case "MD2" -> new MD2(detectionLocation);
+                                    case "MD5" -> new MD5(detectionLocation);
+                                    case "SHA", "SHA1", "SHA-1" -> new SHA(detectionLocation);
+                                    case "SHA-224", "SHA224" -> new SHA2(224, detectionLocation);
+                                    case "SHA-256", "SHA256" -> new SHA2(256, detectionLocation);
+                                    case "SHA-384", "SHA384" -> new SHA2(384, detectionLocation);
+                                    case "SHA-512", "SHA512" -> new SHA2(512, detectionLocation);
+                                    case "SHA-512/224", "SHA512/224" ->
+                                            new SHA2(
+                                                    224,
+                                                    new SHA2(512, detectionLocation),
+                                                    detectionLocation);
+                                    case "SHA-512/256", "SHA512/256" ->
+                                            new SHA2(
+                                                    256,
+                                                    new SHA2(512, detectionLocation),
+                                                    detectionLocation);
+                                    case "SHA3-224" -> new SHA3(224, detectionLocation);
+                                    case "SHA3-256" -> new SHA3(256, detectionLocation);
+                                    case "SHA3-384" -> new SHA3(384, detectionLocation);
+                                    case "SHA3-512" -> new SHA3(512, detectionLocation);
+                                    default -> null;
+                                })
+                .map(HMAC::new);
     }
 }
