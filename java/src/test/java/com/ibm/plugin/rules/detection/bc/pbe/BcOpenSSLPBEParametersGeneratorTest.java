@@ -65,7 +65,11 @@ class BcOpenSSLPBEParametersGeneratorTest extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("OpenSSLPBE");
+        assertThat(value0.asString())
+                .isEqualTo(
+                        findingId == 0
+                                ? "OpenSSLPBEParametersGenerator[MD5]"
+                                : "OpenSSLPBEParametersGenerator");
 
         if (findingId == 1) {
             DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
@@ -74,7 +78,7 @@ class BcOpenSSLPBEParametersGeneratorTest extends TestBase {
             assertThat(store_1.getDetectionValueContext()).isInstanceOf(DigestContext.class);
             IValue<Tree> value0_1 = store_1.getDetectionValues().get(0);
             assertThat(value0_1).isInstanceOf(ValueAction.class);
-            assertThat(value0_1.asString()).isEqualTo("SHA-256");
+            assertThat(value0_1.asString()).isEqualTo("SHA256Digest");
         }
 
         /*
@@ -87,12 +91,13 @@ class BcOpenSSLPBEParametersGeneratorTest extends TestBase {
         INode passwordBasedEncryptionNode1 = nodes.get(0);
         assertThat(passwordBasedEncryptionNode1.getKind()).isEqualTo(PasswordBasedEncryption.class);
         assertThat(passwordBasedEncryptionNode1.getChildren()).hasSize(1);
-        assertThat(passwordBasedEncryptionNode1.asString()).isEqualTo("PKCS #5 v2.0 Scheme 1");
+        assertThat(passwordBasedEncryptionNode1.asString()).isEqualTo("PBES1");
 
         // MessageDigest under PasswordBasedEncryption
         INode messageDigestNode1 =
                 passwordBasedEncryptionNode1.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode1).isNotNull();
-        assertThat(messageDigestNode1.asString()).isEqualTo(findingId == 0 ? "MD5" : "SHA-256");
+        assertThat(messageDigestNode1.getChildren()).hasSize(findingId == 0 ? 2 : 4);
+        assertThat(messageDigestNode1.asString()).isEqualTo(findingId == 0 ? "MD5" : "SHA256");
     }
 }

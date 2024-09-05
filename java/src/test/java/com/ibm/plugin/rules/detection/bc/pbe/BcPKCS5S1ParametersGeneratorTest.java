@@ -26,9 +26,13 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.DigestContext;
+import com.ibm.mapper.model.BlockSize;
+import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.PasswordBasedEncryption;
+import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
 import java.util.List;
@@ -64,7 +68,7 @@ class BcPKCS5S1ParametersGeneratorTest extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("PKCS5S1");
+        assertThat(value0.asString()).isEqualTo("PKCS5S1ParametersGenerator");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
                 getStoreOfValueType(ValueAction.class, detectionStore.getChildren());
@@ -72,7 +76,7 @@ class BcPKCS5S1ParametersGeneratorTest extends TestBase {
         assertThat(store_1.getDetectionValueContext()).isInstanceOf(DigestContext.class);
         IValue<Tree> value0_1 = store_1.getDetectionValues().get(0);
         assertThat(value0_1).isInstanceOf(ValueAction.class);
-        assertThat(value0_1.asString()).isEqualTo("SHA-256");
+        assertThat(value0_1.asString()).isEqualTo("SHA256Digest");
 
         /*
          * Translation
@@ -84,13 +88,37 @@ class BcPKCS5S1ParametersGeneratorTest extends TestBase {
         INode passwordBasedEncryptionNode = nodes.get(0);
         assertThat(passwordBasedEncryptionNode.getKind()).isEqualTo(PasswordBasedEncryption.class);
         assertThat(passwordBasedEncryptionNode.getChildren()).hasSize(1);
-        assertThat(passwordBasedEncryptionNode.asString()).isEqualTo("PKCS #5 v2.0 Scheme 1");
+        assertThat(passwordBasedEncryptionNode.asString()).isEqualTo("PBES1");
 
         // MessageDigest under PasswordBasedEncryption
         INode messageDigestNode =
                 passwordBasedEncryptionNode.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode).isNotNull();
-        assertThat(messageDigestNode.getChildren()).hasSize(1);
-        assertThat(messageDigestNode.asString()).isEqualTo("SHA-256");
+        assertThat(messageDigestNode.getChildren()).hasSize(4);
+        assertThat(messageDigestNode.asString()).isEqualTo("SHA256");
+
+        // DigestSize under MessageDigest under PasswordBasedEncryption
+        INode digestSizeNode = messageDigestNode.getChildren().get(DigestSize.class);
+        assertThat(digestSizeNode).isNotNull();
+        assertThat(digestSizeNode.getChildren()).isEmpty();
+        assertThat(digestSizeNode.asString()).isEqualTo("256");
+
+        // Oid under MessageDigest under PasswordBasedEncryption
+        INode oidNode = messageDigestNode.getChildren().get(Oid.class);
+        assertThat(oidNode).isNotNull();
+        assertThat(oidNode.getChildren()).isEmpty();
+        assertThat(oidNode.asString()).isEqualTo("2.16.840.1.101.3.4.2.1");
+
+        // Digest under MessageDigest under PasswordBasedEncryption
+        INode digestNode = messageDigestNode.getChildren().get(Digest.class);
+        assertThat(digestNode).isNotNull();
+        assertThat(digestNode.getChildren()).isEmpty();
+        assertThat(digestNode.asString()).isEqualTo("DIGEST");
+
+        // BlockSize under MessageDigest under PasswordBasedEncryption
+        INode blockSizeNode = messageDigestNode.getChildren().get(BlockSize.class);
+        assertThat(blockSizeNode).isNotNull();
+        assertThat(blockSizeNode.getChildren()).isEmpty();
+        assertThat(blockSizeNode.asString()).isEqualTo("512");
     }
 }
