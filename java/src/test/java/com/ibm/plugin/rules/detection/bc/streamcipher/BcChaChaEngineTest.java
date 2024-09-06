@@ -64,7 +64,7 @@ class BcChaChaEngineTest extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("ChaCha");
+        assertThat(value0.asString()).isEqualTo("ChaChaEngine");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
                 getStoreOfValueType(OperationMode.class, detectionStore.getChildren());
@@ -84,7 +84,7 @@ class BcChaChaEngineTest extends TestBase {
         INode streamCipherNode = nodes.get(0);
         assertThat(streamCipherNode.getKind()).isEqualTo(StreamCipher.class);
         assertThat(streamCipherNode.getChildren()).hasSize(1);
-        assertThat(streamCipherNode.asString()).isEqualTo("ChaCha");
+        assertThat(streamCipherNode.asString()).isEqualTo("ChaCha20");
 
         // Encrypt under StreamCipher
         INode encryptNode = streamCipherNode.getChildren().get(Encrypt.class);

@@ -39,6 +39,7 @@ import com.ibm.mapper.mapper.bc.BcOperationModeEncryptionMapper;
 import com.ibm.mapper.mapper.bc.BcOperationModeWrappingMapper;
 import com.ibm.mapper.mapper.bc.BcPaddingMapper;
 import com.ibm.mapper.mapper.bc.BcPbeMapper;
+import com.ibm.mapper.mapper.bc.BcStreamCipherEngineMapper;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.mapper.jca.JcaCipherOperationModeMapper;
 import com.ibm.mapper.model.AuthenticatedEncryption;
@@ -147,6 +148,12 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
                     BcBufferedBlockCipherMapper bcBufferedBlockCipherMapper =
                             new BcBufferedBlockCipherMapper();
                     return bcBufferedBlockCipherMapper
+                            .parse(valueAction.asString(), detectionLocation)
+                            .map(f -> f);
+                case STREAM_CIPHER_ENGINE:
+                    BcStreamCipherEngineMapper bcStreamCipherEngineMapper =
+                            new BcStreamCipherEngineMapper();
+                    return bcStreamCipherEngineMapper
                             .parse(valueAction.asString(), detectionLocation)
                             .map(f -> f);
 
