@@ -24,6 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.ibm.mapper.model.CipherSuite;
 import com.ibm.mapper.model.Identifier;
 import com.ibm.mapper.model.KeyAgreement;
+import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.Version;
 import com.ibm.mapper.model.algorithms.AES;
 import com.ibm.mapper.model.algorithms.DH;
@@ -34,7 +35,13 @@ import com.ibm.mapper.model.collections.IdentifierCollection;
 import com.ibm.mapper.model.mode.CBC;
 import com.ibm.mapper.model.protocol.TLS;
 import java.util.List;
+import org.cyclonedx.model.Component;
+import org.cyclonedx.model.component.crypto.AlgorithmProperties;
 import org.cyclonedx.model.component.crypto.CryptoProperties;
+import org.cyclonedx.model.component.crypto.ProtocolProperties;
+import org.cyclonedx.model.component.crypto.enums.AssetType;
+import org.cyclonedx.model.component.crypto.enums.Mode;
+import org.cyclonedx.model.component.crypto.enums.Primitive;
 import org.cyclonedx.model.component.crypto.enums.ProtocolType;
 import org.junit.jupiter.api.Test;
 
@@ -72,6 +79,7 @@ class ProtocolTest extends TestBase {
                     final DH dh = new DH(KeyAgreement.class, detectionLocation);
                     final AES aes = new AES(256, new CBC(detectionLocation), detectionLocation);
                     final DSA dsa = new DSA(new SHA2(256, detectionLocation));
+                    dsa.put(new Oid("2.16.840.1.101.3.4.3.2", detectionLocation));
                     final AssetCollection assetCollection =
                             new AssetCollection(List.of(dh, aes, dsa));
                     final IdentifierCollection identifierCollection =
@@ -83,6 +91,62 @@ class ProtocolTest extends TestBase {
                     cipherSuite.put(identifierCollection);
                     return cipherSuite;
                 },
-                bom -> {});
+                bom -> {
+                    assertThat(bom.getComponents()).hasSize(5);
+                    assertThat(bom.getComponents().stream().map(Component::getName))
+                            .contains("SHA256withDSA", "SHA256", "AES256-CBC", "TLS", "DH");
+
+                    for (Component component : bom.getComponents()) {
+                        asserts(component.getEvidence());
+                        assertThat(component.getCryptoProperties()).isNotNull();
+                        final CryptoProperties cryptoProperties = component.getCryptoProperties();
+
+                        if (cryptoProperties.getAssetType().equals(AssetType.ALGORITHM)) {
+                            assertThat(cryptoProperties.getAlgorithmProperties()).isNotNull();
+                            final AlgorithmProperties algorithmProperties =
+                                    cryptoProperties.getAlgorithmProperties();
+                            if (algorithmProperties.getPrimitive().equals(Primitive.SIGNATURE)) {
+                                assertThat(component.getName()).isEqualTo("SHA256withDSA");
+                                assertThat(cryptoProperties.getOid())
+                                        .isEqualTo("2.16.840.1.101.3.4.3.2");
+                            } else if (algorithmProperties.getPrimitive().equals(Primitive.HASH)) {
+                                assertThat(component.getName()).isEqualTo("SHA256");
+                                assertThat(algorithmProperties.getParameterSetIdentifier())
+                                        .isEqualTo("256");
+                            } else if (algorithmProperties
+                                    .getPrimitive()
+                                    .equals(Primitive.KEY_AGREE)) {
+                                assertThat(component.getName()).isEqualTo("DH");
+                                assertThat(cryptoProperties.getOid())
+                                        .isEqualTo("1.2.840.113549.1.3.1");
+                            } else if (algorithmProperties
+                                    .getPrimitive()
+                                    .equals(Primitive.BLOCK_CIPHER)) {
+                                assertThat(component.getName()).isEqualTo("AES256-CBC");
+                                assertThat(algorithmProperties.getMode()).isEqualTo(Mode.CBC);
+                                assertThat(algorithmProperties.getParameterSetIdentifier())
+                                        .isEqualTo("256");
+                            } else {
+                                throw new AssertionError();
+                            }
+                        } else if (cryptoProperties.getAssetType().equals(AssetType.PROTOCOL)) {
+                            assertThat(cryptoProperties.getProtocolProperties()).isNotNull();
+                            final ProtocolProperties protocolProperties =
+                                    cryptoProperties.getProtocolProperties();
+                            assertThat(protocolProperties.getType()).isEqualTo(ProtocolType.TLS);
+                            assertThat(protocolProperties.getVersion()).isNull();
+                            assertThat(protocolProperties.getCipherSuites()).isNotNull();
+                            assertThat(protocolProperties.getCipherSuites()).hasSize(1);
+
+                            final org.cyclonedx.model.component.crypto.CipherSuite cipherSuite =
+                                    protocolProperties.getCipherSuites().get(0);
+                            assertThat(cipherSuite.getName())
+                                    .isEqualTo("TLS_DHE_DSS_WITH_AES_256_CBC_SHA256");
+
+                            assertThat(cipherSuite.getAlgorithms()).hasSize(3);
+                            assertThat(cipherSuite.getIdentifiers()).contains("0x00", "0x6A");
+                        }
+                    }
+                });
     }
 }
