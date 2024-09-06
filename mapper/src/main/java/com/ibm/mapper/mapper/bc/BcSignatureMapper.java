@@ -26,11 +26,13 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.ProbabilisticSignatureScheme;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.Unknown;
+import com.ibm.mapper.model.algorithms.ANSIX931;
 import com.ibm.mapper.model.algorithms.Ed25519;
 import com.ibm.mapper.model.algorithms.Ed448;
 import com.ibm.mapper.model.algorithms.ISO9796;
 import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.algorithms.RSAssaPSS;
+import com.ibm.mapper.model.algorithms.SM2;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -70,8 +72,8 @@ public class BcSignatureMapper implements IMapper {
             case "ISO9796d2Signer" -> Optional.of(new ISO9796(detectionLocation));
             case "PSSSigner" -> Optional.of(new RSAssaPSS(detectionLocation));
             case "RSADigestSigner" -> Optional.of(new RSA(Signature.class, detectionLocation));
-            // case "SM2Signer" -> Optional.of();
-            // case "X931Signer" -> Optional.of();
+            case "SM2Signer" -> Optional.of(new SM2(detectionLocation));
+            case "X931Signer" -> Optional.of(new ANSIX931(detectionLocation));
             default -> {
                 final Algorithm algorithm =
                         new Algorithm(signerString, Signature.class, detectionLocation);

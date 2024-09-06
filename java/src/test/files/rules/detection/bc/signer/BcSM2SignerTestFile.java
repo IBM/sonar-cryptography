@@ -14,7 +14,7 @@ public class BcSM2SignerTestFile {
 
         // Initialize SM2Signer
         SM2Signer signer = new SM2Signer(new StandardDSAEncoding(), digest);
-        // Noncompliant@-1 {{SM2}}
+        // Noncompliant@-1 {{SM2Signer}}
 
         signer.init(true, new RSAKeyParameters(true, new BigInteger("0"), new BigInteger("1")));
 

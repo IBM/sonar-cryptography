@@ -20,24 +20,16 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.IPrimitive;
-import com.ibm.mapper.model.KeyAgreement;
-import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class SM2 extends Algorithm implements Signature, PublicKeyEncryption, KeyAgreement {
-    // https://datatracker.ietf.org/doc/html/draft-shen-sm2-ecdsa-02
+public final class ANSIX931 extends Algorithm implements Signature {
+    // https://www.cryptsoft.com/pkcs11doc/v220/group__SEC__12__1__13__ANSI__X9__31__RSA.html
 
-    private static final String NAME = "SM2";
+    private static final String NAME = "ANSI X9.31";
 
-    public SM2(@NotNull DetectionLocation detectionLocation) {
+    public ANSIX931(@NotNull DetectionLocation detectionLocation) {
         super(NAME, Signature.class, detectionLocation);
-    }
-
-    public SM2(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull SM2 sm2) {
-        super(sm2, asKind);
     }
 }

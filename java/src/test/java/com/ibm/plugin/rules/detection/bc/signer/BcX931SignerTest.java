@@ -28,11 +28,15 @@ import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.DigestContext;
 import com.ibm.engine.model.context.SignatureContext;
-import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.BlockSize;
+import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.Padding;
+import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.Signature;
+import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
@@ -75,7 +79,7 @@ class BcX931SignerTest extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(SignatureContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("X9.31");
+        assertThat(value0.asString()).isEqualTo("X931Signer");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
                 getStoreOfValueType(OperationMode.class, detectionStore.getChildren());
@@ -87,14 +91,13 @@ class BcX931SignerTest extends TestBase {
 
         List<DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext>> stores =
                 getStoresOfValueType(ValueAction.class, detectionStore.getChildren());
-        assertThat(stores).hasSize(3);
 
-        DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_2 = stores.get(0);
+        var store_2 = stores.get(0);
         assertThat(store_2.getDetectionValues()).hasSize(1);
         assertThat(store_2.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0_2 = store_2.getDetectionValues().get(0);
         assertThat(value0_2).isInstanceOf(ValueAction.class);
-        assertThat(value0_2.asString()).isEqualTo("ISO 9796-1");
+        assertThat(value0_2.asString()).isEqualTo("ISO9796d1Encoding");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_2_1 =
                 getStoreOfValueType(ValueAction.class, store_2.getChildren());
@@ -102,14 +105,14 @@ class BcX931SignerTest extends TestBase {
         assertThat(store_2_1.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0_2_1 = store_2_1.getDetectionValues().get(0);
         assertThat(value0_2_1).isInstanceOf(ValueAction.class);
-        assertThat(value0_2_1.asString()).isEqualTo("RSA");
+        assertThat(value0_2_1.asString()).isEqualTo("RSAEngine");
 
-        DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_3 = stores.get(1);
+        var store_3 = stores.get(1);
         assertThat(store_3.getDetectionValues()).hasSize(1);
         assertThat(store_3.getDetectionValueContext()).isInstanceOf(DigestContext.class);
         IValue<Tree> value0_3 = store_3.getDetectionValues().get(0);
         assertThat(value0_3).isInstanceOf(ValueAction.class);
-        assertThat(value0_3.asString()).isEqualTo("SHA-256");
+        assertThat(value0_3.asString()).isEqualTo("SHA256Digest");
 
         /*
          * Translation
@@ -121,13 +124,25 @@ class BcX931SignerTest extends TestBase {
         INode signatureNode = nodes.get(0);
         assertThat(signatureNode.getKind()).isEqualTo(Signature.class);
         assertThat(signatureNode.getChildren()).hasSize(3);
-        assertThat(signatureNode.asString()).isEqualTo("X9.31");
+        assertThat(signatureNode.asString()).isEqualTo("ANSI X9.31");
 
-        // MessageDigest under Signature
-        INode messageDigestNode = signatureNode.getChildren().get(MessageDigest.class);
-        assertThat(messageDigestNode).isNotNull();
-        assertThat(messageDigestNode.getChildren()).hasSize(1);
-        assertThat(messageDigestNode.asString()).isEqualTo("SHA-256");
+        // PublicKeyEncryption under Signature
+        INode publicKeyEncryptionNode = signatureNode.getChildren().get(PublicKeyEncryption.class);
+        assertThat(publicKeyEncryptionNode).isNotNull();
+        assertThat(publicKeyEncryptionNode.getChildren()).hasSize(2);
+        assertThat(publicKeyEncryptionNode.asString()).isEqualTo("RSA");
+
+        // Padding under PublicKeyEncryption under Signature
+        INode paddingNode = publicKeyEncryptionNode.getChildren().get(Padding.class);
+        assertThat(paddingNode).isNotNull();
+        assertThat(paddingNode.getChildren()).isEmpty();
+        assertThat(paddingNode.asString()).isEqualTo("ISO 9796");
+
+        // Oid under PublicKeyEncryption under Signature
+        INode oidNode = publicKeyEncryptionNode.getChildren().get(Oid.class);
+        assertThat(oidNode).isNotNull();
+        assertThat(oidNode.getChildren()).isEmpty();
+        assertThat(oidNode.asString()).isEqualTo("1.2.840.113549.1.1.1");
 
         // Sign under Signature
         INode signNode = signatureNode.getChildren().get(Sign.class);
@@ -135,16 +150,34 @@ class BcX931SignerTest extends TestBase {
         assertThat(signNode.getChildren()).isEmpty();
         assertThat(signNode.asString()).isEqualTo("SIGN");
 
-        // BlockCipher under Signature
-        INode blockCipherNode2 = signatureNode.getChildren().get(BlockCipher.class);
-        assertThat(blockCipherNode2).isNotNull();
-        assertThat(blockCipherNode2.getChildren()).hasSize(2);
-        assertThat(blockCipherNode2.asString()).isEqualTo("RSA");
+        // MessageDigest under Signature
+        INode messageDigestNode = signatureNode.getChildren().get(MessageDigest.class);
+        assertThat(messageDigestNode).isNotNull();
+        assertThat(messageDigestNode.getChildren()).hasSize(4);
+        assertThat(messageDigestNode.asString()).isEqualTo("SHA256");
 
-        // Padding under BlockCipher under Signature
-        INode paddingNode1 = blockCipherNode2.getChildren().get(Padding.class);
-        assertThat(paddingNode1).isNotNull();
-        assertThat(paddingNode1.getChildren()).isEmpty();
-        assertThat(paddingNode1.asString()).isEqualTo("ISO 9796-1");
+        // BlockSize under MessageDigest under Signature
+        INode blockSizeNode = messageDigestNode.getChildren().get(BlockSize.class);
+        assertThat(blockSizeNode).isNotNull();
+        assertThat(blockSizeNode.getChildren()).isEmpty();
+        assertThat(blockSizeNode.asString()).isEqualTo("512");
+
+        // Digest under MessageDigest under Signature
+        INode digestNode = messageDigestNode.getChildren().get(Digest.class);
+        assertThat(digestNode).isNotNull();
+        assertThat(digestNode.getChildren()).isEmpty();
+        assertThat(digestNode.asString()).isEqualTo("DIGEST");
+
+        // Oid under MessageDigest under Signature
+        INode oidNode1 = messageDigestNode.getChildren().get(Oid.class);
+        assertThat(oidNode1).isNotNull();
+        assertThat(oidNode1.getChildren()).isEmpty();
+        assertThat(oidNode1.asString()).isEqualTo("2.16.840.1.101.3.4.2.1");
+
+        // DigestSize under MessageDigest under Signature
+        INode digestSizeNode = messageDigestNode.getChildren().get(DigestSize.class);
+        assertThat(digestSizeNode).isNotNull();
+        assertThat(digestSizeNode.getChildren()).isEmpty();
+        assertThat(digestSizeNode.asString()).isEqualTo("256");
     }
 }
