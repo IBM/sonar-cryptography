@@ -54,7 +54,7 @@ public final class BcPSSSigner {
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
                     .withMethodParameter(BYTE_ARRAY_TYPE)
-                    .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
+                    .buildForContext(new SignatureContext())
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
@@ -72,7 +72,7 @@ public final class BcPSSSigner {
                     .addDependingDetectionRules(
                             BcDigests.rules(new DigestContext(DigestContext.Kind.MGF1)))
                     .withMethodParameter(BYTE_ARRAY_TYPE)
-                    .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
+                    .buildForContext(new SignatureContext())
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
@@ -91,7 +91,7 @@ public final class BcPSSSigner {
                             BcDigests.rules(new DigestContext(DigestContext.Kind.MGF1)))
                     .withMethodParameter(BYTE_ARRAY_TYPE)
                     .withMethodParameter("byte")
-                    .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
+                    .buildForContext(new SignatureContext())
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
@@ -111,7 +111,7 @@ public final class BcPSSSigner {
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new SaltSizeFactory<>(Size.UnitType.BIT))
                     .asChildOfParameterWithId(-1)
-                    .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
+                    .buildForContext(new SignatureContext())
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
@@ -132,7 +132,7 @@ public final class BcPSSSigner {
                     .shouldBeDetectedAs(new SaltSizeFactory<>(Size.UnitType.BIT))
                     .asChildOfParameterWithId(-1)
                     .withMethodParameter("byte")
-                    .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
+                    .buildForContext(new SignatureContext())
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
@@ -149,7 +149,7 @@ public final class BcPSSSigner {
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new SaltSizeFactory<>(Size.UnitType.BIT))
                     .asChildOfParameterWithId(-1)
-                    .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
+                    .buildForContext(new SignatureContext())
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
@@ -167,7 +167,7 @@ public final class BcPSSSigner {
                     .shouldBeDetectedAs(new SaltSizeFactory<>(Size.UnitType.BIT))
                     .asChildOfParameterWithId(-1)
                     .withMethodParameter("byte")
-                    .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
+                    .buildForContext(new SignatureContext())
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
