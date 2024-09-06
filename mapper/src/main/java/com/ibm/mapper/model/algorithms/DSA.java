@@ -40,4 +40,9 @@ public class DSA extends Algorithm implements Signature {
         super(NAME, Signature.class, detectionLocation);
         this.put(new Oid("1.2.840.10040.4.1", detectionLocation));
     }
+
+    public DSA(@NotNull MessageDigest messageDigest) {
+        this(messageDigest.getDetectionContext());
+        this.put(messageDigest);
+    }
 }
