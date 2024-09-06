@@ -26,6 +26,8 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.ProbabilisticSignatureScheme;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.Unknown;
+import com.ibm.mapper.model.algorithms.Ed25519;
+import com.ibm.mapper.model.algorithms.Ed448;
 import com.ibm.mapper.model.algorithms.ISO9796;
 import com.ibm.mapper.model.algorithms.RSAssaPSS;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -54,11 +56,11 @@ public class BcSignatureMapper implements IMapper {
             case "DSADigestSigner" ->
                     Optional.of(
                             new Algorithm(ITranslator.UNKNOWN, Signature.class, detectionLocation));
-            // case "Ed25519ctxSigner" -> Optional.of();
-            // case "Ed25519phSigner" -> Optional.of();
-            // case "Ed25519Signer" -> Optional.of();
-            // case "Ed448phSigner" -> Optional.of();
-            // case "Ed448Signer" -> Optional.of();
+            case "Ed25519ctxSigner" -> Optional.of(new Ed25519(detectionLocation));
+            case "Ed25519phSigner" -> Optional.of(new Ed25519(detectionLocation));
+            case "Ed25519Signer" -> Optional.of(new Ed25519(detectionLocation));
+            case "Ed448phSigner" -> Optional.of(new Ed448(detectionLocation));
+            case "Ed448Signer" -> Optional.of(new Ed448(detectionLocation));
             case "GenericSigner" ->
                     Optional.of(
                             new Algorithm(ITranslator.UNKNOWN, Signature.class, detectionLocation));
