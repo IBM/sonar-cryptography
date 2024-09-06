@@ -21,7 +21,7 @@ public class BcPSSSignerTestFile {
         byte trailer = 0x01; // Trailer field value
 
         // Initialize the AsymmetricBlockCipher
-        AsymmetricBlockCipher cipher = new RSAEngine(); // Noncompliant {{RSA}}
+        AsymmetricBlockCipher cipher = new RSAEngine(); // Noncompliant {{RSAEngine}}
 
         // Initialize PSSSigner
         PSSSigner signer = new PSSSigner(cipher, contentDigest, mgfDigest, salt, trailer);
