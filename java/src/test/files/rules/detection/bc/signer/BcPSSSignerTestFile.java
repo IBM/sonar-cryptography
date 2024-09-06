@@ -25,7 +25,7 @@ public class BcPSSSignerTestFile {
 
         // Initialize PSSSigner
         PSSSigner signer = new PSSSigner(cipher, contentDigest, mgfDigest, salt, trailer);
-        // Noncompliant@-1 {{PSS}}
+        // Noncompliant@-1 {{PSSSigner}}
 
         signer.init(true, new RSAKeyParameters(true, new BigInteger("0"), new BigInteger("1")));
 

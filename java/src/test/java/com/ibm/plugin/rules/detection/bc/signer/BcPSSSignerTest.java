@@ -28,12 +28,15 @@ import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.DigestContext;
 import com.ibm.engine.model.context.SignatureContext;
-import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.BlockSize;
+import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MaskGenerationFunction;
 import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.ProbabilisticSignatureScheme;
-import com.ibm.mapper.model.Signature;
+import com.ibm.mapper.model.PublicKeyEncryption;
+import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
@@ -77,7 +80,7 @@ class BcPSSSignerTest extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(SignatureContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("PSS");
+        assertThat(value0.asString()).isEqualTo("PSSSigner");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
                 getStoreOfValueType(OperationMode.class, detectionStore.getChildren());
@@ -89,28 +92,27 @@ class BcPSSSignerTest extends TestBase {
 
         List<DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext>> stores =
                 getStoresOfValueType(ValueAction.class, detectionStore.getChildren());
-        assertThat(stores).hasSize(3);
 
-        DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_2 = stores.get(0);
+        var store_2 = stores.get(0);
         assertThat(store_2.getDetectionValues()).hasSize(1);
         assertThat(store_2.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0_2 = store_2.getDetectionValues().get(0);
         assertThat(value0_2).isInstanceOf(ValueAction.class);
-        assertThat(value0_2.asString()).isEqualTo("RSA");
+        assertThat(value0_2.asString()).isEqualTo("RSAEngine");
 
-        DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_3 = stores.get(1);
+        var store_3 = stores.get(1);
         assertThat(store_3.getDetectionValues()).hasSize(1);
         assertThat(store_3.getDetectionValueContext()).isInstanceOf(DigestContext.class);
         IValue<Tree> value0_3 = store_3.getDetectionValues().get(0);
         assertThat(value0_3).isInstanceOf(ValueAction.class);
-        assertThat(value0_3.asString()).isEqualTo("SHA-256");
+        assertThat(value0_3.asString()).isEqualTo("SHA256Digest");
 
-        DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_4 = stores.get(2);
+        var store_4 = stores.get(2);
         assertThat(store_4.getDetectionValues()).hasSize(1);
         assertThat(store_4.getDetectionValueContext()).isInstanceOf(DigestContext.class);
         IValue<Tree> value0_4 = store_4.getDetectionValues().get(0);
         assertThat(value0_4).isInstanceOf(ValueAction.class);
-        assertThat(value0_4.asString()).isEqualTo("SHA-512");
+        assertThat(value0_4.asString()).isEqualTo("SHA512Digest");
 
         /*
          * Translation
@@ -118,42 +120,113 @@ class BcPSSSignerTest extends TestBase {
 
         assertThat(nodes).hasSize(1);
 
-        // Signature
-        INode signatureNode = nodes.get(0);
-        assertThat(signatureNode.getKind()).isEqualTo(Signature.class);
-        assertThat(signatureNode.getChildren()).hasSize(5);
-        assertThat(signatureNode.asString()).isEqualTo("RSA-PSS");
+        // ProbabilisticSignatureScheme
+        INode probabilisticSignatureSchemeNode = nodes.get(0);
+        assertThat(probabilisticSignatureSchemeNode.getKind())
+                .isEqualTo(ProbabilisticSignatureScheme.class);
+        assertThat(probabilisticSignatureSchemeNode.getChildren()).hasSize(5);
+        assertThat(probabilisticSignatureSchemeNode.asString()).isEqualTo("RSASSA-PSS");
 
-        // Sign under Signature
-        INode signNode = signatureNode.getChildren().get(Sign.class);
+        // PublicKeyEncryption under ProbabilisticSignatureScheme
+        INode publicKeyEncryptionNode =
+                probabilisticSignatureSchemeNode.getChildren().get(PublicKeyEncryption.class);
+        assertThat(publicKeyEncryptionNode).isNotNull();
+        assertThat(publicKeyEncryptionNode.getChildren()).hasSize(1);
+        assertThat(publicKeyEncryptionNode.asString()).isEqualTo("RSA");
+
+        // Oid under PublicKeyEncryption under ProbabilisticSignatureScheme
+        INode oidNode = publicKeyEncryptionNode.getChildren().get(Oid.class);
+        assertThat(oidNode).isNotNull();
+        assertThat(oidNode.getChildren()).isEmpty();
+        assertThat(oidNode.asString()).isEqualTo("1.2.840.113549.1.1.1");
+
+        // Sign under ProbabilisticSignatureScheme
+        INode signNode = probabilisticSignatureSchemeNode.getChildren().get(Sign.class);
         assertThat(signNode).isNotNull();
         assertThat(signNode.getChildren()).isEmpty();
         assertThat(signNode.asString()).isEqualTo("SIGN");
 
-        // ProbabilisticSignatureScheme under Signature
-        INode probabilisticSignatureSchemeNode =
-                signatureNode.getChildren().get(ProbabilisticSignatureScheme.class);
-        assertThat(probabilisticSignatureSchemeNode).isNotNull();
-        assertThat(probabilisticSignatureSchemeNode.getChildren()).isEmpty();
-        assertThat(probabilisticSignatureSchemeNode.asString()).isEqualTo("PSS");
-
-        // MaskGenerationFunction under Signature
+        // MaskGenerationFunction under ProbabilisticSignatureScheme
         INode maskGenerationFunctionNode =
-                signatureNode.getChildren().get(MaskGenerationFunction.class);
+                probabilisticSignatureSchemeNode.getChildren().get(MaskGenerationFunction.class);
         assertThat(maskGenerationFunctionNode).isNotNull();
-        assertThat(maskGenerationFunctionNode.getChildren()).isEmpty();
-        assertThat(maskGenerationFunctionNode.asString()).isEqualTo("SHA-512");
+        assertThat(maskGenerationFunctionNode.getChildren()).hasSize(2);
+        assertThat(maskGenerationFunctionNode.asString()).isEqualTo("MGF1");
 
-        // BlockCipher under Signature
-        INode blockCipherNode1 = signatureNode.getChildren().get(BlockCipher.class);
-        assertThat(blockCipherNode1).isNotNull();
-        assertThat(blockCipherNode1.getChildren()).hasSize(1);
-        assertThat(blockCipherNode1.asString()).isEqualTo("RSA");
+        // Oid under MaskGenerationFunction under ProbabilisticSignatureScheme
+        INode oidNode1 = maskGenerationFunctionNode.getChildren().get(Oid.class);
+        assertThat(oidNode1).isNotNull();
+        assertThat(oidNode1.getChildren()).isEmpty();
+        assertThat(oidNode1.asString()).isEqualTo("1.2.840.113549.1.1.8");
 
-        // MessageDigest under Signature
-        INode messageDigestNode = signatureNode.getChildren().get(MessageDigest.class);
+        // MessageDigest under MaskGenerationFunction under ProbabilisticSignatureScheme
+        INode messageDigestNode = maskGenerationFunctionNode.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode).isNotNull();
-        assertThat(messageDigestNode.getChildren()).hasSize(1);
-        assertThat(messageDigestNode.asString()).isEqualTo("SHA-256");
+        assertThat(messageDigestNode.getChildren()).hasSize(4);
+        assertThat(messageDigestNode.asString()).isEqualTo("SHA512");
+
+        // DigestSize under MessageDigest under MaskGenerationFunction under
+        // ProbabilisticSignatureScheme
+        INode digestSizeNode = messageDigestNode.getChildren().get(DigestSize.class);
+        assertThat(digestSizeNode).isNotNull();
+        assertThat(digestSizeNode.getChildren()).isEmpty();
+        assertThat(digestSizeNode.asString()).isEqualTo("512");
+
+        // BlockSize under MessageDigest under MaskGenerationFunction under
+        // ProbabilisticSignatureScheme
+        INode blockSizeNode = messageDigestNode.getChildren().get(BlockSize.class);
+        assertThat(blockSizeNode).isNotNull();
+        assertThat(blockSizeNode.getChildren()).isEmpty();
+        assertThat(blockSizeNode.asString()).isEqualTo("1024");
+
+        // Oid under MessageDigest under MaskGenerationFunction under ProbabilisticSignatureScheme
+        INode oidNode2 = messageDigestNode.getChildren().get(Oid.class);
+        assertThat(oidNode2).isNotNull();
+        assertThat(oidNode2.getChildren()).isEmpty();
+        assertThat(oidNode2.asString()).isEqualTo("2.16.840.1.101.3.4.2.3");
+
+        // Digest under MessageDigest under MaskGenerationFunction under
+        // ProbabilisticSignatureScheme
+        INode digestNode = messageDigestNode.getChildren().get(Digest.class);
+        assertThat(digestNode).isNotNull();
+        assertThat(digestNode.getChildren()).isEmpty();
+        assertThat(digestNode.asString()).isEqualTo("DIGEST");
+
+        // Oid under ProbabilisticSignatureScheme
+        INode oidNode3 = probabilisticSignatureSchemeNode.getChildren().get(Oid.class);
+        assertThat(oidNode3).isNotNull();
+        assertThat(oidNode3.getChildren()).isEmpty();
+        assertThat(oidNode3.asString()).isEqualTo("1.2.840.113549.1.1.10");
+
+        // MessageDigest under ProbabilisticSignatureScheme
+        INode messageDigestNode1 =
+                probabilisticSignatureSchemeNode.getChildren().get(MessageDigest.class);
+        assertThat(messageDigestNode1).isNotNull();
+        assertThat(messageDigestNode1.getChildren()).hasSize(4);
+        assertThat(messageDigestNode1.asString()).isEqualTo("SHA256");
+
+        // DigestSize under MessageDigest under ProbabilisticSignatureScheme
+        INode digestSizeNode1 = messageDigestNode1.getChildren().get(DigestSize.class);
+        assertThat(digestSizeNode1).isNotNull();
+        assertThat(digestSizeNode1.getChildren()).isEmpty();
+        assertThat(digestSizeNode1.asString()).isEqualTo("256");
+
+        // BlockSize under MessageDigest under ProbabilisticSignatureScheme
+        INode blockSizeNode1 = messageDigestNode1.getChildren().get(BlockSize.class);
+        assertThat(blockSizeNode1).isNotNull();
+        assertThat(blockSizeNode1.getChildren()).isEmpty();
+        assertThat(blockSizeNode1.asString()).isEqualTo("512");
+
+        // Oid under MessageDigest under ProbabilisticSignatureScheme
+        INode oidNode4 = messageDigestNode1.getChildren().get(Oid.class);
+        assertThat(oidNode4).isNotNull();
+        assertThat(oidNode4.getChildren()).isEmpty();
+        assertThat(oidNode4.asString()).isEqualTo("2.16.840.1.101.3.4.2.1");
+
+        // Digest under MessageDigest under ProbabilisticSignatureScheme
+        INode digestNode1 = messageDigestNode1.getChildren().get(Digest.class);
+        assertThat(digestNode1).isNotNull();
+        assertThat(digestNode1.getChildren()).isEmpty();
+        assertThat(digestNode1.asString()).isEqualTo("DIGEST");
     }
 }

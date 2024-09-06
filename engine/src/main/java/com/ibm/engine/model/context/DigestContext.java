@@ -29,7 +29,6 @@ public class DigestContext extends DetectionContext
     public enum Kind {
         NONE,
         MGF1,
-        MGF,
         CRAMER_SHOUP,
         NTRU,
     }

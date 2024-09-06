@@ -70,7 +70,7 @@ public final class BcPSSSigner {
                     .addDependingDetectionRules(BcDigests.rules())
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(
-                            BcDigests.rules(new DigestContext(DigestContext.Kind.MGF)))
+                            BcDigests.rules(new DigestContext(DigestContext.Kind.MGF1)))
                     .withMethodParameter(BYTE_ARRAY_TYPE)
                     .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
                     .inBundle(() -> "Bc")
@@ -88,7 +88,7 @@ public final class BcPSSSigner {
                     .addDependingDetectionRules(BcDigests.rules())
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(
-                            BcDigests.rules(new DigestContext(DigestContext.Kind.MGF)))
+                            BcDigests.rules(new DigestContext(DigestContext.Kind.MGF1)))
                     .withMethodParameter(BYTE_ARRAY_TYPE)
                     .withMethodParameter("byte")
                     .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
@@ -107,7 +107,7 @@ public final class BcPSSSigner {
                     .addDependingDetectionRules(BcDigests.rules())
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(
-                            BcDigests.rules(new DigestContext(DigestContext.Kind.MGF)))
+                            BcDigests.rules(new DigestContext(DigestContext.Kind.MGF1)))
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new SaltSizeFactory<>(Size.UnitType.BIT))
                     .asChildOfParameterWithId(-1)
@@ -127,7 +127,7 @@ public final class BcPSSSigner {
                     .addDependingDetectionRules(BcDigests.rules())
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(
-                            BcDigests.rules(new DigestContext(DigestContext.Kind.MGF)))
+                            BcDigests.rules(new DigestContext(DigestContext.Kind.MGF1)))
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new SaltSizeFactory<>(Size.UnitType.BIT))
                     .asChildOfParameterWithId(-1)
