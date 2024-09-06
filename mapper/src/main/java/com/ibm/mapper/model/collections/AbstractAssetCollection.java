@@ -74,11 +74,14 @@ public abstract class AbstractAssetCollection<K extends INode> implements IAsset
 
     @NotNull @Override
     public String asString() {
-        final StringBuilder sb = new StringBuilder();
-        for (K c : collection) {
-            sb.append(c.asString()).append(", ");
+        final StringBuilder sb = new StringBuilder("[");
+        for (int i = 0; i < this.collection.size(); i++) {
+            sb.append(this.collection.get(i).asString());
+            if (i != this.collection.size() - 1) {
+                sb.append(", ");
+            }
         }
-        return sb.toString();
+        return sb.append("]").toString();
     }
 
     @NotNull @Override
