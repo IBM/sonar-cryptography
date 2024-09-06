@@ -27,6 +27,7 @@ import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.model.context.SignatureContext;
 import com.ibm.mapper.mapper.bc.BcDsaMapper;
+import com.ibm.mapper.mapper.bc.BcMessageSignerMapper;
 import com.ibm.mapper.mapper.bc.BcOperationModeSigningMapper;
 import com.ibm.mapper.mapper.bc.BcSignatureMapper;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
@@ -71,6 +72,11 @@ public final class JavaSignatureContextTranslator extends JavaAbstractLibraryTra
                 case DSA:
                     BcDsaMapper bcDSAMapper = new BcDsaMapper();
                     return bcDSAMapper.parse(valueAction.asString(), detectionLocation).map(f -> f);
+                case MESSAGE_SIGNER:
+                    BcMessageSignerMapper bcMessageSignerMapper = new BcMessageSignerMapper();
+                    return bcMessageSignerMapper
+                            .parse(valueAction.asString(), detectionLocation)
+                            .map(f -> f);
                 default:
                     // TODO: would it be better with a special Kind?
                     BcSignatureMapper bcSignatureMapper = new BcSignatureMapper();

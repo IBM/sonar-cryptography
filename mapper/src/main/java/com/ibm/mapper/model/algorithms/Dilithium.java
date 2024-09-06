@@ -20,26 +20,31 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.IPrimitive;
-import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.ParameterSetIdentifier;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-// Hash Based Signature (HBS)
-public final class XMSS extends Algorithm implements Signature, MessageDigest {
-    // https://eprint.iacr.org/2017/349.pdf
-    // https://datatracker.ietf.org/doc/html/rfc8391#section-4.1
+public class Dilithium extends Algorithm implements Signature {
+    // https://pq-crystals.org/dilithium/
 
-    private static final String NAME = "XMSS"; // eXtended Merkle Signature Scheme
+    private static final String NAME = "Dilithium";
 
-    public XMSS(@Nonnull DetectionLocation detectionLocation) {
-        this(Signature.class, detectionLocation);
+    @Override
+    public @Nonnull String asString() {
+        return this.hasChildOfType(ParameterSetIdentifier.class)
+                .map(node -> this.name + node.asString())
+                .orElse(this.name);
     }
 
-    public XMSS(
-            @Nonnull final Class<? extends IPrimitive> asKind,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(NAME, asKind, detectionLocation);
+    public Dilithium(@Nonnull DetectionLocation detectionLocation) {
+        super(NAME, Signature.class, detectionLocation);
+    }
+
+    public Dilithium(int parameterSetIdentifier, @Nonnull DetectionLocation detectionLocation) {
+        this(detectionLocation);
+        this.put(
+                new ParameterSetIdentifier(
+                        String.valueOf(parameterSetIdentifier), detectionLocation));
     }
 }

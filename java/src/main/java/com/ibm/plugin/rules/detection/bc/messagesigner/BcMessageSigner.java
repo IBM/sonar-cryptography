@@ -50,17 +50,17 @@ public final class BcMessageSigner {
                 .putType("org.bouncycastle.pqc.crypto.crystals.dilithium.");
         infoMap.putKey("FalconSigner").putType("org.bouncycastle.pqc.crypto.falcon.");
         infoMap.putKey("GeMSSSigner").putType("org.bouncycastle.pqc.crypto.gemss.");
-        // Below: only constructor with parameter
-        infoMap.putKey("GMSSSigner").putType("org.bouncycastle.pqc.legacy.crypto.gmss.");
+        infoMap.putKey("GMSSSigner" /* only constructor with parameter */)
+                .putType("org.bouncycastle.pqc.legacy.crypto.gmss.");
         infoMap.putKey("HSSSigner").putType("org.bouncycastle.pqc.crypto.lms.");
         infoMap.putKey("LMSSigner").putType("org.bouncycastle.pqc.crypto.lms.");
         infoMap.putKey("PicnicSigner").putType("org.bouncycastle.pqc.crypto.picnic.");
         infoMap.putKey("QTESLASigner")
-                .putName("qTESLA")
+                // .putName("qTESLA")
                 .putType("org.bouncycastle.pqc.legacy.crypto.qtesla.");
         infoMap.putKey("RainbowSigner").putType("org.bouncycastle.pqc.crypto.rainbow.");
         infoMap.putKey("SPHINCSPlusSigner")
-                .putName("SPHINCS+")
+                // .putName("SPHINCS+")
                 .putType("org.bouncycastle.pqc.crypto.sphincsplus.");
     }
 
@@ -69,18 +69,17 @@ public final class BcMessageSigner {
 
         for (Map.Entry<String, BouncyCastleInfoMap.Info> entry : infoMap.entrySet()) {
             String signer = entry.getKey();
-            String signerName = infoMap.getDisplayName(signer, "Signer");
             String type = entry.getValue().getType();
             constructorsList.add(
                     new DetectionRuleBuilder<Tree>()
                             .createDetectionRule()
                             .forObjectTypes(type + signer)
                             .forConstructor()
-                            .shouldBeDetectedAs(new ValueActionFactory<>(signerName))
+                            .shouldBeDetectedAs(new ValueActionFactory<>(signer))
                             // We want to capture all possible constructors (some have arguments)
                             .withAnyParameters()
                             .buildForContext(
-                                    new SignatureContext(SignatureContext.Kind.SIGNATURE_NAME))
+                                    new SignatureContext(SignatureContext.Kind.MESSAGE_SIGNER))
                             .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcMessageSignerInit.rules()));
         }
@@ -95,12 +94,12 @@ public final class BcMessageSigner {
                         .createDetectionRule()
                         .forObjectTypes("org.bouncycastle.pqc.crypto.sphincs.SPHINCS256Signer")
                         .forConstructor()
-                        .shouldBeDetectedAs(new ValueActionFactory<>("SPHINCS-256"))
+                        .shouldBeDetectedAs(new ValueActionFactory<>("SPHINCS256Signer"))
                         .withMethodParameter("org.bouncycastle.crypto.Digest")
                         .addDependingDetectionRules(BcDigests.rules())
                         .withMethodParameter("org.bouncycastle.crypto.Digest")
                         .addDependingDetectionRules(BcDigests.rules())
-                        .buildForContext(new SignatureContext(SignatureContext.Kind.SIGNATURE_NAME))
+                        .buildForContext(new SignatureContext(SignatureContext.Kind.MESSAGE_SIGNER))
                         .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcMessageSignerInit.rules()));
 

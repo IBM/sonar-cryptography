@@ -20,26 +20,16 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.IPrimitive;
-import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-// Hash Based Signature (HBS)
-public final class XMSS extends Algorithm implements Signature, MessageDigest {
-    // https://eprint.iacr.org/2017/349.pdf
-    // https://datatracker.ietf.org/doc/html/rfc8391#section-4.1
+public class QTESLA extends Algorithm implements Signature {
+    // https://eprint.iacr.org/2019/085.pdf
 
-    private static final String NAME = "XMSS"; // eXtended Merkle Signature Scheme
+    private static final String NAME = "qTESLA";
 
-    public XMSS(@Nonnull DetectionLocation detectionLocation) {
-        this(Signature.class, detectionLocation);
-    }
-
-    public XMSS(
-            @Nonnull final Class<? extends IPrimitive> asKind,
-            @Nonnull DetectionLocation detectionLocation) {
-        super(NAME, asKind, detectionLocation);
+    public QTESLA(@Nonnull DetectionLocation detectionLocation) {
+        super(NAME, Signature.class, detectionLocation);
     }
 }

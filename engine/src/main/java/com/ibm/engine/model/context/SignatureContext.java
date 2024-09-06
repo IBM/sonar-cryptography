@@ -28,14 +28,10 @@ public class SignatureContext extends DetectionContext
     public enum Kind {
         PSS,
         MGF1,
-        PKCS1v15,
         DSA,
-        RSA,
         EdDSA,
-        SIGNATURE_NAME,
+        MESSAGE_SIGNER,
         SIGNING_STATUS,
-        DIGEST_MESSAGE_WRAPPER,
-        ALGORITHM_AND_HASH_WRAPPER,
         NONE
     }
 

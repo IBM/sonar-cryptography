@@ -53,8 +53,7 @@ public final class BcPQCSigner {
                         .addDependingDetectionRules(BcMessageSigner.rules())
                         .withMethodParameter("org.bouncycastle.crypto.Digest")
                         .addDependingDetectionRules(BcDigests.rules())
-                        .buildForContext(
-                                new SignatureContext(SignatureContext.Kind.DIGEST_MESSAGE_WRAPPER))
+                        .buildForContext(new SignatureContext())
                         .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcSignerInit.rules()));
 
@@ -69,8 +68,7 @@ public final class BcPQCSigner {
                         .addDependingDetectionRules(BcStateAwareMessageSigner.rules())
                         .withMethodParameter("org.bouncycastle.crypto.Digest")
                         .addDependingDetectionRules(BcDigests.rules())
-                        .buildForContext(
-                                new SignatureContext(SignatureContext.Kind.DIGEST_MESSAGE_WRAPPER))
+                        .buildForContext(new SignatureContext())
                         .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcSignerInit.rules()));
 
