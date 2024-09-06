@@ -21,6 +21,7 @@ package com.ibm.output.cyclondx;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockSize;
+import com.ibm.mapper.model.CipherSuite;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.EllipticCurve;
 import com.ibm.mapper.model.IAsset;
@@ -50,6 +51,7 @@ import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.mapper.model.functionality.Verify;
 import com.ibm.mapper.model.padding.OAEP;
+import com.ibm.mapper.model.protocol.TLS;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.output.Constants;
 import com.ibm.output.IOutputFile;
@@ -115,6 +117,8 @@ public class CBOMOutputFile implements IOutputFile {
                         createKeyComponent(parentBomRef, key);
                     } else if (node instanceof Protocol protocol) {
                         createProtocolComponent(parentBomRef, protocol);
+                    } else if (node instanceof CipherSuite cipherSuite) {
+                        createCipherSuiteComponent(parentBomRef, cipherSuite);
                     } else if (node instanceof SaltLength || node instanceof PasswordLength) {
                         final IProperty property = (IProperty) node;
                         createRelatedCryptoMaterialComponent(parentBomRef, property);
@@ -124,7 +128,8 @@ public class CBOMOutputFile implements IOutputFile {
                 });
     }
 
-    private void createAlgorithmComponent(@Nullable String parentBomRef, @Nonnull Algorithm node) {
+    @Nullable private String createAlgorithmComponent(
+            @Nullable String parentBomRef, @Nonnull Algorithm node) {
         Map<Class<? extends INode>, INode> children = node.getChildren();
         Component algorithm =
                 AlgorithmComponentBuilder.create()
@@ -157,26 +162,51 @@ public class CBOMOutputFile implements IOutputFile {
                         .build();
         final Optional<String> optionalId = getIdentifierFunction().apply(algorithm);
         if (optionalId.isEmpty()) {
-            return;
+            return null;
         }
         addComponentAndDependencies(algorithm, optionalId.get(), parentBomRef, node);
+        return this.components.get(optionalId.get()).getBomRef();
     }
 
     private void createKeyComponent(@Nullable String parentBomRef, @Nonnull Key node) {
         // if functionality nodes are placed under the key node,
-        // they will be moved under the corresponding primitive node
+        // they will be moved under the corresponding primitive node.
         Utils.pushNodesDownToFirstMatch(node, IPrimitive.getKinds(), Functionality.getKinds());
+        // if a key length is defined under the key node, this function makes sure that the
+        // underlying primitive
+        // will get the same key length associated.
+        Utils.pushNodesDownToFirstMatch(
+                node, IPrimitive.getKinds(), List.of(KeyLength.class), false);
+
         createRelatedCryptoMaterialComponent(parentBomRef, node);
     }
 
     private void createProtocolComponent(@Nullable String parentBomRef, @Nonnull Protocol node) {
         Map<Class<? extends INode>, INode> children = node.getChildren();
         Component protocol =
-                ProtocolComponentBuilder.create()
+                ProtocolComponentBuilder.create(this::createAlgorithmComponent)
                         .name(node)
                         .type(node)
                         .version(children.get(com.ibm.mapper.model.Version.class))
                         .cipherSuites(children.get(CipherSuiteCollection.class))
+                        .occurrences(createOccurrenceForm(node.getDetectionContext()))
+                        .build();
+        final Optional<String> optionalId = getIdentifierFunction().apply(protocol);
+        if (optionalId.isEmpty()) {
+            return;
+        }
+        addComponentAndDependencies(protocol, optionalId.get(), parentBomRef, node);
+    }
+
+    private void createCipherSuiteComponent(
+            @Nullable String parentBomRef, @Nonnull CipherSuite node) {
+        final TLS tls = new TLS(node.getDetectionContext());
+        Component protocol =
+                ProtocolComponentBuilder.create(this::createAlgorithmComponent)
+                        .name(tls)
+                        .type(tls)
+                        .version(null)
+                        .cipherSuites(new CipherSuiteCollection(List.of(node)))
                         .occurrences(createOccurrenceForm(node.getDetectionContext()))
                         .build();
         final Optional<String> optionalId = getIdentifierFunction().apply(protocol);

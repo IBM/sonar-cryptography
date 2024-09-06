@@ -22,6 +22,7 @@ package com.ibm.output.cyclonedx;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.mapper.model.AuthenticatedEncryption;
+import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.PublicKey;
 import com.ibm.mapper.model.PublicKeyEncryption;
@@ -124,6 +125,47 @@ class KeyTest extends TestBase {
                                     cryptoProperties.getRelatedCryptoMaterialProperties();
                             assertThat(relatedCryptoMaterialProperties.getType())
                                     .isEqualTo(RelatedCryptoMaterialType.SECRET_KEY);
+                        } else {
+                            throw new AssertionError();
+                        }
+                    }
+                });
+    }
+
+    @Test
+    void updateKeySizeInAlgorithm() {
+        this.assertsNode(
+                () -> {
+                    final RSA rsa = new RSA(2048, detectionLocation);
+                    final PublicKey publicKey = new PublicKey((PublicKeyEncryption) rsa);
+                    publicKey.put(new KeyLength(4096, detectionLocation));
+                    return publicKey;
+                },
+                bom -> {
+                    assertThat(bom.getComponents()).hasSize(2);
+                    for (Component component : bom.getComponents()) {
+                        asserts(component.getEvidence());
+                        assertThat(component.getCryptoProperties()).isNotNull();
+                        final CryptoProperties cryptoProperties = component.getCryptoProperties();
+
+                        if (cryptoProperties.getAssetType().equals(AssetType.ALGORITHM)) {
+                            assertThat(component.getName()).isEqualTo("RSA-4096");
+                            assertThat(cryptoProperties.getAlgorithmProperties()).isNotNull();
+                            final AlgorithmProperties algorithmProperties =
+                                    cryptoProperties.getAlgorithmProperties();
+                            assertThat(algorithmProperties.getPrimitive()).isEqualTo(Primitive.PKE);
+                            assertThat(algorithmProperties.getParameterSetIdentifier())
+                                    .isEqualTo("4096");
+                            assertThat(cryptoProperties.getOid()).isEqualTo("1.2.840.113549.1.1.1");
+                        } else if (cryptoProperties
+                                .getAssetType()
+                                .equals(AssetType.RELATED_CRYPTO_MATERIAL)) {
+                            assertThat(cryptoProperties.getRelatedCryptoMaterialProperties())
+                                    .isNotNull();
+                            final RelatedCryptoMaterialProperties relatedCryptoMaterialProperties =
+                                    cryptoProperties.getRelatedCryptoMaterialProperties();
+                            assertThat(relatedCryptoMaterialProperties.getType())
+                                    .isEqualTo(RelatedCryptoMaterialType.PUBLIC_KEY);
                         } else {
                             throw new AssertionError();
                         }

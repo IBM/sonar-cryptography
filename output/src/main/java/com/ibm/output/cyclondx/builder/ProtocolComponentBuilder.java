@@ -19,13 +19,17 @@
  */
 package com.ibm.output.cyclondx.builder;
 
+import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.CipherSuite;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Identifier;
 import com.ibm.mapper.model.Protocol;
 import com.ibm.mapper.model.collections.CipherSuiteCollection;
 import com.ibm.mapper.model.protocol.TLS;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.BiFunction;
 import javax.annotation.Nonnull;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Evidence;
@@ -41,42 +45,51 @@ public class ProtocolComponentBuilder implements IProtocolComponentBuilder {
     @Nonnull private final Component component;
     @Nonnull private final CryptoProperties cryptoProperties;
     @Nonnull private final ProtocolProperties protocolProperties;
+    @Nonnull private final BiFunction<String, Algorithm, String> algorithmComponentBuilder;
 
-    protected ProtocolComponentBuilder() {
+    protected ProtocolComponentBuilder(
+            @Nonnull BiFunction<String, Algorithm, String> algorithmComponentBuilder) {
         this.component = new Component();
         this.cryptoProperties = new CryptoProperties();
         this.protocolProperties = new ProtocolProperties();
+        this.algorithmComponentBuilder = algorithmComponentBuilder;
     }
 
     private ProtocolComponentBuilder(
             @Nonnull Component component,
             @Nonnull CryptoProperties cryptoProperties,
-            @Nonnull ProtocolProperties protocolProperties) {
+            @Nonnull ProtocolProperties protocolProperties,
+            @Nonnull BiFunction<String, Algorithm, String> algorithmComponentBuilder) {
         this.component = component;
         this.cryptoProperties = cryptoProperties;
         this.protocolProperties = protocolProperties;
+        this.algorithmComponentBuilder = algorithmComponentBuilder;
     }
 
     @Nonnull
-    public static IProtocolComponentBuilder create() {
-        return new ProtocolComponentBuilder();
+    public static IProtocolComponentBuilder create(
+            @Nonnull BiFunction<String, Algorithm, String> algorithmComponentBuilder) {
+        return new ProtocolComponentBuilder(algorithmComponentBuilder);
     }
 
     @NotNull @Override
     public IProtocolComponentBuilder name(@Nullable Protocol name) {
         if (name == null) {
-            return new ProtocolComponentBuilder(component, cryptoProperties, protocolProperties);
+            return new ProtocolComponentBuilder(
+                    component, cryptoProperties, protocolProperties, algorithmComponentBuilder);
         }
 
         this.component.setName(name.asString());
-        return new ProtocolComponentBuilder(component, cryptoProperties, protocolProperties);
+        return new ProtocolComponentBuilder(
+                component, cryptoProperties, protocolProperties, algorithmComponentBuilder);
     }
 
     @NotNull @Override
     public IProtocolComponentBuilder type(@Nullable Protocol type) {
         if (type == null) {
             protocolProperties.setType(ProtocolType.UNKNOWN);
-            return new ProtocolComponentBuilder(component, cryptoProperties, protocolProperties);
+            return new ProtocolComponentBuilder(
+                    component, cryptoProperties, protocolProperties, algorithmComponentBuilder);
         }
 
         if (type instanceof TLS) {
@@ -85,46 +98,83 @@ public class ProtocolComponentBuilder implements IProtocolComponentBuilder {
             protocolProperties.setType(ProtocolType.OTHER);
         }
 
-        return new ProtocolComponentBuilder(component, cryptoProperties, protocolProperties);
+        return new ProtocolComponentBuilder(
+                component, cryptoProperties, protocolProperties, algorithmComponentBuilder);
     }
 
     @NotNull @Override
     public IProtocolComponentBuilder version(@Nullable INode version) {
         if (version == null) {
-            return new ProtocolComponentBuilder(component, cryptoProperties, protocolProperties);
+            return new ProtocolComponentBuilder(
+                    component, cryptoProperties, protocolProperties, algorithmComponentBuilder);
         }
         protocolProperties.setVersion(version.asString());
-        return new ProtocolComponentBuilder(component, cryptoProperties, protocolProperties);
+        return new ProtocolComponentBuilder(
+                component, cryptoProperties, protocolProperties, algorithmComponentBuilder);
     }
 
     @NotNull @Override
     public IProtocolComponentBuilder cipherSuites(@Nullable INode node) {
         if (node == null) {
-            return new ProtocolComponentBuilder(component, cryptoProperties, protocolProperties);
+            return new ProtocolComponentBuilder(
+                    component, cryptoProperties, protocolProperties, algorithmComponentBuilder);
         }
 
         if (node instanceof CipherSuiteCollection cipherSuiteCollection) {
+            List<org.cyclonedx.model.component.crypto.CipherSuite> suites = new ArrayList<>();
             for (CipherSuite cipherSuite : cipherSuiteCollection.getCollection()) {
                 final org.cyclonedx.model.component.crypto.CipherSuite suite =
                         new org.cyclonedx.model.component.crypto.CipherSuite();
                 // name
                 suite.setName(cipherSuite.getName());
                 // algorithms
+                cipherSuite
+                        .getAssetCollection()
+                        .ifPresent(
+                                assetCollection -> {
+                                    final List<String> algorithmRefs = new ArrayList<>();
+                                    for (final INode asset : assetCollection.getCollection()) {
+                                        if (asset instanceof Algorithm algorithm) {
+                                            final String ref =
+                                                    this.algorithmComponentBuilder.apply(
+                                                            "", algorithm);
+                                            algorithmRefs.add(ref);
+                                        }
+                                    }
+                                    suite.setAlgorithms(algorithmRefs);
+                                });
+                // identifiers
+                cipherSuite
+                        .getIdentifierCollection()
+                        .ifPresent(
+                                identifierCollection -> {
+                                    final List<String> identifiers = new ArrayList<>();
+                                    for (final Identifier identifier :
+                                            identifierCollection.getCollection()) {
+                                        identifiers.add(identifier.getValue());
+                                    }
+                                    suite.setIdentifiers(identifiers);
+                                });
+                suites.add(suite);
             }
+            protocolProperties.setCipherSuites(suites);
         }
 
-        return new ProtocolComponentBuilder(component, cryptoProperties, protocolProperties);
+        return new ProtocolComponentBuilder(
+                component, cryptoProperties, protocolProperties, algorithmComponentBuilder);
     }
 
     @NotNull @Override
     public IProtocolComponentBuilder occurrences(@Nullable Occurrence... occurrences) {
         if (occurrences == null) {
-            return new ProtocolComponentBuilder(component, cryptoProperties, protocolProperties);
+            return new ProtocolComponentBuilder(
+                    component, cryptoProperties, protocolProperties, algorithmComponentBuilder);
         }
         final Evidence evidence = new Evidence();
         evidence.setOccurrences(List.of(occurrences));
         this.component.setEvidence(evidence);
-        return new ProtocolComponentBuilder(component, cryptoProperties, protocolProperties);
+        return new ProtocolComponentBuilder(
+                component, cryptoProperties, protocolProperties, algorithmComponentBuilder);
     }
 
     @NotNull @Override

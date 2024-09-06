@@ -187,7 +187,7 @@ class AlgorithmTest extends TestBase {
                 bom -> {
                     assertThat(bom.getComponents()).hasSize(3);
                     assertThat(bom.getComponents().stream().map(Component::getName))
-                            .contains("DSAwithSHA256", "SHA256");
+                            .contains("SHA256withDSA", "SHA256");
 
                     for (Component component : bom.getComponents()) {
                         asserts(component.getEvidence());
@@ -209,7 +209,7 @@ class AlgorithmTest extends TestBase {
                             final AlgorithmProperties algorithmProperties =
                                     cryptoProperties.getAlgorithmProperties();
                             if (algorithmProperties.getPrimitive().equals(Primitive.SIGNATURE)) {
-                                assertThat(component.getName()).isEqualTo("DSAwithSHA256");
+                                assertThat(component.getName()).isEqualTo("SHA256withDSA");
                                 assertThat(cryptoProperties.getOid())
                                         .isEqualTo("2.16.840.1.101.3.4.3.2");
                                 assertThat(algorithmProperties.getCryptoFunctions())

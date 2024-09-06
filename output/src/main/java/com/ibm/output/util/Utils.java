@@ -51,9 +51,18 @@ public final class Utils {
             @Nonnull INode root,
             @Nonnull List<Class<? extends INode>> pushToNodeOfFirstMatchClazz,
             @Nonnull List<Class<? extends INode>> kindsOfNodesToPushDown) {
+        Utils.pushNodesDownToFirstMatch(
+                root, pushToNodeOfFirstMatchClazz, kindsOfNodesToPushDown, true);
+    }
+
+    public static void pushNodesDownToFirstMatch(
+            @Nonnull INode root,
+            @Nonnull List<Class<? extends INode>> pushToNodeOfFirstMatchClazz,
+            @Nonnull List<Class<? extends INode>> kindsOfNodesToPushDown,
+            boolean remove) {
         for (Class<? extends INode> kind : pushToNodeOfFirstMatchClazz) {
             if (root.hasChildOfType(kind).isPresent()) {
-                pushNodesDown(root, kind, kindsOfNodesToPushDown);
+                pushNodesDown(root, kind, kindsOfNodesToPushDown, remove);
                 return;
             }
         }
@@ -62,7 +71,8 @@ public final class Utils {
     public static void pushNodesDown(
             @Nonnull INode root,
             @Nonnull Class<? extends INode> pushToNodeOfClazz,
-            @Nonnull List<Class<? extends INode>> kindsOfNodesToPushDown) {
+            @Nonnull List<Class<? extends INode>> kindsOfNodesToPushDown,
+            boolean remove) {
         final Optional<INode> possiblePushToNode = root.hasChildOfType(pushToNodeOfClazz);
         if (possiblePushToNode.isEmpty()) {
             return;
@@ -74,7 +84,9 @@ public final class Utils {
                     .ifPresent(
                             n -> {
                                 pushToNode.put(n);
-                                root.removeChildOfType(kind);
+                                if (remove) {
+                                    root.removeChildOfType(kind);
+                                }
                             });
         }
     }

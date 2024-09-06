@@ -61,9 +61,9 @@ public final class RSA extends Algorithm implements KeyAgreement, Signature, Pub
         this.put(new Oid(OID, detectionLocation));
     }
 
-    public RSA(@Nonnull KeyLength keyLength, @Nonnull DetectionLocation detectionLocation) {
+    public RSA(int keyLength, @Nonnull DetectionLocation detectionLocation) {
         super(NAME, PublicKeyEncryption.class, detectionLocation);
-        this.put(keyLength);
+        this.put(new KeyLength(keyLength, detectionLocation));
         this.put(new Oid(OID, detectionLocation));
     }
 

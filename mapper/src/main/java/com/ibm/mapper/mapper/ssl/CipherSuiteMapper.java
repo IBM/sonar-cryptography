@@ -25,6 +25,7 @@ import com.ibm.mapper.mapper.ssl.json.JsonCipherSuites;
 import com.ibm.mapper.model.CipherSuite;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Identifier;
+import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.collections.AssetCollection;
 import com.ibm.mapper.model.collections.IdentifierCollection;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -49,7 +50,7 @@ public final class CipherSuiteMapper implements IMapper {
         Optional<JsonCipherSuite> possibleJsonCipherSuite = findCipherSuite(str);
         if (possibleJsonCipherSuite.isEmpty()) {
             // return a 'simple' cipher object
-            return Optional.empty(); // TODO
+            return Optional.of(new CipherSuite(str, detectionLocation));
         }
         final JsonCipherSuite jsonCipherSuite = possibleJsonCipherSuite.get();
 
@@ -64,16 +65,6 @@ public final class CipherSuiteMapper implements IMapper {
                             return keyExchangeAlgorithmMapper.parse(algoStr, detectionLocation);
                         })
                 .ifPresent(assets::add);
-        // authentication agreement
-        jsonCipherSuite
-                .getAuthAlgorithm()
-                .flatMap(
-                        algoStr -> {
-                            final AuthenticationAlgorithmMapper authenticationAlgorithmMapper =
-                                    new AuthenticationAlgorithmMapper();
-                            return authenticationAlgorithmMapper.parse(algoStr, detectionLocation);
-                        })
-                .ifPresent(assets::add);
         // encryption algorithm
         jsonCipherSuite
                 .getEncAlgorithm()
@@ -85,15 +76,30 @@ public final class CipherSuiteMapper implements IMapper {
                         })
                 .ifPresent(assets::add);
         // hash algorithm
+        final Optional<MessageDigest> hash =
+                jsonCipherSuite
+                        .getHashAlgorithm()
+                        .flatMap(
+                                algoStr -> {
+                                    final HashAlgorithmMapper hashAlgorithmMapper =
+                                            new HashAlgorithmMapper();
+                                    return hashAlgorithmMapper.parse(algoStr, detectionLocation);
+                                });
+        // authentication agreement
         jsonCipherSuite
-                .getHashAlgorithm()
+                .getAuthAlgorithm()
                 .flatMap(
                         algoStr -> {
-                            final HashAlgorithmMapper hashAlgorithmMapper =
-                                    new HashAlgorithmMapper();
-                            return hashAlgorithmMapper.parse(algoStr, detectionLocation);
+                            final AuthenticationAlgorithmMapper authenticationAlgorithmMapper =
+                                    new AuthenticationAlgorithmMapper();
+                            return authenticationAlgorithmMapper.parse(algoStr, detectionLocation);
                         })
-                .ifPresent(assets::add);
+                .ifPresentOrElse(
+                        sign -> {
+                            hash.ifPresent(sign::put);
+                            assets.add(sign);
+                        },
+                        () -> hash.ifPresent(assets::add));
 
         final CipherSuite cipherSuite =
                 new CipherSuite(
