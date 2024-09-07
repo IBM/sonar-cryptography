@@ -27,6 +27,7 @@ import com.ibm.mapper.model.PBES2;
 import com.ibm.mapper.model.PKCS12PBE;
 import com.ibm.mapper.model.PasswordBasedEncryption;
 import com.ibm.mapper.model.Unknown;
+import com.ibm.mapper.model.algorithms.MD5;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -49,6 +50,11 @@ public class BcPbeMapper implements IMapper {
             @Nonnull String pbeString, @Nonnull DetectionLocation detectionLocation) {
         return switch (pbeString) {
             case "OpenSSLPBEParametersGenerator" -> Optional.of(new PBES1(detectionLocation));
+            case "OpenSSLPBEParametersGenerator[MD5]" -> {
+                PBES1 pbe = new PBES1(detectionLocation);
+                pbe.put(new MD5(detectionLocation));
+                yield Optional.of(pbe);
+            }
             case "PKCS12ParametersGenerator" -> Optional.of(new PKCS12PBE(detectionLocation));
             case "PKCS5S1ParametersGenerator" -> Optional.of(new PBES1(detectionLocation));
             case "PKCS5S2ParametersGenerator" -> Optional.of(new PBES2(detectionLocation));

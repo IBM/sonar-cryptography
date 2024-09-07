@@ -113,7 +113,7 @@ class BcKCCMBlockCipherTest extends TestBase {
         INode authenticatedEncryptionNode1 = nodes.get(0);
         assertThat(authenticatedEncryptionNode1.getKind()).isEqualTo(AuthenticatedEncryption.class);
         assertThat(authenticatedEncryptionNode1.getChildren()).hasSize(5);
-        assertThat(authenticatedEncryptionNode1.asString()).isEqualTo("AES");
+        assertThat(authenticatedEncryptionNode1.asString()).isEqualTo("AES-CCM");
 
         // Mode under AuthenticatedEncryption
         INode modeNode1 = authenticatedEncryptionNode1.getChildren().get(Mode.class);

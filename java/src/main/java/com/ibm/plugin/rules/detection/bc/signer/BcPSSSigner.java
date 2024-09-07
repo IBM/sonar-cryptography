@@ -41,105 +41,107 @@ public final class BcPSSSigner {
         // nothing
     }
 
+    private static final String CLASS_NAME = "PSSSigner";
+
     private static final IDetectionRule<Tree> CONSTRUCTOR_1 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.signers.PSSSigner")
+                    .forObjectTypes("org.bouncycastle.crypto.signers." + CLASS_NAME)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("PSS"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(CLASS_NAME))
                     .withMethodParameter("org.bouncycastle.crypto.AsymmetricBlockCipher")
                     .addDependingDetectionRules(BcAsymmetricBlockCipher.rules())
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
                     .withMethodParameter(BYTE_ARRAY_TYPE)
-                    .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
+                    .buildForContext(new SignatureContext())
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_2 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.signers.PSSSigner")
+                    .forObjectTypes("org.bouncycastle.crypto.signers." + CLASS_NAME)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("PSS"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(CLASS_NAME))
                     .withMethodParameter("org.bouncycastle.crypto.AsymmetricBlockCipher")
                     .addDependingDetectionRules(BcAsymmetricBlockCipher.rules())
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(
-                            BcDigests.rules(new DigestContext(DigestContext.Kind.MGF)))
+                            BcDigests.rules(new DigestContext(DigestContext.Kind.MGF1)))
                     .withMethodParameter(BYTE_ARRAY_TYPE)
-                    .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
+                    .buildForContext(new SignatureContext())
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_3 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.signers.PSSSigner")
+                    .forObjectTypes("org.bouncycastle.crypto.signers." + CLASS_NAME)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("PSS"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(CLASS_NAME))
                     .withMethodParameter("org.bouncycastle.crypto.AsymmetricBlockCipher")
                     .addDependingDetectionRules(BcAsymmetricBlockCipher.rules())
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(
-                            BcDigests.rules(new DigestContext(DigestContext.Kind.MGF)))
+                            BcDigests.rules(new DigestContext(DigestContext.Kind.MGF1)))
                     .withMethodParameter(BYTE_ARRAY_TYPE)
                     .withMethodParameter("byte")
-                    .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
+                    .buildForContext(new SignatureContext())
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_4 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.signers.PSSSigner")
+                    .forObjectTypes("org.bouncycastle.crypto.signers." + CLASS_NAME)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("PSS"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(CLASS_NAME))
                     .withMethodParameter("org.bouncycastle.crypto.AsymmetricBlockCipher")
                     .addDependingDetectionRules(BcAsymmetricBlockCipher.rules())
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(
-                            BcDigests.rules(new DigestContext(DigestContext.Kind.MGF)))
+                            BcDigests.rules(new DigestContext(DigestContext.Kind.MGF1)))
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new SaltSizeFactory<>(Size.UnitType.BIT))
                     .asChildOfParameterWithId(-1)
-                    .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
+                    .buildForContext(new SignatureContext())
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_5 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.signers.PSSSigner")
+                    .forObjectTypes("org.bouncycastle.crypto.signers." + CLASS_NAME)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("PSS"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(CLASS_NAME))
                     .withMethodParameter("org.bouncycastle.crypto.AsymmetricBlockCipher")
                     .addDependingDetectionRules(BcAsymmetricBlockCipher.rules())
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(
-                            BcDigests.rules(new DigestContext(DigestContext.Kind.MGF)))
+                            BcDigests.rules(new DigestContext(DigestContext.Kind.MGF1)))
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new SaltSizeFactory<>(Size.UnitType.BIT))
                     .asChildOfParameterWithId(-1)
                     .withMethodParameter("byte")
-                    .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
+                    .buildForContext(new SignatureContext())
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_6 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.signers.PSSSigner")
+                    .forObjectTypes("org.bouncycastle.crypto.signers." + CLASS_NAME)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("PSS"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(CLASS_NAME))
                     .withMethodParameter("org.bouncycastle.crypto.AsymmetricBlockCipher")
                     .addDependingDetectionRules(BcAsymmetricBlockCipher.rules())
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
@@ -147,16 +149,16 @@ public final class BcPSSSigner {
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new SaltSizeFactory<>(Size.UnitType.BIT))
                     .asChildOfParameterWithId(-1)
-                    .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
+                    .buildForContext(new SignatureContext())
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_7 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.signers.PSSSigner")
+                    .forObjectTypes("org.bouncycastle.crypto.signers." + CLASS_NAME)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("PSS"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(CLASS_NAME))
                     .withMethodParameter("org.bouncycastle.crypto.AsymmetricBlockCipher")
                     .addDependingDetectionRules(BcAsymmetricBlockCipher.rules())
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
@@ -165,7 +167,7 @@ public final class BcPSSSigner {
                     .shouldBeDetectedAs(new SaltSizeFactory<>(Size.UnitType.BIT))
                     .asChildOfParameterWithId(-1)
                     .withMethodParameter("byte")
-                    .buildForContext(new SignatureContext(SignatureContext.Kind.PSS))
+                    .buildForContext(new SignatureContext())
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 

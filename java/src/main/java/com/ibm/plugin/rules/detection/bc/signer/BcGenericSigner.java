@@ -37,12 +37,14 @@ public final class BcGenericSigner {
         // nothing
     }
 
+    private static final String CLASS_NAME = "GenericSigner";
+
     private static final IDetectionRule<Tree> CONSTRUCTOR_1 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.signers.GenericSigner")
+                    .forObjectTypes("org.bouncycastle.crypto.signers." + CLASS_NAME)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("GenericSigner"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(CLASS_NAME))
                     .withMethodParameter("org.bouncycastle.crypto.AsymmetricBlockCipher")
                     .addDependingDetectionRules(
                             BcAsymmetricBlockCipher.rules(
@@ -51,8 +53,7 @@ public final class BcGenericSigner {
                                             CipherContext.Kind.ASYMMETRIC_CIPHER_ENGINE_SIGNATURE)))
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
-                    .buildForContext(
-                            new SignatureContext(SignatureContext.Kind.ALGORITHM_AND_HASH_WRAPPER))
+                    .buildForContext(new SignatureContext())
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 

@@ -116,7 +116,7 @@ class BcGCMSIVBlockCipherTest extends TestBase {
         INode authenticatedEncryptionNode2 = nodes.get(0);
         assertThat(authenticatedEncryptionNode2.getKind()).isEqualTo(AuthenticatedEncryption.class);
         // assertThat(authenticatedEncryptionNode2.getChildren()).hasSize(findingId == 2 ? 3 : 4);
-        assertThat(authenticatedEncryptionNode2.asString()).isEqualTo("AES");
+        assertThat(authenticatedEncryptionNode2.asString()).isEqualTo("AES-GCM-SIV");
 
         // Mode under AuthenticatedEncryption
         INode modeNode2 = authenticatedEncryptionNode2.getChildren().get(Mode.class);

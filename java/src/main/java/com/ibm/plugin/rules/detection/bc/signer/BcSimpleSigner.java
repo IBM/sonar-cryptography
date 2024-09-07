@@ -23,10 +23,9 @@ import com.ibm.engine.model.context.SignatureContext;
 import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
-import com.ibm.plugin.rules.detection.bc.BouncyCastleInfoMap;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -40,32 +39,27 @@ public final class BcSimpleSigner {
 
     /* TODO: maybe the function `extractSecret` would be a better entry point than the constructors? */
 
-    private static BouncyCastleInfoMap infoMap = new BouncyCastleInfoMap();
-
-    static {
-        infoMap.putKey("Ed25519Signer").putName("Ed25519"); // standard algorithm
-        infoMap.putKey("Ed25519phSigner").putName("Ed25519"); // prehashed variant
-        infoMap.putKey("Ed25519ctxSigner").putName("Ed25519"); // contextual variant
-
-        infoMap.putKey("Ed448Signer").putName("Ed448"); // standard algorithm
-        infoMap.putKey("Ed448phSigner").putName("Ed448"); // prehashed variant
-    }
+    private static final List<String> simpleSigners =
+            Arrays.asList(
+                    "Ed25519Signer" /* standard algorithm */,
+                    "Ed25519phSigner" /* prehashed variant */,
+                    "Ed25519ctxSigner" /* contextual variant */,
+                    "Ed448Signer" /* standard algorithm */,
+                    "Ed448phSigner" /* prehashed variant */);
 
     private static @NotNull List<IDetectionRule<Tree>> simpleConstructors() {
         List<IDetectionRule<Tree>> constructorsList = new LinkedList<>();
 
-        for (Map.Entry<String, BouncyCastleInfoMap.Info> entry : infoMap.entrySet()) {
-            String signer = entry.getKey();
-            String signerName = infoMap.getDisplayName(signer);
+        for (String signer : simpleSigners) {
             constructorsList.add(
                     new DetectionRuleBuilder<Tree>()
                             .createDetectionRule()
                             .forObjectTypes("org.bouncycastle.crypto.signers." + signer)
                             .forConstructor()
-                            .shouldBeDetectedAs(new ValueActionFactory<>(signerName))
+                            .shouldBeDetectedAs(new ValueActionFactory<>(signer))
                             // We want to capture all possible constructors (some have arguments)
                             .withAnyParameters()
-                            .buildForContext(new SignatureContext(SignatureContext.Kind.EdDSA))
+                            .buildForContext(new SignatureContext())
                             .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcSignerInit.rules()));
         }

@@ -127,7 +127,7 @@ public class PycaEllipticCurveSign2Test extends TestBase {
             INode ellipticCurveNode = signatureNode.getChildren().get(EllipticCurve.class);
             assertThat(ellipticCurveNode).isNotNull();
             assertThat(ellipticCurveNode.getChildren()).isEmpty();
-            assertThat(ellipticCurveNode.asString()).isEqualTo("Curve25519");
+            assertThat(ellipticCurveNode.asString()).isEqualTo("Edwards25519");
         } else if (findingId == 1) {
             /*
              * Detection Store

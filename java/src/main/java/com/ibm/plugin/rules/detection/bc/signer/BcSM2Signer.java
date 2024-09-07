@@ -35,50 +35,52 @@ public final class BcSM2Signer {
         // nothing
     }
 
+    private static final String CLASS_NAME = "SM2Signer";
+
     private static final IDetectionRule<Tree> CONSTRUCTOR_1 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.signers.SM2Signer")
+                    .forObjectTypes("org.bouncycastle.crypto.signers." + CLASS_NAME)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("SM2"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(CLASS_NAME))
                     .withoutParameters()
-                    .buildForContext(new SignatureContext(SignatureContext.Kind.SIGNATURE_NAME))
+                    .buildForContext(new SignatureContext())
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_2 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.signers.SM2Signer")
+                    .forObjectTypes("org.bouncycastle.crypto.signers." + CLASS_NAME)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("SM2"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(CLASS_NAME))
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
-                    .buildForContext(new SignatureContext(SignatureContext.Kind.SIGNATURE_NAME))
+                    .buildForContext(new SignatureContext())
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_3 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.signers.SM2Signer")
+                    .forObjectTypes("org.bouncycastle.crypto.signers." + CLASS_NAME)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("SM2"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(CLASS_NAME))
                     .withMethodParameter("org.bouncycastle.crypto.signers.DSAEncoding")
-                    .buildForContext(new SignatureContext(SignatureContext.Kind.SIGNATURE_NAME))
+                    .buildForContext(new SignatureContext())
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_4 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.signers.SM2Signer")
+                    .forObjectTypes("org.bouncycastle.crypto.signers." + CLASS_NAME)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("SM2"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(CLASS_NAME))
                     .withMethodParameter("org.bouncycastle.crypto.signers.DSAEncoding")
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
-                    .buildForContext(new SignatureContext(SignatureContext.Kind.SIGNATURE_NAME))
+                    .buildForContext(new SignatureContext())
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 

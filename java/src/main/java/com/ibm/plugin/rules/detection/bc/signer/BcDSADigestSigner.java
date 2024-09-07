@@ -36,34 +36,34 @@ public final class BcDSADigestSigner {
         // nothing
     }
 
+    private static final String CLASS_NAME = "DSADigestSigner";
+
     private static final IDetectionRule<Tree> CONSTRUCTOR_1 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.signers.DSADigestSigner")
+                    .forObjectTypes("org.bouncycastle.crypto.signers." + CLASS_NAME)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("DSADigest"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(CLASS_NAME))
                     .withMethodParameter("org.bouncycastle.crypto.DSA")
                     .addDependingDetectionRules(BcDSA.rules())
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
-                    .buildForContext(
-                            new SignatureContext(SignatureContext.Kind.ALGORITHM_AND_HASH_WRAPPER))
+                    .buildForContext(new SignatureContext())
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
     private static final IDetectionRule<Tree> CONSTRUCTOR_2 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.crypto.signers.DSADigestSigner")
+                    .forObjectTypes("org.bouncycastle.crypto.signers." + CLASS_NAME)
                     .forConstructor()
-                    .shouldBeDetectedAs(new ValueActionFactory<>("DSADigest"))
+                    .shouldBeDetectedAs(new ValueActionFactory<>(CLASS_NAME))
                     .withMethodParameter("org.bouncycastle.crypto.DSAExt")
                     .addDependingDetectionRules(BcDSA.rules())
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
                     .withMethodParameter("org.bouncycastle.crypto.signers.DSAEncoding")
-                    .buildForContext(
-                            new SignatureContext(SignatureContext.Kind.ALGORITHM_AND_HASH_WRAPPER))
+                    .buildForContext(new SignatureContext())
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 

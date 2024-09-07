@@ -19,6 +19,7 @@
  */
 package com.ibm.mapper.reorganizer.rules;
 
+import com.ibm.mapper.ITranslator;
 import com.ibm.mapper.model.EllipticCurve;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
@@ -30,7 +31,9 @@ import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.functionality.Functionality;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
+import com.ibm.mapper.reorganizer.UsualPerformActions;
 import com.ibm.mapper.reorganizer.builder.ReorganizerRuleBuilder;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -40,6 +43,22 @@ public final class SignatureReorganizer {
     private SignatureReorganizer() {
         // private
     }
+
+    @Nonnull
+    public static final IReorganizerRule MERGE_SIGNATURE_UNKNOWN_PARENT_AND_CHILD =
+            new ReorganizerRuleBuilder()
+                    .createReorganizerRule("MERGE_SIGNATURE_UNKNOWN_PARENT_AND_CHILD")
+                    .forNodeKind(Signature.class)
+                    .forNodeValue(ITranslator.UNKNOWN)
+                    .includingChildren(
+                            List.of(
+                                    new ReorganizerRuleBuilder()
+                                            .createReorganizerRule()
+                                            .forNodeKind(Signature.class)
+                                            .noAction()))
+                    .perform(
+                            UsualPerformActions.performMergeParentAndChildOfSameKind(
+                                    Signature.class));
 
     @Nonnull
     public static final IReorganizerRule MERGE_SIGNATURE_WITH_PKE_UNDER_PRIVATE_KEY =

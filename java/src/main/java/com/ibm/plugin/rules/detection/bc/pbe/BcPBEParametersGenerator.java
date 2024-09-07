@@ -38,13 +38,6 @@ public final class BcPBEParametersGenerator {
         // private
     }
 
-    private static final List<String> constructorEmpty =
-            /*
-             * List of children classes of PBEParametersGenerator having a
-             * constructor taking no argument
-             */
-            Arrays.asList("OpenSSLPBEParametersGenerator", "PKCS5S2ParametersGenerator");
-
     private static final List<String> constructorDigest =
             /*
              * List of children classes of PBEParametersGenerator having a
@@ -59,30 +52,47 @@ public final class BcPBEParametersGenerator {
     private static @NotNull List<IDetectionRule<Tree>> simpleConstructors() {
         List<IDetectionRule<Tree>> constructorsList = new LinkedList<>();
 
-        for (String pbeClass : constructorEmpty) {
-            constructorsList.add(
-                    new DetectionRuleBuilder<Tree>()
-                            .createDetectionRule()
-                            .forObjectTypes("org.bouncycastle.crypto.generators." + pbeClass)
-                            .forConstructor()
-                            .shouldBeDetectedAs(
-                                    new ValueActionFactory<>(
-                                            pbeClass.replace("ParametersGenerator", "")))
-                            .withoutParameters()
-                            .buildForContext(new CipherContext(CipherContext.Kind.PBE))
-                            .inBundle(() -> "Bc")
-                            .withoutDependingDetectionRules());
-        }
+        /* Constructor without argument */
+        constructorsList.add(
+                new DetectionRuleBuilder<Tree>()
+                        .createDetectionRule()
+                        .forObjectTypes(
+                                "org.bouncycastle.crypto.generators."
+                                        + "PKCS5S2ParametersGenerator")
+                        .forConstructor()
+                        .shouldBeDetectedAs(new ValueActionFactory<>("PKCS5S2ParametersGenerator"))
+                        .withoutParameters()
+                        .buildForContext(new CipherContext(CipherContext.Kind.PBE))
+                        .inBundle(() -> "Bc")
+                        .withoutDependingDetectionRules());
 
+        /*
+         * With this constructor of `OpenSSLPBEParametersGenerator`, no `Digest` argument is provided:
+         * it uses the default MD5 which we represent (for the translation) by capturing
+         * the value `ChaCha20Poly1305[MD5]`
+         */
+        constructorsList.add(
+                new DetectionRuleBuilder<Tree>()
+                        .createDetectionRule()
+                        .forObjectTypes(
+                                "org.bouncycastle.crypto.generators."
+                                        + "OpenSSLPBEParametersGenerator")
+                        .forConstructor()
+                        .shouldBeDetectedAs(
+                                new ValueActionFactory<>("OpenSSLPBEParametersGenerator[MD5]"))
+                        .withoutParameters()
+                        .buildForContext(new CipherContext(CipherContext.Kind.PBE))
+                        .inBundle(() -> "Bc")
+                        .withoutDependingDetectionRules());
+
+        /* All constructors with a Digest argument */
         for (String pbeClass : constructorDigest) {
             constructorsList.add(
                     new DetectionRuleBuilder<Tree>()
                             .createDetectionRule()
                             .forObjectTypes("org.bouncycastle.crypto.generators." + pbeClass)
                             .forConstructor()
-                            .shouldBeDetectedAs(
-                                    new ValueActionFactory<>(
-                                            pbeClass.replace("ParametersGenerator", "")))
+                            .shouldBeDetectedAs(new ValueActionFactory<>(pbeClass))
                             .withMethodParameter("org.bouncycastle.crypto.Digest")
                             .addDependingDetectionRules(BcDigests.rules())
                             .buildForContext(new CipherContext(CipherContext.Kind.PBE))

@@ -8,7 +8,7 @@ public class BcChaChaEngineTestFile {
         byte[] key = Hex.decode("000102030405060708090a0b0c0d0e0f");
 
         // Initialize the ChaCha engine with the provided key
-        ChaChaEngine chachaEngine = new ChaChaEngine(); //  Noncompliant {{ChaCha}}
+        ChaChaEngine chachaEngine = new ChaChaEngine(); //  Noncompliant {{ChaChaEngine}}
         chachaEngine.init(true, new KeyParameter(key));
     }
 }

@@ -48,13 +48,12 @@ public final class BcPQCSigner {
                         .createDetectionRule()
                         .forObjectExactTypes("org.bouncycastle.pqc.crypto.DigestingMessageSigner")
                         .forConstructor()
-                        .shouldBeDetectedAs(new ValueActionFactory<>("DigestingMessage"))
+                        .shouldBeDetectedAs(new ValueActionFactory<>("DigestingMessageSigner"))
                         .withMethodParameter("org.bouncycastle.pqc.crypto.MessageSigner")
                         .addDependingDetectionRules(BcMessageSigner.rules())
                         .withMethodParameter("org.bouncycastle.crypto.Digest")
                         .addDependingDetectionRules(BcDigests.rules())
-                        .buildForContext(
-                                new SignatureContext(SignatureContext.Kind.DIGEST_MESSAGE_WRAPPER))
+                        .buildForContext(new SignatureContext())
                         .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcSignerInit.rules()));
 
@@ -64,13 +63,13 @@ public final class BcPQCSigner {
                         .forObjectExactTypes(
                                 "org.bouncycastle.pqc.crypto.DigestingStateAwareMessageSigner")
                         .forConstructor()
-                        .shouldBeDetectedAs(new ValueActionFactory<>("DigestingStateAwareMessage"))
+                        .shouldBeDetectedAs(
+                                new ValueActionFactory<>("DigestingStateAwareMessageSigner"))
                         .withMethodParameter("org.bouncycastle.pqc.crypto.StateAwareMessageSigner")
                         .addDependingDetectionRules(BcStateAwareMessageSigner.rules())
                         .withMethodParameter("org.bouncycastle.crypto.Digest")
                         .addDependingDetectionRules(BcDigests.rules())
-                        .buildForContext(
-                                new SignatureContext(SignatureContext.Kind.DIGEST_MESSAGE_WRAPPER))
+                        .buildForContext(new SignatureContext())
                         .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcSignerInit.rules()));
 

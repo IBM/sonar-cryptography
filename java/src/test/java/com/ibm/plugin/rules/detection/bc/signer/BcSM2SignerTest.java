@@ -27,9 +27,13 @@ import com.ibm.engine.model.OperationMode;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.DigestContext;
 import com.ibm.engine.model.context.SignatureContext;
+import com.ibm.mapper.model.BlockSize;
+import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.Signature;
+import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
@@ -65,7 +69,7 @@ class BcSM2SignerTest extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(SignatureContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("SM2");
+        assertThat(value0.asString()).isEqualTo("SM2Signer");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
                 getStoreOfValueType(OperationMode.class, detectionStore.getChildren());
@@ -81,7 +85,7 @@ class BcSM2SignerTest extends TestBase {
         assertThat(store_2.getDetectionValueContext()).isInstanceOf(DigestContext.class);
         IValue<Tree> value0_2 = store_2.getDetectionValues().get(0);
         assertThat(value0_2).isInstanceOf(ValueAction.class);
-        assertThat(value0_2.asString()).isEqualTo("SHA-256");
+        assertThat(value0_2.asString()).isEqualTo("SHA256Digest");
 
         /*
          * Translation
@@ -95,16 +99,40 @@ class BcSM2SignerTest extends TestBase {
         assertThat(signatureNode.getChildren()).hasSize(2);
         assertThat(signatureNode.asString()).isEqualTo("SM2");
 
-        // MessageDigest under Signature
-        INode messageDigestNode = signatureNode.getChildren().get(MessageDigest.class);
-        assertThat(messageDigestNode).isNotNull();
-        assertThat(messageDigestNode.getChildren()).hasSize(1);
-        assertThat(messageDigestNode.asString()).isEqualTo("SHA-256");
-
         // Sign under Signature
         INode signNode = signatureNode.getChildren().get(Sign.class);
         assertThat(signNode).isNotNull();
         assertThat(signNode.getChildren()).isEmpty();
         assertThat(signNode.asString()).isEqualTo("SIGN");
+
+        // MessageDigest under Signature
+        INode messageDigestNode = signatureNode.getChildren().get(MessageDigest.class);
+        assertThat(messageDigestNode).isNotNull();
+        assertThat(messageDigestNode.getChildren()).hasSize(4);
+        assertThat(messageDigestNode.asString()).isEqualTo("SHA256");
+
+        // DigestSize under MessageDigest under Signature
+        INode digestSizeNode = messageDigestNode.getChildren().get(DigestSize.class);
+        assertThat(digestSizeNode).isNotNull();
+        assertThat(digestSizeNode.getChildren()).isEmpty();
+        assertThat(digestSizeNode.asString()).isEqualTo("256");
+
+        // Digest under MessageDigest under Signature
+        INode digestNode = messageDigestNode.getChildren().get(Digest.class);
+        assertThat(digestNode).isNotNull();
+        assertThat(digestNode.getChildren()).isEmpty();
+        assertThat(digestNode.asString()).isEqualTo("DIGEST");
+
+        // BlockSize under MessageDigest under Signature
+        INode blockSizeNode = messageDigestNode.getChildren().get(BlockSize.class);
+        assertThat(blockSizeNode).isNotNull();
+        assertThat(blockSizeNode.getChildren()).isEmpty();
+        assertThat(blockSizeNode.asString()).isEqualTo("512");
+
+        // Oid under MessageDigest under Signature
+        INode oidNode = messageDigestNode.getChildren().get(Oid.class);
+        assertThat(oidNode).isNotNull();
+        assertThat(oidNode.getChildren()).isEmpty();
+        assertThat(oidNode.asString()).isEqualTo("2.16.840.1.101.3.4.2.1");
     }
 }

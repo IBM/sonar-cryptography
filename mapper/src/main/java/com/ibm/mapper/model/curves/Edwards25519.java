@@ -26,6 +26,6 @@ import org.jetbrains.annotations.NotNull;
 public final class Edwards25519 extends EllipticCurve {
 
     public Edwards25519(@NotNull DetectionLocation detectionLocation) {
-        super("Curve25519", detectionLocation);
+        super("Edwards25519", detectionLocation);
     }
 }

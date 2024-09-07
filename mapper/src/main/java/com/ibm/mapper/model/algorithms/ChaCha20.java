@@ -20,8 +20,10 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.IAlgorithm;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -33,6 +35,16 @@ public final class ChaCha20 extends Algorithm implements StreamCipher {
 
     public ChaCha20(@NotNull DetectionLocation detectionLocation) {
         super(NAME, StreamCipher.class, detectionLocation);
+    }
+
+    /** Returns the name "ChaCha20Poly1305" when it has a Poly1305 Mac node as child */
+    @Override
+    @Nonnull
+    public String asString() {
+        return this.hasChildOfType(Mac.class)
+                .filter(node -> node instanceof Poly1305)
+                .map(node -> this.name + ((IAlgorithm) node).getName())
+                .orElse(this.name);
     }
 
     public ChaCha20(int keyLength, @NotNull DetectionLocation detectionLocation) {

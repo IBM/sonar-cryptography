@@ -25,6 +25,7 @@ import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
 public final class RSAssaPSS extends Algorithm implements ProbabilisticSignatureScheme {
+    // https://www.cryptosys.net/pki/manpki/pki_rsaschemes.html
 
     public RSAssaPSS(@NotNull DetectionLocation detectionLocation) {
         super("RSASSA-PSS", ProbabilisticSignatureScheme.class, detectionLocation);

@@ -117,7 +117,7 @@ class BcChaCha20Poly1305Test extends TestBase {
         INode authenticatedEncryptionNode1 = nodes.get(0);
         assertThat(authenticatedEncryptionNode1.getKind()).isEqualTo(AuthenticatedEncryption.class);
         assertThat(authenticatedEncryptionNode1.getChildren()).hasSize(findingId == 0 ? 3 : 2);
-        assertThat(authenticatedEncryptionNode1.asString()).isEqualTo("ChaCha20");
+        assertThat(authenticatedEncryptionNode1.asString()).isEqualTo("ChaCha20Poly1305");
 
         // Encrypt under AuthenticatedEncryption
         INode encryptNode1 = authenticatedEncryptionNode1.getChildren().get(Encrypt.class);

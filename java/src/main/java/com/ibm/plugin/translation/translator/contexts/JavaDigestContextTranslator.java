@@ -28,6 +28,8 @@ import com.ibm.mapper.mapper.bc.BcDigestMapper;
 import com.ibm.mapper.mapper.jca.JcaMessageDigestMapper;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.algorithms.MGF1;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
@@ -62,25 +64,18 @@ public final class JavaDigestContextTranslator extends JavaAbstractLibraryTransl
         final DigestContext.Kind kind = ((DigestContext) detectionContext).kind();
         if (value instanceof ValueAction) {
             switch (kind) {
-                case MGF1, MGF -> Optional.empty(); /* TODO: */
+                case MGF1 -> {
+                    BcDigestMapper bcDigestsMapper = new BcDigestMapper();
+                    return bcDigestsMapper
+                            .parse(value.asString(), detectionLocation)
+                            .filter(MessageDigest.class::isInstance)
+                            .map(digest -> new MGF1((MessageDigest) digest));
+                }
                 default -> {
                     BcDigestMapper bcDigestsMapper = new BcDigestMapper();
                     return bcDigestsMapper.parse(value.asString(), detectionLocation).map(f -> f);
                 }
             }
-
-            /*final com.ibm.mapper.model.Algorithm algorithm =
-                    new com.ibm.mapper.model.Algorithm(digestName, detectionLocation);
-
-            final DigestContext.Kind kind = ((DigestContext) detectionContext).kind();
-            return switch (kind) {
-                case MGF1, MGF -> Optional.of(new MaskGenerationFunction(algorithm));
-                default ->
-                        Optional.of(
-                                Optional.ofNullable(digestSize)
-                                        .map(size -> new MessageDigest(algorithm, size))
-                                        .orElse(new MessageDigest(algorithm)));
-            };*/
         } else if (value instanceof com.ibm.engine.model.DigestSize digestSize) {
             return Optional.of(new DigestSize(digestSize.getValue(), detectionLocation));
         }

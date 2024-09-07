@@ -29,8 +29,9 @@ import javax.annotation.Nonnull;
 // Hash Based Signature (HBS)
 public final class XMSS extends Algorithm implements Signature, MessageDigest {
     // https://eprint.iacr.org/2017/349.pdf
+    // https://datatracker.ietf.org/doc/html/rfc8391#section-4.1
 
-    private static final String NAME = "XMSS";
+    private static final String NAME = "XMSS"; // eXtended Merkle Signature Scheme
 
     public XMSS(@Nonnull DetectionLocation detectionLocation) {
         this(Signature.class, detectionLocation);

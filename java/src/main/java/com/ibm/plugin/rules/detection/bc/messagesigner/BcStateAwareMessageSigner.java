@@ -54,17 +54,16 @@ public final class BcStateAwareMessageSigner {
 
         for (Map.Entry<String, BouncyCastleInfoMap.Info> entry : infoMap.entrySet()) {
             String signer = entry.getKey();
-            String signerName = infoMap.getDisplayName(signer, "Signer");
             String type = entry.getValue().getType();
             constructorsList.add(
                     new DetectionRuleBuilder<Tree>()
                             .createDetectionRule()
                             .forObjectTypes(type + signer)
                             .forConstructor()
-                            .shouldBeDetectedAs(new ValueActionFactory<>(signerName))
+                            .shouldBeDetectedAs(new ValueActionFactory<>(signer))
                             .withoutParameters()
                             .buildForContext(
-                                    new SignatureContext(SignatureContext.Kind.SIGNATURE_NAME))
+                                    new SignatureContext(SignatureContext.Kind.MESSAGE_SIGNER))
                             .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcMessageSignerInit.rules()));
         }
@@ -80,10 +79,10 @@ public final class BcStateAwareMessageSigner {
                         .forObjectTypes(
                                 "org.bouncycastle.pqc.legacy.crypto.gmss.GMSSStateAwareSigner")
                         .forConstructor()
-                        .shouldBeDetectedAs(new ValueActionFactory<>("GMSS"))
+                        .shouldBeDetectedAs(new ValueActionFactory<>("GMSSStateAwareSigner"))
                         .withMethodParameter("org.bouncycastle.crypto.Digest")
                         .addDependingDetectionRules(BcDigests.rules())
-                        .buildForContext(new SignatureContext(SignatureContext.Kind.SIGNATURE_NAME))
+                        .buildForContext(new SignatureContext(SignatureContext.Kind.MESSAGE_SIGNER))
                         .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcMessageSignerInit.rules()));
 
