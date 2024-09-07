@@ -40,8 +40,8 @@ public class PBES1 extends Algorithm implements PasswordBasedEncryption {
         final Optional<INode> mac = this.hasChildOfType(Mac.class);
         final Optional<INode> cipher = this.hasChildOfType(BlockCipher.class);
 
-        if (messageDigest.isPresent() && cipher.isPresent()) {
-            return "pbeWith" + messageDigest.get().asString() + "And" + cipher.get().asString();
+        if (messageDigest.isPresent() && cipher.isPresent() && cipher.get() instanceof Cipher c) {
+            return "pbeWith" + messageDigest.get().asString() + "And" + c.getName();
         } else if (mac.isPresent()) {
             String n = "pbeWith" + changeHMACNameing(mac.get().asString());
             return cipher.map(node -> n + "And" + node.asString()).orElse(n);
