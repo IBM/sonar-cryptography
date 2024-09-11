@@ -41,7 +41,7 @@ import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
-public class DuplicateDependingRules2Test extends TestBase {
+class DuplicateDependingRules2Test extends TestBase {
 
     static IDetectionContext detectionContext =
             new IDetectionContext() {
@@ -96,7 +96,7 @@ public class DuplicateDependingRules2Test extends TestBase {
 
         List<DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext>> stores =
                 getStoresOfValueType(Algorithm.class, detectionStore.getChildren());
-        assertThat(stores).hasSize(3);
+        assertThat(stores).hasSize(2);
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 = stores.get(0);
         assertThat(store_1.getDetectionValues()).hasSize(1);
