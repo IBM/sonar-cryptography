@@ -22,9 +22,12 @@ package com.ibm.plugin;
 import com.ibm.mapper.model.INode;
 import com.ibm.output.IOutputFile;
 import com.ibm.output.IOutputFileFactory;
+import com.ibm.output.statistics.IStatistics;
+import com.ibm.output.statistics.ScanStatistics;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -37,12 +40,28 @@ public final class ScannerManager {
 
     @Nonnull
     public IOutputFile getOutputFile() {
+        return Optional.ofNullable(this.outputFileFactory)
+                .orElse(IOutputFileFactory.DEFAULT)
+                .createOutputFormat(getAggregatedNodes());
+    }
+
+    @Nonnull
+    public IStatistics getStatistics() {
+        return new ScanStatistics(
+                () -> getAggregatedNodes().size(), // numberOfDetectedAssetsSupplier
+                () ->
+                        getAggregatedNodes().stream() // numberOfAssetsPerTypeSupplier
+                                .collect(
+                                        Collectors.groupingBy(
+                                                INode::getKind, Collectors.counting())));
+    }
+
+    @Nonnull
+    private List<INode> getAggregatedNodes() {
         List<INode> nodes = new ArrayList<>();
         nodes.addAll(JavaAggregator.getDetectedNodes());
         nodes.addAll(PythonAggregator.getDetectedNodes());
-        return Optional.ofNullable(this.outputFileFactory)
-                .orElse(IOutputFileFactory.DEFAULT)
-                .createOutputFormat(nodes);
+        return nodes;
     }
 
     public void reset() {

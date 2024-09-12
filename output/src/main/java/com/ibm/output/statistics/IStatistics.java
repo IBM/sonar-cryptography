@@ -17,23 +17,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.output;
+package com.ibm.output.statistics;
 
-import com.ibm.mapper.model.INode;
-import java.util.List;
+import java.util.function.Consumer;
 import javax.annotation.Nonnull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public interface IAggregator {
-    Logger LOGGER = LoggerFactory.getLogger(IAggregator.class);
+public interface IStatistics {
 
-    static void log(@Nonnull List<INode> nodes) {
-        nodes.forEach(
-                node ->
-                        LOGGER.info(
-                                "Detected ({}) {}",
-                                node.getKind().getSimpleName(),
-                                node.asString()));
-    }
+    void print(@Nonnull Consumer<String> out);
 }

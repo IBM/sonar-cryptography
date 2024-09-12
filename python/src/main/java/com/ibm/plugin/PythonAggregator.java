@@ -57,6 +57,7 @@ public final class PythonAggregator implements IAggregator {
 
     public static void addNodes(@Nonnull List<INode> newNodes) {
         detectedNodes.addAll(newNodes);
+        IAggregator.log(newNodes);
     }
 
     public static void reset() {
