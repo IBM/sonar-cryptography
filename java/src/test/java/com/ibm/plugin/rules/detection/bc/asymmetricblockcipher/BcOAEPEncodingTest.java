@@ -34,8 +34,7 @@ import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
 class BcOAEPEncodingTest extends TestBase {
-    /* TODO: fix duplicate digest detections before enabling and writing asserts */
-    @Disabled
+    @Disabled("Fix duplicate digest detections before enabling and writing asserts")
     @Test
     void test() {
         CheckVerifier.newVerifier()
