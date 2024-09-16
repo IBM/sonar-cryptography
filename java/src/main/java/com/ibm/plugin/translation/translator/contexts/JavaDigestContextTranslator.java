@@ -30,8 +30,10 @@ import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.algorithms.MGF1;
+import com.ibm.mapper.model.collections.MergeableCollection;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.utils.DetectionLocation;
+import java.util.List;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.java.api.tree.Tree;
@@ -70,6 +72,12 @@ public final class JavaDigestContextTranslator extends JavaAbstractLibraryTransl
                             .parse(value.asString(), detectionLocation)
                             .filter(MessageDigest.class::isInstance)
                             .map(digest -> new MGF1((MessageDigest) digest));
+                }
+                case ASSET_COLLECTION -> {
+                    BcDigestMapper bcDigestsMapper = new BcDigestMapper();
+                    return bcDigestsMapper
+                            .parse(value.asString(), detectionLocation)
+                            .map(digest -> new MergeableCollection(List.of(digest)));
                 }
                 default -> {
                     BcDigestMapper bcDigestsMapper = new BcDigestMapper();

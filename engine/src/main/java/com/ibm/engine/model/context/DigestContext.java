@@ -31,6 +31,7 @@ public class DigestContext extends DetectionContext
         MGF1,
         CRAMER_SHOUP,
         NTRU,
+        ASSET_COLLECTION
     }
 
     @Nonnull private final Kind kind;
