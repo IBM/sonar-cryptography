@@ -30,6 +30,7 @@ import com.ibm.mapper.model.algorithms.DH;
 import com.ibm.mapper.model.algorithms.DSA;
 import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.utils.DetectionLocation;
+import com.ibm.mapper.utils.Utils;
 import java.util.List;
 import java.util.Optional;
 import org.junit.Test;
@@ -47,6 +48,7 @@ public class CipherSuiteMapperTest {
         assertThat(node).isPresent();
         assertThat(node.get().is(CipherSuite.class)).isTrue();
         final CipherSuite cipherSuite = (CipherSuite) node.get();
+        Utils.printNodeTree("tree", List.of(cipherSuite));
 
         assertThat(cipherSuite.getAssetCollection()).isPresent();
         assertThat(cipherSuite.getIdentifierCollection()).isPresent();
@@ -63,8 +65,7 @@ public class CipherSuiteMapperTest {
         assertThat(assetCollection)
                 .contains(
                         new AES(testDetectionLocation),
-                        new DSA(testDetectionLocation),
-                        new SHA2(256, testDetectionLocation),
+                        new DSA(new SHA2(256, testDetectionLocation)),
                         new DH(KeyAgreement.class, testDetectionLocation));
     }
 

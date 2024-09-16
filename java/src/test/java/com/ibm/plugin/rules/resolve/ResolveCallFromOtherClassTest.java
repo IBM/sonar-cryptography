@@ -75,7 +75,7 @@ class ResolveCallFromOtherClassTest extends TestBase {
 
             INode blockCipher = node.getChildren().get(PublicKeyEncryption.class);
             assertThat(blockCipher).isNotNull();
-            assertThat(blockCipher.asString()).isEqualTo("RSA");
+            assertThat(blockCipher.asString()).isEqualTo("RSA-2048");
 
             INode defaultKeyLength = blockCipher.getChildren().get(KeyLength.class);
             assertThat(defaultKeyLength).isNotNull();
