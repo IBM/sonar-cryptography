@@ -45,6 +45,7 @@ public final class JavaAggregator implements IAggregator {
 
     public static void addNodes(@Nonnull List<INode> newNodes) {
         detectedNodes.addAll(newNodes);
+        IAggregator.log(newNodes);
     }
 
     @Nonnull
