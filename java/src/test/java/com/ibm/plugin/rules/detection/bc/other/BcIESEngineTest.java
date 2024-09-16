@@ -35,7 +35,7 @@ import org.sonar.plugins.java.api.tree.Tree;
 
 class BcIESEngineTest extends TestBase {
     @Disabled(
-            "Problem to reolve before enabling this test: duplicate detection of the hashes (probably the same problem as in `DuplicateParameterFindingsTest`)")
+            "Problem to resolve before enabling this test: duplicate detection of the hashes (probably the same problem as in `DuplicateParameterFindingsTest`)")
     @Test
     void test() {
         CheckVerifier.newVerifier()

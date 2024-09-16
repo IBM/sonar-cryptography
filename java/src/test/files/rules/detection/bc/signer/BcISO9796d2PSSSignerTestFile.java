@@ -16,14 +16,14 @@ public class BcISO9796d2PSSSignerTestFile {
         Digest digest = new SHA256Digest(); // Initialize your digest, e.g., new SHA256Digest()
 
         // Initialize the Engine
-        AsymmetricBlockCipher engine = new RSAEngine(); // Noncompliant {{RSA}}
+        AsymmetricBlockCipher engine = new RSAEngine(); // Noncompliant {{RSAEngine}}
 
         // Initialize the AsymmetricBlockCipher
-        ISO9796d1Encoding cipher = new ISO9796d1Encoding(engine); // Noncompliant {{ISO 9796-1}}
+        ISO9796d1Encoding cipher = new ISO9796d1Encoding(engine); // Noncompliant {{ISO9796d1Encoding}}
 
         // Initialize ISO9796d2PSSSigner
         ISO9796d2PSSSigner signer = new ISO9796d2PSSSigner(cipher, digest, 256, false);
-        // Noncompliant@-1 {{ISO9796d2PSS}}
+        // Noncompliant@-1 {{ISO9796d2PSSSigner}}
 
         signer.init(true, new RSAKeyParameters(true, new BigInteger("0"), new BigInteger("1")));
 

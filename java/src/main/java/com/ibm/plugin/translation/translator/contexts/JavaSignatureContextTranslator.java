@@ -148,6 +148,8 @@ public final class JavaSignatureContextTranslator extends JavaAbstractLibraryTra
                 default:
                     break;
             }
+        } else if (value instanceof SaltSize<Tree> saltSize) {
+            return Optional.of(new SaltLength(saltSize.getValue(), detectionLocation));
         }
         return Optional.empty();
     }
