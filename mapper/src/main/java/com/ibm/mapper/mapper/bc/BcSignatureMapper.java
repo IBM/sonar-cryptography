@@ -54,9 +54,10 @@ public class BcSignatureMapper implements IMapper {
     private Optional<? extends INode> map(
             @Nonnull String signerString, @Nonnull DetectionLocation detectionLocation) {
         return switch (signerString) {
-            // case "DigestingMessageSigner" -> Optional.of();
-            // case "DigestingStateAwareMessageSigner" -> Optional.of();
-            case "DSADigestSigner" ->
+            case "DigestingMessageSigner",
+                            "DigestingStateAwareMessageSigner",
+                            "GenericSigner",
+                            "DSADigestSigner" ->
                     Optional.of(
                             new Algorithm(ITranslator.UNKNOWN, Signature.class, detectionLocation));
             case "Ed25519ctxSigner" -> Optional.of(new Ed25519(detectionLocation));
@@ -64,9 +65,6 @@ public class BcSignatureMapper implements IMapper {
             case "Ed25519Signer" -> Optional.of(new Ed25519(detectionLocation));
             case "Ed448phSigner" -> Optional.of(new Ed448(detectionLocation));
             case "Ed448Signer" -> Optional.of(new Ed448(detectionLocation));
-            case "GenericSigner" ->
-                    Optional.of(
-                            new Algorithm(ITranslator.UNKNOWN, Signature.class, detectionLocation));
             case "ISO9796d2PSSSigner" ->
                     Optional.of(new ISO9796(ProbabilisticSignatureScheme.class, detectionLocation));
             case "ISO9796d2Signer" -> Optional.of(new ISO9796(detectionLocation));
