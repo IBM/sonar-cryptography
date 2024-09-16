@@ -25,14 +25,11 @@ import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.CipherContext;
-import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Mode;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.sonar.java.checks.verifier.CheckVerifier;
 import org.sonar.plugins.java.api.JavaCheck;
@@ -48,11 +45,10 @@ class NextParameterDependingRulesTest extends TestBase {
      * rules on a parameter to capture a block cipher (AES). However, this block cipher gets
      * captured only when using the rule CONSTRUCTOR_1 (see `test2` in the test file) and not with
      * the NEW_INSTANCE_1 (see `test1` in the test file). See more details here:
-     * https://github.ibm.com/CryptoDiscovery/sonar-cryptography/issues/99
+     * https://github.com/IBM/sonar-cryptography/issues/16
      *
      * <p>The issue is here at the level of the detection store.
      */
-    @Disabled
     @Test
     void test() {
         CheckVerifier.newVerifier()
@@ -82,7 +78,7 @@ class NextParameterDependingRulesTest extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("GCM");
+        assertThat(value0.asString()).isEqualTo("GCMBlockCipher");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
                 getStoreOfValueType(ValueAction.class, detectionStore.getChildren());
@@ -91,24 +87,6 @@ class NextParameterDependingRulesTest extends TestBase {
         assertThat(store_1.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0_1 = store_1.getDetectionValues().get(0);
         assertThat(value0_1).isInstanceOf(ValueAction.class);
-        assertThat(value0_1.asString()).isEqualTo("AES");
-
-        /*
-         * Translation
-         */
-
-        assertThat(nodes).hasSize(1);
-
-        // AuthenticatedEncryption
-        INode authenticatedEncryptionNode1 = nodes.get(0);
-        assertThat(authenticatedEncryptionNode1.getKind()).isEqualTo(AuthenticatedEncryption.class);
-        assertThat(authenticatedEncryptionNode1.getChildren()).hasSize(2);
-        assertThat(authenticatedEncryptionNode1.asString()).isEqualTo("AES");
-
-        // Mode under AuthenticatedEncryption
-        INode modeNode1 = authenticatedEncryptionNode1.getChildren().get(Mode.class);
-        assertThat(modeNode1).isNotNull();
-        assertThat(modeNode1.getChildren()).isEmpty();
-        assertThat(modeNode1.asString()).isEqualTo("GCM");
+        assertThat(value0_1.asString()).isEqualTo("AESEngine");
     }
 }

@@ -19,7 +19,15 @@
  */
 package com.ibm.engine.language.java;
 
-import com.ibm.engine.detection.*;
+import com.ibm.engine.detection.DetectionStore;
+import com.ibm.engine.detection.DetectionStoreWithHook;
+import com.ibm.engine.detection.Handler;
+import com.ibm.engine.detection.IDetectionEngine;
+import com.ibm.engine.detection.MatchContext;
+import com.ibm.engine.detection.MethodDetection;
+import com.ibm.engine.detection.ResolvedValue;
+import com.ibm.engine.detection.TraceSymbol;
+import com.ibm.engine.detection.ValueDetection;
 import com.ibm.engine.hooks.EnumHook;
 import com.ibm.engine.hooks.MethodInvocationHookWithParameterResolvement;
 import com.ibm.engine.hooks.MethodInvocationHookWithReturnResolvement;
@@ -29,7 +37,12 @@ import com.ibm.engine.rule.DetectableParameter;
 import com.ibm.engine.rule.DetectionRule;
 import com.ibm.engine.rule.MethodDetectionRule;
 import com.ibm.engine.rule.Parameter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,7 +53,24 @@ import org.sonar.java.model.ExpressionUtils;
 import org.sonar.plugins.java.api.JavaCheck;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
-import org.sonar.plugins.java.api.tree.*;
+import org.sonar.plugins.java.api.tree.Arguments;
+import org.sonar.plugins.java.api.tree.ArrayDimensionTree;
+import org.sonar.plugins.java.api.tree.AssignmentExpressionTree;
+import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
+import org.sonar.plugins.java.api.tree.ClassTree;
+import org.sonar.plugins.java.api.tree.EnumConstantTree;
+import org.sonar.plugins.java.api.tree.ExpressionTree;
+import org.sonar.plugins.java.api.tree.IdentifierTree;
+import org.sonar.plugins.java.api.tree.ListTree;
+import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
+import org.sonar.plugins.java.api.tree.MethodInvocationTree;
+import org.sonar.plugins.java.api.tree.MethodTree;
+import org.sonar.plugins.java.api.tree.NewArrayTree;
+import org.sonar.plugins.java.api.tree.NewClassTree;
+import org.sonar.plugins.java.api.tree.ReturnStatementTree;
+import org.sonar.plugins.java.api.tree.Tree;
+import org.sonar.plugins.java.api.tree.TypeTree;
+import org.sonar.plugins.java.api.tree.VariableTree;
 
 public final class JavaDetectionEngine implements IDetectionEngine<Tree, Symbol> {
     private static final Logger LOGGER = LoggerFactory.getLogger(JavaDetectionEngine.class);
@@ -691,10 +721,6 @@ public final class JavaDetectionEngine implements IDetectionEngine<Tree, Symbol>
          *
          * Check out: src/test/java/com/ibm/plugin/resolve/ResolveBuilderPatternTest.java
          */
-        /*
-         * Checks if the method call itself is of interested and not in any parameter.
-         */
-
         // check if expression is a builder pattern
         boolean isBuilderPattern = false;
         if (expressionTree instanceof MethodInvocationTree methodInvocationTree
@@ -795,6 +821,10 @@ public final class JavaDetectionEngine implements IDetectionEngine<Tree, Symbol>
                 if (expression instanceof MethodInvocationTree methodInvocationTree) {
                     // methods are part of the outer scope
                     resolveValuesInOuterScope(methodInvocationTree, parameter);
+                    // follow expression directly, do not find matching expression in the method
+                    // scope
+                    detectionStore.onDetectedDependingParameter(
+                            parameter, methodInvocationTree, DetectionStore.Scope.EXPRESSION);
                 } else if (expression instanceof NewClassTree newClassTree
                         && assignedSymbol.isEmpty()) {
                     // follow expression directly, do not find matching expression in the method
