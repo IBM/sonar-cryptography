@@ -194,33 +194,36 @@ public abstract class ITranslator<R, T, S, P> {
             for (INode parentNode : copyParentNodes) {
                 newNodesCollection.forEach(
                         childNode -> {
-                            if (parentNode.hasChildOfType(childNode.getKind()).isPresent()) {
+                            Optional<INode> existingNodeOpt =
+                                    parentNode.hasChildOfType(childNode.getKind());
+                            if (existingNodeOpt.isPresent()) {
+                                INode existingNode = existingNodeOpt.get();
+                                /* Special case of multiple `MergeableCollection`: we merge them */
                                 if (childNode instanceof MergeableCollection addedCollectionNode
-                                        && parentNode.hasChildOfType(childNode.getKind()).get()
+                                        && existingNode
                                                 instanceof
                                                 MergeableCollection existingCollectionNode
                                         /* this 3rd condition ensures that both nodes have the same *exact* class */
                                         && addedCollectionNode
                                                 .getClass()
                                                 .equals(existingCollectionNode.getClass())) {
-                                    List<INode> existingCollection =
-                                            existingCollectionNode.getCollection();
-                                    List<INode> addedCollection =
-                                            addedCollectionNode.getCollection();
 
-                                    List<INode> mergedCollection = new ArrayList<>();
-                                    mergedCollection.addAll(existingCollection);
-                                    mergedCollection.addAll(addedCollection);
+                                    List<INode> mergedCollection =
+                                            new ArrayList<>(existingCollectionNode.getCollection());
+                                    mergedCollection.addAll(addedCollectionNode.getCollection());
 
                                     MergeableCollection mergedCollectionNode =
                                             new MergeableCollection(mergedCollection);
-                                    for (INode child : addedCollectionNode.getChildren().values()) {
-                                        mergedCollectionNode.put(child);
-                                    }
-                                    for (INode child :
-                                            existingCollectionNode.getChildren().values()) {
-                                        mergedCollectionNode.put(child);
-                                    }
+
+                                    addedCollectionNode
+                                            .getChildren()
+                                            .values()
+                                            .forEach(mergedCollectionNode::put);
+                                    existingCollectionNode
+                                            .getChildren()
+                                            .values()
+                                            .forEach(mergedCollectionNode::put);
+
                                     parentNode.put(mergedCollectionNode);
 
                                 } else {
