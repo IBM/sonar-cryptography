@@ -222,14 +222,25 @@ public class DetectionStore<R, T, S, P> implements IHookDetectionObserver<R, T, 
     }
 
     void addValue(int index, @Nonnull final IValue<T> iValue) {
-        this.detectionValues.compute(
+        addValue(this, index, iValue);
+    }
+
+    void addValue(
+            @Nonnull DetectionStore<R, T, S, P> detectionStore,
+            int index,
+            @Nonnull final IValue<T> iValue) {
+        detectionStore.detectionValues.compute(
                 index,
                 (i, list) -> {
                     if (list == null) {
+                        // If the list is null, create a new ArrayList
+                        // with the iValue and return it
                         final List<IValue<T>> values = new ArrayList<>();
                         values.add(iValue);
                         return values;
                     } else {
+                        // If the list is not null, add the iValue to it
+                        // and return the modified list
                         list.add(iValue);
                         return list;
                     }
@@ -289,7 +300,7 @@ public class DetectionStore<R, T, S, P> implements IHookDetectionObserver<R, T, 
             final Optional<Integer> positionMove = detectableParameter.getShouldBeMovedUnder();
             // Check if the parameter should be moved under
             if (positionMove.isPresent()) {
-                final Integer id = positionMove.get();
+                final int id = positionMove.get();
                 // Get the iValue to be detected and store it in a variable
                 valueDetection
                         .toValue(valueDetection.detectableParameter().getiValueFactory())
@@ -304,30 +315,15 @@ public class DetectionStore<R, T, S, P> implements IHookDetectionObserver<R, T, 
                                                     handler,
                                                     statusReporting);
                                     // Compute the detection values for the given id
-                                    detectionStore.detectionValues.compute(
-                                            id,
-                                            (i, list) -> {
-                                                if (list == null) {
-                                                    // If the list is null, create a new ArrayList
-                                                    // with the iValue and return it
-                                                    final List<IValue<T>> values =
-                                                            new ArrayList<>();
-                                                    values.add(iValue);
-                                                    return values;
-                                                } else {
-                                                    // If the list is not null, add the iValue to it
-                                                    // and return the modified list
-                                                    list.add(iValue);
-                                                    return list;
-                                                }
-                                            });
+                                    addValue(detectionStore, id, iValue);
                                     // Attach the detection store to the given id
                                     this.attach(id, detectionStore);
                                 });
             } else {
                 valueDetection
                         .toValue(valueDetection.detectableParameter().getiValueFactory())
-                        .ifPresent(iValue -> addValue(detectableParameter.getIndex(), iValue));
+                        .ifPresent(
+                                iValue -> addValue(this, detectableParameter.getIndex(), iValue));
             }
 
             // follow method parameter related detection rules
@@ -350,7 +346,13 @@ public class DetectionStore<R, T, S, P> implements IHookDetectionObserver<R, T, 
             // follow invoked object (object where the method was executed on) related detection
             // rules
             final TraceSymbol<S> traceSymbol = getAssignedTraceSymbol(valueDetection.expression());
-            final List<IDetectionRule<T>> nextDetectionRules = detectionRule.nextDetectionRules();
+
+            final List<IDetectionRule<T>> nextDetectionRules;
+            if (positionMove.isPresent()) {
+                nextDetectionRules = List.of();
+            } else {
+                nextDetectionRules = detectionRule.nextDetectionRules();
+            }
             this.statusReporting.addAdditionalExpectedRuleVisits(nextDetectionRules.size());
             handler.getLanguageSupport()
                     .getEnclosingMethod(detection.expression())
