@@ -25,12 +25,13 @@ import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.KeyWrap;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
-public final class Kalyna extends Algorithm implements BlockCipher, Mac {
+public final class Kalyna extends Algorithm implements BlockCipher, Mac, KeyWrap {
     // https://en.wikipedia.org/wiki/Kalyna_(cipher)
     // https://eprint.iacr.org/2015/650.pdf
 
