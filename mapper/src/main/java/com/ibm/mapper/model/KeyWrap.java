@@ -20,9 +20,9 @@
 package com.ibm.mapper.model;
 
 /**
- * Represents key encapsulation mechanism (KEM) for <strong>public-key cryptosystems</strong> (as
- * defined in {@link https://en.wikipedia.org/wiki/Key_encapsulation_mechanism}).
+ * Represents key encapsulation for <strong>symmetric encryption algorithms</strong> (as defined in
+ * {@link https://en.wikipedia.org/wiki/Key_wrap}).
  *
- * <p>For symmetric encryption algorithms, use {@code KeyWrap} instead.
+ * <p>For public-key cryptosystems, use {@code KeyEncapsulationMechanism} instead.
  */
-public interface KeyEncapsulationMechanism extends IPrimitive {}
+public interface KeyWrap extends IPrimitive {}
