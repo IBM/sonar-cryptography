@@ -24,7 +24,6 @@ import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Unknown;
-import com.ibm.mapper.model.algorithms.AESWrap;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -47,8 +46,8 @@ public class BcWrapperMapper implements IMapper {
             @Nonnull String streamCipherString, @Nonnull DetectionLocation detectionLocation) {
         return switch (streamCipherString) {
             /* TODO: how should Wrap be handled? Should all BlockCiphers be duplicated with a Wrap version like for AES? */
-            case "AESWrapEngine" -> Optional.of(new AESWrap(detectionLocation));
-            case "AESWrapPadEngine" -> Optional.of(new AESWrap(detectionLocation));
+            // case "AESWrapEngine" -> Optional.of(new AESWrap(detectionLocation));
+            // case "AESWrapPadEngine" -> Optional.of(new AESWrap(detectionLocation));
             // case "ARIAWrapEngine" -> Optional.of();
             // case "ARIAWrapPadEngine" -> Optional.of();
             // case "CamelliaWrapEngine" -> Optional.of();

@@ -24,13 +24,14 @@ import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.KeyWrap;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class DESede extends Algorithm implements BlockCipher {
+public final class DESede extends Algorithm implements BlockCipher, KeyWrap {
     // https://en.wikipedia.org/wiki/Triple_DES
 
     private static final String NAME = "DESede"; // TripleDES, 3DES, TDES

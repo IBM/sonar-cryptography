@@ -32,8 +32,8 @@ import com.ibm.mapper.mapper.pyca.PycaCipherMapper;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.KeyWrap;
 import com.ibm.mapper.model.algorithms.AES;
-import com.ibm.mapper.model.algorithms.AESWrap;
 import com.ibm.mapper.model.functionality.Decrypt;
 import com.ibm.mapper.model.functionality.Encapsulate;
 import com.ibm.mapper.model.functionality.Encrypt;
@@ -117,7 +117,11 @@ public final class PycaCipherContextTranslator implements IContextTranslation<Tr
                                         str ->
                                                 switch (str.toUpperCase().trim()) {
                                                     case "AES" ->
-                                                            new AESWrap(128, detectionLocation);
+                                                            new AES(
+                                                                    KeyWrap.class,
+                                                                    new AES(
+                                                                            128,
+                                                                            detectionLocation));
                                                     default -> null;
                                                 })
                                 .map(
