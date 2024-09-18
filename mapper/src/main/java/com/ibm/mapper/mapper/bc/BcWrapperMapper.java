@@ -55,7 +55,7 @@ public class BcWrapperMapper implements IMapper {
     private Optional<? extends INode> map(
             @Nonnull String streamCipherString, @Nonnull DetectionLocation detectionLocation) {
         return switch (streamCipherString) {
-            case "AESWrapEngine", "AESWrapPadEngine" ->
+            case "AESWrapEngine", "AESWrapPadEngine", "RFC3394WrapEngine", "RFC5649WrapEngine" ->
                     Optional.of(new AES(KeyWrap.class, detectionLocation));
             case "ARIAWrapEngine", "ARIAWrapPadEngine" ->
                     Optional.of(new Aria(KeyWrap.class, new Aria(detectionLocation)));
@@ -71,12 +71,8 @@ public class BcWrapperMapper implements IMapper {
                     Optional.of(new SEED(KeyWrap.class, new SEED(detectionLocation)));
             case "DSTU7624WrapEngine" ->
                     Optional.of(new Kalyna(KeyWrap.class, new Kalyna(detectionLocation)));
-            /* case "RFC3211WrapEngine" ->
+            case "RFC3211WrapEngine" ->
                     Optional.of(new RC2(KeyWrap.class, new RC2(detectionLocation)));
-            case "RFC3394WrapEngine" ->
-                    Optional.of(new RC2(KeyWrap.class, new RC2(detectionLocation)));
-            case "RFC5649WrapEngine" ->
-                    Optional.of(new RC2(KeyWrap.class, new RC2(detectionLocation))); */
             default -> {
                 final Algorithm algorithm =
                         new Algorithm(streamCipherString, BlockCipher.class, detectionLocation);
