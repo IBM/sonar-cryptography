@@ -14,7 +14,7 @@ public class BcDSTU7624WrapEngineTestFile {
         random.nextBytes(wrappingKey);
 
         // Wrap the key (block size: 256 bits)
-        DSTU7624WrapEngine wrapper = new DSTU7624WrapEngine(256); // Noncompliant {{DSTU 7624:2014}}
+        DSTU7624WrapEngine wrapper = new DSTU7624WrapEngine(256); // Noncompliant {{DSTU7624WrapEngine}}
         KeyParameter keyParameter = new KeyParameter(wrappingKey);
         wrapper.init(true, keyParameter);
 

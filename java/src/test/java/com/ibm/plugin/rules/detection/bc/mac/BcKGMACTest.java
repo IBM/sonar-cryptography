@@ -139,7 +139,7 @@ class BcKGMACTest extends TestBase {
                 macNode.getChildren().get(AuthenticatedEncryption.class);
         assertThat(authenticatedEncryptionNode).isNotNull();
         assertThat(authenticatedEncryptionNode.getChildren()).hasSize(2);
-        assertThat(authenticatedEncryptionNode.asString()).isEqualTo("Kalyna");
+        assertThat(authenticatedEncryptionNode.asString()).isEqualTo("Kalyna-64");
 
         // BlockSize under AuthenticatedEncryption under Mac
         INode blockSizeNode = authenticatedEncryptionNode.getChildren().get(BlockSize.class);
