@@ -28,6 +28,7 @@ import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -58,7 +59,7 @@ public final class BcBlockCipher {
         IDetectionContext context =
                 detectionValueContext != null
                         ? detectionValueContext
-                        : new CipherContext(CipherContext.Kind.BLOCK_CIPHER);
+                        : new CipherContext(Map.of("kind", "BLOCK_CIPHER"));
 
         for (String blockCipher : blockCiphers) {
             constructorsList.add(
@@ -82,7 +83,7 @@ public final class BcBlockCipher {
         IDetectionContext context =
                 detectionValueContext != null
                         ? detectionValueContext
-                        : new CipherContext(CipherContext.Kind.BLOCK_CIPHER);
+                        : new CipherContext(Map.of("kind", "BLOCK_CIPHER"));
 
         constructorsList.add(
                 new DetectionRuleBuilder<Tree>()

@@ -27,31 +27,6 @@ public class CipherContext extends DetectionContext
         implements IDetectionContext, ISupportKind<CipherContext.Kind> {
 
     public enum Kind {
-        PKE,
-        RSA,
-        Fernet,
-        OAEP,
-        CHACHA20POLY1305,
-        AES_WRAP,
-        AES_WRAP_WITH_PADDING,
-        ENCRYPTION_STATUS,
-        WRAPPING_STATUS,
-        ENCODING,
-        ENCODING_SIGNATURE,
-        WRAP,
-        BLOCK_CIPHER,
-        BLOCK_CIPHER_ENGINE,
-        BLOCK_CIPHER_ENGINE_FOR_AEAD,
-        STREAM_CIPHER_ENGINE,
-        ASYMMETRIC_CIPHER_ENGINE,
-        ASYMMETRIC_CIPHER_ENGINE_SIGNATURE,
-        ASYMMETRIC_BUFFERED_BLOCK_CIPHER,
-        BUFFERED_BLOCK_CIPHER,
-        AEAD_BLOCK_CIPHER,
-        AEAD_ENGINE,
-        PADDING,
-        PBE,
-        HASH,
         NONE
     }
 

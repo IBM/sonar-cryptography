@@ -29,6 +29,7 @@ import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import com.ibm.plugin.rules.detection.jca.algorithmspec.JcaAlgorithmParameterSpec;
 import com.ibm.plugin.rules.detection.jca.keyspec.JcaKeySpec;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
@@ -43,7 +44,7 @@ public final class JcaCipherInit {
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new OperationModeFactory<>())
                     .withMethodParameter("java.security.cert.Certificate")
-                    .buildForContext(new CipherContext(CipherContext.Kind.PKE))
+                    .buildForContext(new CipherContext(Map.of("kind", "PKE")))
                     .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
@@ -56,7 +57,7 @@ public final class JcaCipherInit {
                     .shouldBeDetectedAs(new OperationModeFactory<>())
                     .withMethodParameter("java.security.cert.Certificate")
                     .withMethodParameter("java.security.SecureRandom")
-                    .buildForContext(new CipherContext(CipherContext.Kind.PKE))
+                    .buildForContext(new CipherContext(Map.of("kind", "PKE")))
                     .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 

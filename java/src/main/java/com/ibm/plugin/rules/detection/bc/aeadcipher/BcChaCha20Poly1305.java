@@ -25,6 +25,7 @@ import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import com.ibm.plugin.rules.detection.bc.mac.BcMac;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
@@ -44,7 +45,7 @@ public final class BcChaCha20Poly1305 {
                     .forConstructor()
                     .shouldBeDetectedAs(new ValueActionFactory<>(AEAD))
                     .withoutParameters()
-                    .buildForContext(new CipherContext(CipherContext.Kind.CHACHA20POLY1305))
+                    .buildForContext(new CipherContext(Map.of("kind", "CHACHA20POLY1305")))
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcAEADCipherInit.rules());
 
@@ -60,7 +61,7 @@ public final class BcChaCha20Poly1305 {
                     .shouldBeDetectedAs(new ValueActionFactory<>(AEAD + "[WITH_MAC]"))
                     .withMethodParameter("org.bouncycastle.crypto.Mac")
                     .addDependingDetectionRules(BcMac.rules())
-                    .buildForContext(new CipherContext(CipherContext.Kind.CHACHA20POLY1305))
+                    .buildForContext(new CipherContext(Map.of("kind", "CHACHA20POLY1305")))
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcAEADCipherInit.rules());
 

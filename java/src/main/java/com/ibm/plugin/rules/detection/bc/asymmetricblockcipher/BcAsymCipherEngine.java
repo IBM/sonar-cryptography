@@ -26,6 +26,7 @@ import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
@@ -53,7 +54,7 @@ public final class BcAsymCipherEngine {
         IDetectionContext context =
                 detectionValueContext != null
                         ? detectionValueContext
-                        : new CipherContext(CipherContext.Kind.ASYMMETRIC_CIPHER_ENGINE);
+                        : new CipherContext(Map.of("kind", "ASYMMETRIC_CIPHER_ENGINE"));
 
         for (String engine : blockCiphers) {
             constructorsList.add(

@@ -28,6 +28,7 @@ import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -46,7 +47,7 @@ public final class BcPKCS1Encoding {
         IDetectionContext context =
                 encodingDetectionValueContext != null
                         ? encodingDetectionValueContext
-                        : new CipherContext(CipherContext.Kind.ENCODING);
+                        : new CipherContext(Map.of("kind", "ENCODING"));
 
         constructorsList.add(
                 new DetectionRuleBuilder<Tree>()

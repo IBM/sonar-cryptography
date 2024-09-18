@@ -28,6 +28,7 @@ import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -82,7 +83,7 @@ public final class BcBlockCipherEngine {
         IDetectionContext context =
                 detectionValueContext != null
                         ? detectionValueContext
-                        : new CipherContext(CipherContext.Kind.BLOCK_CIPHER_ENGINE);
+                        : new CipherContext(Map.of("kind", "BLOCK_CIPHER_ENGINE"));
 
         // Simple empty constructors
         for (String engine : enginesEmptyConstructors) {

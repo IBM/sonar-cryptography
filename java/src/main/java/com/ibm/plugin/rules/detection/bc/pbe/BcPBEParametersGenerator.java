@@ -27,6 +27,7 @@ import com.ibm.plugin.rules.detection.bc.digest.BcDigests;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -62,7 +63,7 @@ public final class BcPBEParametersGenerator {
                         .forConstructor()
                         .shouldBeDetectedAs(new ValueActionFactory<>("PKCS5S2ParametersGenerator"))
                         .withoutParameters()
-                        .buildForContext(new CipherContext(CipherContext.Kind.PBE))
+                        .buildForContext(new CipherContext(Map.of("kind", "PBE")))
                         .inBundle(() -> "Bc")
                         .withoutDependingDetectionRules());
 
@@ -81,7 +82,7 @@ public final class BcPBEParametersGenerator {
                         .shouldBeDetectedAs(
                                 new ValueActionFactory<>("OpenSSLPBEParametersGenerator[MD5]"))
                         .withoutParameters()
-                        .buildForContext(new CipherContext(CipherContext.Kind.PBE))
+                        .buildForContext(new CipherContext(Map.of("kind", "PBE")))
                         .inBundle(() -> "Bc")
                         .withoutDependingDetectionRules());
 
@@ -95,7 +96,7 @@ public final class BcPBEParametersGenerator {
                             .shouldBeDetectedAs(new ValueActionFactory<>(pbeClass))
                             .withMethodParameter("org.bouncycastle.crypto.Digest")
                             .addDependingDetectionRules(BcDigests.rules())
-                            .buildForContext(new CipherContext(CipherContext.Kind.PBE))
+                            .buildForContext(new CipherContext(Map.of("kind", "PBE")))
                             .inBundle(() -> "Bc")
                             .withoutDependingDetectionRules());
         }

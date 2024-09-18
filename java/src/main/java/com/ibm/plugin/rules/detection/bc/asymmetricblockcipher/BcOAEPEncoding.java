@@ -49,7 +49,7 @@ public final class BcOAEPEncoding {
         IDetectionContext context =
                 encodingDetectionValueContext != null
                         ? encodingDetectionValueContext
-                        : new CipherContext(CipherContext.Kind.ENCODING);
+                        : new CipherContext(Map.of("kind", "ENCODING"));
 
         constructorsList.add(
                 new DetectionRuleBuilder<Tree>()

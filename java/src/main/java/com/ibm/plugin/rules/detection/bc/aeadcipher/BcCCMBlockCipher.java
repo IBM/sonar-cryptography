@@ -25,6 +25,7 @@ import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import com.ibm.plugin.rules.detection.bc.blockcipher.BcBlockCipher;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
@@ -47,8 +48,8 @@ public final class BcCCMBlockCipher {
                     .addDependingDetectionRules(
                             BcBlockCipher.all(
                                     new CipherContext(
-                                            CipherContext.Kind.BLOCK_CIPHER_ENGINE_FOR_AEAD)))
-                    .buildForContext(new CipherContext(CipherContext.Kind.AEAD_BLOCK_CIPHER))
+                                            Map.of("kind", "BLOCK_CIPHER_ENGINE_FOR_AEAD"))))
+                    .buildForContext(new CipherContext(Map.of("kind", "AEAD_BLOCK_CIPHER")))
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcAEADCipherInit.rules());
 
@@ -62,8 +63,8 @@ public final class BcCCMBlockCipher {
                     .addDependingDetectionRules(
                             BcBlockCipher.all(
                                     new CipherContext(
-                                            CipherContext.Kind.BLOCK_CIPHER_ENGINE_FOR_AEAD)))
-                    .buildForContext(new CipherContext(CipherContext.Kind.AEAD_BLOCK_CIPHER))
+                                            Map.of("kind", "BLOCK_CIPHER_ENGINE_FOR_AEAD"))))
+                    .buildForContext(new CipherContext(Map.of("kind", "AEAD_BLOCK_CIPHER")))
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcAEADCipherInit.rules());
 

@@ -26,6 +26,7 @@ import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import com.ibm.plugin.rules.detection.bc.cipherparameters.BcCipherParameters;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
@@ -47,7 +48,7 @@ public final class BcBufferedAsymmetricBlockCipher {
                     .shouldBeDetectedAs(new BooleanFactory<>())
                     .withMethodParameter("org.bouncycastle.crypto.CipherParameters")
                     .addDependingDetectionRules(BcCipherParameters.rules())
-                    .buildForContext(new CipherContext(CipherContext.Kind.ENCRYPTION_STATUS))
+                    .buildForContext(new CipherContext(Map.of("kind", "ENCRYPTION_STATUS")))
                     .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
@@ -60,7 +61,7 @@ public final class BcBufferedAsymmetricBlockCipher {
                     .withMethodParameter("org.bouncycastle.crypto.AsymmetricBlockCipher")
                     .addDependingDetectionRules(BcAsymmetricBlockCipher.rules())
                     .buildForContext(
-                            new CipherContext(CipherContext.Kind.ASYMMETRIC_BUFFERED_BLOCK_CIPHER))
+                            new CipherContext(Map.of("kind", "ASYMMETRIC_BUFFERED_BLOCK_CIPHER")))
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(List.of(INIT));
 

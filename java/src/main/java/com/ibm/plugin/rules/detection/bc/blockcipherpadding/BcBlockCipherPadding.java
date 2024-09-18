@@ -25,6 +25,7 @@ import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -55,7 +56,7 @@ public final class BcBlockCipherPadding {
                             .forConstructor()
                             .shouldBeDetectedAs(new ValueActionFactory<>(padding))
                             .withoutParameters()
-                            .buildForContext(new CipherContext(CipherContext.Kind.PADDING))
+                            .buildForContext(new CipherContext(Map.of("kind", "PADDING")))
                             .inBundle(() -> "Bc")
                             .withoutDependingDetectionRules());
         }

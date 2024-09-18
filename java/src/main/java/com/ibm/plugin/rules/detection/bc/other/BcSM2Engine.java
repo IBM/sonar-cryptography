@@ -25,6 +25,7 @@ import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import com.ibm.plugin.rules.detection.bc.digest.BcDigests;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
@@ -45,7 +46,7 @@ public final class BcSM2Engine {
                     .forConstructor()
                     .shouldBeDetectedAs(new ValueActionFactory<>(ENGINE_NAME))
                     .withoutParameters()
-                    .buildForContext(new CipherContext(CipherContext.Kind.ASYMMETRIC_CIPHER_ENGINE))
+                    .buildForContext(new CipherContext(Map.of("kind", "ASYMMETRIC_CIPHER_ENGINE")))
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSM2EngineInit.rules());
 
@@ -57,7 +58,7 @@ public final class BcSM2Engine {
                     .shouldBeDetectedAs(new ValueActionFactory<>(ENGINE_NAME))
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
-                    .buildForContext(new CipherContext(CipherContext.Kind.ASYMMETRIC_CIPHER_ENGINE))
+                    .buildForContext(new CipherContext(Map.of("kind", "ASYMMETRIC_CIPHER_ENGINE")))
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSM2EngineInit.rules());
 
@@ -70,7 +71,7 @@ public final class BcSM2Engine {
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
                     .withMethodParameter("org.bouncycastle.crypto.engines.SM2Engine$Mode")
-                    .buildForContext(new CipherContext(CipherContext.Kind.ASYMMETRIC_CIPHER_ENGINE))
+                    .buildForContext(new CipherContext(Map.of("kind", "ASYMMETRIC_CIPHER_ENGINE")))
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSM2EngineInit.rules());
 
@@ -81,7 +82,7 @@ public final class BcSM2Engine {
                     .forConstructor()
                     .shouldBeDetectedAs(new ValueActionFactory<>(ENGINE_NAME))
                     .withMethodParameter("org.bouncycastle.crypto.engines.SM2Engine$Mode")
-                    .buildForContext(new CipherContext(CipherContext.Kind.ASYMMETRIC_CIPHER_ENGINE))
+                    .buildForContext(new CipherContext(Map.of("kind", "ASYMMETRIC_CIPHER_ENGINE")))
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSM2EngineInit.rules());
 
