@@ -54,8 +54,7 @@ public final class BcSABERParameters {
                      */
                     // .shouldBeDetectedAs(new BooleanFactory<>()) // captures `usingAes`
                     .withMethodParameter("boolean")
-                    .buildForContext(
-                            new AlgorithmParameterContext(AlgorithmParameterContext.Kind.SABER))
+                    .buildForContext(new AlgorithmParameterContext())
                     .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
