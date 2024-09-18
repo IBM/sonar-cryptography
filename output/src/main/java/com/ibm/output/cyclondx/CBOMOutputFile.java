@@ -28,9 +28,11 @@ import com.ibm.mapper.model.IAsset;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.IProperty;
+import com.ibm.mapper.model.InitializationVectorLength;
 import com.ibm.mapper.model.Key;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mode;
+import com.ibm.mapper.model.NonceLength;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.ParameterSetIdentifier;
@@ -119,7 +121,10 @@ public class CBOMOutputFile implements IOutputFile {
                         createProtocolComponent(parentBomRef, protocol);
                     } else if (node instanceof CipherSuite cipherSuite) {
                         createCipherSuiteComponent(parentBomRef, cipherSuite);
-                    } else if (node instanceof SaltLength || node instanceof PasswordLength) {
+                    } else if (node instanceof SaltLength
+                            || node instanceof PasswordLength
+                            || node instanceof InitializationVectorLength
+                            || node instanceof NonceLength) {
                         final IProperty property = (IProperty) node;
                         createRelatedCryptoMaterialComponent(parentBomRef, property);
                     } else if (node.hasChildren()) {
