@@ -20,19 +20,15 @@
 package com.ibm.mapper.reorganizer.rules;
 
 import com.ibm.mapper.ITranslator;
-import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.PublicKeyEncryption;
-import com.ibm.mapper.model.padding.OAEP;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
+import com.ibm.mapper.reorganizer.UsualPerformActions;
 import com.ibm.mapper.reorganizer.builder.ReorganizerRuleBuilder;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 
 public final class AsymmetricBlockCipherReorganizer {
 
@@ -41,7 +37,7 @@ public final class AsymmetricBlockCipherReorganizer {
     }
 
     @Nonnull
-    private static final IReorganizerRule MERGE_PKE =
+    public static final IReorganizerRule MERGE_PKE_PARENT_AND_CHILD =
             new ReorganizerRuleBuilder()
                     .createReorganizerRule()
                     .forNodeKind(PublicKeyEncryption.class)
@@ -53,39 +49,11 @@ public final class AsymmetricBlockCipherReorganizer {
                                             .forNodeKind(PublicKeyEncryption.class)
                                             .noAction()))
                     .perform(
-                            (node, parent, roots) -> {
-                                INode newPke =
-                                        node.getChildren()
-                                                .get(PublicKeyEncryption.class)
-                                                .deepCopy();
-
-                                for (Map.Entry<Class<? extends INode>, INode> childKeyValue :
-                                        node.getChildren().entrySet()) {
-                                    if (!childKeyValue.getKey().equals(PublicKeyEncryption.class)) {
-                                        newPke.put(childKeyValue.getValue());
-                                    }
-                                }
-
-                                if (parent == null) {
-                                    // `node` is a root node
-                                    // Create a copy of the roots list
-                                    List<INode> rootsCopy = new ArrayList<>(roots);
-                                    for (int i = 0; i < rootsCopy.size(); i++) {
-                                        if (rootsCopy.get(i).equals(node)) {
-                                            rootsCopy.set(i, newPke);
-                                            break;
-                                        }
-                                    }
-                                    return rootsCopy;
-                                } else {
-                                    // Replace the previous PublicKeyEncryption node
-                                    parent.put(newPke);
-                                    return roots;
-                                }
-                            });
+                            UsualPerformActions.performMergeParentAndChildOfSameKind(
+                                    PublicKeyEncryption.class));
 
     @Nonnull
-    private static final IReorganizerRule INVERT_DIGEST_AND_ITS_SIZE =
+    public static final IReorganizerRule INVERT_DIGEST_AND_ITS_SIZE =
             new ReorganizerRuleBuilder()
                     .createReorganizerRule()
                     .forNodeKind(DigestSize.class)
@@ -96,57 +64,24 @@ public final class AsymmetricBlockCipherReorganizer {
                                             .forNodeKind(MessageDigest.class)
                                             .noAction()))
                     .perform(
-                            (node, parent, roots) -> {
+                            (digestSizeNode, parent, roots) -> {
                                 if (parent == null) {
                                     // Do nothing
                                     return roots;
                                 }
 
                                 INode messageDigestChild =
-                                        node.getChildren().get(MessageDigest.class).deepCopy();
+                                        digestSizeNode.getChildren().get(MessageDigest.class);
 
                                 /* Append the DigestSize (without its DigestSize) child to the new DigestSize */
-                                INode digestSize = node.deepCopy();
-                                digestSize.removeChildOfType(MessageDigest.class);
-                                messageDigestChild.put(digestSize);
+                                digestSizeNode.removeChildOfType(MessageDigest.class);
+                                messageDigestChild.put(digestSizeNode);
+
+                                // Remove the DigestSize from the parent
+                                parent.removeChildOfType(DigestSize.class);
 
                                 // Append the MessageDigest to the parent
                                 parent.put(messageDigestChild);
                                 return roots;
                             });
-
-    @Nonnull
-    private static final IReorganizerRule MOVE_HASH_UNDER_OAEP =
-            new ReorganizerRuleBuilder()
-                    .createReorganizerRule()
-                    .forNodeKind(BlockCipher.class)
-                    .includingChildren(
-                            List.of(
-                                    new ReorganizerRuleBuilder()
-                                            .createReorganizerRule()
-                                            .forNodeKind(OAEP.class)
-                                            .noAction(),
-                                    new ReorganizerRuleBuilder()
-                                            .createReorganizerRule()
-                                            .forNodeKind(MessageDigest.class)
-                                            .noAction()))
-                    .perform(
-                            (node, parent, roots) -> {
-                                INode oaepChild = node.getChildren().get(OAEP.class);
-                                INode messageDigestChild =
-                                        node.getChildren().get(MessageDigest.class).deepCopy();
-
-                                // Add the message digest under the OAEP node
-                                oaepChild.put(messageDigestChild);
-                                // Remove the message digest from the BlockCipher's children
-                                node.removeChildOfType(MessageDigest.class);
-
-                                return roots;
-                            });
-
-    @Unmodifiable
-    @Nonnull
-    public static List<IReorganizerRule> rules() {
-        return List.of(MERGE_PKE, INVERT_DIGEST_AND_ITS_SIZE, MOVE_HASH_UNDER_OAEP);
-    }
 }

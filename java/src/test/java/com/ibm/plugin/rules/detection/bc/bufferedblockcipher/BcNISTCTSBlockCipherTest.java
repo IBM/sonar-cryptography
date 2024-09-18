@@ -101,8 +101,8 @@ class BcNISTCTSBlockCipherTest extends TestBase {
         // BlockCipher
         INode blockCipherNode = nodes.get(0);
         assertThat(blockCipherNode.getKind()).isEqualTo(BlockCipher.class);
-        assertThat(blockCipherNode.getChildren()).hasSize(3);
-        assertThat(blockCipherNode.asString()).isEqualTo("AES");
+        assertThat(blockCipherNode.getChildren()).hasSize(4);
+        assertThat(blockCipherNode.asString()).isEqualTo("AES-CTS");
 
         // Encrypt under BlockCipher
         INode encryptNode = blockCipherNode.getChildren().get(Encrypt.class);

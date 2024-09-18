@@ -27,7 +27,6 @@ import com.ibm.mapper.reorganizer.rules.CipherParameterReorganizer;
 import com.ibm.mapper.reorganizer.rules.MacReorganizer;
 import com.ibm.mapper.reorganizer.rules.SignatureReorganizer;
 import java.util.List;
-import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 
 public final class JavaReorganizerRules {
@@ -37,14 +36,17 @@ public final class JavaReorganizerRules {
 
     @Nonnull
     public static List<IReorganizerRule> rules() {
-        return Stream.of(
-                        AeadBlockCipherReorganizer.rules().stream(),
-                        AsymmetricBlockCipherReorganizer.rules().stream(),
-                        BlockCipherReorganizer.rules().stream(),
-                        CipherParameterReorganizer.rules().stream(),
-                        MacReorganizer.rules().stream(),
-                        Stream.of(SignatureReorganizer.MERGE_SIGNATURE_UNKNOWN_PARENT_AND_CHILD))
-                .flatMap(i -> i)
-                .toList();
+        return List.of(
+                AeadBlockCipherReorganizer.MERGE_AE_PARENT_AND_CHILD,
+                AeadBlockCipherReorganizer.MOVE_TAG_LENGTH_UNDER_MAC,
+                AsymmetricBlockCipherReorganizer.INVERT_DIGEST_AND_ITS_SIZE,
+                AsymmetricBlockCipherReorganizer.MERGE_PKE_PARENT_AND_CHILD,
+                BlockCipherReorganizer.MERGE_BLOCK_CIPHER_PARENT_AND_CHILD,
+                CipherParameterReorganizer.MOVE_KEY_LENGTH_UNDER_TAG_LENGTH_UP,
+                CipherParameterReorganizer.MOVE_NODES_UNDER_DECRYPT_UP,
+                CipherParameterReorganizer.MOVE_NODES_UNDER_ENCRYPT_UP,
+                MacReorganizer.MERGE_UNKNOWN_MAC_PARENT_AND_CIPHER_CHILD,
+                MacReorganizer.MOVE_SOME_MAC_CHILDREN_UNDER_BLOCKCIPHER,
+                SignatureReorganizer.MERGE_UNKNOWN_SIGNATURE_PARENT_AND_CHILD);
     }
 }

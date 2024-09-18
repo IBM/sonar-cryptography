@@ -62,6 +62,14 @@ public final class UsualPerformActions {
                 return roots;
             };
 
+    /**
+     * When there is a parent node and a child node of the same {@code kind}, this action will merge
+     * both. In detail, it will put all the children nodes of the parent as children of the child
+     * node, and will replace the parent node by the child node in the tree of nodes.
+     *
+     * @param kind - The kind of the parent and child nodes
+     * @return A reorganization action (a {@code Function3})
+     */
     @Nonnull
     public static final IFunctionPerformReorganization performMergeParentAndChildOfSameKind(
             Class<? extends IPrimitive> kind) {
