@@ -13,9 +13,9 @@ public class DuplicateParameterFindingsTestFile {
 
     public byte[] encryptCEK(final RSAPublicKey pub, final SecretKey cek)
     throws RuntimeException {
-        AsymmetricBlockCipher engine = new RSAEngine(); // Noncompliant {{RSA}}
+        AsymmetricBlockCipher engine = new RSAEngine(); // Noncompliant {{RSAEngine}}
 
-        OAEPEncoding cipher = new OAEPEncoding(engine, new SHA3Digest(), new SHA512Digest(), new byte[16]); // Noncompliant {{OAEP}}
+        OAEPEncoding cipher = new OAEPEncoding(engine, new SHA3Digest(), new SHA512Digest(), new byte[16]); // Noncompliant {{OAEPEncoding}}
 
         // cipher.init(true, new RSAKeyParameters(false, null, null));
 
