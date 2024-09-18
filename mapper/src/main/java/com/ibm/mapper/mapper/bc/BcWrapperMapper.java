@@ -55,7 +55,6 @@ public class BcWrapperMapper implements IMapper {
     private Optional<? extends INode> map(
             @Nonnull String streamCipherString, @Nonnull DetectionLocation detectionLocation) {
         return switch (streamCipherString) {
-            /* TODO: how should Wrap be handled? Should all BlockCiphers be duplicated with a Wrap version like for AES? */
             case "AESWrapEngine", "AESWrapPadEngine" ->
                     Optional.of(new AES(KeyWrap.class, detectionLocation));
             case "ARIAWrapEngine", "ARIAWrapPadEngine" ->

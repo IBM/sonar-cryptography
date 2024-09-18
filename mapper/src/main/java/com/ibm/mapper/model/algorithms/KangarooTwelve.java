@@ -22,12 +22,13 @@ package com.ibm.mapper.model.algorithms;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.ClassicalBitSecurityLevel;
 import com.ibm.mapper.model.DigestSize;
+import com.ibm.mapper.model.ExtendableOutputFunction;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.NumberOfIterations;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public final class KangarooTwelve extends Algorithm implements MessageDigest {
+public final class KangarooTwelve extends Algorithm implements ExtendableOutputFunction {
     // https://eprint.iacr.org/2016/770.pdf
 
     private static final String NAME = "KangarooTwelve";
