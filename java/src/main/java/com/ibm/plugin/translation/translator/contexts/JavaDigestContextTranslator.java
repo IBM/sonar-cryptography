@@ -22,7 +22,7 @@ package com.ibm.plugin.translation.translator.contexts;
 import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.ValueAction;
-import com.ibm.engine.model.context.DigestContext;
+import com.ibm.engine.model.context.DetectionContext;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.mapper.mapper.bc.BcDigestMapper;
 import com.ibm.mapper.mapper.jca.JcaMessageDigestMapper;
@@ -63,17 +63,17 @@ public final class JavaDigestContextTranslator extends JavaAbstractLibraryTransl
             @NotNull IValue<Tree> value,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
-        final DigestContext.Kind kind = ((DigestContext) detectionContext).kind();
-        if (value instanceof ValueAction) {
+        if (value instanceof ValueAction && detectionContext instanceof DetectionContext context) {
+            String kind = context.get("kind").map(k -> k).orElse("");
             switch (kind) {
-                case MGF1 -> {
+                case "MGF1" -> {
                     BcDigestMapper bcDigestsMapper = new BcDigestMapper();
                     return bcDigestsMapper
                             .parse(value.asString(), detectionLocation)
                             .filter(MessageDigest.class::isInstance)
                             .map(digest -> new MGF1((MessageDigest) digest));
                 }
-                case ASSET_COLLECTION -> {
+                case "ASSET_COLLECTION" -> {
                     BcDigestMapper bcDigestsMapper = new BcDigestMapper();
                     return bcDigestsMapper
                             .parse(value.asString(), detectionLocation)

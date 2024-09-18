@@ -22,7 +22,6 @@ package com.ibm.plugin.rules.detection.bc.cipherparameters;
 import static com.ibm.plugin.rules.detection.TypeShortcuts.BYTE_ARRAY_TYPE;
 
 import com.ibm.engine.model.context.AlgorithmParameterContext;
-import com.ibm.engine.model.context.DigestContext;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import com.ibm.plugin.rules.detection.bc.digest.BcDigests;
@@ -60,8 +59,7 @@ public final class BcNTRUEncryptionParameters {
                     .withMethodParameter("boolean")
                     .withMethodParameter("boolean")
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
-                    .addDependingDetectionRules(
-                            BcDigests.rules(new DigestContext(DigestContext.Kind.NTRU)))
+                    .addDependingDetectionRules(BcDigests.rules())
                     .buildForContext(new AlgorithmParameterContext())
                     .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
@@ -91,8 +89,7 @@ public final class BcNTRUEncryptionParameters {
                     .withMethodParameter("boolean")
                     .withMethodParameter("boolean")
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
-                    .addDependingDetectionRules(
-                            BcDigests.rules(new DigestContext(DigestContext.Kind.NTRU)))
+                    .addDependingDetectionRules(BcDigests.rules())
                     .buildForContext(new AlgorithmParameterContext())
                     .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();

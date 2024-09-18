@@ -30,6 +30,7 @@ import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import com.ibm.plugin.rules.detection.bc.digest.BcDigests;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -107,7 +108,7 @@ public final class BcOAEPEncoding {
                         .addDependingDetectionRules(BcDigests.rules())
                         .withMethodParameter("org.bouncycastle.crypto.Digest") // mgf1Hash
                         .addDependingDetectionRules(
-                                BcDigests.rules(new DigestContext(DigestContext.Kind.MGF1)))
+                                BcDigests.rules(new DigestContext(Map.of("kind", "MGF1"))))
                         .withMethodParameter(BYTE_ARRAY_TYPE)
                         .buildForContext(context)
                         .inBundle(() -> "Bc")

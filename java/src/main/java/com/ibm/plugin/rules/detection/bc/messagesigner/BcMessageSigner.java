@@ -99,11 +99,11 @@ public final class BcMessageSigner {
                         .withMethodParameter("org.bouncycastle.crypto.Digest")
                         .addDependingDetectionRules(
                                 BcDigests.rules(
-                                        new DigestContext(DigestContext.Kind.ASSET_COLLECTION)))
+                                        new DigestContext(Map.of("kind", "ASSET_COLLECTION"))))
                         .withMethodParameter("org.bouncycastle.crypto.Digest")
                         .addDependingDetectionRules(
                                 BcDigests.rules(
-                                        new DigestContext(DigestContext.Kind.ASSET_COLLECTION)))
+                                        new DigestContext(Map.of("kind", "ASSET_COLLECTION"))))
                         .buildForContext(new SignatureContext(SignatureContext.Kind.MESSAGE_SIGNER))
                         .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcMessageSignerInit.rules()));
