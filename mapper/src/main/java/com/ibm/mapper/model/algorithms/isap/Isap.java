@@ -21,7 +21,6 @@ package com.ibm.mapper.model.algorithms.isap;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
-import com.ibm.mapper.model.ClassicalBitSecurityLevel;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.NonceLength;
@@ -48,6 +47,5 @@ public class Isap extends Algorithm implements AuthenticatedEncryption {
         this.put(new KeyLength(128, detectionLocation));
         this.put(new NonceLength(128, detectionLocation));
         this.put(new TagLength(128, detectionLocation));
-        this.put(new ClassicalBitSecurityLevel(128, detectionLocation));
     }
 }

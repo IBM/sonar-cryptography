@@ -22,7 +22,6 @@ package com.ibm.mapper.model.algorithms.sparkle;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
-import com.ibm.mapper.model.ClassicalBitSecurityLevel;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.NonceLength;
@@ -71,6 +70,5 @@ public class Schwaemm extends Algorithm implements AuthenticatedEncryption, Bloc
         this.put(new KeyLength(capacity, detectionLocation));
         this.put(new TagLength(capacity, detectionLocation));
         this.put(new NonceLength(rate, detectionLocation));
-        this.put(new ClassicalBitSecurityLevel(capacity - 8, detectionLocation));
     }
 }

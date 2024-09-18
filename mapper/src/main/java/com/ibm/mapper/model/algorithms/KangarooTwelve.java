@@ -20,7 +20,6 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.ClassicalBitSecurityLevel;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.ExtendableOutputFunction;
 import com.ibm.mapper.model.MessageDigest;
@@ -35,7 +34,6 @@ public final class KangarooTwelve extends Algorithm implements ExtendableOutputF
 
     public KangarooTwelve(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, MessageDigest.class, detectionLocation);
-        this.put(new ClassicalBitSecurityLevel(128, detectionLocation));
         this.put(new NumberOfIterations(12, detectionLocation));
     }
 

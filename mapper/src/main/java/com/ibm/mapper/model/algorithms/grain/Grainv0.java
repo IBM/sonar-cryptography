@@ -19,7 +19,6 @@
  */
 package com.ibm.mapper.model.algorithms.grain;
 
-import com.ibm.mapper.model.ClassicalBitSecurityLevel;
 import com.ibm.mapper.model.InitializationVectorLength;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.StreamCipher;
@@ -35,6 +34,5 @@ public class Grainv0 extends Grain {
         super(NAME, StreamCipher.class, detectionLocation);
         this.put(new KeyLength(80, detectionLocation));
         this.put(new InitializationVectorLength(64, detectionLocation));
-        this.put(new ClassicalBitSecurityLevel(80, detectionLocation));
     }
 }

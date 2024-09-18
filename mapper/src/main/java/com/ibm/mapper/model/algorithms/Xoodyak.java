@@ -21,7 +21,6 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.AuthenticatedEncryption;
-import com.ibm.mapper.model.ClassicalBitSecurityLevel;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.NumberOfIterations;
@@ -37,7 +36,6 @@ public final class Xoodyak extends Algorithm
 
     public Xoodyak(@Nonnull DetectionLocation detectionLocation) {
         this(MessageDigest.class, detectionLocation);
-        this.put(new ClassicalBitSecurityLevel(128, detectionLocation));
         this.put(new NumberOfIterations(12, detectionLocation));
     }
 

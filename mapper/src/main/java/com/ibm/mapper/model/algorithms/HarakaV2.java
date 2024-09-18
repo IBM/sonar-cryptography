@@ -21,7 +21,6 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockSize;
-import com.ibm.mapper.model.ClassicalBitSecurityLevel;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.IPrimitive;
@@ -54,7 +53,6 @@ public final class HarakaV2 extends Algorithm implements MessageDigest {
     public HarakaV2(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, MessageDigest.class, detectionLocation);
         this.put(new DigestSize(256, detectionLocation));
-        this.put(new ClassicalBitSecurityLevel(256, detectionLocation));
     }
 
     public HarakaV2(int blockSize, @Nonnull DetectionLocation detectionLocation) {

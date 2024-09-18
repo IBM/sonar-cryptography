@@ -20,7 +20,6 @@
 package com.ibm.mapper.model.algorithms.elephant;
 
 import com.ibm.mapper.model.BlockSize;
-import com.ibm.mapper.model.ClassicalBitSecurityLevel;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
@@ -32,6 +31,5 @@ public class Delirium extends Elephant {
         super(NAME, detectionLocation);
         this.put(new BlockSize(200, detectionLocation));
         this.put(new TagLength(128, detectionLocation));
-        this.put(new ClassicalBitSecurityLevel(127, detectionLocation));
     }
 }
