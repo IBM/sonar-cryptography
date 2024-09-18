@@ -47,6 +47,7 @@ public final class JavaReorganizerRules {
                 CipherParameterReorganizer.MOVE_NODES_UNDER_ENCRYPT_UP,
                 MacReorganizer.MERGE_UNKNOWN_MAC_PARENT_AND_CIPHER_CHILD,
                 MacReorganizer.MOVE_SOME_MAC_CHILDREN_UNDER_BLOCKCIPHER,
+                MacReorganizer.MOVE_TAG_LENGTH_UNDER_MAC,
                 SignatureReorganizer.MERGE_UNKNOWN_SIGNATURE_PARENT_AND_CHILD);
     }
 }

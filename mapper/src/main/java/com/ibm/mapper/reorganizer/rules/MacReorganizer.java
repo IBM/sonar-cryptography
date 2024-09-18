@@ -28,6 +28,7 @@ import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.StreamCipher;
+import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.mapper.reorganizer.builder.ReorganizerRuleBuilder;
 import java.util.ArrayList;
@@ -158,6 +159,29 @@ public final class MacReorganizer {
                                         node.removeChildOfType(kind);
                                     }
                                 }
+                                return roots;
+                            });
+
+    @Nonnull
+    public static final IReorganizerRule MOVE_TAG_LENGTH_UNDER_MAC =
+            new ReorganizerRuleBuilder()
+                    .createReorganizerRule()
+                    .forNodeKind(Mac.class)
+                    .withDetectionCondition(
+                            (node, parent, roots) ->
+                                    parent != null
+                                            && parent.hasChildOfType(TagLength.class).isPresent())
+                    .perform(
+                            (node, parent, roots) -> {
+                                if (parent == null) {
+                                    return roots;
+                                }
+                                INode tagLengthChild = parent.getChildren().get(TagLength.class);
+
+                                // Append the TagLength to the Mac node and remove it from the
+                                // parent node
+                                node.put(tagLengthChild);
+                                parent.removeChildOfType(TagLength.class);
                                 return roots;
                             });
 }
