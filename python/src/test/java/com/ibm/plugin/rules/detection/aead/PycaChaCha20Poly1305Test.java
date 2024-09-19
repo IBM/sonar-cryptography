@@ -36,20 +36,19 @@ import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Encrypt;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.plugin.TestBase;
-import com.ibm.plugin.utils.GenerateAssertsHelper;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
 import org.sonar.plugins.python.api.tree.Tree;
 import org.sonar.python.checks.utils.PythonCheckVerifier;
 
-public class PycaChaCha20Poly1305Test extends TestBase {
+class PycaChaCha20Poly1305Test extends TestBase {
 
     @Test
-    public void test() {
+    void test() {
         PythonCheckVerifier.verify(
                 "src/test/files/rules/detection/aead/PycaChaCha20Poly1305TestFile.py", this);
     }
@@ -82,8 +81,6 @@ public class PycaChaCha20Poly1305Test extends TestBase {
         assertThat(store.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         assertThat(encryptValue).isInstanceOf(CipherAction.class);
         assertThat(encryptValue.asString()).isEqualTo("DECRYPT");
-
-        GenerateAssertsHelper.generate(detectionStore, nodes);
 
         /*
          * Translation

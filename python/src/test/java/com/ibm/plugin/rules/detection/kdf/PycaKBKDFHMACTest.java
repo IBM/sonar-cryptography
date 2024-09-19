@@ -38,20 +38,19 @@ import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.KeyDerivation;
 import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
-import com.ibm.plugin.utils.GenerateAssertsHelper;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
 import org.sonar.plugins.python.api.tree.Tree;
 import org.sonar.python.checks.utils.PythonCheckVerifier;
 
-public class PycaKBKDFHMACTest extends TestBase {
+class PycaKBKDFHMACTest extends TestBase {
 
     @Test
-    public void test() {
+    void test() {
         PythonCheckVerifier.verify(
                 "src/test/files/rules/detection/kdf/PycaKBKDFHMACTestFile.py", this);
     }
@@ -61,7 +60,6 @@ public class PycaKBKDFHMACTest extends TestBase {
             int findingId,
             @Nonnull DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> detectionStore,
             @Nonnull List<INode> nodes) {
-        GenerateAssertsHelper.generate(detectionStore, nodes);
         /*
          * Detection Store
          */

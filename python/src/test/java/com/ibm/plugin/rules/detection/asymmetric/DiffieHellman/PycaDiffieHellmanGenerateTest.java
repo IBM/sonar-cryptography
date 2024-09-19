@@ -33,7 +33,7 @@ import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
@@ -45,7 +45,7 @@ public final class PycaDiffieHellmanGenerateTest extends TestBase {
     // The key size does not yet appear because
     // of the TraceSymbol problem documented on the Github issue
     @Test
-    public void test() {
+    void test() {
         PythonCheckVerifier.verify(
                 "src/test/files/rules/detection/asymmetric/DiffieHellman/PycaDiffieHellmanGenerateTestFile.py",
                 this);

@@ -24,22 +24,22 @@ import com.ibm.mapper.model.INode;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
 import org.sonar.plugins.python.api.tree.Tree;
 import org.sonar.python.checks.utils.PythonCheckVerifier;
 
-public class PycaEllipticCurveVerifyTest extends TestBase {
+class PycaEllipticCurveVerifyTest extends TestBase {
 
     // junit4
-    @Ignore(
+    @Disabled(
             "Reenable once we have an approach to detect `verify` (either make it an entry\n"
                     + "point, or better handle file imports for depending detection rule)")
     @Test
-    public void test() {
+    void test() {
         PythonCheckVerifier.verify(
                 "src/test/files/rules/detection/asymmetric/EllipticCurve/PycaEllipticCurveVerifyTestFile.py",
                 this);
