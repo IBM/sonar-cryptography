@@ -32,17 +32,17 @@ import com.ibm.mapper.model.functionality.Encapsulate;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
 import org.sonar.plugins.python.api.tree.Tree;
 import org.sonar.python.checks.utils.PythonCheckVerifier;
 
-public class PycaWrappingWithPaddingTest extends TestBase {
+class PycaWrappingWithPaddingTest extends TestBase {
 
     @Test
-    public void test() {
+    void test() {
         PythonCheckVerifier.verify(
                 "src/test/files/rules/detection/wrapping/PycaWrappingWithPaddingTestFile.py", this);
     }

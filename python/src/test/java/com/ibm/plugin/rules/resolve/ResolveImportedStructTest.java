@@ -24,15 +24,15 @@ import com.ibm.mapper.model.INode;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
 import org.sonar.plugins.python.api.tree.Tree;
 import org.sonar.python.checks.utils.PythonCheckVerifier;
 
-public class ResolveImportedStructTest extends TestBase {
+class ResolveImportedStructTest extends TestBase {
     // This Test class structure allows testing a single class of rules instead of all rules defined
     // in PythonDetectionRules.
     // To do so, add `extends PythonBaseDetectionRule` and define a constructor using the rules you
@@ -51,9 +51,9 @@ public class ResolveImportedStructTest extends TestBase {
         // nothing
     }
 
-    @Ignore("feature not supported/implemented")
+    @Disabled("feature not supported/implemented")
     @Test
-    public void test() {
+    void test() {
         PythonCheckVerifier.verify(
                 List.of(
                         "src/test/files/rules/resolve/ResolveImportedStructTestFile.py",

@@ -25,18 +25,18 @@ import com.ibm.plugin.TestBase;
 import java.util.List;
 import javax.annotation.Nonnull;
 import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
 import org.sonar.plugins.python.api.tree.Tree;
 import org.sonar.python.checks.utils.PythonCheckVerifier;
 
-public class PycaEllipticCurveNumbersTest extends TestBase {
+class PycaEllipticCurveNumbersTest extends TestBase {
 
     @Ignore("In this testcase the name of a var is resolved, but not teh actual value.")
     @Test
-    public void test() {
+    void test() {
         PythonCheckVerifier.verify(
                 "src/test/files/rules/detection/asymmetric/EllipticCurve/PycaEllipticCurveNumbersTestFile.py",
                 this);
