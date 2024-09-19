@@ -79,8 +79,7 @@ public final class BcMessageSigner {
                             .shouldBeDetectedAs(new ValueActionFactory<>(signer))
                             // We want to capture all possible constructors (some have arguments)
                             .withAnyParameters()
-                            .buildForContext(
-                                    new SignatureContext(SignatureContext.Kind.MESSAGE_SIGNER))
+                            .buildForContext(new SignatureContext(Map.of("kind", "MESSAGE_SIGNER")))
                             .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcMessageSignerInit.rules()));
         }
@@ -104,7 +103,7 @@ public final class BcMessageSigner {
                         .addDependingDetectionRules(
                                 BcDigests.rules(
                                         new DigestContext(Map.of("kind", "ASSET_COLLECTION"))))
-                        .buildForContext(new SignatureContext(SignatureContext.Kind.MESSAGE_SIGNER))
+                        .buildForContext(new SignatureContext(Map.of("kind", "MESSAGE_SIGNER")))
                         .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcMessageSignerInit.rules()));
 

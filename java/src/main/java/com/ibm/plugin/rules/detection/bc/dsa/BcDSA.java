@@ -25,6 +25,7 @@ import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -60,7 +61,7 @@ public final class BcDSA {
                             .shouldBeDetectedAs(new ValueActionFactory<>(dsa))
                             // We want to capture all possible constructors (some have arguments)
                             .withAnyParameters()
-                            .buildForContext(new SignatureContext(SignatureContext.Kind.DSA))
+                            .buildForContext(new SignatureContext(Map.of("kind", "DSA")))
                             .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcDSAInit.rules()));
         }

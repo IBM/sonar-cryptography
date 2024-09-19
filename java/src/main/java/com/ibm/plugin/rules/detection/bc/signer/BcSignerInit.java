@@ -44,7 +44,7 @@ public final class BcSignerInit {
                     .shouldBeDetectedAs(new BooleanFactory<>())
                     .withMethodParameter("org.bouncycastle.crypto.CipherParameters")
                     .addDependingDetectionRules(BcCipherParameters.rules())
-                    .buildForContext(new SignatureContext(SignatureContext.Kind.SIGNING_STATUS))
+                    .buildForContext(new SignatureContext())
                     .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 

@@ -62,8 +62,7 @@ public final class BcStateAwareMessageSigner {
                             .forConstructor()
                             .shouldBeDetectedAs(new ValueActionFactory<>(signer))
                             .withoutParameters()
-                            .buildForContext(
-                                    new SignatureContext(SignatureContext.Kind.MESSAGE_SIGNER))
+                            .buildForContext(new SignatureContext(Map.of("kind", "MESSAGE_SIGNER")))
                             .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcMessageSignerInit.rules()));
         }
@@ -82,7 +81,7 @@ public final class BcStateAwareMessageSigner {
                         .shouldBeDetectedAs(new ValueActionFactory<>("GMSSStateAwareSigner"))
                         .withMethodParameter("org.bouncycastle.crypto.Digest")
                         .addDependingDetectionRules(BcDigests.rules())
-                        .buildForContext(new SignatureContext(SignatureContext.Kind.MESSAGE_SIGNER))
+                        .buildForContext(new SignatureContext(Map.of("kind", "MESSAGE_SIGNER")))
                         .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcMessageSignerInit.rules()));
 
