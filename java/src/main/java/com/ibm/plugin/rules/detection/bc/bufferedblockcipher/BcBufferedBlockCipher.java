@@ -49,7 +49,7 @@ public final class BcBufferedBlockCipher {
         infoMap.putKey("DefaultBufferedBlockCipher").putType(typePrefix); // <–– parent class
         infoMap.putKey("CTSBlockCipher").putType(typePrefix + "modes.");
         infoMap.putKey("KXTSBlockCipher").putType(typePrefix + "modes.");
-        infoMap.putKey("OldCTSBlockCipher").putName("CTS").putType(typePrefix + "modes.");
+        infoMap.putKey("OldCTSBlockCipher").putType(typePrefix + "modes.");
         infoMap.putKey("PaddedBlockCipher").putType(typePrefix + "modes.");
     }
 
