@@ -71,7 +71,7 @@ public final class BcEncapsulatedSecretGenerator {
                             .forConstructor()
                             .shouldBeDetectedAs(new ValueActionFactory<>(generator))
                             .withMethodParameter("java.security.SecureRandom")
-                            .buildForContext(new KeyContext(KeyContext.Kind.KEM))
+                            .buildForContext(new KeyContext(Map.of("kind", "KEM")))
                             .inBundle(() -> "Bc")
                             .withoutDependingDetectionRules());
         }
@@ -94,7 +94,7 @@ public final class BcEncapsulatedSecretGenerator {
                         .withMethodParameter("org.bouncycastle.crypto.DerivationFunction")
                         .addDependingDetectionRules(BcDerivationFunction.rules())
                         .withMethodParameter("java.security.SecureRandom")
-                        .buildForContext(new KeyContext(KeyContext.Kind.KEM))
+                        .buildForContext(new KeyContext(Map.of("kind", "KEM")))
                         .inBundle(() -> "Bc")
                         .withoutDependingDetectionRules());
 
@@ -110,7 +110,7 @@ public final class BcEncapsulatedSecretGenerator {
                         .withMethodParameter("org.bouncycastle.crypto.DerivationFunction")
                         .addDependingDetectionRules(BcDerivationFunction.rules())
                         .withMethodParameter("java.security.SecureRandom")
-                        .buildForContext(new KeyContext(KeyContext.Kind.KEM))
+                        .buildForContext(new KeyContext(Map.of("kind", "KEM")))
                         .inBundle(() -> "Bc")
                         .withoutDependingDetectionRules());
 
@@ -129,7 +129,7 @@ public final class BcEncapsulatedSecretGenerator {
                         .withMethodParameter("boolean")
                         .withMethodParameter("boolean")
                         .withMethodParameter("boolean")
-                        .buildForContext(new KeyContext(KeyContext.Kind.KEM))
+                        .buildForContext(new KeyContext(Map.of("kind", "KEM")))
                         .inBundle(() -> "Bc")
                         .withoutDependingDetectionRules());
 
