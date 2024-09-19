@@ -48,8 +48,7 @@ public final class BcCCMParameters {
                     .shouldBeDetectedAs(new MacSizeFactory<>(Size.UnitType.BIT))
                     .withMethodParameter(BYTE_ARRAY_TYPE)
                     .withMethodParameter(BYTE_ARRAY_TYPE)
-                    .buildForContext(
-                            new AlgorithmParameterContext(AlgorithmParameterContext.Kind.CCM))
+                    .buildForContext(new AlgorithmParameterContext())
                     .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 

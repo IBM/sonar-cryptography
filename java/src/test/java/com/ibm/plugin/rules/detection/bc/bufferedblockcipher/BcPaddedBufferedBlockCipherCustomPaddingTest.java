@@ -43,16 +43,8 @@ import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
 class BcPaddedBufferedBlockCipherCustomPaddingTest extends TestBase {
-    /**
-     * This test shows that CBC is missing its AES child, because of the issue described in
-     * `NextParameterDependingRulesTest` (this test does not use an intermediary variable for AES,
-     * contrarily to `BcPaddedBufferedBlockCipherTest`).
-     *
-     * <p>Also, we currently have two ValueActions at the same level that both translate to a
-     * BlockCipher: CBC (that is missing its AES child) and an undesirable AES detection. At
-     * translation, this will create the bug observed in `DuplicateDependingRulesTest`.
-     */
-    @Disabled
+    @Disabled(
+            "There is an undesirable AES detection at the same level than CBC: it should not be the case")
     @Test
     void test() {
         CheckVerifier.newVerifier()

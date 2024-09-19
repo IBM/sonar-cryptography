@@ -22,15 +22,14 @@ package com.ibm.mapper.model.algorithms;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.BlockSize;
-import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.KeyWrap;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
 import javax.annotation.Nonnull;
 
-public final class Kalyna extends Algorithm implements BlockCipher, Mac {
+public final class Kalyna extends Algorithm implements BlockCipher, Mac, KeyWrap {
     // https://en.wikipedia.org/wiki/Kalyna_(cipher)
     // https://eprint.iacr.org/2015/650.pdf
 
@@ -44,18 +43,8 @@ public final class Kalyna extends Algorithm implements BlockCipher, Mac {
     @Nonnull
     public String asString() {
         StringBuilder builtName = new StringBuilder(this.name);
-
-        Optional<INode> blockSize = this.hasChildOfType(BlockSize.class);
-        Optional<INode> keyLength = this.hasChildOfType(KeyLength.class);
-
-        if (blockSize.isPresent() && keyLength.isPresent()) {
-            builtName
-                    .append("-")
-                    .append(blockSize.get().asString())
-                    .append("/")
-                    .append(keyLength.get().asString());
-        }
-
+        this.hasChildOfType(BlockSize.class).ifPresent(b -> builtName.append("-" + b.asString()));
+        this.hasChildOfType(KeyLength.class).ifPresent(k -> builtName.append("/" + k.asString()));
         return builtName.toString();
     }
 

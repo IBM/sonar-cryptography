@@ -28,6 +28,7 @@ import com.ibm.plugin.rules.detection.bc.bufferedblockcipher.BcBufferedBlockCiph
 import com.ibm.plugin.rules.detection.bc.derivationfunction.BcDerivationFunction;
 import com.ibm.plugin.rules.detection.bc.mac.BcMac;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
@@ -53,7 +54,7 @@ public final class BcIESEngine {
                     .addDependingDetectionRules(BcDerivationFunction.rules())
                     .withMethodParameter("org.bouncycastle.crypto.Mac")
                     .addDependingDetectionRules(BcMac.rules())
-                    .buildForContext(new CipherContext(CipherContext.Kind.ASYMMETRIC_CIPHER_ENGINE))
+                    .buildForContext(new CipherContext(Map.of("kind", "ASYMMETRIC_CIPHER_ENGINE")))
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcIESEngineInit.rules());
 
@@ -71,7 +72,7 @@ public final class BcIESEngine {
                     .addDependingDetectionRules(BcMac.rules())
                     .withMethodParameter("org.bouncycastle.crypto.BufferedBlockCipher")
                     .addDependingDetectionRules(BcBufferedBlockCipher.rules())
-                    .buildForContext(new CipherContext(CipherContext.Kind.ASYMMETRIC_CIPHER_ENGINE))
+                    .buildForContext(new CipherContext(Map.of("kind", "ASYMMETRIC_CIPHER_ENGINE")))
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcIESEngineInit.rules());
 

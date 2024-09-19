@@ -22,7 +22,6 @@ package com.ibm.plugin.rules.detection.bc.cipherparameters;
 import static com.ibm.plugin.rules.detection.TypeShortcuts.BIGINTEGER_TYPE;
 
 import com.ibm.engine.model.context.AlgorithmParameterContext;
-import com.ibm.engine.model.context.DigestContext;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import com.ibm.plugin.rules.detection.bc.digest.BcDigests;
@@ -49,8 +48,7 @@ public final class BcCramerShoupParameters {
                     .withMethodParameter(BIGINTEGER_TYPE)
                     .withMethodParameter(BIGINTEGER_TYPE)
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
-                    .addDependingDetectionRules(
-                            BcDigests.rules(new DigestContext(DigestContext.Kind.CRAMER_SHOUP)))
+                    .addDependingDetectionRules(BcDigests.rules())
                     .buildForContext(new AlgorithmParameterContext())
                     .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();

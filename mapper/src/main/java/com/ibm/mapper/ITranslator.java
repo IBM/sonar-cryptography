@@ -24,6 +24,7 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.rule.IBundle;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.collections.MergeableCollection;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -193,10 +194,43 @@ public abstract class ITranslator<R, T, S, P> {
             for (INode parentNode : copyParentNodes) {
                 newNodesCollection.forEach(
                         childNode -> {
-                            if (parentNode.hasChildOfType(childNode.getKind()).isPresent()) {
-                                final INode newParent = parentNode.deepCopy();
-                                newParent.put(childNode);
-                                newRoots.add(newParent);
+                            Optional<INode> existingNodeOpt =
+                                    parentNode.hasChildOfType(childNode.getKind());
+                            if (existingNodeOpt.isPresent()) {
+                                INode existingNode = existingNodeOpt.get();
+                                /* Special case of multiple `MergeableCollection`: we merge them */
+                                if (childNode instanceof MergeableCollection addedCollectionNode
+                                        && existingNode
+                                                instanceof
+                                                MergeableCollection existingCollectionNode
+                                        /* this 3rd condition ensures that both nodes have the same *exact* class */
+                                        && addedCollectionNode
+                                                .getClass()
+                                                .equals(existingCollectionNode.getClass())) {
+
+                                    List<INode> mergedCollection =
+                                            new ArrayList<>(existingCollectionNode.getCollection());
+                                    mergedCollection.addAll(addedCollectionNode.getCollection());
+
+                                    MergeableCollection mergedCollectionNode =
+                                            new MergeableCollection(mergedCollection);
+
+                                    addedCollectionNode
+                                            .getChildren()
+                                            .values()
+                                            .forEach(mergedCollectionNode::put);
+                                    existingCollectionNode
+                                            .getChildren()
+                                            .values()
+                                            .forEach(mergedCollectionNode::put);
+
+                                    parentNode.put(mergedCollectionNode);
+
+                                } else {
+                                    final INode newParent = parentNode.deepCopy();
+                                    newParent.put(childNode);
+                                    newRoots.add(newParent);
+                                }
                             } else {
                                 parentNode.put(childNode);
                             }

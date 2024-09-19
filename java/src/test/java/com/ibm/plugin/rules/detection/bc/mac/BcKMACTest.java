@@ -26,9 +26,9 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.ParameterIdentifier;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.MacContext;
+import com.ibm.mapper.model.ExtendableOutputFunction;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mac;
-import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.ParameterSetIdentifier;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.Tag;
@@ -95,15 +95,15 @@ class BcKMACTest extends TestBase {
         assertThat(tagNode.getChildren()).isEmpty();
         assertThat(tagNode.asString()).isEqualTo("TAG");
 
-        // MessageDigest under Mac
-        INode messageDigestNode = macNode.getChildren().get(MessageDigest.class);
-        assertThat(messageDigestNode).isNotNull();
-        assertThat(messageDigestNode.getChildren()).hasSize(1);
-        assertThat(messageDigestNode.asString()).isEqualTo("cSHAKE");
+        // ExtendableOutputFunction under Mac
+        INode xofNode = macNode.getChildren().get(ExtendableOutputFunction.class);
+        assertThat(xofNode).isNotNull();
+        assertThat(xofNode.getChildren()).hasSize(1);
+        assertThat(xofNode.asString()).isEqualTo("cSHAKE");
         /* TODO: optimally, we would capture cSHAKE256 here (using enrichment) */
 
-        // Digest under MessageDigest under Mac
-        INode digestNode = messageDigestNode.getChildren().get(Digest.class);
+        // Digest under ExtendableOutputFunction under Mac
+        INode digestNode = xofNode.getChildren().get(Digest.class);
         assertThat(digestNode).isNotNull();
         assertThat(digestNode.getChildren()).isEmpty();
         assertThat(digestNode.asString()).isEqualTo("DIGEST");

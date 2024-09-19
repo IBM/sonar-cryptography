@@ -20,17 +20,18 @@
 package com.ibm.mapper.model.algorithms.blake;
 
 import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.ExtendableOutputFunction;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public final class BLAKE2X extends Algorithm implements MessageDigest {
+public final class BLAKE2X extends Algorithm implements ExtendableOutputFunction {
     // https://en.wikipedia.org/wiki/BLAKE_(hash_function)#BLAKE2
 
     private static final String NAME = "BLAKE2X";
 
     public BLAKE2X(@Nonnull MessageDigest blake2, @Nonnull DetectionLocation detectionLocation) {
-        super(NAME, MessageDigest.class, detectionLocation);
+        super(NAME, ExtendableOutputFunction.class, detectionLocation);
         this.put(blake2);
     }
 }

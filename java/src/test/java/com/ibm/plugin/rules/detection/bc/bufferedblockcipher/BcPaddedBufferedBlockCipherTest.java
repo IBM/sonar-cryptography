@@ -42,12 +42,8 @@ import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
 class BcPaddedBufferedBlockCipherTest extends TestBase {
-    /**
-     * We currently have two ValueActions at the same level that both translate to a BlockCipher:
-     * CBC and an undesirable duplicate AES detection. At translation, this will create the bug
-     * observed in `DuplicateDependingRulesTest`.
-     */
-    @Disabled
+    @Disabled(
+            "There is an undesirable AES detection at the same level than CBC: it should not be the case")
     @Test
     void test() {
         CheckVerifier.newVerifier()

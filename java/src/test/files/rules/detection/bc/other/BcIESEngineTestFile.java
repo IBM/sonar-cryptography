@@ -19,18 +19,18 @@ public class BcIESEngineTestFile {
                 new EphemeralKeyPairGenerator(null, null);
 
         // Set up the basic agreement
-        ECDHBasicAgreement agreement = new ECDHBasicAgreement(); // Noncompliant {{ECDH}}
+        ECDHBasicAgreement agreement = new ECDHBasicAgreement(); // Noncompliant {{ECDHBasicAgreement}}
 
         // Set up the key derivation function
         // Here, we use a simple SHA-256 based derivation function
-        DerivationFunction kdf = new KDF1BytesGenerator(new SHA256Digest()); // Noncompliant {{KDF1}}
+        DerivationFunction kdf = new KDF1BytesGenerator(new SHA256Digest()); // Noncompliant {{KDF1BytesGenerator}}
 
         // Set up the MAC (Message Authentication Code)
         // Here, we use HMAC with SHA-512
         HMac mac = new HMac(new SHA512Digest()); // Noncompliant {{HMac}}
 
         // Initialize the IESEngine
-        IESEngine engine = new IESEngine(agreement, kdf, mac); // Noncompliant {{IES}}
+        IESEngine engine = new IESEngine(agreement, kdf, mac); // Noncompliant {{IESEngine}}
 
         // Set up the IESEngine parameters
         IESParameters iesParameters = new IESParameters(null, null, 128);

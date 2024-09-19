@@ -20,7 +20,6 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.ClassicalBitSecurityLevel;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.NumberOfIterations;
@@ -34,7 +33,6 @@ public final class MarsupilamiFourteen extends Algorithm implements MessageDiges
 
     public MarsupilamiFourteen(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, MessageDigest.class, detectionLocation);
-        this.put(new ClassicalBitSecurityLevel(256, detectionLocation));
         this.put(new NumberOfIterations(14, detectionLocation));
     }
 

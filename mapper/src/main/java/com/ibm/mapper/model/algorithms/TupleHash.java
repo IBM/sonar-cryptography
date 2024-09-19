@@ -21,17 +21,17 @@ package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.DigestSize;
-import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.ExtendableOutputFunction;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-public final class TupleHash extends Algorithm implements MessageDigest {
+public final class TupleHash extends Algorithm implements ExtendableOutputFunction {
     // https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-185.pdf
 
     private static final String NAME = "TupleHash";
 
     public TupleHash(@Nonnull DetectionLocation detectionLocation) {
-        super(NAME, MessageDigest.class, detectionLocation);
+        super(NAME, ExtendableOutputFunction.class, detectionLocation);
     }
 
     public TupleHash(int digestSize, @Nonnull DetectionLocation detectionLocation) {

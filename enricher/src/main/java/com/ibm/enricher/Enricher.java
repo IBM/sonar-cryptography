@@ -23,6 +23,7 @@ import com.ibm.enricher.algorithm.AESEnricher;
 import com.ibm.enricher.algorithm.DESEnricher;
 import com.ibm.enricher.algorithm.DHEnricher;
 import com.ibm.enricher.algorithm.DSAEnricher;
+import com.ibm.enricher.algorithm.KEMEnricher;
 import com.ibm.enricher.algorithm.PBKDF2Enricher;
 import com.ibm.enricher.algorithm.RSAEnricher;
 import com.ibm.enricher.algorithm.RSAoaepEnricher;
@@ -88,7 +89,8 @@ public class Enricher implements IEnricher {
                     new RSAssaPSSEnricher(),
                     new RSAoaepEnricher(),
                     new SignatureEnricher(),
-                    new TagOrDigestEnricher());
+                    new TagOrDigestEnricher(),
+                    new KEMEnricher());
 
     /**
      * Enriches the given node with additional information.

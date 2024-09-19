@@ -26,6 +26,7 @@ import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -58,7 +59,7 @@ public final class BcBasicAgreement {
                             .forConstructor()
                             .shouldBeDetectedAs(new ValueActionFactory<>(agreement))
                             .withoutParameters()
-                            .buildForContext(new KeyContext(KeyContext.Kind.DH))
+                            .buildForContext(new KeyContext(Map.of("kind", "DH")))
                             .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcBasicAgreementInit.rules()));
         }

@@ -110,8 +110,8 @@ class BcCBCBlockCipherTest extends TestBase {
         // BlockCipher
         INode blockCipherNode1 = nodes.get(0);
         assertThat(blockCipherNode1.getKind()).isEqualTo(BlockCipher.class);
-        assertThat(blockCipherNode1.getChildren()).hasSize(3);
-        assertThat(blockCipherNode1.asString()).isEqualTo("AES");
+        assertThat(blockCipherNode1.getChildren()).hasSize(4);
+        assertThat(blockCipherNode1.asString()).isEqualTo("AES-CBC");
 
         // Decrypt under BlockCipher
         INode decryptNode =

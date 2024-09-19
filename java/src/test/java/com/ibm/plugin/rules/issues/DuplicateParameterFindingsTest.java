@@ -29,13 +29,12 @@ import com.ibm.engine.model.context.DigestContext;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MaskGenerationFunction;
 import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.PublicKeyEncryption;
-import com.ibm.mapper.model.padding.OAEP;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.sonar.java.checks.verifier.CheckVerifier;
 import org.sonar.plugins.java.api.JavaCheck;
@@ -55,7 +54,6 @@ class DuplicateParameterFindingsTest extends TestBase {
      * each with the two possible contexts, which is not expected and makes impossible to
      * distinguish the two hashes from their contexts.
      */
-    @Disabled
     @Test
     void test() {
         CheckVerifier.newVerifier()
@@ -82,7 +80,7 @@ class DuplicateParameterFindingsTest extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("OAEP");
+        assertThat(value0.asString()).isEqualTo("OAEPEncoding");
 
         List<DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext>> valueActionStores =
                 getStoresOfValueType(ValueAction.class, detectionStore.getChildren());
@@ -96,7 +94,7 @@ class DuplicateParameterFindingsTest extends TestBase {
         assertThat(store_2.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0_2 = store_2.getDetectionValues().get(0);
         assertThat(value0_2).isInstanceOf(ValueAction.class);
-        assertThat(value0_2.asString()).isEqualTo("RSA");
+        assertThat(value0_2.asString()).isEqualTo("RSAEngine");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_3 =
                 valueActionStores.get(1);
@@ -104,7 +102,7 @@ class DuplicateParameterFindingsTest extends TestBase {
         assertThat(store_3.getDetectionValueContext()).isInstanceOf(DigestContext.class);
         IValue<Tree> value0_4 = store_3.getDetectionValues().get(0);
         assertThat(value0_4).isInstanceOf(ValueAction.class);
-        assertThat(value0_4.asString()).isEqualTo("SHA-3");
+        assertThat(value0_4.asString()).isEqualTo("SHA3Digest");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_4 =
                 valueActionStores.get(2);
@@ -112,7 +110,7 @@ class DuplicateParameterFindingsTest extends TestBase {
         assertThat(store_4.getDetectionValueContext()).isInstanceOf(DigestContext.class);
         IValue<Tree> value0_5 = store_4.getDetectionValues().get(0);
         assertThat(value0_5).isInstanceOf(ValueAction.class);
-        assertThat(value0_5.asString()).isEqualTo("SHA-512");
+        assertThat(value0_5.asString()).isEqualTo("SHA512Digest");
 
         /*
          * Translation
@@ -123,18 +121,18 @@ class DuplicateParameterFindingsTest extends TestBase {
         // PublicKeyEncryption
         INode publicKeyEncryptionNode1 = nodes.get(0);
         assertThat(publicKeyEncryptionNode1.getKind()).isEqualTo(PublicKeyEncryption.class);
-        assertThat(publicKeyEncryptionNode1.getChildren()).hasSize(5);
-        assertThat(publicKeyEncryptionNode1.asString()).isEqualTo("RSA");
+        assertThat(publicKeyEncryptionNode1.getChildren()).hasSize(4);
+        assertThat(publicKeyEncryptionNode1.asString()).isEqualTo("RSA-OAEP");
 
         // MessageDigest under PublicKeyEncryption
         INode messageDigestNode = publicKeyEncryptionNode1.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode).isNotNull();
-        assertThat(messageDigestNode.getChildren()).isEmpty();
-        assertThat(messageDigestNode.asString()).isEqualTo("SHA-3");
+        assertThat(messageDigestNode.getChildren()).hasSize(1);
+        assertThat(messageDigestNode.asString()).isEqualTo("SHA3");
 
         // OptimalAsymmetricEncryptionPadding under PublicKeyEncryption
         INode optimalAsymmetricEncryptionPaddingNode =
-                publicKeyEncryptionNode1.getChildren().get(OAEP.class);
+                publicKeyEncryptionNode1.getChildren().get(Padding.class);
         assertThat(optimalAsymmetricEncryptionPaddingNode).isNotNull();
         assertThat(optimalAsymmetricEncryptionPaddingNode.getChildren()).isEmpty();
         assertThat(optimalAsymmetricEncryptionPaddingNode.asString()).isEqualTo("OAEP");
@@ -143,7 +141,14 @@ class DuplicateParameterFindingsTest extends TestBase {
         INode maskGenerationFunctionNode =
                 publicKeyEncryptionNode1.getChildren().get(MaskGenerationFunction.class);
         assertThat(maskGenerationFunctionNode).isNotNull();
-        assertThat(maskGenerationFunctionNode.getChildren()).isEmpty();
-        assertThat(maskGenerationFunctionNode.asString()).isEqualTo("SHA-512");
+        assertThat(maskGenerationFunctionNode.getChildren()).hasSize(2);
+        assertThat(maskGenerationFunctionNode.asString()).isEqualTo("MGF1");
+
+        // MessageDigest under MaskGenerationFunction under PublicKeyEncryption
+        INode messageDigestNode1 =
+                maskGenerationFunctionNode.getChildren().get(MessageDigest.class);
+        assertThat(messageDigestNode1).isNotNull();
+        assertThat(messageDigestNode1.getChildren()).hasSize(4);
+        assertThat(messageDigestNode1.asString()).isEqualTo("SHA512");
     }
 }

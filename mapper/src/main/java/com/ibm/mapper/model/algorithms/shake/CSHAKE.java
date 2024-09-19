@@ -20,21 +20,21 @@
 package com.ibm.mapper.model.algorithms.shake;
 
 import com.ibm.mapper.model.Algorithm;
+import com.ibm.mapper.model.ExtendableOutputFunction;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.IPrimitive;
-import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.ParameterSetIdentifier;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
-public final class CSHAKE extends Algorithm implements MessageDigest {
+public final class CSHAKE extends Algorithm implements ExtendableOutputFunction {
     // https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-185.pdf
 
     private static final String NAME = "cSHAKE"; // customizable SHAKE
 
     public CSHAKE(@Nonnull DetectionLocation detectionLocation) {
-        super(NAME, MessageDigest.class, detectionLocation);
+        super(NAME, ExtendableOutputFunction.class, detectionLocation);
     }
 
     /** Returns a name of the form "cSHAKEXXX" where XXX is the parameter set identifer */

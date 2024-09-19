@@ -29,7 +29,6 @@ import com.ibm.mapper.reorganizer.UsualPerformActions;
 import com.ibm.mapper.reorganizer.builder.ReorganizerRuleBuilder;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 
 public final class CipherParameterReorganizer {
 
@@ -39,7 +38,7 @@ public final class CipherParameterReorganizer {
 
     /* Used for AEADParameters */
     @Nonnull
-    private static final IReorganizerRule MOVE_KEY_LENGTH_UP =
+    public static final IReorganizerRule MOVE_KEY_LENGTH_UNDER_TAG_LENGTH_UP =
             new ReorganizerRuleBuilder()
                     .createReorganizerRule()
                     .forNodeKind(TagLength.class)
@@ -51,8 +50,7 @@ public final class CipherParameterReorganizer {
                                             .noAction()))
                     .perform(
                             (node, parent, roots) -> {
-                                INode keyLengthChild =
-                                        node.getChildren().get(KeyLength.class).deepCopy();
+                                INode keyLengthChild = node.getChildren().get(KeyLength.class);
                                 if (parent == null) {
                                     // Do nothing
                                     return roots;
@@ -66,7 +64,7 @@ public final class CipherParameterReorganizer {
                             });
 
     @Nonnull
-    private static final IReorganizerRule MOVE_NODES_UNDER_ENCRYPT_UP =
+    public static final IReorganizerRule MOVE_NODES_UNDER_ENCRYPT_UP =
             new ReorganizerRuleBuilder()
                     .createReorganizerRule()
                     .forNodeKind(Encrypt.class)
@@ -74,17 +72,10 @@ public final class CipherParameterReorganizer {
                     .perform(UsualPerformActions.performMovingChildrenUp);
 
     @Nonnull
-    private static final IReorganizerRule MOVE_NODES_UNDER_DECRYPT_UP =
+    public static final IReorganizerRule MOVE_NODES_UNDER_DECRYPT_UP =
             new ReorganizerRuleBuilder()
                     .createReorganizerRule()
                     .forNodeKind(Decrypt.class)
                     .withAnyNonNullChildren()
                     .perform(UsualPerformActions.performMovingChildrenUp);
-
-    @Unmodifiable
-    @Nonnull
-    public static List<IReorganizerRule> rules() {
-        return List.of(
-                MOVE_KEY_LENGTH_UP, MOVE_NODES_UNDER_ENCRYPT_UP, MOVE_NODES_UNDER_DECRYPT_UP);
-    }
 }

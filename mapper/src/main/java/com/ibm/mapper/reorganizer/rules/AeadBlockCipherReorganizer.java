@@ -27,7 +27,6 @@ import com.ibm.mapper.reorganizer.UsualPerformActions;
 import com.ibm.mapper.reorganizer.builder.ReorganizerRuleBuilder;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 
 public final class AeadBlockCipherReorganizer {
 
@@ -36,7 +35,7 @@ public final class AeadBlockCipherReorganizer {
     }
 
     @Nonnull
-    private static final IReorganizerRule MERGE_AE_PARENT_AND_CHILD =
+    public static final IReorganizerRule MERGE_AE_PARENT_AND_CHILD =
             new ReorganizerRuleBuilder()
                     .createReorganizerRule()
                     .forNodeKind(AuthenticatedEncryption.class)
@@ -51,7 +50,7 @@ public final class AeadBlockCipherReorganizer {
                                     AuthenticatedEncryption.class));
 
     @Nonnull
-    private static final IReorganizerRule MOVE_TAG_LENGTH_UNDER_MAC =
+    public static final IReorganizerRule MOVE_TAG_LENGTH_UNDER_MAC =
             new ReorganizerRuleBuilder()
                     .createReorganizerRule()
                     .forNodeKind(AuthenticatedEncryption.class)
@@ -75,10 +74,4 @@ public final class AeadBlockCipherReorganizer {
                                 node.removeChildOfType(TagLength.class);
                                 return roots;
                             });
-
-    @Unmodifiable
-    @Nonnull
-    public static List<IReorganizerRule> rules() {
-        return List.of(MERGE_AE_PARENT_AND_CHILD, MOVE_TAG_LENGTH_UNDER_MAC);
-    }
 }

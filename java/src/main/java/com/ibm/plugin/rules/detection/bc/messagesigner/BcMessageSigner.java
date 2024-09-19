@@ -19,6 +19,7 @@
  */
 package com.ibm.plugin.rules.detection.bc.messagesigner;
 
+import com.ibm.engine.model.context.DigestContext;
 import com.ibm.engine.model.context.SignatureContext;
 import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
@@ -78,8 +79,7 @@ public final class BcMessageSigner {
                             .shouldBeDetectedAs(new ValueActionFactory<>(signer))
                             // We want to capture all possible constructors (some have arguments)
                             .withAnyParameters()
-                            .buildForContext(
-                                    new SignatureContext(SignatureContext.Kind.MESSAGE_SIGNER))
+                            .buildForContext(new SignatureContext(Map.of("kind", "MESSAGE_SIGNER")))
                             .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcMessageSignerInit.rules()));
         }
@@ -96,10 +96,14 @@ public final class BcMessageSigner {
                         .forConstructor()
                         .shouldBeDetectedAs(new ValueActionFactory<>("SPHINCS256Signer"))
                         .withMethodParameter("org.bouncycastle.crypto.Digest")
-                        .addDependingDetectionRules(BcDigests.rules())
+                        .addDependingDetectionRules(
+                                BcDigests.rules(
+                                        new DigestContext(Map.of("kind", "ASSET_COLLECTION"))))
                         .withMethodParameter("org.bouncycastle.crypto.Digest")
-                        .addDependingDetectionRules(BcDigests.rules())
-                        .buildForContext(new SignatureContext(SignatureContext.Kind.MESSAGE_SIGNER))
+                        .addDependingDetectionRules(
+                                BcDigests.rules(
+                                        new DigestContext(Map.of("kind", "ASSET_COLLECTION"))))
+                        .buildForContext(new SignatureContext(Map.of("kind", "MESSAGE_SIGNER")))
                         .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcMessageSignerInit.rules()));
 

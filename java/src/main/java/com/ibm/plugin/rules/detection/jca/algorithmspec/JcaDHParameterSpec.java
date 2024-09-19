@@ -41,8 +41,7 @@ public final class JcaDHParameterSpec {
                     .withMethodParameter(BIGINTEGER_TYPE)
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.PRIME_P))
                     .withMethodParameter(BIGINTEGER_TYPE)
-                    .buildForContext(
-                            new AlgorithmParameterContext(AlgorithmParameterContext.Kind.DH))
+                    .buildForContext(new AlgorithmParameterContext())
                     .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
@@ -55,8 +54,7 @@ public final class JcaDHParameterSpec {
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.PRIME_P))
                     .withMethodParameter(BIGINTEGER_TYPE)
                     .withMethodParameter("int")
-                    .buildForContext(
-                            new AlgorithmParameterContext(AlgorithmParameterContext.Kind.DH))
+                    .buildForContext(new AlgorithmParameterContext())
                     .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 

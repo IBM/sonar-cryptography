@@ -45,7 +45,7 @@ public final class SignatureReorganizer {
     }
 
     @Nonnull
-    public static final IReorganizerRule MERGE_SIGNATURE_UNKNOWN_PARENT_AND_CHILD =
+    public static final IReorganizerRule MERGE_UNKNOWN_SIGNATURE_PARENT_AND_CHILD =
             new ReorganizerRuleBuilder()
                     .createReorganizerRule("MERGE_SIGNATURE_UNKNOWN_PARENT_AND_CHILD")
                     .forNodeKind(Signature.class)

@@ -29,6 +29,7 @@ import com.ibm.plugin.rules.detection.bc.blockcipher.BcBlockCipherEngine;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
@@ -67,7 +68,7 @@ public final class BcWrapperEngine {
                             .shouldBeDetectedAs(new ValueActionFactory<>(engine))
                             // We want to capture all possible constructors (some have arguments)
                             .withAnyParameters()
-                            .buildForContext(new CipherContext(CipherContext.Kind.WRAP))
+                            .buildForContext(new CipherContext(Map.of("kind", "WRAP")))
                             .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcWrapperInit.rules()));
         }
@@ -87,7 +88,7 @@ public final class BcWrapperEngine {
                         .withMethodParameter("int")
                         .shouldBeDetectedAs(new BlockSizeFactory<>(Size.UnitType.BIT))
                         .asChildOfParameterWithId(-1)
-                        .buildForContext(new CipherContext(CipherContext.Kind.WRAP))
+                        .buildForContext(new CipherContext(Map.of("kind", "WRAP")))
                         .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcWrapperInit.rules()));
 
@@ -99,7 +100,7 @@ public final class BcWrapperEngine {
                         .shouldBeDetectedAs(new ValueActionFactory<>("RFC5649WrapEngine"))
                         .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                         .addDependingDetectionRules(BcBlockCipherEngine.rules())
-                        .buildForContext(new CipherContext(CipherContext.Kind.WRAP))
+                        .buildForContext(new CipherContext(Map.of("kind", "WRAP")))
                         .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcWrapperInit.rules()));
 
@@ -111,7 +112,7 @@ public final class BcWrapperEngine {
                         .shouldBeDetectedAs(new ValueActionFactory<>("RFC3394WrapEngine"))
                         .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                         .addDependingDetectionRules(BcBlockCipherEngine.rules())
-                        .buildForContext(new CipherContext(CipherContext.Kind.WRAP))
+                        .buildForContext(new CipherContext(Map.of("kind", "WRAP")))
                         .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcWrapperInit.rules()));
 
@@ -124,7 +125,7 @@ public final class BcWrapperEngine {
                         .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                         .addDependingDetectionRules(BcBlockCipherEngine.rules())
                         .withMethodParameter("boolean")
-                        .buildForContext(new CipherContext(CipherContext.Kind.WRAP))
+                        .buildForContext(new CipherContext(Map.of("kind", "WRAP")))
                         .inBundle(() -> "Bc")
                         .withDependingDetectionRules(BcWrapperInit.rules()));
 

@@ -49,8 +49,7 @@ public final class BcIESParameters {
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new MacSizeFactory<>(Size.UnitType.BIT))
                     .asChildOfParameterWithId(-1)
-                    .buildForContext(
-                            new AlgorithmParameterContext(AlgorithmParameterContext.Kind.IES))
+                    .buildForContext(new AlgorithmParameterContext())
                     .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
@@ -66,8 +65,7 @@ public final class BcIESParameters {
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
                     .asChildOfParameterWithId(-1)
-                    .buildForContext(
-                            new AlgorithmParameterContext(AlgorithmParameterContext.Kind.IES))
+                    .buildForContext(new AlgorithmParameterContext())
                     .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 

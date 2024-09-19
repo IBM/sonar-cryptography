@@ -25,6 +25,7 @@ import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.KeyWrap;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -32,8 +33,9 @@ import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
 public final class GOST28147 extends Algorithm
-        implements BlockCipher, AuthenticatedEncryption, Mac {
+        implements BlockCipher, AuthenticatedEncryption, Mac, KeyWrap {
     // https://www.rfc-editor.org/rfc/rfc5830
+    // Key Wrap: https://datatracker.ietf.org/doc/html/rfc4357#section-6.1
 
     private static final String NAME = "GOST28147"; // Magma, GOST 28147-89 (RFC 5830)
 

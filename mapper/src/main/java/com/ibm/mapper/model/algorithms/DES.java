@@ -22,16 +22,16 @@ package com.ibm.mapper.model.algorithms;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.BlockSize;
-import com.ibm.mapper.model.ClassicalBitSecurityLevel;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class DES extends Algorithm implements BlockCipher {
+public final class DES extends Algorithm implements BlockCipher, Mac {
     // https://en.wikipedia.org/wiki/Data_Encryption_Standard
 
     private static final String NAME = "DES";
@@ -49,7 +49,6 @@ public final class DES extends Algorithm implements BlockCipher {
         super(NAME, BlockCipher.class, detectionLocation);
         this.put(new KeyLength(56, detectionLocation));
         this.put(new BlockSize(64, detectionLocation));
-        this.put(new ClassicalBitSecurityLevel(56, detectionLocation));
     }
 
     public DES(int keyLength, @NotNull DetectionLocation detectionLocation) {

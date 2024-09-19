@@ -27,6 +27,7 @@ import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import com.ibm.plugin.rules.detection.bc.asymmetricblockcipher.BcAsymmetricBlockCipher;
 import com.ibm.plugin.rules.detection.bc.digest.BcDigests;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
@@ -48,9 +49,9 @@ public final class BcGenericSigner {
                     .withMethodParameter("org.bouncycastle.crypto.AsymmetricBlockCipher")
                     .addDependingDetectionRules(
                             BcAsymmetricBlockCipher.rules(
-                                    new CipherContext(CipherContext.Kind.ENCODING_SIGNATURE),
+                                    new CipherContext(Map.of("kind", "ENCODING_SIGNATURE")),
                                     new CipherContext(
-                                            CipherContext.Kind.ASYMMETRIC_CIPHER_ENGINE_SIGNATURE)))
+                                            Map.of("kind", "ASYMMETRIC_CIPHER_ENGINE_SIGNATURE"))))
                     .withMethodParameter("org.bouncycastle.crypto.Digest")
                     .addDependingDetectionRules(BcDigests.rules())
                     .buildForContext(new SignatureContext())

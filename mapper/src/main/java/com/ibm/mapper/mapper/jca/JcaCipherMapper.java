@@ -22,15 +22,15 @@ package com.ibm.mapper.mapper.jca;
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.IAlgorithm;
+import com.ibm.mapper.model.KeyWrap;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.PasswordBasedEncryption;
 import com.ibm.mapper.model.algorithms.AES;
-import com.ibm.mapper.model.algorithms.AESWrap;
 import com.ibm.mapper.model.algorithms.Blowfish;
 import com.ibm.mapper.model.algorithms.ChaCha20;
 import com.ibm.mapper.model.algorithms.DES;
-import com.ibm.mapper.model.algorithms.DESedeWrap;
+import com.ibm.mapper.model.algorithms.DESede;
 import com.ibm.mapper.model.algorithms.Poly1305;
 import com.ibm.mapper.model.algorithms.RC2;
 import com.ibm.mapper.model.algorithms.RC4;
@@ -103,17 +103,21 @@ public final class JcaCipherMapper implements IMapper {
             case "AES_192" -> Optional.of(new AES(192, detectionLocation));
             case "AES_256" -> Optional.of(new AES(256, detectionLocation));
 
-            case "AESWRAP" -> Optional.of(new AESWrap(detectionLocation));
-            case "AESWRAP_128" -> Optional.of(new AESWrap(128, detectionLocation));
-            case "AESWRAP_192" -> Optional.of(new AESWrap(192, detectionLocation));
-            case "AESWRAP_256" -> Optional.of(new AESWrap(256, detectionLocation));
+            case "AESWRAP" -> Optional.of(new AES(KeyWrap.class, detectionLocation));
+            case "AESWRAP_128" ->
+                    Optional.of(new AES(KeyWrap.class, new AES(128, detectionLocation)));
+            case "AESWRAP_192" ->
+                    Optional.of(new AES(KeyWrap.class, new AES(192, detectionLocation)));
+            case "AESWRAP_256" ->
+                    Optional.of(new AES(KeyWrap.class, new AES(256, detectionLocation)));
 
             case "RC4", "ARCFOUR", "ARC4" -> Optional.of(new RC4(detectionLocation));
             case "RC2", "ARC2" -> Optional.of(new RC2(detectionLocation));
             case "BLOWFISH" -> Optional.of(new Blowfish(detectionLocation));
             case "DES" -> Optional.of(new DES(detectionLocation));
             case "DESEDE" -> Optional.of(new TripleDES(detectionLocation));
-            case "DESEDEWRAP", "TRIPLEDESWRAP" -> Optional.of(new DESedeWrap(detectionLocation));
+            case "DESEDEWRAP", "TRIPLEDESWRAP" ->
+                    Optional.of(new DESede(KeyWrap.class, new DESede(detectionLocation)));
             case "CHACHA20" -> Optional.of(new ChaCha20(detectionLocation));
             case "CHACHA20-POLY1305" -> {
                 final ChaCha20 chaCha20 = new ChaCha20(detectionLocation);

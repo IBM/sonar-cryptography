@@ -99,7 +99,7 @@ class BcDefaultBufferedBlockCipherTest extends TestBase {
         // BlockCipher
         INode blockCipherNode = nodes.get(0);
         assertThat(blockCipherNode.getKind()).isEqualTo(BlockCipher.class);
-        assertThat(blockCipherNode.getChildren()).hasSize(2);
+        assertThat(blockCipherNode.getChildren()).hasSize(3);
         assertThat(blockCipherNode.asString()).isEqualTo("AES");
 
         // Encrypt under BlockCipher

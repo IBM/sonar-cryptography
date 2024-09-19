@@ -28,6 +28,7 @@ import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.StreamCipher;
+import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.mapper.reorganizer.builder.ReorganizerRuleBuilder;
 import java.util.ArrayList;
@@ -35,7 +36,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +47,7 @@ public final class MacReorganizer {
     }
 
     @Nonnull
-    private static final IReorganizerRule MERGE_UNKNOWN_MAC_AND_CIPHER =
+    public static final IReorganizerRule MERGE_UNKNOWN_MAC_PARENT_AND_CIPHER_CHILD =
             new ReorganizerRuleBuilder()
                     .createReorganizerRule()
                     .forNodeKind(Mac.class)
@@ -61,10 +61,8 @@ public final class MacReorganizer {
                     .perform(
                             (node, parent, roots) -> {
                                 Algorithm blockCipher =
-                                        (Algorithm)
-                                                node.getChildren()
-                                                        .get(BlockCipher.class)
-                                                        .deepCopy();
+                                        (Algorithm) node.getChildren().get(BlockCipher.class);
+                                /* TODO: doing this is not ideal because we "lose" the original class (i.e. AES) of the node, which prevents class-specific enrichment */
                                 INode newMac = new Algorithm(blockCipher, Mac.class);
 
                                 for (Map.Entry<Class<? extends INode>, INode> childKeyValue :
@@ -92,8 +90,18 @@ public final class MacReorganizer {
                                 }
                             });
 
+    /**
+     * A reorganizer rule for moving cipher configuration nodes (e.g., Mode, Padding, BlockSize)
+     * under their respective cipher parent nodes (BlockCipher or StreamCipher) within a {@code Mac}
+     * node.
+     *
+     * <p>This rule is designed to enforce a hierarchical structure where cryptographic
+     * configuration parameters such as {@code Mode}, {@code Padding}, and {@code BlockSize} are
+     * directly associated with their corresponding cipher (either a {@code BlockCipher} or {@code
+     * StreamCipher}), rather than being children of the {@code Mac} node.
+     */
     @Nonnull
-    private static final IReorganizerRule MOVE_NODES_UNDER_CIPHER =
+    public static final IReorganizerRule MOVE_SOME_MAC_CHILDREN_UNDER_BLOCKCIPHER =
             new ReorganizerRuleBuilder()
                     .createReorganizerRule()
                     .forNodeKind(Mac.class)
@@ -154,83 +162,26 @@ public final class MacReorganizer {
                                 return roots;
                             });
 
-    /*
-    private static final IReorganizerRule RENAME_MAC =
+    @Nonnull
+    public static final IReorganizerRule MOVE_TAG_LENGTH_UNDER_MAC =
             new ReorganizerRuleBuilder()
                     .createReorganizerRule()
-                    .forNodeKind(HMAC.class)
+                    .forNodeKind(Mac.class)
                     .withDetectionCondition(
-                            (node, parent, roots) -> {
-                                return node.asString().contains(ITranslator.UNKNOWN)
-                                        && (node.hasChildOfType(BlockCipher.class).isPresent()
-                                                || node.hasChildOfType(StreamCipher.class)
-                                                        .isPresent()
-                                                || node.hasChildOfType(MessageDigest.class)
-                                                        .isPresent());
-                            })
+                            (node, parent, roots) ->
+                                    parent != null
+                                            && parent.hasChildOfType(TagLength.class).isPresent())
                     .perform(
                             (node, parent, roots) -> {
-                                // Get the child node which defines the name of the Mac
-                                // Typically, a BlockCipher, StreamCipher or MessageDigest
-                                INode referenceChild = null;
-                                for (Map.Entry<Class<? extends INode>, INode> entry :
-                                        node.getChildren().entrySet()) {
-                                    Class<? extends INode> kind = entry.getKey();
-                                    if (kind.equals(BlockCipher.class)
-                                            || kind.equals(StreamCipher.class)
-                                            || kind.equals(MessageDigest.class)) {
-                                        if (referenceChild != null) {
-                                            // Detect when there are mutliple "reference" children
-                                            LOGGER.warn(
-                                                    "Mac name must be determined by a BlockCipher, StreamCipher or MessageDigest child, but the mac has several of these children. It will use the "
-                                                            + kind.getSimpleName());
-                                        }
-                                        referenceChild = entry.getValue();
-                                    }
-                                }
-
-                                // Create the new name of the Mac node by replacing the UNKNOWN part.
-                                // TODO: This is a simple version where we use only the name of the reference child,
-                                // but it could be modified to include infromation from a potential mode or size subchild
-                                String newMacName =
-                                        node.asString()
-                                                .replace(
-                                                        ITranslator.UNKNOWN,
-                                                        referenceChild.asString());
-
-                                // Create the new Mac node
-                                DetectionLocation detectionLocation =
-                                        ((IAsset) node).getDetectionContext();
-                                HMAC newMac =
-                                        new HMAC(new Algorithm(newMacName, detectionLocation));
-
-                                // Add all the Mac children to the new Mac node
-                                for (Map.Entry<Class<? extends INode>, INode> childKeyValue :
-                                        node.getChildren().entrySet()) {
-                                    newMac.put(childKeyValue.getValue());
-                                }
-
                                 if (parent == null) {
-                                    // `node` is a root node
-                                    // Create a copy of the roots list
-                                    List<INode> rootsCopy = new ArrayList<>(roots);
-                                    for (int i = 0; i < rootsCopy.size(); i++) {
-                                        if (rootsCopy.get(i).equals(node)) {
-                                            rootsCopy.set(i, newMac);
-                                            break;
-                                        }
-                                    }
-                                    return rootsCopy;
-                                } else {
-                                    // Replace the previous Mac node
-                                    parent.put(newMac);
                                     return roots;
                                 }
-                            });*/
+                                INode tagLengthChild = parent.getChildren().get(TagLength.class);
 
-    @Unmodifiable
-    @Nonnull
-    public static List<IReorganizerRule> rules() {
-        return List.of(MERGE_UNKNOWN_MAC_AND_CIPHER, MOVE_NODES_UNDER_CIPHER); // RENAME_MAC
-    }
+                                // Append the TagLength to the Mac node and remove it from the
+                                // parent node
+                                node.put(tagLengthChild);
+                                parent.removeChildOfType(TagLength.class);
+                                return roots;
+                            });
 }

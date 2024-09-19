@@ -14,7 +14,7 @@ public class BcAESWrapEngineTestFile {
         random.nextBytes(wrappingKey);
 
         // Wrap the key
-        AESWrapEngine wrapper = new AESWrapEngine(); // Noncompliant {{AES}}
+        AESWrapEngine wrapper = new AESWrapEngine(); // Noncompliant {{AESWrapEngine}}
         KeyParameter keyParameter = new KeyParameter(wrappingKey);
         wrapper.init(true, keyParameter);
 

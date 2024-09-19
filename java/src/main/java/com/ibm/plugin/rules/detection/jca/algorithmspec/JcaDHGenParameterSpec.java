@@ -39,8 +39,7 @@ public final class JcaDHGenParameterSpec {
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
                     .withMethodParameter("int")
-                    .buildForContext(
-                            new AlgorithmParameterContext(AlgorithmParameterContext.Kind.DH))
+                    .buildForContext(new AlgorithmParameterContext())
                     .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 

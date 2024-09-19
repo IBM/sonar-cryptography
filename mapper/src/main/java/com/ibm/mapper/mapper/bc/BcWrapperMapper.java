@@ -23,8 +23,17 @@ import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.KeyWrap;
 import com.ibm.mapper.model.Unknown;
-import com.ibm.mapper.model.algorithms.AESWrap;
+import com.ibm.mapper.model.algorithms.AES;
+import com.ibm.mapper.model.algorithms.Aria;
+import com.ibm.mapper.model.algorithms.Camellia;
+import com.ibm.mapper.model.algorithms.DESede;
+import com.ibm.mapper.model.algorithms.Kalyna;
+import com.ibm.mapper.model.algorithms.RC2;
+import com.ibm.mapper.model.algorithms.SEED;
+import com.ibm.mapper.model.algorithms.gost.CryptoPro;
+import com.ibm.mapper.model.algorithms.gost.GOST28147;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -46,21 +55,24 @@ public class BcWrapperMapper implements IMapper {
     private Optional<? extends INode> map(
             @Nonnull String streamCipherString, @Nonnull DetectionLocation detectionLocation) {
         return switch (streamCipherString) {
-            /* TODO: how should Wrap be handled? Should all BlockCiphers be duplicated with a Wrap version like for AES? */
-            case "AESWrapEngine" -> Optional.of(new AESWrap(detectionLocation));
-            case "AESWrapPadEngine" -> Optional.of(new AESWrap(detectionLocation));
-            // case "ARIAWrapEngine" -> Optional.of();
-            // case "ARIAWrapPadEngine" -> Optional.of();
-            // case "CamelliaWrapEngine" -> Optional.of();
-            // case "CryptoProWrapEngine" -> Optional.of();
-            // case "DESedeWrapEngine" -> Optional.of();
-            // case "GOST28147WrapEngine" -> Optional.of();
-            // case "RC2WrapEngine" -> Optional.of();
-            // case "SEEDWrapEngine" -> Optional.of();
-            // case "DSTU7624WrapEngine" -> Optional.of();
-            // case "RFC3211WrapEngine" -> Optional.of();
-            // case "RFC3394WrapEngine" -> Optional.of();
-            // case "RFC5649WrapEngine" -> Optional.of();
+            case "AESWrapEngine", "AESWrapPadEngine", "RFC3394WrapEngine", "RFC5649WrapEngine" ->
+                    Optional.of(new AES(KeyWrap.class, detectionLocation));
+            case "ARIAWrapEngine", "ARIAWrapPadEngine" ->
+                    Optional.of(new Aria(KeyWrap.class, new Aria(detectionLocation)));
+            case "CamelliaWrapEngine" ->
+                    Optional.of(new Camellia(KeyWrap.class, new Camellia(detectionLocation)));
+            case "CryptoProWrapEngine" -> Optional.of(new CryptoPro(detectionLocation));
+            case "DESedeWrapEngine" ->
+                    Optional.of(new DESede(KeyWrap.class, new DESede(detectionLocation)));
+            case "GOST28147WrapEngine" ->
+                    Optional.of(new GOST28147(KeyWrap.class, new GOST28147(detectionLocation)));
+            case "RC2WrapEngine" -> Optional.of(new RC2(KeyWrap.class, new RC2(detectionLocation)));
+            case "SEEDWrapEngine" ->
+                    Optional.of(new SEED(KeyWrap.class, new SEED(detectionLocation)));
+            case "DSTU7624WrapEngine" ->
+                    Optional.of(new Kalyna(KeyWrap.class, new Kalyna(detectionLocation)));
+            case "RFC3211WrapEngine" ->
+                    Optional.of(new RC2(KeyWrap.class, new RC2(detectionLocation)));
             default -> {
                 final Algorithm algorithm =
                         new Algorithm(streamCipherString, BlockCipher.class, detectionLocation);

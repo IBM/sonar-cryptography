@@ -28,10 +28,6 @@ public class SignatureContext extends DetectionContext
     public enum Kind {
         PSS,
         MGF1,
-        DSA,
-        EdDSA,
-        MESSAGE_SIGNER,
-        SIGNING_STATUS,
         NONE
     }
 

@@ -26,8 +26,10 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.OperationMode;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.CipherContext;
-import com.ibm.mapper.model.BlockCipher;
+import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.KeyWrap;
+import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.functionality.Encapsulate;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
@@ -63,7 +65,7 @@ class BcAESWrapEngineTest extends TestBase {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(CipherContext.class);
         IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
         assertThat(value0).isInstanceOf(ValueAction.class);
-        assertThat(value0.asString()).isEqualTo("AES");
+        assertThat(value0.asString()).isEqualTo("AESWrapEngine");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
                 getStoreOfValueType(OperationMode.class, detectionStore.getChildren());
@@ -79,14 +81,26 @@ class BcAESWrapEngineTest extends TestBase {
 
         assertThat(nodes).hasSize(1);
 
-        // com.ibm.mapper.model.Algorithm
-        INode blockCipherNode = nodes.get(0);
-        assertThat(blockCipherNode.getKind()).isEqualTo(BlockCipher.class);
-        assertThat(blockCipherNode.getChildren()).hasSize(2);
-        assertThat(blockCipherNode.asString()).isEqualTo("AES");
+        // KeyWrap
+        INode keyWrapNode = nodes.get(0);
+        assertThat(keyWrapNode.getKind()).isEqualTo(KeyWrap.class);
+        assertThat(keyWrapNode.getChildren()).hasSize(3);
+        assertThat(keyWrapNode.asString()).isEqualTo("AES");
 
-        // Encapsulate under com.ibm.mapper.model.Algorithm
-        INode encapsulateNode = blockCipherNode.getChildren().get(Encapsulate.class);
+        // Oid under KeyWrap
+        INode oidNode = keyWrapNode.getChildren().get(Oid.class);
+        assertThat(oidNode).isNotNull();
+        assertThat(oidNode.getChildren()).isEmpty();
+        assertThat(oidNode.asString()).isEqualTo("2.16.840.1.101.3.4.1");
+
+        // BlockSize under KeyWrap
+        INode blockSizeNode = keyWrapNode.getChildren().get(BlockSize.class);
+        assertThat(blockSizeNode).isNotNull();
+        assertThat(blockSizeNode.getChildren()).isEmpty();
+        assertThat(blockSizeNode.asString()).isEqualTo("128");
+
+        // Encapsulate under KeyWrap
+        INode encapsulateNode = keyWrapNode.getChildren().get(Encapsulate.class);
         assertThat(encapsulateNode).isNotNull();
         assertThat(encapsulateNode.getChildren()).isEmpty();
         assertThat(encapsulateNode.asString()).isEqualTo("ENCAPSULATE");

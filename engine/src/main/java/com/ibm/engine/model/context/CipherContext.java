@@ -23,70 +23,14 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Nonnull;
 
-public class CipherContext extends DetectionContext
-        implements IDetectionContext, ISupportKind<CipherContext.Kind> {
-
-    public enum Kind {
-        PKE,
-        RSA,
-        Fernet,
-        OAEP,
-        CHACHA20POLY1305,
-        AES_WRAP,
-        AES_WRAP_WITH_PADDING,
-        ENCRYPTION_STATUS,
-        WRAPPING_STATUS,
-        ENCODING,
-        ENCODING_SIGNATURE,
-        WRAP,
-        BLOCK_CIPHER,
-        BLOCK_CIPHER_ENGINE,
-        BLOCK_CIPHER_ENGINE_FOR_AEAD,
-        STREAM_CIPHER_ENGINE,
-        ASYMMETRIC_CIPHER_ENGINE,
-        ASYMMETRIC_CIPHER_ENGINE_SIGNATURE,
-        ASYMMETRIC_BUFFERED_BLOCK_CIPHER,
-        BUFFERED_BLOCK_CIPHER,
-        AEAD_BLOCK_CIPHER,
-        AEAD_ENGINE,
-        PADDING,
-        PBE,
-        HASH,
-        NONE
-    }
-
-    @Nonnull private final Kind kind;
-
-    /**
-     * use a property map instead
-     *
-     * @deprecated
-     */
-    @Deprecated(since = "1.3.0")
-    public CipherContext(@Nonnull Kind kind) {
-        super(new HashMap<>());
-        this.kind = kind;
-    }
+public class CipherContext extends DetectionContext {
 
     public CipherContext() {
         super(new HashMap<>());
-        this.kind = Kind.NONE;
     }
 
     public CipherContext(@Nonnull Map<String, String> properties) {
         super(properties);
-        this.kind = Kind.NONE;
-    }
-
-    /**
-     * use a property map instead
-     *
-     * @deprecated
-     */
-    @Deprecated(since = "1.3.0")
-    @Nonnull
-    public Kind kind() {
-        return kind;
     }
 
     @Nonnull

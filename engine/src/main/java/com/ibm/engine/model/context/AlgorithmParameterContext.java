@@ -19,36 +19,19 @@
  */
 package com.ibm.engine.model.context;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public class AlgorithmParameterContext
-        implements IDetectionContext, ISupportKind<AlgorithmParameterContext.Kind> {
-
-    public enum Kind {
-        DH,
-        AEAD,
-        CCM,
-        GMSS,
-        IES,
-        KEY,
-        SABER,
-        NONE
-    }
-
-    @Nonnull private final Kind kind;
-
-    public AlgorithmParameterContext(@Nonnull Kind kind) {
-        this.kind = kind;
-    }
+public class AlgorithmParameterContext extends DetectionContext {
 
     public AlgorithmParameterContext() {
-        this.kind = Kind.NONE;
+        super(new HashMap<>());
     }
 
-    @Nonnull
-    public Kind kind() {
-        return kind;
+    public AlgorithmParameterContext(@Nonnull Map<String, String> properties) {
+        super(properties);
     }
 
     @NotNull @Override

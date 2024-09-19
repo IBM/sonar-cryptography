@@ -72,7 +72,7 @@ public final class BcEncapsulatedSecretExtractor {
                             .shouldBeDetectedAs(new ValueActionFactory<>(extractor))
                             // We want to capture all possible constructors (some have arguments)
                             .withAnyParameters()
-                            .buildForContext(new KeyContext(KeyContext.Kind.KEM))
+                            .buildForContext(new KeyContext(Map.of("kind", "KEM")))
                             .inBundle(() -> "Bc")
                             .withoutDependingDetectionRules());
         }
@@ -95,7 +95,7 @@ public final class BcEncapsulatedSecretExtractor {
                         .asChildOfParameterWithId(-1)
                         .withMethodParameter("org.bouncycastle.crypto.DerivationFunction")
                         .addDependingDetectionRules(BcDerivationFunction.rules())
-                        .buildForContext(new KeyContext(KeyContext.Kind.KEM))
+                        .buildForContext(new KeyContext(Map.of("kind", "KEM")))
                         .inBundle(() -> "Bc")
                         .withoutDependingDetectionRules());
 
@@ -112,7 +112,7 @@ public final class BcEncapsulatedSecretExtractor {
                         .asChildOfParameterWithId(-1)
                         .withMethodParameter("org.bouncycastle.crypto.DerivationFunction")
                         .addDependingDetectionRules(BcDerivationFunction.rules())
-                        .buildForContext(new KeyContext(KeyContext.Kind.KEM))
+                        .buildForContext(new KeyContext(Map.of("kind", "KEM")))
                         .inBundle(() -> "Bc")
                         .withoutDependingDetectionRules());
 
@@ -132,7 +132,7 @@ public final class BcEncapsulatedSecretExtractor {
                         .withMethodParameter("boolean")
                         .withMethodParameter("boolean")
                         .withMethodParameter("boolean")
-                        .buildForContext(new KeyContext(KeyContext.Kind.KEM))
+                        .buildForContext(new KeyContext(Map.of("kind", "KEM")))
                         .inBundle(() -> "Bc")
                         .withoutDependingDetectionRules());
 

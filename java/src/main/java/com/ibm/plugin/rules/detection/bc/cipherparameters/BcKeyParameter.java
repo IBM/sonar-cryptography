@@ -47,8 +47,7 @@ public final class BcKeyParameter {
                     .withMethodParameter("int")
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
-                    .buildForContext(
-                            new AlgorithmParameterContext(AlgorithmParameterContext.Kind.KEY))
+                    .buildForContext(new AlgorithmParameterContext())
                     .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 

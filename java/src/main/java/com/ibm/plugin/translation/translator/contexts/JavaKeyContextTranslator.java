@@ -25,8 +25,8 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.KeySize;
 import com.ibm.engine.model.OperationMode;
 import com.ibm.engine.model.ValueAction;
+import com.ibm.engine.model.context.DetectionContext;
 import com.ibm.engine.model.context.IDetectionContext;
-import com.ibm.engine.model.context.KeyContext;
 import com.ibm.engine.model.context.PrivateKeyContext;
 import com.ibm.engine.model.context.PublicKeyContext;
 import com.ibm.engine.model.context.SecretKeyContext;
@@ -97,26 +97,26 @@ public final class JavaKeyContextTranslator extends JavaAbstractLibraryTranslato
             @NotNull IValue<Tree> value,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
-        if (value instanceof ValueAction<Tree> valueAction) {
-            final KeyContext.Kind kind = ((KeyContext) detectionContext).kind();
-            // com.ibm.mapper.model.Algorithm algorithm;
+        if (value instanceof ValueAction<Tree> valueAction
+                && detectionContext instanceof DetectionContext context) {
+            String kind = context.get("kind").map(k -> k).orElse("");
             switch (kind) {
-                case DH:
+                case "DH":
                     BcAgreementMapper bcAgreementMapper = new BcAgreementMapper();
                     return bcAgreementMapper
                             .parse(valueAction.asString(), detectionLocation)
                             .map(f -> f);
-                case KDF:
+                case "KDF":
                     BcDerivationFunctionMapper bcDerivationFunctionMapper =
                             new BcDerivationFunctionMapper();
                     return bcDerivationFunctionMapper
                             .parse(valueAction.asString(), detectionLocation)
                             .map(f -> f);
-                case KEM:
+                case "KEM":
                     BcKemMapper bcKEMMapper = new BcKemMapper();
                     return bcKEMMapper.parse(valueAction.asString(), detectionLocation).map(f -> f);
                 default:
-                    break;
+                    return Optional.empty();
             }
         } else if (value instanceof KeySize<Tree> keySize) {
             KeyLength keyLength = new KeyLength(keySize.getValue(), detectionLocation);

@@ -825,8 +825,7 @@ public final class JavaDetectionEngine implements IDetectionEngine<Tree, Symbol>
                     // scope
                     detectionStore.onDetectedDependingParameter(
                             parameter, methodInvocationTree, DetectionStore.Scope.EXPRESSION);
-                } else if (expression instanceof NewClassTree newClassTree
-                        && assignedSymbol.isEmpty()) {
+                } else if (expression instanceof NewClassTree newClassTree) {
                     // follow expression directly, do not find matching expression in the method
                     // scope
                     detectionStore.onDetectedDependingParameter(

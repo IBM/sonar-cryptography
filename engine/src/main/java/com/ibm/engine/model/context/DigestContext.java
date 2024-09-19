@@ -23,48 +23,14 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Nonnull;
 
-public class DigestContext extends DetectionContext
-        implements IDetectionContext, ISupportKind<DigestContext.Kind> {
-
-    public enum Kind {
-        NONE,
-        MGF1,
-        CRAMER_SHOUP,
-        NTRU,
-    }
-
-    @Nonnull private final Kind kind;
+public class DigestContext extends DetectionContext {
 
     public DigestContext() {
         super(new HashMap<>());
-        this.kind = Kind.NONE;
-    }
-
-    /**
-     * use a property map instead
-     *
-     * @deprecated
-     */
-    @Deprecated(since = "1.3.0")
-    public DigestContext(@Nonnull Kind kind) {
-        super(new HashMap<>());
-        this.kind = kind;
     }
 
     public DigestContext(@Nonnull Map<String, String> properties) {
         super(properties);
-        this.kind = Kind.NONE;
-    }
-
-    /**
-     * use a property map instead
-     *
-     * @deprecated
-     */
-    @Deprecated(since = "1.3.0")
-    @Nonnull
-    public Kind kind() {
-        return kind;
     }
 
     @Nonnull

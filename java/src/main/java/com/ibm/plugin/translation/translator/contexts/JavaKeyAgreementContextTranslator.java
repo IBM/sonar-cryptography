@@ -61,9 +61,7 @@ public final class JavaKeyAgreementContextTranslator extends JavaAbstractLibrary
             @NotNull IValue<Tree> value,
             @NotNull IDetectionContext detectionContext,
             @NotNull DetectionLocation detectionLocation) {
-        if (value instanceof Algorithm<Tree> algorithm) {
-            return Optional.empty(); // TODO
-        } else if (value instanceof KeySize<Tree> keySize) {
+        if (value instanceof KeySize<Tree> keySize) {
             KeyLength keyLength = new KeyLength(keySize.getValue(), detectionLocation);
             return Optional.of(keyLength);
         } else if (value instanceof KeyAction<Tree> action) {

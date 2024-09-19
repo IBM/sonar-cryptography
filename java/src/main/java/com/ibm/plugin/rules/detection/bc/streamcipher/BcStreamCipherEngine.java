@@ -26,6 +26,7 @@ import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -72,7 +73,7 @@ public final class BcStreamCipherEngine {
                             // We want to capture all possible constructors (some have arguments)
                             .withAnyParameters()
                             .buildForContext(
-                                    new CipherContext(CipherContext.Kind.STREAM_CIPHER_ENGINE))
+                                    new CipherContext(Map.of("kind", "STREAM_CIPHER_ENGINE")))
                             .inBundle(() -> "Bc")
                             .withDependingDetectionRules(BcStreamCipherInit.rules()));
         }

@@ -25,9 +25,9 @@ import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.CipherAction;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.context.CipherContext;
-import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.KeyWrap;
 import com.ibm.mapper.model.functionality.Encapsulate;
 import com.ibm.plugin.TestBase;
 import java.util.List;
@@ -68,9 +68,9 @@ public class PycaWrappingWithPaddingTest extends TestBase {
 
         // BlockCipher
         INode blockCipherNode = nodes.get(0);
-        assertThat(blockCipherNode.getKind()).isEqualTo(BlockCipher.class);
-        assertThat(blockCipherNode.getChildren()).hasSize(2);
-        assertThat(blockCipherNode.asString()).isEqualTo("AESWrap128");
+        assertThat(blockCipherNode.getKind()).isEqualTo(KeyWrap.class);
+        assertThat(blockCipherNode.getChildren()).hasSize(4);
+        assertThat(blockCipherNode.asString()).isEqualTo("AES128");
 
         // KeyLength under BlockCipher
         INode keyLengthNode = blockCipherNode.getChildren().get(KeyLength.class);

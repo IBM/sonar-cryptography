@@ -19,16 +19,11 @@
  */
 package com.ibm.mapper.reorganizer.rules;
 
-import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.BlockCipher;
-import com.ibm.mapper.model.INode;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
+import com.ibm.mapper.reorganizer.UsualPerformActions;
 import com.ibm.mapper.reorganizer.builder.ReorganizerRuleBuilder;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 
 public final class BlockCipherReorganizer {
 
@@ -36,7 +31,7 @@ public final class BlockCipherReorganizer {
         // private
     }
 
-    private static final IReorganizerRule MERGE_BLOCK_CIPHER_PARENT_AND_CHILD =
+    public static final IReorganizerRule MERGE_BLOCK_CIPHER_PARENT_AND_CHILD =
             new ReorganizerRuleBuilder()
                     .createReorganizerRule()
                     .forNodeKind(BlockCipher.class)
@@ -47,41 +42,6 @@ public final class BlockCipherReorganizer {
                                             .forNodeKind(BlockCipher.class)
                                             .noAction()))
                     .perform(
-                            (node, parent, roots) -> {
-                                Algorithm newBlockCipher =
-                                        (Algorithm)
-                                                node.getChildren()
-                                                        .get(BlockCipher.class)
-                                                        .deepCopy();
-
-                                for (Map.Entry<Class<? extends INode>, INode> childKeyValue :
-                                        node.getChildren().entrySet()) {
-                                    if (!childKeyValue.getKey().equals(BlockCipher.class)) {
-                                        newBlockCipher.put(childKeyValue.getValue());
-                                    }
-                                }
-
-                                if (parent == null) {
-                                    // `node` is a root node
-                                    // Create a copy of the roots list
-                                    List<INode> rootsCopy = new ArrayList<>(roots);
-                                    for (int i = 0; i < rootsCopy.size(); i++) {
-                                        if (rootsCopy.get(i).equals(node)) {
-                                            rootsCopy.set(i, newBlockCipher);
-                                            break;
-                                        }
-                                    }
-                                    return rootsCopy;
-                                } else {
-                                    // Replace the previous BlockCipher node
-                                    parent.put(newBlockCipher);
-                                    return roots;
-                                }
-                            });
-
-    @Unmodifiable
-    @Nonnull
-    public static List<IReorganizerRule> rules() {
-        return List.of(MERGE_BLOCK_CIPHER_PARENT_AND_CHILD);
-    }
+                            UsualPerformActions.performMergeParentAndChildOfSameKind(
+                                    BlockCipher.class));
 }

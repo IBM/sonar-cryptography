@@ -24,13 +24,16 @@ import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.KeyLength;
+import com.ibm.mapper.model.KeyWrap;
+import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-public final class Camellia extends Algorithm implements BlockCipher, AuthenticatedEncryption {
+public final class Camellia extends Algorithm
+        implements BlockCipher, AuthenticatedEncryption, KeyWrap, Mac {
     private static final String NAME = "Camellia";
 
     public Camellia(@NotNull DetectionLocation detectionLocation) {

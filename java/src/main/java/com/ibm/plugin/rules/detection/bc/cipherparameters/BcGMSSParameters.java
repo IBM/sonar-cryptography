@@ -46,8 +46,7 @@ public final class BcGMSSParameters {
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
                     .asChildOfParameterWithId(-1)
-                    .buildForContext(
-                            new AlgorithmParameterContext(AlgorithmParameterContext.Kind.GMSS))
+                    .buildForContext(new AlgorithmParameterContext())
                     .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
@@ -59,8 +58,7 @@ public final class BcGMSSParameters {
                     .withMethodParameter("boolean")
                     .withMethodParameter("org.bouncycastle.pqc.legacy.crypto.gmss.GMSSParameters")
                     .addDependingDetectionRules(List.of(BASE_CONSTRUCTOR))
-                    .buildForContext(
-                            new AlgorithmParameterContext(AlgorithmParameterContext.Kind.GMSS))
+                    .buildForContext(new AlgorithmParameterContext())
                     .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
@@ -73,8 +71,7 @@ public final class BcGMSSParameters {
                     .withMethodParameter(BYTE_ARRAY_TYPE)
                     .withMethodParameter("org.bouncycastle.pqc.legacy.crypto.gmss.GMSSParameters")
                     .addDependingDetectionRules(List.of(BASE_CONSTRUCTOR))
-                    .buildForContext(
-                            new AlgorithmParameterContext(AlgorithmParameterContext.Kind.GMSS))
+                    .buildForContext(new AlgorithmParameterContext())
                     .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
@@ -86,8 +83,7 @@ public final class BcGMSSParameters {
                     .withMethodParameter(BYTE_ARRAY_TYPE)
                     .withMethodParameter("org.bouncycastle.pqc.legacy.crypto.gmss.GMSSParameters")
                     .addDependingDetectionRules(List.of(BASE_CONSTRUCTOR))
-                    .buildForContext(
-                            new AlgorithmParameterContext(AlgorithmParameterContext.Kind.GMSS))
+                    .buildForContext(new AlgorithmParameterContext())
                     .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
@@ -99,8 +95,7 @@ public final class BcGMSSParameters {
                     .withMethodParameter(
                             "org.bouncycastle.pqc.legacy.crypto.gmss.GMSSPublicKeyParameters")
                     .addDependingDetectionRules(List.of(PUBLIC_KEY_CONSTRUCTOR))
-                    .buildForContext(
-                            new AlgorithmParameterContext(AlgorithmParameterContext.Kind.GMSS))
+                    .buildForContext(new AlgorithmParameterContext())
                     .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
@@ -127,8 +122,7 @@ public final class BcGMSSParameters {
                     .addDependingDetectionRules(List.of(BASE_CONSTRUCTOR))
                     .withMethodParameter(
                             "org.bouncycastle.pqc.legacy.crypto.gmss.GMSSDigestProvider")
-                    .buildForContext(
-                            new AlgorithmParameterContext(AlgorithmParameterContext.Kind.GMSS))
+                    .buildForContext(new AlgorithmParameterContext())
                     .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
@@ -162,8 +156,7 @@ public final class BcGMSSParameters {
                     .addDependingDetectionRules(List.of(BASE_CONSTRUCTOR))
                     .withMethodParameter(
                             "org.bouncycastle.pqc.legacy.crypto.gmss.GMSSDigestProvider")
-                    .buildForContext(
-                            new AlgorithmParameterContext(AlgorithmParameterContext.Kind.GMSS))
+                    .buildForContext(new AlgorithmParameterContext())
                     .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 

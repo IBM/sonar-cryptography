@@ -25,7 +25,6 @@ import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.sonar.java.checks.verifier.CheckVerifier;
 import org.sonar.plugins.java.api.JavaCheck;
@@ -34,8 +33,7 @@ import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
 class BcOAEPEncodingTest extends TestBase {
-    /* TODO: fix duplicate digest detections before enabling and writing asserts */
-    @Disabled
+    // @Disabled("Fix duplicate digest detections before enabling and writing asserts")
     @Test
     void test() {
         CheckVerifier.newVerifier()

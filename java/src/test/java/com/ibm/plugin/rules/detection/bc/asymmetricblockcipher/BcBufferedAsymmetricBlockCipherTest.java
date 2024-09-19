@@ -123,7 +123,7 @@ class BcBufferedAsymmetricBlockCipherTest extends TestBase {
         INode pkeNode = nodes.get(0);
         assertThat(pkeNode.getKind()).isEqualTo(PublicKeyEncryption.class);
         assertThat(pkeNode.getChildren()).hasSize(4);
-        assertThat(pkeNode.asString()).isEqualTo("RSA");
+        assertThat(pkeNode.asString()).isEqualTo("RSA-OAEP");
 
         // Encrypt under PublicKeyEncryption
         INode encryptNode = pkeNode.getChildren().get(Encrypt.class);

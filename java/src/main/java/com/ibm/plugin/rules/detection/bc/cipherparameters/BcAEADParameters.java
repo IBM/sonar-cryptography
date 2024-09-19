@@ -48,8 +48,7 @@ public final class BcAEADParameters {
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new MacSizeFactory<>(Size.UnitType.BIT))
                     .withMethodParameter(BYTE_ARRAY_TYPE)
-                    .buildForContext(
-                            new AlgorithmParameterContext(AlgorithmParameterContext.Kind.AEAD))
+                    .buildForContext(new AlgorithmParameterContext())
                     .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
@@ -65,8 +64,7 @@ public final class BcAEADParameters {
                     .shouldBeDetectedAs(new MacSizeFactory<>(Size.UnitType.BIT))
                     .withMethodParameter(BYTE_ARRAY_TYPE)
                     .withMethodParameter(BYTE_ARRAY_TYPE)
-                    .buildForContext(
-                            new AlgorithmParameterContext(AlgorithmParameterContext.Kind.AEAD))
+                    .buildForContext(new AlgorithmParameterContext())
                     .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
