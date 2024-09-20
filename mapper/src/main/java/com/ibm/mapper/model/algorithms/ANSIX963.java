@@ -25,8 +25,25 @@ import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://csrc.nist.gov/CSRC/media/Events/Key-Management-Workshop-2000/documents/x963_overview.pdf
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ * </ul>
+ */
 public final class ANSIX963 extends Algorithm implements KeyDerivationFunction {
-    // https://csrc.nist.gov/CSRC/media/Events/Key-Management-Workshop-2000/documents/x963_overview.pdf
 
     private static final String NAME = "ANSI X9.63";
 

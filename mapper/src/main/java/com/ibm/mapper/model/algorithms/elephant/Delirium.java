@@ -24,8 +24,26 @@ import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>Elephant-Keccak-f[200]
+ * </ul>
+ */
 public class Delirium extends Elephant {
-    private static final String NAME = "Delirium"; // Elephant-Keccak-f[200]
+    private static final String NAME = "Delirium";
 
     public Delirium(@NotNull DetectionLocation detectionLocation) {
         super(NAME, detectionLocation);

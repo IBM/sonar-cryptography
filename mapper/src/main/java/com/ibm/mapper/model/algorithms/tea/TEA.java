@@ -30,10 +30,28 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://en.wikipedia.org/wiki/Tiny_Encryption_Algorithm
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>Tiny Encryption Algorithm
+ * </ul>
+ */
 public final class TEA extends Algorithm implements BlockCipher {
-    // https://en.wikipedia.org/wiki/Tiny_Encryption_Algorithm
 
-    private static final String NAME = "TEA"; // Tiny Encryption Algorithm
+    private static final String NAME = "TEA";
 
     public TEA(@NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);

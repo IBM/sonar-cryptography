@@ -24,10 +24,28 @@ import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://en.wikipedia.org/wiki/Variably_Modified_Permutation_Composition
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>Variably Modified Permutation Composition
+ * </ul>
+ */
 public class VMPC extends Algorithm implements StreamCipher {
-    // https://en.wikipedia.org/wiki/Variably_Modified_Permutation_Composition
 
-    private static final String NAME = "VMPC"; // Variably Modified Permutation Composition
+    private static final String NAME = "VMPC";
 
     public VMPC(@NotNull DetectionLocation detectionLocation) {
         super(NAME, StreamCipher.class, detectionLocation);

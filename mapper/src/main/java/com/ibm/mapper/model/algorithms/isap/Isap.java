@@ -29,8 +29,25 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://csrc.nist.gov/CSRC/media/Projects/lightweight-cryptography/documents/finalist-round/updated-spec-doc/isap-spec-final.pdf
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ * </ul>
+ */
 public class Isap extends Algorithm implements AuthenticatedEncryption {
-    // https://csrc.nist.gov/CSRC/media/Projects/lightweight-cryptography/documents/finalist-round/updated-spec-doc/isap-spec-final.pdf
 
     private static final String NAME = "Isap";
 

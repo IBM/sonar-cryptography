@@ -29,11 +29,29 @@ import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://en.wikipedia.org/wiki/Kalyna_(cipher)
+ *   <li>https://eprint.iacr.org/2015/650.pdf
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>DSTU 7624:2014
+ * </ul>
+ */
 public final class Kalyna extends Algorithm implements BlockCipher, Mac, KeyWrap {
-    // https://en.wikipedia.org/wiki/Kalyna_(cipher)
-    // https://eprint.iacr.org/2015/650.pdf
 
-    private static final String NAME = "Kalyna"; // DSTU 7624:2014
+    private static final String NAME = "Kalyna";
 
     /**
      * Returns a name of the form "Kalyna-XXX/YYY" where XXX is the block size and YYY is the key

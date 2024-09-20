@@ -30,10 +30,28 @@ import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://csrc.nist.gov/CSRC/media/Projects/lightweight-cryptography/documents/finalist-round/updated-spec-doc/sparkle-spec-final.pdf
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>Part of the Sparkle family
+ * </ul>
+ */
 public class Schwaemm extends Algorithm implements AuthenticatedEncryption, BlockCipher {
-    // https://csrc.nist.gov/CSRC/media/Projects/lightweight-cryptography/documents/finalist-round/updated-spec-doc/sparkle-spec-final.pdf
 
-    private static final String NAME = "Schwaemm"; // from the Sparkle family
+    private static final String NAME = "Schwaemm";
 
     /**
      * Returns a name of the form "SchwaemmXXX-YYY" where XXX is the rate and YYY is the capacity

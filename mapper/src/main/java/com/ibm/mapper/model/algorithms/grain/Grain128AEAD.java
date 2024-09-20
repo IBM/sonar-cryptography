@@ -25,8 +25,25 @@ import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://csrc.nist.gov/CSRC/media/Projects/lightweight-cryptography/documents/round-2/spec-doc-rnd2/grain-128aead-spec-round2.pdf
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ * </ul>
+ */
 public class Grain128AEAD extends Grain implements AuthenticatedEncryption {
-    // https://csrc.nist.gov/CSRC/media/Projects/lightweight-cryptography/documents/round-2/spec-doc-rnd2/grain-128aead-spec-round2.pdf
 
     private static final String NAME = "Grain-128AEAD";
 

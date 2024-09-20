@@ -29,10 +29,28 @@ import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://en.wikipedia.org/wiki/CAST-128
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>CAST5
+ * </ul>
+ */
 public final class CAST128 extends Algorithm implements BlockCipher {
-    // https://en.wikipedia.org/wiki/CAST-128
 
-    private static final String NAME = "CAST-128"; // CAST5
+    private static final String NAME = "CAST-128";
 
     // "128" refers to the maximum size of the key
 

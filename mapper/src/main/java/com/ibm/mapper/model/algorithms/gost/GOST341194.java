@@ -26,11 +26,30 @@ import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://en.wikipedia.org/wiki/GOST_(hash_function)
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>GOST R 34.11-94
+ *   <li>GOST 34.311-95
+ *   <li>Just "GOST"
+ * </ul>
+ */
 public final class GOST341194 extends Algorithm implements MessageDigest {
-    // https://en.wikipedia.org/wiki/GOST_(hash_function)
 
-    private static final String NAME =
-            "GOST341194"; // GOST R 34.11-94, GOST 34.311-95, or just "GOST"
+    private static final String NAME = "GOST341194";
 
     public GOST341194(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, MessageDigest.class, detectionLocation);

@@ -29,8 +29,25 @@ import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://en.wikipedia.org/wiki/NOEKEON
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ * </ul>
+ */
 public final class NOEKEON extends Algorithm implements BlockCipher {
-    // https://en.wikipedia.org/wiki/NOEKEON
 
     private static final String NAME = "NOEKEON";
 
