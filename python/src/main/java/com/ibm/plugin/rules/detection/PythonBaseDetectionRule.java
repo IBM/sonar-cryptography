@@ -79,6 +79,7 @@ public abstract class PythonBaseDetectionRule extends PythonVisitorCheck
     public void update(@Nonnull Finding<PythonCheck, Tree, Symbol, PythonVisitorContext> finding) {
         List<INode> nodes = pythonTranslationProcess.initiate(finding.detectionStore());
         PythonAggregator.addNodes(nodes);
+        this.report(finding.detectionStore(), this);
     }
 
     @Override
