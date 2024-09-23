@@ -16,7 +16,8 @@
         <module>output</module>
         <module>common</module>
         <module>enricher</module>
-        <module>sonar-cryptography-plugin</module>
+        <module>sonar-java-cryptography-plugin</module>
+        <module>sonar-python-cryptography-plugin</module>
     </modules>
 
     <version>2.0.0-SNAPSHOT</version>

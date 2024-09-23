@@ -60,12 +60,10 @@ public final class ScannerManager {
     private List<INode> getAggregatedNodes() {
         List<INode> nodes = new ArrayList<>();
         nodes.addAll(JavaAggregator.getDetectedNodes());
-        nodes.addAll(PythonAggregator.getDetectedNodes());
         return nodes;
     }
 
     public void reset() {
         JavaAggregator.reset();
-        PythonAggregator.reset();
     }
 }

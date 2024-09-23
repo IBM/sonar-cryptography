@@ -9,7 +9,7 @@
         <version>2.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>sonar-cryptography-plugin</artifactId>
+    <artifactId>sonar-java-cryptography-plugin</artifactId>
     <packaging>sonar-plugin</packaging>
 
     <description>A SonarQube Plugin to detect cryptographic assets in applications</description>
@@ -26,12 +26,6 @@
         <dependency>
             <groupId>com.ibm</groupId>
             <artifactId>java</artifactId>
-            <version>2.0.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.ibm</groupId>
-            <artifactId>python</artifactId>
             <version>2.0.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
@@ -55,8 +49,8 @@
                 <version>1.23.0.740</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <pluginKey>sonar-crypto-plugin</pluginKey>
-                    <pluginName>Sonar Crypto Plugin</pluginName>
+                    <pluginKey>sonar-java-crypto-plugin</pluginKey>
+                    <pluginName>Sonar Java Crypto Plugin</pluginName>
                     <pluginClass>com.ibm.plugin.CryptographyPlugin</pluginClass>
                     <pluginApiMinVersion>${sonar.minVersion}</pluginApiMinVersion>
                     <sonarLintSupported>true</sonarLintSupported>
@@ -124,7 +118,7 @@
                                     <directory>target</directory>
                                     <filtering>false</filtering>
                                     <includes>
-                                        <include>sonar-cryptography-plugin-*.jar</include>
+                                        <include>sonar-java-cryptography-plugin-*.jar</include>
                                     </includes>
                                 </resource>
                             </resources>

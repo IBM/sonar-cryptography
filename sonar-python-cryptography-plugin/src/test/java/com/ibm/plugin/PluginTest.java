@@ -19,13 +19,26 @@
  */
 package com.ibm.plugin;
 
-public final class Constants {
-    /** Config properties */
-    public static final String CBOM_OUTPUT_NAME = "sonar.cryptoScanner.cbom";
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.sonar.api.Plugin;
+import org.sonar.api.SonarEdition;
+import org.sonar.api.SonarQubeSide;
+import org.sonar.api.SonarRuntime;
+import org.sonar.api.internal.PluginContextImpl;
+import org.sonar.api.internal.SonarRuntimeImpl;
+import org.sonar.api.utils.Version;
 
-    public static final String CBOM_OUTPUT_NAME_DEFAULT = "cbom";
+class PluginTest {
 
-    public static final String SUB_CATEGORY_GENERAL = "General";
-
-    private Constants() {}
+    @Test
+    void testExtensions() {
+        SonarRuntime runtime =
+                SonarRuntimeImpl.forSonarQube(
+                        Version.create(9, 5), SonarQubeSide.SCANNER, SonarEdition.COMMUNITY);
+        Plugin.Context context = new PluginContextImpl.Builder().setSonarRuntime(runtime).build();
+        CryptographyPlugin plugin = new CryptographyPlugin();
+        plugin.define(context);
+        Assertions.assertEquals(4, context.getExtensions().size());
+    }
 }

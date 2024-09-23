@@ -35,16 +35,13 @@ public class CryptographyPlugin implements Plugin {
         SonarRuntime runtime = context.getRuntime();
         SonarProduct product = runtime.getProduct();
 
-        LOGGER.info("Sonar Cryptography initialized in context (" + product + ")");
+        LOGGER.info("Sonar Java Cryptography initialized in context (" + product + ")");
 
         context.addExtensions(Configuration.getPropertyDefinitions()); // add configuration
         context.addExtensions(
                 // java
                 JavaScannerRuleDefinition.class, // Define Rules
                 JavaCheckRegistrar.class, // Register Java rules by sonar-java sensor
-                // python
-                PythonScannerRuleDefinition.class, // Define Rules
-                PythonCheckRegistrar.class, // Register Python rules by sonar-python sensor
                 // general
                 OutputFileJob.class);
     }
