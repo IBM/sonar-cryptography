@@ -26,6 +26,24 @@ import com.ibm.mapper.model.padding.PKCS7;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   *
+ * </ul>
+ */
 public final class Fernet extends Algorithm implements AuthenticatedEncryption {
     private static final String NAME = "Fernet";
 

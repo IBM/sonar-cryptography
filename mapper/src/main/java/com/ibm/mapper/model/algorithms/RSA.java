@@ -35,6 +35,24 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   *
+ * </ul>
+ */
 public final class RSA extends Algorithm implements KeyAgreement, Signature, PublicKeyEncryption {
     private static final String NAME = "RSA";
     private static final String OID = "1.2.840.113549.1.1.1";
