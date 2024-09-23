@@ -58,6 +58,8 @@
                     <pluginKey>sonar-crypto-plugin</pluginKey>
                     <pluginName>Sonar Crypto Plugin</pluginName>
                     <pluginClass>com.ibm.plugin.CryptographyPlugin</pluginClass>
+                    <!-- This line must specify all file extensions which should be scanned by the plugin -->
+                    <requiredForLanguages>java,jsp,py,ipynb</requiredForLanguages>
                     <pluginApiMinVersion>${sonar.minVersion}</pluginApiMinVersion>
                     <sonarLintSupported>true</sonarLintSupported>
                     <skipDependenciesPackaging>true</skipDependenciesPackaging>
