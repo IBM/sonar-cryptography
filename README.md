@@ -9,9 +9,10 @@ in source code and generates [CBOM](https://cyclonedx.org/capabilities/cbom/).
 
 ## Version compatibility
 
-| Plugin Version | SonarQube Version                 |
-|----------------|-----------------------------------|
-| 1.2.0 and up   | SonarQube 9.8 and up              |      
+| Plugin Version | SonarQube Version      |
+|----------------|------------------------|
+| 1.3.2 and up   | SonarQube 9.8 and up   | 
+| 1.2.0 to 1.3.1 | SonarQube 9.8 and 10.4 |      
 
 
 ## Supported languages and libraries
