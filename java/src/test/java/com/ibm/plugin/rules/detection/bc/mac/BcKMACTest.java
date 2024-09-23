@@ -100,7 +100,6 @@ class BcKMACTest extends TestBase {
         assertThat(xofNode).isNotNull();
         assertThat(xofNode.getChildren()).hasSize(1);
         assertThat(xofNode.asString()).isEqualTo("cSHAKE");
-        /* TODO: optimally, we would capture cSHAKE256 here (using enrichment) */
 
         // Digest under ExtendableOutputFunction under Mac
         INode digestNode = xofNode.getChildren().get(Digest.class);

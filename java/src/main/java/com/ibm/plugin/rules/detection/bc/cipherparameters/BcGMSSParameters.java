@@ -99,7 +99,6 @@ public final class BcGMSSParameters {
                     .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
-    // TODO: add a test case for this constructor
     private static final IDetectionRule<Tree> PRIVATE_KEY_CONSTRUCTOR_1 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
@@ -126,7 +125,6 @@ public final class BcGMSSParameters {
                     .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
-    // TODO: add a test case for this constructor
     private static final IDetectionRule<Tree> PRIVATE_KEY_CONSTRUCTOR_2 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()

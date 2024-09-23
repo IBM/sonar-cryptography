@@ -84,7 +84,6 @@ public final class BcBufferedBlockCipher {
                         .forConstructor()
                         .shouldBeDetectedAs(new ValueActionFactory<>("NISTCTSBlockCipher"))
                         .withMethodParameter("int")
-                        // TODO: "Type": should it be detected?
                         .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                         .addDependingDetectionRules(BcBlockCipher.all())
                         .buildForContext(new CipherContext(Map.of("kind", "BUFFERED_BLOCK_CIPHER")))

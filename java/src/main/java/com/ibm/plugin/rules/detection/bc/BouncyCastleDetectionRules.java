@@ -76,7 +76,6 @@ public final class BouncyCastleDetectionRules {
                         // Wrapper
                         BcWrapperEngine.rules().stream(),
                         // BasicAgreement
-                        // TODO: Should it be an entry point or only a depending rule of IES?
                         BcBasicAgreement.rules().stream(),
                         // DerivationFunction
                         BcDerivationFunction.rules().stream(),

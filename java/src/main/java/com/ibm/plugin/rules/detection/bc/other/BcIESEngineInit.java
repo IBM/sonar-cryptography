@@ -45,7 +45,6 @@ public final class BcIESEngineInit {
                     .withMethodParameter("org.bouncycastle.crypto.params.AsymmetricKeyParameter")
                     .withMethodParameter("org.bouncycastle.crypto.CipherParameters")
                     .addDependingDetectionRules(BcCipherParameters.rules())
-                    // TODO: capture?
                     .withMethodParameter(
                             "org.bouncycastle.crypto.generators.EphemeralKeyPairGenerator")
                     .buildForContext(new CipherContext())
@@ -61,7 +60,6 @@ public final class BcIESEngineInit {
                     .withMethodParameter("org.bouncycastle.crypto.params.AsymmetricKeyParameter")
                     .withMethodParameter("org.bouncycastle.crypto.CipherParameters")
                     .addDependingDetectionRules(BcCipherParameters.rules())
-                    // TODO: capture?
                     .withMethodParameter("org.bouncycastle.crypto.KeyParser")
                     .buildForContext(new CipherContext())
                     .inBundle(() -> "Bc")

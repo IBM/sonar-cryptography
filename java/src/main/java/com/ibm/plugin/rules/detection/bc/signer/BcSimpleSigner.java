@@ -37,8 +37,6 @@ public final class BcSimpleSigner {
         // nothing
     }
 
-    /* TODO: maybe the function `extractSecret` would be a better entry point than the constructors? */
-
     private static final List<String> simpleSigners =
             Arrays.asList(
                     "Ed25519Signer" /* standard algorithm */,

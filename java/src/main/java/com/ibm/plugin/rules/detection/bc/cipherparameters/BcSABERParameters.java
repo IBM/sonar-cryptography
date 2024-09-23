@@ -48,11 +48,6 @@ public final class BcSABERParameters {
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
                     .withMethodParameter("boolean")
-                    /*
-                     * TODO: How to translate below?
-                     * It comes from using SABERParameters with `usingAes == true`
-                     */
-                    // .shouldBeDetectedAs(new BooleanFactory<>()) // captures `usingAes`
                     .withMethodParameter("boolean")
                     .buildForContext(new AlgorithmParameterContext())
                     .inBundle(() -> "Bc")

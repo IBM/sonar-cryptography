@@ -60,8 +60,8 @@ class BcISO9797Alg3MacTest extends TestBase {
             @NotNull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
             @NotNull List<INode> nodes) {
         /**
-         * TODO: Optimally, we shouldn't have these direct detections of engines, as they appear in
-         * the depending detection rules
+         * Optimally, we shouldn't have these direct detections of engines, as they appear in the
+         * depending detection rules
          */
         if (findingId == 0) {
             return;

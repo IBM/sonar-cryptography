@@ -37,8 +37,6 @@ public final class BcDSA {
         // nothing
     }
 
-    /* TODO: maybe the function `extractSecret` would be a better entry point than the constructors? */
-
     public static final List<String> dsas =
             List.of(
                     "DSASigner",

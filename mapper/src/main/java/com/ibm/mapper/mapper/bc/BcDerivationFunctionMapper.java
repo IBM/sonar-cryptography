@@ -65,17 +65,17 @@ public class BcDerivationFunctionMapper implements IMapper {
                 // "RFC 2631 Diffie-hellman KEK derivation function"
                 // https://datatracker.ietf.org/doc/html/rfc2631#section-2.1.3
                 final KeyDerivationFunction kdf = new ANSIX942(detectionLocation);
-                kdf.put(new KeyDerivation(detectionLocation)); // TODO: add to enrichment
+                kdf.put(new KeyDerivation(detectionLocation));
                 yield Optional.of(kdf);
             }
             case "ECDHKEKGenerator" -> {
                 // "X9.63 based key derivation function for ECDH CMS"
                 // https://csrc.nist.gov/CSRC/media/Events/Key-Management-Workshop-2000/documents/x963_overview.pdf
                 final KeyDerivationFunction kdf = new ANSIX963(detectionLocation);
-                kdf.put(new KeyDerivation(detectionLocation)); // TODO: add to enrichment
+                kdf.put(new KeyDerivation(detectionLocation));
                 yield Optional.of(new ANSIX963(detectionLocation));
             }
-            // TODO: case "HandshakeKDFFunction" -> Optional.of();
+            /* case "HandshakeKDFFunction" -> Optional.of(); // TODO: which algorithm should it be mapped to? */
             case "GSKKFDGenerator" -> Optional.of(new KDFSession(detectionLocation));
             case "HKDFBytesGenerator" -> Optional.of(new HKDF(detectionLocation));
             case "KDF1BytesGenerator" -> Optional.of(new KDF1(detectionLocation));
