@@ -28,8 +28,25 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://datatracker.ietf.org/doc/html/draft-shen-sm2-ecdsa-02
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ * </ul>
+ */
 public final class SM2 extends Algorithm implements Signature, PublicKeyEncryption, KeyAgreement {
-    // https://datatracker.ietf.org/doc/html/draft-shen-sm2-ecdsa-02
 
     private static final String NAME = "SM2";
 

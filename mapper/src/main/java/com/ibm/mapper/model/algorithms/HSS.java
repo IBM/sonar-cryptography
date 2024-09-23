@@ -24,10 +24,28 @@ import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://www.rfc-editor.org/rfc/rfc8708.html#name-hierarchical-signature-syst
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>Hierarchical Signature System (RFC 8708)
+ * </ul>
+ */
 public class HSS extends Algorithm implements Signature {
-    // https://www.rfc-editor.org/rfc/rfc8708.html#name-hierarchical-signature-syst
 
-    private static final String NAME = "HSS"; // Hierarchical Signature System
+    private static final String NAME = "HSS";
 
     public HSS(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, Signature.class, detectionLocation);

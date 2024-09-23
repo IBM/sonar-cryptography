@@ -25,8 +25,26 @@ import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://www-polsys.lip6.fr/Links/NIST/GeMSS.html
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>Great Multivariate Short Signature
+ * </ul>
+ */
 public class GeMSS extends Algorithm implements Signature {
-    // https://www-polsys.lip6.fr/Links/NIST/GeMSS.html
 
     private static final String NAME = "GeMSS"; // Great Multivariate Short Signature
 

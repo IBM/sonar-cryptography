@@ -25,9 +25,26 @@ import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://microsoft.github.io/Picnic/
+ *   <li>https://csrc.nist.gov/CSRC/media/Presentations/picnic-round-2-presentation/images-media/picnic-zaverucha.pdf
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ * </ul>
+ */
 public class Picnic extends Algorithm implements Signature {
-    // https://microsoft.github.io/Picnic/
-    // https://csrc.nist.gov/CSRC/media/Presentations/picnic-round-2-presentation/images-media/picnic-zaverucha.pdf
 
     private static final String NAME = "Picnic";
 

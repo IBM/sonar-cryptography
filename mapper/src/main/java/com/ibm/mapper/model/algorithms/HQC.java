@@ -26,10 +26,28 @@ import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://pqc-hqc.org/doc/hqc-specification_2023-04-30.pdf
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>Hamming Quasi-Cyclic
+ * </ul>
+ */
 public final class HQC extends Algorithm implements KeyEncapsulationMechanism, PublicKeyEncryption {
-    // https://pqc-hqc.org/doc/hqc-specification_2023-04-30.pdf
 
-    private static final String NAME = "HQC"; // Hamming Quasi-Cyclic
+    private static final String NAME = "HQC";
 
     /** Returns a more specific name "HQC.KEM" or "HQC.PKE" length */
     @Override

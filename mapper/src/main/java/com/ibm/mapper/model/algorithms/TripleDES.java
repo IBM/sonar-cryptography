@@ -30,9 +30,26 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-// default is EDE mode
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>Default is EDE mode
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>TripleDES
+ * </ul>
+ */
 public final class TripleDES extends Algorithm implements BlockCipher {
-    private static final String NAME = "3DES"; // TripleDES
+    private static final String NAME = "3DES";
 
     public TripleDES(@NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);

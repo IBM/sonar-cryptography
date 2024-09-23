@@ -24,8 +24,25 @@ import com.ibm.mapper.model.KeyWrap;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://datatracker.ietf.org/doc/html/rfc3211#section-2.3.1
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ * </ul>
+ */
 public class RFC3211Wrap extends Algorithm implements KeyWrap {
-    // https://datatracker.ietf.org/doc/html/rfc3211#section-2.3.1
 
     private static final String NAME = "RFC 3211";
 

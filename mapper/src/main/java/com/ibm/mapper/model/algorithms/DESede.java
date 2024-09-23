@@ -32,10 +32,30 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://en.wikipedia.org/wiki/Triple_DES
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>TripleDES
+ *   <li>3DES
+ *   <li>TDES
+ * </ul>
+ */
 public final class DESede extends Algorithm implements BlockCipher, KeyWrap, Mac {
-    // https://en.wikipedia.org/wiki/Triple_DES
 
-    private static final String NAME = "DESede"; // TripleDES, 3DES, TDES
+    private static final String NAME = "DESede";
 
     @Override
     public @NotNull String asString() {

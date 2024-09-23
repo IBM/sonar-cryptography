@@ -27,9 +27,26 @@ import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://en.wikipedia.org/wiki/ElGamal_encryption
+ *   <li>https://en.wikipedia.org/wiki/ElGamal_signature_scheme
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ * </ul>
+ */
 public final class ElGamal extends Algorithm implements PublicKeyEncryption, Signature {
-    // https://en.wikipedia.org/wiki/ElGamal_encryption
-    // https://en.wikipedia.org/wiki/ElGamal_signature_scheme
 
     private static final String NAME = "ElGamal";
 

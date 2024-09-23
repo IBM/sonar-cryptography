@@ -24,8 +24,25 @@ import com.ibm.mapper.model.KeyEncapsulationMechanism;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://frodokem.org/files/FrodoKEM-specification-20210604.pdf
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ * </ul>
+ */
 public final class FrodoKEM extends Algorithm implements KeyEncapsulationMechanism {
-    // https://frodokem.org/files/FrodoKEM-specification-20210604.pdf
 
     private static final String NAME = "FrodoKEM";
 

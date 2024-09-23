@@ -24,8 +24,26 @@ import com.ibm.mapper.model.KeyEncapsulationMechanism;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>See 11.5 of https://www.shoup.net/iso/std6.pdf (ISO 18033)
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>ISO 18033
+ * </ul>
+ */
 public final class RSAKEM extends Algorithm implements KeyEncapsulationMechanism {
-    // See 11.5 of https://www.shoup.net/iso/std6.pdf (ISO 18033)
 
     private static final String NAME = "RSA-KEM";
 

@@ -24,10 +24,28 @@ import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://raw.githubusercontent.com/wiki/skunkwerks/swirl/papers/Merkle_Signatures_with_Virtually_Unlimited_Signature_Capacity.pdf
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>Generalized Merkle Signature Scheme
+ * </ul>
+ */
 public class GMSS extends Algorithm implements Signature {
-    // https://raw.githubusercontent.com/wiki/skunkwerks/swirl/papers/Merkle_Signatures_with_Virtually_Unlimited_Signature_Capacity.pdf
 
-    private static final String NAME = "GMSS"; // Generalized Merkle Signature Scheme
+    private static final String NAME = "GMSS";
 
     public GMSS(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, Signature.class, detectionLocation);

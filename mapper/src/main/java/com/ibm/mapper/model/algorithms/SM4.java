@@ -29,8 +29,26 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>SMS4
+ * </ul>
+ */
 public final class SM4 extends Algorithm implements BlockCipher, AuthenticatedEncryption, Mac {
-    private static final String NAME = "SM4"; // SMS4
+    private static final String NAME = "SM4";
 
     public SM4(@NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);

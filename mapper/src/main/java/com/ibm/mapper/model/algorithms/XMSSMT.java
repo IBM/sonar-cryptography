@@ -26,11 +26,28 @@ import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-// Hash Based Signature (HBS)
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>Hash Based Signature (HBS)
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://datatracker.ietf.org/doc/html/rfc8391#section-4.2
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>Multi-Tree XMSS
+ * </ul>
+ */
 public final class XMSSMT extends Algorithm implements Signature, MessageDigest {
-    // https://datatracker.ietf.org/doc/html/rfc8391#section-4.2
 
-    private static final String NAME = "XMSS^MT"; // Multi-Tree XMSS
+    private static final String NAME = "XMSS^MT";
 
     public XMSSMT(@Nonnull DetectionLocation detectionLocation) {
         this(Signature.class, detectionLocation);

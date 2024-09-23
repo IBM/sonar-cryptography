@@ -26,12 +26,29 @@ import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
-// Hash Based Signature (HBS)
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>Hash Based Signature (HBS)
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://eprint.iacr.org/2017/349.pdf
+ *   <li>https://datatracker.ietf.org/doc/html/rfc8391#section-4.1
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>eXtended Merkle Signature Scheme
+ * </ul>
+ */
 public final class XMSS extends Algorithm implements Signature, MessageDigest {
-    // https://eprint.iacr.org/2017/349.pdf
-    // https://datatracker.ietf.org/doc/html/rfc8391#section-4.1
 
-    private static final String NAME = "XMSS"; // eXtended Merkle Signature Scheme
+    private static final String NAME = "XMSS";
 
     public XMSS(@Nonnull DetectionLocation detectionLocation) {
         this(Signature.class, detectionLocation);

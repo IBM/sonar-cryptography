@@ -25,9 +25,28 @@ import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>See 13.2 of https://ieeexplore.ieee.org/document/1335427 (IEEE P1363a)
+ *   <li>See 6.2.3 of https://www.shoup.net/iso/std6.pdf (ISO 18033)
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>IEEE P1363a
+ *   <li>ISO 18033
+ * </ul>
+ */
 public final class KDF2 extends Algorithm implements KeyDerivationFunction {
-    // See 13.2 of https://ieeexplore.ieee.org/document/1335427 (IEEE P1363a)
-    // See 6.2.3 of https://www.shoup.net/iso/std6.pdf (ISO 18033)
 
     private static final String NAME = "KDF2";
 

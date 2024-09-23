@@ -27,10 +27,26 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://en.wikipedia.org/wiki/ISAAC_(cipher)
+ *   <li>https://www.burtleburtle.net/bob/rand/isaacafa.html
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ * </ul>
+ */
 public final class ISAAC extends Algorithm implements StreamCipher, PseudorandomNumberGenerator {
-    // https://en.wikipedia.org/wiki/ISAAC_(cipher)
-    // https://www.burtleburtle.net/bob/rand/isaacafa.html
-
     private static final String NAME = "ISAAC";
 
     public ISAAC(@Nonnull DetectionLocation detectionLocation) {
