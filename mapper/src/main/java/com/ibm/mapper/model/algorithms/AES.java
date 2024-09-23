@@ -33,9 +33,29 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://en.wikipedia.org/wiki/Advanced_Encryption_Standard
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>Advanced Encryption Standard
+ *   <li>Rijndael
+ * </ul>
+ */
 public final class AES extends Algorithm
         implements BlockCipher, AuthenticatedEncryption, KeyWrap, Mac {
-    private static final String NAME = "AES"; // Rijndael
+    private static final String NAME = "AES";
 
     @Override
     public @NotNull String asString() {

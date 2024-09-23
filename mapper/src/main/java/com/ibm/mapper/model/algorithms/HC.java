@@ -28,9 +28,26 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>HC-256: https://en.wikipedia.org/wiki/HC-256
+ *   <li>HC-128: https://www.ecrypt.eu.org/stream/p3ciphers/hc/hc128_p3.pdf
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ * </ul>
+ */
 public final class HC extends Algorithm implements StreamCipher {
-    // HC-256: https://en.wikipedia.org/wiki/HC-256
-    // HC-128: https://www.ecrypt.eu.org/stream/p3ciphers/hc/hc128_p3.pdf
 
     private static final String NAME = "HC";
 

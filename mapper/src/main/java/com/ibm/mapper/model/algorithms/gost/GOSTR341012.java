@@ -24,8 +24,26 @@ import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>GOST R 34.10-2012
+ * </ul>
+ */
 public final class GOSTR341012 extends Algorithm implements Signature {
-    private static final String NAME = "GOSTR341012"; // GOST R 34.10-2012
+    private static final String NAME = "GOSTR341012";
 
     public GOSTR341012(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, Signature.class, detectionLocation);

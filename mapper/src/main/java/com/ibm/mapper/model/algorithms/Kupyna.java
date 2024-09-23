@@ -30,10 +30,28 @@ import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://eprint.iacr.org/2015/885.pdf
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>DSTU 7564:2014
+ * </ul>
+ */
 public final class Kupyna extends Algorithm implements MessageDigest {
-    // https://eprint.iacr.org/2015/885.pdf
 
-    private static final String NAME = "Kupyna"; // DSTU 7564:2014
+    private static final String NAME = "Kupyna";
 
     /** Returns a name of the form "Kupyna-XXX" where XXX is the digest size */
     @Override

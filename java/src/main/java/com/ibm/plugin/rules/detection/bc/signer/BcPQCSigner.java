@@ -34,7 +34,6 @@ import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class BcPQCSigner {
-    // TODO: Need support for MessageSigner and StateAwareMessageSigner first
 
     private BcPQCSigner() {
         // nothing

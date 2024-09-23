@@ -29,8 +29,25 @@ import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://eprint.iacr.org/2016/098.pdf
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ * </ul>
+ */
 public final class HarakaV2 extends Algorithm implements MessageDigest {
-    // https://eprint.iacr.org/2016/098.pdf
 
     private static final String NAME = "Haraka v2";
 

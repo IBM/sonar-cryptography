@@ -30,13 +30,30 @@ import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://en.wikipedia.org/wiki/Serpent_(cipher)
+ *   <li>Tnepres (byte swapped version of Serpent):
+ *       https://downloads.bouncycastle.org/java/docs/bcprov-jdk18on-javadoc/org/bouncycastle/crypto/engines/TnepresEngine.html
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>Tnepres
+ * </ul>
+ */
 public final class Serpent extends Algorithm implements BlockCipher, AuthenticatedEncryption {
-    // https://en.wikipedia.org/wiki/Serpent_(cipher)
 
-    private static final String NAME = "Serpent"; // Tnepres
-
-    // Tnepres is a byte swapped version of Serpent:
-    // https://downloads.bouncycastle.org/java/docs/bcprov-jdk18on-javadoc/org/bouncycastle/crypto/engines/TnepresEngine.html
+    private static final String NAME = "Serpent";
 
     public Serpent(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);

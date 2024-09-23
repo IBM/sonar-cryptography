@@ -32,6 +32,7 @@ import com.ibm.mapper.model.KeyDerivationFunction;
 import com.ibm.mapper.model.KeyEncapsulationMechanism;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.functionality.Encapsulate;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
 import java.util.List;
@@ -60,8 +61,8 @@ class BcRSAKEMGeneratorTest extends TestBase {
             @NotNull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
             @NotNull List<INode> nodes) {
         /**
-         * TODO: Optimally, we shouldn't have these direct detections of engines, as they appear in
-         * the depending detection rules
+         * Optimally, we shouldn't have these direct detections of engines, as they appear in the
+         * depending detection rules
          */
         if (findingId == 0) {
             return;
@@ -111,7 +112,7 @@ class BcRSAKEMGeneratorTest extends TestBase {
         INode keyEncapsulationMechanismNode = nodes.get(0);
         assertThat(keyEncapsulationMechanismNode.getKind())
                 .isEqualTo(KeyEncapsulationMechanism.class);
-        assertThat(keyEncapsulationMechanismNode.getChildren()).hasSize(2);
+        assertThat(keyEncapsulationMechanismNode.getChildren()).hasSize(3);
         assertThat(keyEncapsulationMechanismNode.asString()).isEqualTo("RSA-KEM");
 
         // KeyLength under KeyEncapsulationMechanism
@@ -133,5 +134,11 @@ class BcRSAKEMGeneratorTest extends TestBase {
         assertThat(messageDigestNode1).isNotNull();
         assertThat(messageDigestNode1.getChildren()).hasSize(4);
         assertThat(messageDigestNode1.asString()).isEqualTo("SHA256");
+
+        // Decapsulate under KeyEncapsulationMechanism
+        INode decapsulateNode = keyEncapsulationMechanismNode.getChildren().get(Encapsulate.class);
+        assertThat(decapsulateNode).isNotNull();
+        assertThat(decapsulateNode.getChildren()).isEmpty();
+        assertThat(decapsulateNode.asString()).isEqualTo("ENCAPSULATE");
     }
 }

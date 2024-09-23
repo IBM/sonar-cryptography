@@ -27,10 +27,28 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://en.wikipedia.org/wiki/HKDF
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>RFC 5869
+ * </ul>
+ */
 public final class HKDF extends Algorithm implements KeyDerivationFunction {
-    // https://en.wikipedia.org/wiki/HKDF
 
-    private static final String NAME = "HKDF"; // RFC 5869
+    private static final String NAME = "HKDF";
 
     public HKDF(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, KeyDerivationFunction.class, detectionLocation);

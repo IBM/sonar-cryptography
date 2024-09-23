@@ -26,8 +26,25 @@ import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://keccak.team/keccak.html
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ * </ul>
+ */
 public final class Keccak extends Algorithm implements MessageDigest, AuthenticatedEncryption {
-    // https://keccak.team/keccak.html
 
     private static final String NAME = "Keccak";
 

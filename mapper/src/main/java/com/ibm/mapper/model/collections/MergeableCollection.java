@@ -32,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>This differs from the default behavior, in which the root nodes are duplicated to create
  * multiple trees, each containing one instance of the various {@code MergeableCollection}.
  */
+// TODO: handle this in the output layer
 public class MergeableCollection extends AbstractAssetCollection<INode> {
 
     public MergeableCollection(@NotNull List<INode> collection) {

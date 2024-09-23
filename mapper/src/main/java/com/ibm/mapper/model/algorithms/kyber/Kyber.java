@@ -28,11 +28,29 @@ import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://pq-crystals.org/kyber/resources.shtml (details the multiple versions)
+ *   <li>https://en.wikipedia.org/wiki/Kyber
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>This is <b>not</b> ML-KEM
+ * </ul>
+ */
 public class Kyber extends Algorithm implements KeyEncapsulationMechanism {
-    // https://pq-crystals.org/kyber/resources.shtml (details the multiple versions)
-    // https://en.wikipedia.org/wiki/Kyber
 
-    private static final String NAME = "Kyber"; // this is *not* ML-KEM
+    private static final String NAME = "Kyber";
 
     /**
      * Returns a name of the form "Kyber-XXX (version YYY)" where XXX is the parameter set identifer

@@ -27,9 +27,26 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-// Hash Based Signature (HBS)
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>Hash Based Signature (HBS)
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://eprint.iacr.org/2017/349.pdf
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   Hash Based Signature (HBS)
+ * </ul>
+ */
 public final class LMS extends Algorithm implements Signature, MessageDigest {
-    // https://eprint.iacr.org/2017/349.pdf
 
     private static final String NAME = "LMS";
 

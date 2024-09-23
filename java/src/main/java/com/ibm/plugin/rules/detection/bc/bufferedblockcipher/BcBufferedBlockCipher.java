@@ -49,7 +49,7 @@ public final class BcBufferedBlockCipher {
         infoMap.putKey("DefaultBufferedBlockCipher").putType(typePrefix); // <–– parent class
         infoMap.putKey("CTSBlockCipher").putType(typePrefix + "modes.");
         infoMap.putKey("KXTSBlockCipher").putType(typePrefix + "modes.");
-        infoMap.putKey("OldCTSBlockCipher").putName("CTS").putType(typePrefix + "modes.");
+        infoMap.putKey("OldCTSBlockCipher").putType(typePrefix + "modes.");
         infoMap.putKey("PaddedBlockCipher").putType(typePrefix + "modes.");
     }
 
@@ -84,7 +84,6 @@ public final class BcBufferedBlockCipher {
                         .forConstructor()
                         .shouldBeDetectedAs(new ValueActionFactory<>("NISTCTSBlockCipher"))
                         .withMethodParameter("int")
-                        // TODO: "Type": should it be detected?
                         .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
                         .addDependingDetectionRules(BcBlockCipher.all())
                         .buildForContext(new CipherContext(Map.of("kind", "BUFFERED_BLOCK_CIPHER")))

@@ -57,7 +57,6 @@ public class BcStreamCipherEngineMapper implements IMapper {
             @Nonnull String streamCipherString, @Nonnull DetectionLocation detectionLocation) {
         return switch (streamCipherString) {
             case "ChaCha7539Engine" -> Optional.of(new ChaCha20(detectionLocation));
-            /* TODO: in the case below, there is also a constructor alllowing to specify the number X of rounds, which would create a "ChaChaX" instead */
             case "ChaChaEngine" -> Optional.of(new ChaCha20(detectionLocation));
             case "Grain128Engine" -> Optional.of(new Grain128(detectionLocation));
             case "Grainv1Engine" -> Optional.of(new Grainv1(detectionLocation));

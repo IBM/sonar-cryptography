@@ -27,9 +27,26 @@ import com.ibm.mapper.model.NumberOfIterations;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://en.wikipedia.org/wiki/Tiger_(hash_function)
+ *   <li>https://iacr.org/archive/asiacrypt2007/48330539/48330539.pdf
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ * </ul>
+ */
 public final class Tiger extends Algorithm implements MessageDigest {
-    // https://en.wikipedia.org/wiki/Tiger_(hash_function)
-    // https://iacr.org/archive/asiacrypt2007/48330539/48330539.pdf
 
     private static final String NAME = "Tiger";
 

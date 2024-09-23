@@ -24,8 +24,25 @@ import com.ibm.mapper.model.KeyEncapsulationMechanism;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://www.esat.kuleuven.be/cosic/pqcrypto/saber/
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ * </ul>
+ */
 public final class SABER extends Algorithm implements KeyEncapsulationMechanism {
-    // https://www.esat.kuleuven.be/cosic/pqcrypto/saber/
 
     private static final String NAME = "SABER";
 

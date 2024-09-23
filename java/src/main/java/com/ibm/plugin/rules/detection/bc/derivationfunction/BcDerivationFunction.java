@@ -100,7 +100,6 @@ public final class BcDerivationFunction {
                             .withMethodParameter("org.bouncycastle.crypto.Digest")
                             .addDependingDetectionRules(BcDigests.rules())
                             .buildForContext(new KeyContext(Map.of("kind", "KDF")))
-                            // TODO: .withDependingDetectionRules(DerivationFunctionInit.rules()));
                             .inBundle(() -> "Bc")
                             .withoutDependingDetectionRules());
         }
@@ -117,7 +116,6 @@ public final class BcDerivationFunction {
                             .withMethodParameter("org.bouncycastle.crypto.Mac")
                             .addDependingDetectionRules(BcMac.rules())
                             .buildForContext(new KeyContext(Map.of("kind", "KDF")))
-                            // TODO: .withDependingDetectionRules(DerivationFunctionInit.rules()));
                             .inBundle(() -> "Bc")
                             .withoutDependingDetectionRules());
         }
@@ -139,7 +137,6 @@ public final class BcDerivationFunction {
                         .withMethodParameter("org.bouncycastle.crypto.Digest")
                         .addDependingDetectionRules(BcDigests.rules())
                         .buildForContext(new KeyContext(Map.of("kind", "KDF")))
-                        // TODO: .withDependingDetectionRules(DerivationFunctionInit.rules()));
                         .inBundle(() -> "Bc")
                         .withoutDependingDetectionRules());
 

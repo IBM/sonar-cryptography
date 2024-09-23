@@ -26,6 +26,24 @@ import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://en.wikipedia.org/wiki/Naccache–Stern_cryptosystem
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ * </ul>
+ */
 public final class NaccacheStern extends Algorithm implements PublicKeyEncryption {
     // https://en.wikipedia.org/wiki/Naccache–Stern_cryptosystem
 

@@ -187,8 +187,7 @@ public final class BcBlockCipher {
         constructorsList.add(
                 new DetectionRuleBuilder<Tree>()
                         .createDetectionRule()
-                        // TODO: forExactObjectTypes(...)
-                        .forObjectTypes("org.bouncycastle.crypto.modes.PGPCFBBlockCipher")
+                        .forObjectExactTypes("org.bouncycastle.crypto.modes.PGPCFBBlockCipher")
                         .forConstructor()
                         .shouldBeDetectedAs(new ValueActionFactory<>("PGPCFBBlockCipher"))
                         .withMethodParameter("org.bouncycastle.crypto.BlockCipher")

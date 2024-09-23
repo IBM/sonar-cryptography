@@ -30,8 +30,26 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>Kuznyechik
+ * </ul>
+ */
 public final class GOSTR34122015 extends Algorithm implements BlockCipher, AuthenticatedEncryption {
-    private static final String NAME = "GOSTR34122015"; // Kuznyechik
+    private static final String NAME = "GOSTR34122015";
 
     public GOSTR34122015(@NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);

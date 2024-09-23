@@ -29,6 +29,24 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   *
+ * </ul>
+ */
 public final class PBKDF1 extends Algorithm implements PasswordBasedKeyDerivationFunction {
     private static final String NAME = "PBKDF1";
 

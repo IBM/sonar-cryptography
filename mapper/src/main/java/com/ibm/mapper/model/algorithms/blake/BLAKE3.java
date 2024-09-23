@@ -27,8 +27,25 @@ import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://github.com/BLAKE3-team/BLAKE3-specs/blob/master/blake3.pdf
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ * </ul>
+ */
 public final class BLAKE3 extends Algorithm implements MessageDigest, KeyDerivationFunction {
-    // https://github.com/BLAKE3-team/BLAKE3-specs/blob/master/blake3.pdf
 
     private static final String NAME = "BLAKE3";
 

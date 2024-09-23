@@ -27,6 +27,7 @@ import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.algorithms.DSA;
 import com.ibm.mapper.model.algorithms.DSTU4145;
 import com.ibm.mapper.model.algorithms.ECDSA;
+import com.ibm.mapper.model.algorithms.ECNR;
 import com.ibm.mapper.model.algorithms.gost.GOSTR341012;
 import com.ibm.mapper.model.algorithms.gost.GOSTR341094;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -55,7 +56,7 @@ public class BcDsaMapper implements IMapper {
             case "ECDSASigner" -> Optional.of(new ECDSA(detectionLocation));
             case "ECGOST3410_2012Signer" -> Optional.of(new GOSTR341012(detectionLocation));
             case "ECGOST3410Signer" -> Optional.of(new GOSTR341012(detectionLocation));
-            // TOOD: case "ECNRSigner" -> Optional.of();
+            case "ECNRSigner" -> Optional.of(new ECNR(detectionLocation));
             case "GOST3410Signer" -> Optional.of(new GOSTR341094(detectionLocation));
             default -> {
                 final Algorithm algorithm =

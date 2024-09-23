@@ -29,8 +29,28 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://en.wikipedia.org/wiki/RC4
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>ARC4
+ *   <li>ARCFOUR
+ * </ul>
+ */
 public final class RC4 extends Algorithm implements StreamCipher {
-    private static final String NAME = "RC4"; // ARC4, ARCFOUR
+    private static final String NAME = "RC4";
 
     public RC4(@NotNull DetectionLocation detectionLocation) {
         super(NAME, StreamCipher.class, detectionLocation);

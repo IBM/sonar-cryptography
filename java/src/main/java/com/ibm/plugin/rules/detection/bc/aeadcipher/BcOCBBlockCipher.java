@@ -38,8 +38,6 @@ public final class BcOCBBlockCipher {
 
     private static final String MODE = "OCBBlockCipher";
 
-    // TODO: add a way to distinguish between the main and the hash ciphers,
-    // that can be used in translation
     private static final IDetectionRule<Tree> CONSTRUCTOR_1 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()

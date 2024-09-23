@@ -32,12 +32,31 @@ import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://www.rfc-editor.org/rfc/rfc5830
+ *   <li>Key Wrap: https://datatracker.ietf.org/doc/html/rfc4357#section-6.1
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>Magma
+ *   <li>GOST 28147-89 (RFC 5830)
+ * </ul>
+ */
 public final class GOST28147 extends Algorithm
         implements BlockCipher, AuthenticatedEncryption, Mac, KeyWrap {
-    // https://www.rfc-editor.org/rfc/rfc5830
-    // Key Wrap: https://datatracker.ietf.org/doc/html/rfc4357#section-6.1
 
-    private static final String NAME = "GOST28147"; // Magma, GOST 28147-89 (RFC 5830)
+    private static final String NAME = "GOST28147";
 
     public GOST28147(@NotNull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);

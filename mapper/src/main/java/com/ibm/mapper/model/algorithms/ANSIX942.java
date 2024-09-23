@@ -24,8 +24,25 @@ import com.ibm.mapper.model.KeyDerivationFunction;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://www.cryptsoft.com/pkcs11doc/v220/group__SEC__12__4__14__X9__42__DIFFIE__HELLMAN__KEY__DERIVATION.html
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ * </ul>
+ */
 public final class ANSIX942 extends Algorithm implements KeyDerivationFunction {
-    // https://www.cryptsoft.com/pkcs11doc/v220/group__SEC__12__4__14__X9__42__DIFFIE__HELLMAN__KEY__DERIVATION.html
 
     private static final String NAME = "ANSI X9.42";
 

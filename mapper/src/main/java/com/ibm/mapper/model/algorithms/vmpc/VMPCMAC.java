@@ -24,11 +24,30 @@ import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://eprint.iacr.org/2004/301.pdf
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ * </ul>
+ */
 public final class VMPCMAC extends Algorithm implements Mac {
-    // https://eprint.iacr.org/2004/301.pdf
+
+    private static final String NAME = "VMPC-MAC";
 
     public VMPCMAC(@NotNull DetectionLocation detectionLocation) {
-        super("VMPC-MAC", Mac.class, detectionLocation);
+        super(NAME, Mac.class, detectionLocation);
         this.put(new VMPC(detectionLocation));
     }
 }

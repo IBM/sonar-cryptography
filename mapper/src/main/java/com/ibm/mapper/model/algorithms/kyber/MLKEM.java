@@ -27,11 +27,29 @@ import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://csrc.nist.gov/pubs/fips/203/final
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>Module-Lattice-Based Key-Encapsulation
+ *   <li>Standardized version of Kyber
+ * </ul>
+ */
 public class MLKEM extends Algorithm implements KeyEncapsulationMechanism {
-    // https://csrc.nist.gov/pubs/fips/203/final
-    // This is the standardized version of Kyber
 
-    private static final String NAME = "ML-KEM"; // Module-Lattice-Based Key-Encapsulation Mechanism
+    private static final String NAME = "ML-KEM";
 
     /** Returns a name of the form "ML-KEM-XXX" where XXX is the parameter set identifer */
     @Override

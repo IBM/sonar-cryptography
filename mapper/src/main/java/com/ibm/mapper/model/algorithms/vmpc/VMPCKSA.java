@@ -25,10 +25,28 @@ import com.ibm.mapper.model.Version;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://vmpcfunction.com/cipher.htm#2
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>VMPC Key Scheduling Algorithm
+ * </ul>
+ */
 public class VMPCKSA extends Algorithm implements StreamCipher {
-    // https://vmpcfunction.com/cipher.htm#2
 
-    private static final String NAME = "VMPC-KSA"; // VMPC Key Scheduling Algorithm
+    private static final String NAME = "VMPC-KSA";
 
     /** Returns a name of the form "VMPC-KSAX" where X is the version */
     @Override

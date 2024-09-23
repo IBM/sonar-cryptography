@@ -385,8 +385,6 @@ public final class BcMac {
                         .forObjectTypes("org.bouncycastle.crypto.macs.SkeinMac")
                         .forConstructor()
                         .shouldBeDetectedAs(new ValueActionFactory<>("SkeinMac"))
-                        // TODO: Should I capture this parameter?
-                        // Could that lead to an infinity of depending detection rules?
                         .withMethodParameter("org.bouncycastle.crypto.macs.SkeinMac")
                         .buildForContext(new MacContext())
                         .inBundle(() -> "Bc")

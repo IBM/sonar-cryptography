@@ -27,6 +27,7 @@ import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.KeyContext;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyEncapsulationMechanism;
+import com.ibm.mapper.model.functionality.Decapsulate;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.bc.BouncyCastleJars;
 import java.util.List;
@@ -54,7 +55,6 @@ class BcBIKEKEMExtractorTest extends TestBase {
             int findingId,
             @NotNull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
             @NotNull List<INode> nodes) {
-
         /*
          * Detection Store
          */
@@ -75,7 +75,13 @@ class BcBIKEKEMExtractorTest extends TestBase {
         INode keyEncapsulationMechanismNode = nodes.get(0);
         assertThat(keyEncapsulationMechanismNode.getKind())
                 .isEqualTo(KeyEncapsulationMechanism.class);
-        assertThat(keyEncapsulationMechanismNode.getChildren()).isEmpty();
+        assertThat(keyEncapsulationMechanismNode.getChildren()).hasSize(1);
         assertThat(keyEncapsulationMechanismNode.asString()).isEqualTo("BIKE");
+
+        // Decapsulate under KeyEncapsulationMechanism
+        INode decapsulateNode = keyEncapsulationMechanismNode.getChildren().get(Decapsulate.class);
+        assertThat(decapsulateNode).isNotNull();
+        assertThat(decapsulateNode.getChildren()).isEmpty();
+        assertThat(decapsulateNode.asString()).isEqualTo("DECAPSULATE");
     }
 }

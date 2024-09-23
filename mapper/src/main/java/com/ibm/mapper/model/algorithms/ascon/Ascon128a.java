@@ -27,6 +27,24 @@ import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.utils.DetectionLocation;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   *
+ * </ul>
+ */
 public final class Ascon128a extends Ascon implements AuthenticatedEncryption {
     private static final String NAME = "Ascon-128a";
 

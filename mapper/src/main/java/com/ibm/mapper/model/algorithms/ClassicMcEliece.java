@@ -24,10 +24,28 @@ import com.ibm.mapper.model.KeyEncapsulationMechanism;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://classic.mceliece.org/index.html
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>CMCE
+ * </ul>
+ */
 public final class ClassicMcEliece extends Algorithm implements KeyEncapsulationMechanism {
-    // https://classic.mceliece.org/index.html
 
-    private static final String NAME = "Classic McEliece"; // CMCE
+    private static final String NAME = "Classic McEliece";
 
     public ClassicMcEliece(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, KeyEncapsulationMechanism.class, detectionLocation);

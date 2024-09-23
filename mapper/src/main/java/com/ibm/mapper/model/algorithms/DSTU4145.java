@@ -24,6 +24,24 @@ import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   *
+ * </ul>
+ */
 public final class DSTU4145 extends Algorithm implements Signature {
     private static final String NAME = "DSTU 4145-2002";
 

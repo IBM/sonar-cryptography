@@ -25,8 +25,25 @@ import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://www.ecrypt.eu.org/stream/ciphers/grain/grain.pdf
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ * </ul>
+ */
 public class Grainv0 extends Grain {
-    // https://www.ecrypt.eu.org/stream/ciphers/grain/grain.pdf
 
     private static final String NAME = "Grain v0";
 

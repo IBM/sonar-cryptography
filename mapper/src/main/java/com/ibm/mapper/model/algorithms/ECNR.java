@@ -17,12 +17,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms.gost;
+package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
-import com.ibm.mapper.model.BlockSize;
-import com.ibm.mapper.model.DigestSize;
-import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.EllipticCurve;
+import com.ibm.mapper.model.Oid;
+import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
@@ -36,31 +36,26 @@ import javax.annotation.Nonnull;
  * <h3>Specification</h3>
  *
  * <ul>
- *   <li>https://en.wikipedia.org/wiki/GOST_(hash_function)
  * </ul>
  *
  * <h3>Other Names and Related Standards</h3>
  *
  * <ul>
- *   <li>GOST R 34.11-94
- *   <li>GOST 34.311-95
- *   <li>Just "GOST"
+ *   *
  * </ul>
  */
-public final class GOST341194 extends Algorithm implements MessageDigest {
+public final class ECNR extends Algorithm implements Signature {
 
-    private static final String NAME = "GOST341194";
+    private static final String NAME = "EC-NR"; // Elliptic Curve Nyberg-Rueppel, Certicom ECNRA
 
-    public GOST341194(@Nonnull DetectionLocation detectionLocation) {
-        super(NAME, MessageDigest.class, detectionLocation);
-        this.put(new BlockSize(256, detectionLocation));
-        this.put(new DigestSize(256, detectionLocation));
-        // The hash function is derived from this block cipher:
-        this.put(new GOST28147(detectionLocation));
+    public ECNR(@Nonnull DetectionLocation detectionLocation) {
+        super(NAME, Signature.class, detectionLocation);
+        this.put(new Oid("2.23.42.9.11.4.2.16", detectionLocation));
     }
 
-    public GOST341194(
-            @Nonnull final Class<? extends MessageDigest> asKind, @Nonnull GOST341194 gostr341194) {
-        super(gostr341194, asKind);
+    public ECNR(
+            @Nonnull EllipticCurve ellipticCurve, @Nonnull DetectionLocation detectionLocation) {
+        this(detectionLocation);
+        this.put(ellipticCurve);
     }
 }

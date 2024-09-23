@@ -5,7 +5,7 @@ import org.bouncycastle.crypto.params.KeyParameter;
 
 public class BcCBCBlockCipherTestFile {
     public void AESCipherCBCnoPad1(byte[] key) {
-        // TODO: This detection should optimally not happen once AES has been detected as a child finding of CBCBlockCipher
+        // This detection should optimally not happen once AES has been detected as a child finding of CBCBlockCipher
         org.bouncycastle.crypto.BlockCipher aes = new AESFastEngine(); //  Noncompliant {{AESFastEngine}}
         CBCBlockCipher cbc = new CBCBlockCipher(aes); //  Noncompliant {{CBCBlockCipher}}
         KeyParameter kp = new KeyParameter(key);
@@ -14,7 +14,7 @@ public class BcCBCBlockCipherTestFile {
     }
 
     public void AESCipherCBCnoPad2(byte[] key) {
-        // TODO: This detection should optimally not happen once AES has been detected as a child finding of CBCBlockCipher
+        // This detection should optimally not happen once AES has been detected as a child finding of CBCBlockCipher
         org.bouncycastle.crypto.BlockCipher aes = AESEngine.newInstance(); //  Noncompliant {{AESEngine}}
         CBCBlockCipher cbc = CBCBlockCipher.newInstance(aes); //  Noncompliant {{CBCBlockCipher}}
         KeyParameter kp = new KeyParameter(key);

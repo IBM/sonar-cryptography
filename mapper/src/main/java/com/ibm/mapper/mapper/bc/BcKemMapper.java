@@ -35,6 +35,8 @@ import com.ibm.mapper.model.algorithms.kyber.Kyber;
 import com.ibm.mapper.model.algorithms.ntru.NTRU;
 import com.ibm.mapper.model.algorithms.ntru.NTRULPrime;
 import com.ibm.mapper.model.algorithms.ntru.StreamlinedNTRUPrime;
+import com.ibm.mapper.model.functionality.Decapsulate;
+import com.ibm.mapper.model.functionality.Encapsulate;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -56,25 +58,116 @@ public class BcKemMapper implements IMapper {
     private Optional<? extends INode> map(
             @Nonnull String kemString, @Nonnull DetectionLocation detectionLocation) {
         return switch (kemString) {
-            case "BIKEKEMExtractor", "BIKEKEMGenerator" -> Optional.of(new BIKE(detectionLocation));
-            case "CMCEKEMExtractor", "CMCEKEMGenerator" ->
-                    Optional.of(new ClassicMcEliece(detectionLocation));
-            case "ECIESKEMExtractor", "ECIESKEMGenerator" ->
-                    Optional.of(new ECIESKEM(detectionLocation));
-            case "FrodoKEMExtractor", "FrodoKEMGenerator" ->
-                    Optional.of(new FrodoKEM(detectionLocation));
-            case "HQCKEMExtractor", "HQCKEMGenerator" ->
-                    Optional.of(new HQC(KeyEncapsulationMechanism.class, detectionLocation));
-            case "KyberKEMExtractor", "KyberKEMGenerator" ->
-                    Optional.of(new Kyber(detectionLocation));
-            case "NTRUKEMExtractor", "NTRUKEMGenerator" -> Optional.of(new NTRU(detectionLocation));
-            case "NTRULPRimeKEMExtractor", "NTRULPRimeKEMGenerator" ->
-                    Optional.of(new NTRULPrime(detectionLocation));
-            case "RSAKEMExtractor", "RSAKEMGenerator" -> Optional.of(new RSAKEM(detectionLocation));
-            case "SABERKEMExtractor", "SABERKEMGenerator" ->
-                    Optional.of(new SABER(detectionLocation));
-            case "SNTRUPrimeKEMExtractor", "SNTRUPrimeKEMGenerator" ->
-                    Optional.of(new StreamlinedNTRUPrime(detectionLocation));
+            case "BIKEKEMExtractor" -> {
+                var bike = new BIKE(detectionLocation);
+                bike.put(new Decapsulate(detectionLocation));
+                yield Optional.of(bike);
+            }
+            case "BIKEKEMGenerator" -> {
+                var bike = new BIKE(detectionLocation);
+                bike.put(new Encapsulate(detectionLocation));
+                yield Optional.of(bike);
+            }
+            case "CMCEKEMExtractor" -> {
+                var cmce = new ClassicMcEliece(detectionLocation);
+                cmce.put(new Decapsulate(detectionLocation));
+                yield Optional.of(cmce);
+            }
+            case "CMCEKEMGenerator" -> {
+                var cmce = new ClassicMcEliece(detectionLocation);
+                cmce.put(new Encapsulate(detectionLocation));
+                yield Optional.of(cmce);
+            }
+            case "ECIESKEMExtractor" -> {
+                var ecies = new ECIESKEM(detectionLocation);
+                ecies.put(new Decapsulate(detectionLocation));
+                yield Optional.of(ecies);
+            }
+            case "ECIESKEMGenerator" -> {
+                var ecies = new ECIESKEM(detectionLocation);
+                ecies.put(new Encapsulate(detectionLocation));
+                yield Optional.of(ecies);
+            }
+            case "FrodoKEMExtractor" -> {
+                var frodo = new FrodoKEM(detectionLocation);
+                frodo.put(new Decapsulate(detectionLocation));
+                yield Optional.of(frodo);
+            }
+            case "FrodoKEMGenerator" -> {
+                var frodo = new FrodoKEM(detectionLocation);
+                frodo.put(new Encapsulate(detectionLocation));
+                yield Optional.of(frodo);
+            }
+            case "HQCKEMExtractor" -> {
+                var hqc = new HQC(KeyEncapsulationMechanism.class, detectionLocation);
+                hqc.put(new Decapsulate(detectionLocation));
+                yield Optional.of(hqc);
+            }
+            case "HQCKEMGenerator" -> {
+                var hqc = new HQC(KeyEncapsulationMechanism.class, detectionLocation);
+                hqc.put(new Encapsulate(detectionLocation));
+                yield Optional.of(hqc);
+            }
+            case "KyberKEMExtractor" -> {
+                var kyber = new Kyber(detectionLocation);
+                kyber.put(new Decapsulate(detectionLocation));
+                yield Optional.of(kyber);
+            }
+            case "KyberKEMGenerator" -> {
+                var kyber = new Kyber(detectionLocation);
+                kyber.put(new Encapsulate(detectionLocation));
+                yield Optional.of(kyber);
+            }
+            case "NTRUKEMExtractor" -> {
+                var ntru = new NTRU(detectionLocation);
+                ntru.put(new Decapsulate(detectionLocation));
+                yield Optional.of(ntru);
+            }
+            case "NTRUKEMGenerator" -> {
+                var ntru = new NTRU(detectionLocation);
+                ntru.put(new Encapsulate(detectionLocation));
+                yield Optional.of(ntru);
+            }
+            case "NTRULPRimeKEMExtractor" -> {
+                var ntruLP = new NTRULPrime(detectionLocation);
+                ntruLP.put(new Decapsulate(detectionLocation));
+                yield Optional.of(ntruLP);
+            }
+            case "NTRULPRimeKEMGenerator" -> {
+                var ntruLP = new NTRULPrime(detectionLocation);
+                ntruLP.put(new Encapsulate(detectionLocation));
+                yield Optional.of(ntruLP);
+            }
+            case "RSAKEMExtractor" -> {
+                var rsa = new RSAKEM(detectionLocation);
+                rsa.put(new Decapsulate(detectionLocation));
+                yield Optional.of(rsa);
+            }
+            case "RSAKEMGenerator" -> {
+                var rsa = new RSAKEM(detectionLocation);
+                rsa.put(new Encapsulate(detectionLocation));
+                yield Optional.of(rsa);
+            }
+            case "SABERKEMExtractor" -> {
+                var saber = new SABER(detectionLocation);
+                saber.put(new Decapsulate(detectionLocation));
+                yield Optional.of(saber);
+            }
+            case "SABERKEMGenerator" -> {
+                var saber = new SABER(detectionLocation);
+                saber.put(new Encapsulate(detectionLocation));
+                yield Optional.of(saber);
+            }
+            case "SNTRUPrimeKEMExtractor" -> {
+                var sntruPrime = new StreamlinedNTRUPrime(detectionLocation);
+                sntruPrime.put(new Decapsulate(detectionLocation));
+                yield Optional.of(sntruPrime);
+            }
+            case "SNTRUPrimeKEMGenerator" -> {
+                var sntruPrime = new StreamlinedNTRUPrime(detectionLocation);
+                sntruPrime.put(new Encapsulate(detectionLocation));
+                yield Optional.of(sntruPrime);
+            }
             default -> {
                 final Algorithm algorithm =
                         new Algorithm(
