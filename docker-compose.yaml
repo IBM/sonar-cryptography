@@ -1,6 +1,6 @@
 services:
   sonarqube:
-    image: sonarqube:10.4-community
+    image: sonarqube:latest
     user: "${UID}"
     volumes:
       - sonar-data:/opt/sonarqube/data
