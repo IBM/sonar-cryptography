@@ -99,19 +99,17 @@ A detection context is therefore linked to each detected value, and is designed 
 For example, suppose you have two function calls `Cipher.getInstance("AES")` and `SecretKeyFactory.getInstance("AES")`. When writing detection rules to capture their cryptography information, you will in both cases capture the algorithm value "AES".
 But using the detection context, you can distinguish these two values. In the first case, using `buildForContext(new CipherContext())`, you can capture "AES" knowing that it is a cipher.
 In the second case, using `buildForContext(new SecretKeyContext())`, you can capture "AES" knowing that it is a secret key.
-Additionally, you can add more precise information in your context if necessary. For example, to specify that your AES cipher is a block cipher, you can use the specific context `buildForContext(new CipherContext(CipherContext.Kind.BLOCK_CIPHER))`. This context first coarsely categorizes your finding as related to ciphers, and specifies more precisely that it is a block cipher.
+Additionally, you can add more precise information in your context if necessary, using the constructor `DetectionContext(@Nonnull Map<String, String> properties)` to add (multiple) properties to any context.
+For example, to specify that your AES cipher is a block cipher, you can use the specific context `buildForContext(new CipherContext(Map.of("kind", "BLOCK_CIPHER"))`. This context first coarsely categorizes your finding as related to ciphers, and specifies more precisely that it is a block cipher.
 
 After, we have `inBundle(IBundle bundle)` that requires us to link our rule to a bundle identifier ([`IBundle`](../engine/src/main/java/com/ibm/engine/rule/IBundle.java)).
-Indeed, we may have several functions or constructors doing the same thing, typically all having the same name, but differing by the various parameters they have.
-In this case, we have to write one detection rule per function.
-But using the same bundle identifier for all these rules, we can specify that these rules all belong together.
+We typically use a short identifier of the cryptography library for the bundle, like "Jca" for JCA and "Bc" for BouncyCastle.
+This will then be useful when we translate the detected findings: we use the bundle identifier to distinguish between the cryptography libraries and apply an adequate translation.
 
 And finally, we can finish the specification of the detection rules by adding top level dependent detection rules with `withDependingDetectionRules(List<IDetectionRule<T>> detectionRules)` (or not, using `withoutDependingDetectionRules()` instead).
-These are similar to the parameter dependent rules, but instead of applying these rules on a parameter, they are applied to the object itself, i.e. to the object with which the rule matched in the first place. 
+These are similar to the parameter dependent rules, but instead of applying these rules on a parameter, they are applied to the object itself, i.e. to the object with which the rule matched in the first place[^2].
 
-> TODO: Currently, findings of top level dependent detection rules are added below *each* (top level and parameter) detections of the rules in the tree of detected values.
-> This is not a desired behavior as it duplicates information, and should be changed in the future.
-> This issue can be followed [here](https://github.com/IBM/sonar-cryptography/issues/12).
+[^2]: Currently, findings of top level dependent detection rules are added below *each* (top level and parameter) detections of the rules in the tree of detected values, *except* for parameter detections using `asChildOfParameterWithId`. More information [here](https://github.com/IBM/sonar-cryptography/pull/142).
 
 > [!TIP]
 > You will find all the classes implementing the action factories, value factories and contexts (that you may use in the functions described above) in the [`model`](../engine/src/main/java/com/ibm/engine/model/) directory of the engine.
@@ -144,7 +142,7 @@ new DetectionRuleBuilder<Tree>()
         .shouldBeDetectedAs(new BlockSizeFactory<>(Size.UnitType.BIT))
         .asChildOfParameterWithId(-1)
     .buildForContext(new CipherContext(CipherContext.Kind.MODE))
-    .inBundle(() -> "BcBlockCipher")
+    .inBundle(() -> "Bc")
     .withDependingDetectionRules(BcBlockCipherInit.rules());
 ```
 
@@ -157,6 +155,7 @@ This parameter detection is placed below the mode detection using `asChildOfPara
 To capture the first parameter, we rely instead on a list of dependent detection rules `BcBlockCipherEngine.rules()`, that should capture all the possible `BlockCipher` classes existing in the library. In our case, a dependent rule targeting `AESEngine.newInstance()` should capture the value "AES", with a context that should specify that it is the base cipher.
 
 Finally, a list of top level dependent detection rules `BcBlockCipherInit.rules()` should capture some information contained in the `cfb.init(...)` function call.
+This top level dependent detection should be placed only below the `BlockCipher` detection (and not below the `int` detection because it uses `asChildOfParameterWithId`).
 
 
 ### Special cases: no parameter and any parameters
@@ -188,14 +187,91 @@ Once you have written your detection rule, and once this rule detects findings w
 The aim of the translation is to represent these values in a standardized, language-independent tree in the cryptographic domain.
 For this, you should represent your cryptographic assets and values using the standard classes defined in the [`model`](../mapper/src/main/java/com/ibm/mapper/model/) directory of the *mapper* module (and not of the engine module like before).
 
-You should use the information contained in the detection context and the type of detection value to decide which type of translation you want to apply.
+### If your detected asset is generic
 
-With the help of some knowledge about cryptography, you can translate those findings into the correct model classes.
-It is straightforward to translate what you detected as an *Algorithm* (from `engine`) into an *Algorithm* (from `mapper`).
-But if you know that this algorithm is used for public key encryption in the specific context in which you detect it, you may keep this information by using the context `PublicKeyContext` in your detection rule, and then decide to translate it into a `PublicKeyEncryption` (which is a superclass of mapper's `Algorithm`).
+Let's start with the simplest case: suppose you are detecting a generic value, independent of any algorithm, like a key size.
+Suppose you detect the value `"256"` as a `KeySize`.
+In this case, you don't have to use algorithm-specific classes of our model, you can simply translate it to the appropriate equivalent class of the model, which is in this case `KeyLength`.
+This simple translation would look like:
+```java
+if (value instanceof KeySize<Tree> keySize) {
+    KeyLength keyLength = new KeyLength(keySize.getValue(), detectionLocation);
+    return Optional.of(keyLength);
+}
+```
 
-As a rule a thumb, there is almost always a straightforward translation of the assets you detect.
-But if you keep sufficiently enough information using the context and if you use some cryptography knowledge, you may translate your finding into a more specific class which will then bring more information into the CBOM.
+### If your detected asset is already specified in our model
+
+Let's suppose you detect the string `"AESEngine"` corresponding to the instantiation of a new AES block cipher.
+Because our model already contains the [`AES`](../mapper/src/main/java/com/ibm/mapper/model/algorithms/AES.java) algorithm, you can simply use it.
+This concretely means that in the mapper file (implementing [`IMapper`](../mapper/src/main/java/com/ibm/mapper/mapper/IMapper.java)) in which you are implementing this translation, you should return a `new Optional.of(new AES(detectionLocation))` when `parse("AESEngine", detectionLocation)` is called.
+
+Every time you are using one of these predefined model algorithm, you should have a look at its class: it may contain various constructors for various use cases.
+For example, if your `"AESEngine"` call was instead used for authenticated encryption (and you would carry this information through the detection context for example), you should instead translate it using the constructor `new AES(AuthenticatedEncryption.class, detectionLocation)`.
+
+### If your detected asset is not yet specified in our model: add it!
+
+Suppose you are detecting the string `"KalynaEngine"`, corresponding to the Kalyna block cipher which is not yet part of our model.
+We explain how you can add Kalyna to our general model, which you can then use for your translation.
+
+First, find resources about Kalyna, like its [Wikipedia page](https://en.wikipedia.org/wiki/Kalyna_(cipher)) or an official [paper](https://eprint.iacr.org/2015/650.pdf).
+Kalyna is also sometimes referred as "DSTU 7624:2014", which we will add to the class documentation.
+
+Using this knowledge, we first need to find the _base class_ of Kalyna: is it an [`Algorithm`](../mapper/src/main/java/com/ibm/mapper/model/Algorithm.java), [`Mode`](../mapper/src/main/java/com/ibm/mapper/model/Mode.java), [`Padding`](../mapper/src/main/java/com/ibm/mapper/model/Padding.java), [`EllipticCurve`](../mapper/src/main/java/com/ibm/mapper/model/EllipticCurve.java) or [`Protocol`](../mapper/src/main/java/com/ibm/mapper/model/Protocol.java)? It is an `Algorithm`.
+
+Then, we look into the _primitives_ which can apply to Kalyna: these are the classes at the root of [`model`](../mapper/src/main/java/com/ibm/mapper/model/) implementing [`IPrimitive`](../mapper/src/main/java/com/ibm/mapper/model/IPrimitive.java).
+Kalyna is mainly used as a [`BlockCipher`](../mapper/src/main/java/com/ibm/mapper/model/BlockCipher.java), but can also be used as a [`Mac`](../mapper/src/main/java/com/ibm/mapper/model/Mac.java) or a [`KeyWrap`](../mapper/src/main/java/com/ibm/mapper/model/KeyWrap.java).
+
+Therefore, we start writing the class [`Kalyna`](../mapper/src/main/java/com/ibm/mapper/model/algorithms/Kalyna.java), with its basic documentation, as:
+```java
+/**
+ *
+ *
+ * <h2>{@value #NAME}</h2>
+ *
+ * <p>
+ *
+ * <h3>Specification</h3>
+ *
+ * <ul>
+ *   <li>https://en.wikipedia.org/wiki/Kalyna_(cipher)
+ *   <li>https://eprint.iacr.org/2015/650.pdf
+ * </ul>
+ *
+ * <h3>Other Names and Related Standards</h3>
+ *
+ * <ul>
+ *   <li>DSTU 7624:2014
+ * </ul>
+ */
+public final class Kalyna extends Algorithm implements BlockCipher, Mac, KeyWrap {
+
+    private static final String NAME = "Kalyna";
+```
+
+You then should define multiple constructors which could be useful in the context of Kalyna.
+Because it is primarily a `BlockCipher`, let's add a basic constructor, and a second one adding the size of the block:
+```java
+public Kalyna(@Nonnull DetectionLocation detectionLocation) {
+    super(NAME, BlockCipher.class, detectionLocation);
+}
+
+public Kalyna(int blockSize, @Nonnull DetectionLocation detectionLocation) {
+    this(detectionLocation);
+    this.put(new BlockSize(blockSize, detectionLocation));
+}
+```
+
+Here, we have added the `BlockSize` as a parameter, but there are a lot of other building blocks in this cryptography model. You can explore all the possibilities at the root of [`model`](../mapper/src/main/java/com/ibm/mapper/model/) and in its [`functionality`](../mapper/src/main/java/com/ibm/mapper/model/functionality/) subdirectory.
+
+However, it is important to note that Kalyna is not _always_ a `BlockCipher` (as it also implements `Mac` and `KeyWrap`), and an easy way to let the user instantiate a Kalyna with the kind of its choice is to have this kind of constructor:
+```java
+public Kalyna(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull Kalyna kalyna) {
+    super(kalyna, asKind);
+}
+```
+
+### The output of the translation
 
 The translation of the tree of detected findings is done node-by-node.
 A tree of translated values is built while you are translating your detected values.
@@ -204,7 +280,7 @@ This means that the translation of a child node of a detected value will be appe
 
 | ![example of the node-by-node translation process](./images/translation.png) | 
 |:--:| 
-| *This diagram represents the node-by-node translation process. In blue, we have the tree of detected values. The dotted lines show that each detected value gets independently translated into some translated value(s), in green. At the end of the node-by-node translation process, we have a tree of translated values (right part of the diagram) which is composed of each translated value, linked with the same ordering as the tree of detected values. This current result is not satisfying, and we will explain next how we can reorganize this tree of translated values.* |
+| *This diagram represents the node-by-node translation process. In blue, we have the tree of detected values. The dotted lines show that each detected value gets independently translated into some translated value(s), in green. Note that we translate `CCMBlockCipher` into an `UNKNOWN` authenticated encryption node with a `CCM` mode node, to avoid having the mode as the parent of the algorithm (`AES`), which will make the next step (reorganization) a bit simpler. At the end of the node-by-node translation process, we have a tree of translated values (right part of the diagram) which is composed of each translated value, linked with the same ordering as the tree of detected values. This current result is not satisfying, and we will explain next how we can reorganize this tree of translated values.* |
 
 ## Reorganizing the translation tree
 
