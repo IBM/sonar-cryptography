@@ -58,7 +58,7 @@ This plugin incorporates rules specifically focused on cryptography.
 > To generate a Cryptography Bill of Materials (CBOM), it is mandatory to activate at 
 > least one of these cryptography-related rules.
 
-![Activate Rules Crypto Rules](.github/img/rules.png)
+![Activate Rules Crypto Rules](docs/images/rules.png)
 
 As of the current version, the plugin contains one single rule for creating a cryptographic inventory. 
 Future updates may introduce additional rules to expand functionality.
