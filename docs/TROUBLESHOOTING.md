@@ -4,7 +4,7 @@ If you are new to SonarQube, or if you did not manage to obtain results with our
 
 ## Installing SonarQube with the plugin
 > [!IMPORTANT]
-> Make sure you use a version of SonarQube supported by our plugin. Currently, SonarQube versions `10.5` and above (including the latest) version are not supported, and we advise installing SonarQube `10.4`.
+> Make sure you use a version of SonarQube supported by our plugin. See [here](../README.md#version-compatibility).
 
 ### If you already have a SonarQube instance
 Follow the [Installation](../README.md#installation) paragraph of the main [`README.md`](../README.md) to add the latest released plugin to your SonarQube instance.
@@ -16,7 +16,7 @@ In this case, we advise you to use our [`docker-compose.yaml`](../docker-compose
 
 To do so, start by opening this repo and `git checkout` to the latest release branch (for example, at the time of writing this document, it is `release/1.2.0`).
 
-Open the [`docker-compose.yaml`](../docker-compose.yaml) file and check the `image` argument to make sure that it uses a version of SonarQube supported by our plugin. In our case, yes, it is `sonarqube:10.4-community`.
+Open the [`docker-compose.yaml`](../docker-compose.yaml) file and check the `image` argument to make sure that it uses a version of SonarQube supported by our plugin.
 
 You then need to have a `.jar` plugin in the `.SonarQube/plugins/` directory. There are two options for this:
 - Easiest way: download the `.jar` file from the [latest releases](https://github.com/IBM/sonar-cryptography/releases) GitHub page and move it to this directory. In our case, it is named `sonar-cryptography-plugin-1.2.0.jar`.
@@ -35,7 +35,6 @@ You should then be able to access the SonarQube UI at `http://localhost:9000`.
 
 #### Managing your own Docker installation 
 Alternatively, you can follow these [SonarQube instructions](https://docs.sonarsource.com/sonarqube/latest/setup-and-upgrade/install-the-server/installing-sonarqube-from-docker/) to manage your own Docker installation.
-Make sure to use the right version of the Docker image (we advise using `sonarqube:10.4-community`).
 
 ---
 
