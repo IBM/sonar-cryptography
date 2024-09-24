@@ -1,4 +1,4 @@
-# Sonar Cryptography Plugin
+# Sonar Cryptography Plugin (CBOMkit-hyperion)
 
 [![License](https://img.shields.io/github/license/IBM/sonar-cryptography.svg?)](https://opensource.org/licenses/Apache-2.0) <!--- long-description-skip-begin -->
 [![Current Release](https://img.shields.io/github/release/IBM/sonar-cryptography.svg?logo=IBM)](https://github.com/IBM/sonar-cryptography/releases)
@@ -6,6 +6,7 @@
 
 This repository contains a SonarQube Plugin that detects cryptographic assets 
 in source code and generates [CBOM](https://cyclonedx.org/capabilities/cbom/).
+It is part of **the [CBOMKit](https://github.com/IBM/cbomkit) toolset**.
 
 ## Version compatibility
 
@@ -58,7 +59,7 @@ This plugin incorporates rules specifically focused on cryptography.
 > To generate a Cryptography Bill of Materials (CBOM), it is mandatory to activate at 
 > least one of these cryptography-related rules.
 
-![Activate Rules Crypto Rules](.github/img/rules.png)
+![Activate Rules Crypto Rules](docs/images/rules.png)
 
 As of the current version, the plugin contains one single rule for creating a cryptographic inventory. 
 Future updates may introduce additional rules to expand functionality.

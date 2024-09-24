@@ -76,7 +76,9 @@ The tree does not contain any semantic information about how the cryptographic v
 Ultimately, we want a meaningful representation of all cryptography-relevant values: a tree structure in which the relationships between the nodes have a meaning.
 Back to our example, we want a tree where the mode is a child node of the algorithm node, to indicate that it's the mode of this algorithm.
 
-This process of building a meaningful tree representation of the captured cryptography values is called the translation. This process is also part of the language module (like the `java` or `python` module). In certain cases where translation requires to parse a string, the parsing and translation process is outsourced to the `mapper` module for better modularity.
+This process of building a meaningful tree representation of the captured cryptography values is called the translation. This process is also part of the language module (like the `java` or `python` module).
+The translation process requires at some point to map those captured cryptography strings to a standard representation of the cryptography asset.
+For better modularity, this mapping is done as part of the `mapper` module.
 
 The last step of the translation process is called the enrichment, and is done by the `enricher` module.
 This step aims at adding content to the translated tree, based on external knowledge.
@@ -129,6 +131,17 @@ And add the dependency (using this version reference) under `<!-- language suppo
     <artifactId>sonar-java-plugin</artifactId>
     <version>${sonar.java.version}</version>
 </dependency>
+```
+
+### Specifying related file extensions
+
+Now, open the [`pom.xml`](../sonar-cryptography-plugin/pom.xml) of the `sonar-cryptography-plugin` module, and look for the tag `<requiredForLanguages>`.
+This is where you should specify the file extensions for which you want the plugin to run.
+In the case of Java, we want the Cryptography Plugin to run on `.java` and `.jsp` files, so we add these file extensions inside the tag, in addition to already existing ones (like `py` and `ipynb` below). 
+
+```xml
+<!-- This line must specify all file extensions which should be scanned by the plugin -->
+<requiredForLanguages>java,jsp,py,ipynb</requiredForLanguages>
 ```
 
 ### Identifying the four classes to use in generics
@@ -434,10 +447,9 @@ public static List<IDetectionRule<Tree>> rules() {
 Once this is done, try to run your unit test and look at the logs.
 If it works, you should see logs[^4] of your detected values, in a tree structure looking like this (but with the values of your test file that you specified to detect in *MyRule*):
 ```
-DEBUG [id: 1c259, bundle: -2060…, level: 0, hash: -8884…] (CipherContext<BLOCK_CIPHER>, ValueAction) CBC
-DEBUG [id: f5b9a, bundle: 21061…, level: 1, hash: 13077…]    └─ (CipherContext<ENCRYPTION_STATUS>, OperationMode) 0
-DEBUG [id: 7b818, bundle: 92146…, level: 1, hash: -4294…]    └─ (CipherContext<BLOCK_CIPHER_ENGINE>, ValueAction) AES
-DEBUG [id: 8d2d8, bundle: 21061…, level: 2, hash: 13077…]       └─ (CipherContext<ENCRYPTION_STATUS>, OperationMode) 0
+[id: afeca, bundle: Bc, level: 0, hash: -1948…] (CipherContext<{kind=BLOCK_CIPHER}>, ValueAction) CBCBlockCipher
+[id: cca99, bundle: Bc, level: 1, hash: 10584…]    └─ (CipherContext<{kind=ENCRYPTION_STATUS}>, OperationMode) 0
+[id: bb6ad, bundle: Bc, level: 1, hash: -6352…]    └─ (CipherContext<{kind=BLOCK_CIPHER_ENGINE}>, ValueAction) AESEngine
 ```
 
 [^4]: If you wrote your own `TestBase`, make sure that you call the `DetectionStoreLogger.print(DetectionStore ds)` method at the right place to display your findings in the logs.
@@ -487,9 +499,8 @@ java
             ├── translator
             │   └── contexts
             └── reorganizer
-                └── rules
 ```
-<p align="right"><a href="https://tree.nathanfriend.io/?s=(%27opt7s!(%27fancy!true~fullPath3~trailingSlash3~rootDot3)~8(%278%272java52src5*2main%2Fjava%2Fcom%2Fibm%2Fplugin09042detect7A42mycryptoA42...%20%5Bother%20libraries%5D067A6orA*2contextsA2reorganizerA*9%27)~vers7!%271%27)4%2005**2-%203!false4*%205%5Cn*62translat7ion8source!92rulesA0*%01A987654320*"><sub><sup>edit this tree<sub><sup></a></p>
+<p align="right"><a href="https://tree.nathanfriend.io/?s=(%27opt7s!(%27fancy!true~fullPath3~trailingSlash3~rootDot3)~8(%278%272java49src4*9main%2Fjava%2Fcom%2Fibm%2Fplugin02rules052detect7A52mycryptoA52...%20%5Bother%20libraries%5D067A6orA9contexts09reorganizer4%27)~vers7!%271%27)5%2004**9-%203!false4%5Cn5*%2062translat7ion8source!9*2A0*%01A987654320*"><sub><sup>edit this tree<sub><sup></a></p>
 
 #### The translator
 
@@ -498,19 +509,30 @@ In Java, this is the [`JavaTranslator`](../java/src/main/java/com/ibm/plugin/tra
 
 For better structure, we advise to split the translation in multiple files based on the detection context of the detected values.
 We therefore advise creating one translator file per detection context, and to store them in `translation/translator/contexts/`.
+Each of these files should implement the interface [`IContextTranslation`](../mapper/src/main/java/com/ibm/mapper/IContextTranslation.java).
 In your main translator file, you can switch over the detection context of the values of your detection store, and delegate the actual translation work to the context translator files.
 Look at how it is done in Java for more details.
 
-Additionally, if translating your assets implies parsing complicated strings (typically like `"AES/ECB/PKCS5Padding"` in Java's JCA), we recommend handling the parsing with dedicated classes of the `mapper` module.
-These classes should be in the `mapper/.../mapper/mapper/mycrypto/` directory and should implement the [`IMapper`](../mapper/src/main/java/com/ibm/mapper/mapper/IMapper.java) interface.
+In each context translation file, you may want to have a different translation process depending on the cryptography library.
+If so, have a look to how it is done in Java, where an abstract class [`JavaAbstractLibraryTranslator`](../java/src/main/java/com/ibm/plugin/translation/translator/contexts/JavaAbstractLibraryTranslator.java) implementing `IContextTranslation` is defined, and performs a switch on the bundle identifier to distinguish between the various cryptography libraries.
+Then, the various classes in the `context` folder extend this abstract class, and implement library-specific translation functions.
+
+Then for each context, you want to map each detected value (often a string) to a "standard" representation of this asset.
+Such representations form what we call the cryptography _model_, and you can find a wide variety of classes describing algorithms, modes, paddings and others in the subfolders of the mapper's [`model`](../mapper/src/main/java/com/ibm/mapper/model/) folder.
+The mapping should therefore link detected values to model classes, and should be done in the `mapper` module, with classes in the `mapper/.../mapper/mapper/mycrypto/` directory which should implement the [`IMapper`](../mapper/src/main/java/com/ibm/mapper/mapper/IMapper.java) interface.
+Typically, a mapper file provides a switch statement over a variety of possible detected values, and maps each value to a class of the `model`.
+When translating your detected values implies parsing complicated strings (typically like `"AES/ECB/PKCS5Padding"` in Java's JCA), the parsing should also be handled in those mapper classes.
+
+Ultimately, those mapper classes can be called from your context-specific translation functions.
 
 You can now add content to these files to translate the findings from your first detection rule, following the section [*Translating findings of a detection rule*](./DETECTION_RULE_STRUCTURE.md#translating-findings-of-a-detection-rule).
 
 #### The reorganization
 
-In the directory `translation/reorganizer/`, start by creating your file listing all reorganization rules for your language. In Java, this is the [`JavaReorganizerRules`](../java/src/main/java/com/ibm/plugin/translation/reorganizer/JavaReorganizerRules.java) class.
+Reorganization rules can be added in the [`reorganizer/rules/`](../mapper/src/main/java/com/ibm/mapper/reorganizer/rules/) directory of the mapper, independently of the programming language and cryptography library (a same rule could be reused in multiple cases).
+You can use the helpers defined in [`UsualPerformActions.java`](../mapper/src/main/java/com/ibm/mapper/reorganizer/UsualPerformActions.java) to easily write common reorganization rules.
 
-All these reorganization rules should then be stored in `translation/reorganizer/rules/`, with the structure of your choice.
+Then, in the directory `translation/reorganizer/`, create a file listing all reorganization rules for your language. In Java, this is the [`JavaReorganizerRules`](../java/src/main/java/com/ibm/plugin/translation/reorganizer/JavaReorganizerRules.java) class.
 
 If necessary, you can now reorganize the translation of the findings of your first detection rule, following the section [*Reorganizing the translation tree*](./DETECTION_RULE_STRUCTURE.md#reorganizing-the-translation-tree).
 
@@ -521,6 +543,7 @@ In `translation/`, start by creating a file controlling the translation process 
 In Java, this is [`JavaTranslationProcess`](../java/src/main/java/com/ibm/plugin/translation/JavaTranslationProcess.java).
 
 This is where you will apply the translation and reorganization steps, as well as the enrichment process, which is a step adding external information to the translation tree, as mentioned [earlier](#the-translation).
+Make sure to log the translated, reorganized and enriched trees of findings by calling `Utils.printNodeTree(List<INode> nodes)` at the right places (with `Utils` from `com.ibm.mapper.utils`).
 These steps must be called in the `initiate` function, which looks like this in Java:
 ```java
 @Override
@@ -529,26 +552,29 @@ public List<INode> initiate(
     @Nonnull
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> rootDetectionStore) {
     // 1. Translate
-    JavaTranslator javaTranslator = new JavaTranslator(rule);
-    List<INode> translatedValues = javaTranslator.translate(rootDetectionStore);
+    final JavaTranslator javaTranslator = new JavaTranslator();
+    final List<INode> translatedValues = javaTranslator.translate(rootDetectionStore);
+    Utils.printNodeTree("translated ", translatedValues);
 
     // 2. Reorganize
-    Reorganizer javaReorganizer = new Reorganizer(reorganizerRules);
-    List<INode> reorganizedValues = javaReorganizer.reorganize(translatedValues);
+    final Reorganizer javaReorganizer = new Reorganizer(reorganizerRules);
+    final List<INode> reorganizedValues = javaReorganizer.reorganize(translatedValues);
+    Utils.printNodeTree("reorganised", reorganizedValues);
 
     // 3. Enrich
-    Enricher.enrich(reorganizedValues);
+    final List<INode> enrichedValues = Enricher.enrich(reorganizedValues).stream().toList();
+    Utils.printNodeTree("enriched   ", enrichedValues);
 
-    return reorganizedValues;
+    return Collections.unmodifiableCollection(enrichedValues).stream().toList();
 }
 ```
 
 Finally, this translation process file should be registered in two places:
 - In your class implementing the language-specific sonar visitor class ([`JavaBaseDetectionRule`](../java/src/main/java/com/ibm/plugin/rules/detection/JavaBaseDetectionRule.java) in Java), mentioned in [here](#the-check-registrar-extension-point).
-- In your `TestBase` class ([`TestBase`](../java/src/test/java/com/ibm/plugin/TestBase.java) in Java), mentioned in [here](#organizing-your-files). Also makes sure to log the translated tree of findings by calling `Utils.printNodeTree(List<INode> nodes)` at the right place (with `Utils` from `com.ibm.mapper.utils`).
+- In your `TestBase` class ([`TestBase`](../java/src/test/java/com/ibm/plugin/TestBase.java) in Java), mentioned in [here](#organizing-your-files).
 
 You can now run again your unit test to check whether your detected values are correctly translated.
-If your implementation works, you should observe logs displaying the translated (and potentially reorganized) trees, after the initial logs of the detected values.
+If your implementation works, you should observe logs displaying the translated (and potentially reorganized/enriched) trees, after the initial logs of the detected values.
 
 
 ### Writing assert statements
@@ -560,7 +586,7 @@ For this, we advise writing exhaustive assert statements for each unit test, che
 You can look into existing unit tests to know how these assert statements are written.
 
 If you have to write a lot of assert statements for a lot of detection rules, you may want to automate this process.
-While we do not provide a generic methodology to do so, we have done it for Java, with [`GenerateAssertsHelper`](../java/src/test/java/com/ibm/plugin/utils/GenerateAssertsHelper.java) (documented in its file), which can easily be reused for another language, requiring only minor modifications.
+While we do not provide a generic methodology to do so, we have done it for Java (and Python), with [`GenerateAssertsHelper`](../java/src/test/java/com/ibm/plugin/utils/GenerateAssertsHelper.java) (documented in its file), which can easily be reused for another language, requiring only minor modifications.
 
 
 ### Going further: using graph visualization to better understand dependent detection rules
