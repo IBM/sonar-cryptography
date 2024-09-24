@@ -27,7 +27,6 @@ import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.mapper.reorganizer.Reorganizer;
 import com.ibm.mapper.utils.Utils;
 import com.ibm.plugin.translation.translator.JavaTranslator;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -61,8 +60,8 @@ public final class JavaTranslationProcess
         Utils.printNodeTree("reorganised", reorganizedValues);
 
         // 3. Enrich
-        final Collection<INode> enrichedValues = Enricher.enrich(reorganizedValues);
-        Utils.printNodeTree("enriched   ", reorganizedValues);
+        final List<INode> enrichedValues = Enricher.enrich(reorganizedValues).stream().toList();
+        Utils.printNodeTree("enriched   ", enrichedValues);
 
         return Collections.unmodifiableCollection(enrichedValues).stream().toList();
     }
