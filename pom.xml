@@ -48,6 +48,8 @@
         <sonar.java.version>8.3.0.36747</sonar.java.version>
         <sonar.python.version>4.22.0.16914</sonar.python.version>
 
+        <junit.jupiter.version>5.11.1</junit.jupiter.version>
+
         <google-java-format.version>1.23.0</google-java-format.version>
     </properties>
 
@@ -117,13 +119,13 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.11.1</version>
+            <version>${junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.11.1</version>
+            <version>${junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency> 
         <dependency>
