@@ -17,6 +17,7 @@
         <module>common</module>
         <module>enricher</module>
         <module>sonar-cryptography-plugin</module>
+        <module>rules</module>
     </modules>
 
     <version>2.0.0-SNAPSHOT</version>

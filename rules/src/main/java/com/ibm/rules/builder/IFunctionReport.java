@@ -17,15 +17,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.engine.rule;
+package com.ibm.rules.builder;
 
-import com.ibm.common.IObserver;
-import com.ibm.engine.detection.DetectionStore;
-import com.ibm.engine.detection.Finding;
+import com.ibm.mapper.model.INode;
+import com.ibm.mapper.utils.Function3;
+import com.ibm.rules.Issue;
+
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
+import javax.annotation.Nullable;
 
-public interface IBaseDetectionRule<R, T, S, P> extends IObserver<Finding<R, T, S, P>> {
-
-    void report(@Nonnull @Unmodifiable DetectionStore<R, T, S, P> detectionStore, @Nonnull R rule);
+public interface IFunctionReport<T> extends Function3<T, INode, INode, Issue<T>> {
+    @Override
+    @Nonnull Issue<T> apply(@Nonnull T markedTree, @Nonnull INode node, @Nullable INode parent);
 }

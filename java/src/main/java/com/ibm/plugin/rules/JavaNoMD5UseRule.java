@@ -19,34 +19,22 @@
  */
 package com.ibm.plugin.rules;
 
-import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.mapper.model.INode;
 import com.ibm.plugin.rules.detection.JavaBaseDetectionRule;
-import com.ibm.plugin.translation.reorganizer.JavaReorganizerRules;
 import com.ibm.rules.Issue;
-import com.ibm.rules.IssueCreator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
-import org.jetbrains.annotations.VisibleForTesting;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.tree.Tree;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
-@Rule(key = "Inventory")
-public class JavaInventoryRule extends JavaBaseDetectionRule {
-
-    @VisibleForTesting
-    protected JavaInventoryRule(@Nonnull List<IDetectionRule<Tree>> detectionRules) {
-        super(detectionRules, JavaReorganizerRules.rules());
-    }
+@Rule(key = "JavaNoMD5use")
+public class JavaNoMD5UseRule extends JavaBaseDetectionRule {
 
     @Override
     public Issue<Tree> report(@Nonnull Tree markerTree, @NotNull @Unmodifiable List<INode> translatedNodes) {
-        return IssueCreator
-                .using(markerTree, translatedNodes)
-                .matchesCondition((node, parent) -> true)
-                .create((markedTree, node, parent) -> new Issue<>(markedTree, node.asString()));
+        return null;
     }
 }

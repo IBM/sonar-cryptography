@@ -20,6 +20,7 @@
 package com.ibm.plugin;
 
 import com.ibm.plugin.rules.JavaInventoryRule;
+import com.ibm.plugin.rules.JavaNoMD5UseRule;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -38,7 +39,7 @@ public final class JavaRuleList {
 
     /** These rules are going to target MAIN code only */
     public static List<Class<? extends JavaCheck>> getJavaChecks() {
-        return List.of(JavaInventoryRule.class);
+        return List.of(JavaInventoryRule.class, JavaNoMD5UseRule.class);
     }
 
     /** These rules are going to target TEST code only */

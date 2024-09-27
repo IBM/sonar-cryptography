@@ -23,7 +23,7 @@ import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.detection.Finding;
 import com.ibm.engine.executive.DetectionExecutive;
 import com.ibm.engine.language.python.PythonScanContext;
-import com.ibm.engine.rule.IBaseDetectionRule;
+import com.ibm.mapper.IReportableDetectionRule;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
@@ -41,7 +41,7 @@ import org.sonar.plugins.python.api.tree.CallExpression;
 import org.sonar.plugins.python.api.tree.Tree;
 
 public abstract class PythonBaseDetectionRule extends PythonVisitorCheck
-        implements IBaseDetectionRule<PythonCheck, Tree, Symbol, PythonVisitorContext> {
+        implements IReportableDetectionRule<PythonCheck, Tree, Symbol, PythonVisitorContext> {
 
     @Nonnull protected final PythonTranslationProcess pythonTranslationProcess;
     @Nonnull protected final List<IDetectionRule<Tree>> detectionRules;
