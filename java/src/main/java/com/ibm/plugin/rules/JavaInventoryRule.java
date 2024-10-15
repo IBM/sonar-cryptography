@@ -25,13 +25,14 @@ import com.ibm.plugin.rules.detection.JavaBaseDetectionRule;
 import com.ibm.plugin.translation.reorganizer.JavaReorganizerRules;
 import com.ibm.rules.InventoryRule;
 import com.ibm.rules.issue.Issue;
-import java.util.List;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.tree.Tree;
+
+import javax.annotation.Nonnull;
+import java.util.List;
 
 @Rule(key = "Inventory")
 public class JavaInventoryRule extends JavaBaseDetectionRule {
