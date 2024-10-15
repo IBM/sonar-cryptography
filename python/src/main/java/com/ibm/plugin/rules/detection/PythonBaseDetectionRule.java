@@ -28,6 +28,7 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.plugin.PythonAggregator;
 import com.ibm.plugin.translation.PythonTranslationProcess;
+import com.ibm.plugin.translation.reorganizer.PythonReorganizerRules;
 import com.ibm.rules.IReportableDetectionRule;
 import com.ibm.rules.issue.Issue;
 import java.util.Collections;
@@ -48,6 +49,12 @@ public abstract class PythonBaseDetectionRule extends PythonVisitorCheck
 
     @Nonnull protected final PythonTranslationProcess pythonTranslationProcess;
     @Nonnull protected final List<IDetectionRule<Tree>> detectionRules;
+
+    protected PythonBaseDetectionRule() {
+        this.detectionRules = PythonDetectionRules.rules();
+        this.pythonTranslationProcess =
+                new PythonTranslationProcess(PythonReorganizerRules.rules());
+    }
 
     protected PythonBaseDetectionRule(
             @Nonnull List<IDetectionRule<Tree>> detectionRules,

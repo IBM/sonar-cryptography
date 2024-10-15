@@ -48,11 +48,11 @@ public abstract class TestBase extends PythonInventoryRule {
 
     private int findingId = 0;
 
-    protected TestBase(@NotNull List<IDetectionRule<Tree>> detectionRules) {
+    public TestBase(@NotNull List<IDetectionRule<Tree>> detectionRules) {
         super(detectionRules);
     }
 
-    protected TestBase() {
+    public TestBase() {
         super(PythonDetectionRules.rules());
     }
 

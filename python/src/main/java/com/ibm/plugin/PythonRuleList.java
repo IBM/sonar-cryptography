@@ -20,6 +20,7 @@
 package com.ibm.plugin;
 
 import com.ibm.plugin.rules.PythonInventoryRule;
+import com.ibm.plugin.rules.PythonNoMD5UseRule;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,7 +42,7 @@ public final class PythonRuleList {
 
     /** These rules are going to target MAIN code only */
     public static @NotNull @Unmodifiable List<Class<? extends PythonCheck>> getPythonChecks() {
-        return List.of(PythonInventoryRule.class);
+        return List.of(PythonInventoryRule.class, PythonNoMD5UseRule.class);
     }
 
     /** These rules are going to target TEST code only */

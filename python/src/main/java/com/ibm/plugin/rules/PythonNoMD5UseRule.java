@@ -17,23 +17,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.plugin;
+package com.ibm.plugin.rules;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import com.ibm.mapper.model.INode;
+import com.ibm.plugin.rules.detection.PythonBaseDetectionRule;
+import com.ibm.rules.NoMD5UseForMessageDigestRule;
+import com.ibm.rules.issue.Issue;
+import java.util.List;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
+import org.sonar.check.Rule;
+import org.sonar.plugins.python.api.tree.Tree;
 
-import org.junit.jupiter.api.Test;
-import org.sonar.plugins.java.api.CheckRegistrar;
+@Rule(key = "PythonNoMD5use")
+public final class PythonNoMD5UseRule extends PythonBaseDetectionRule {
 
-class JavaFileCheckRegistrarTest {
-
-    @Test
-    void checkNumberRules() {
-        CheckRegistrar.RegistrarContext context = new CheckRegistrar.RegistrarContext();
-
-        JavaCheckRegistrar registrar = new JavaCheckRegistrar();
-        registrar.register(context);
-
-        assertThat(context.checkClasses()).hasSize(2);
-        assertThat(context.testCheckClasses()).isEmpty();
+    @Override
+    public @NotNull List<Issue<Tree>> report(
+            @NotNull Tree markerTree, @NotNull @Unmodifiable List<INode> translatedNodes) {
+        return new NoMD5UseForMessageDigestRule<Tree>().report(markerTree, translatedNodes);
     }
 }
