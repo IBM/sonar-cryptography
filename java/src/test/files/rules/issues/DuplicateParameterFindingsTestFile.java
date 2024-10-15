@@ -13,12 +13,8 @@ public class DuplicateParameterFindingsTestFile {
 
     public byte[] encryptCEK(final RSAPublicKey pub, final SecretKey cek)
     throws RuntimeException {
-        AsymmetricBlockCipher engine = new RSAEngine(); // Noncompliant {{RSAEngine}}
-
-        OAEPEncoding cipher = new OAEPEncoding(engine, new SHA3Digest(), new SHA512Digest(), new byte[16]); // Noncompliant {{OAEPEncoding}}
-
-        // cipher.init(true, new RSAKeyParameters(false, null, null));
-
+        AsymmetricBlockCipher engine = new RSAEngine(); // Noncompliant {{(PublicKeyEncryption) RSA}}
+        OAEPEncoding cipher = new OAEPEncoding(engine, new SHA3Digest(), new SHA512Digest(), new byte[16]); // Noncompliant {{(PublicKeyEncryption) RSA-OAEP}}
         return cipher.processBlock(cek.getEncoded(), 0, keyBytes.length);
     }
 }

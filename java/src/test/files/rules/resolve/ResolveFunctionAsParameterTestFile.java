@@ -9,6 +9,6 @@ public class ResolveFunctionAsParameterTestFile {
     }
 
     public String algorithm() {
-        return "RSA";  // Noncompliant {{RSA}}
+        return "RSA";  // Noncompliant {{(SecretKey) RSA}}
     }
 }

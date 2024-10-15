@@ -25,7 +25,7 @@ public class BcHKDFBytesGeneratorTestFile {
 
         // Create the HKDFBytesGenerator
         HKDFBytesGenerator hkdfGenerator =
-                new HKDFBytesGenerator(hash); // Noncompliant {{HKDFBytesGenerator}}
+                new HKDFBytesGenerator(hash); // Noncompliant {{(KeyDerivationFunction) HKDF-SHA256}}
 
         // Initialize the generator with parameters
         hkdfGenerator.init(new HKDFParameters(ikm, salt, info));
@@ -55,7 +55,7 @@ public class BcHKDFBytesGeneratorTestFile {
 
         // Create the HKDFBytesGenerator
         HKDFBytesGenerator hkdfGenerator =
-                new HKDFBytesGenerator(new SHA512Digest()); // Noncompliant {{HKDFBytesGenerator}}
+                new HKDFBytesGenerator(new SHA512Digest()); // Noncompliant {{(KeyDerivationFunction) HKDF-SHA512}}
 
         // Initialize the generator with parameters
         hkdfGenerator.init(new HKDFParameters(ikm, salt, info));

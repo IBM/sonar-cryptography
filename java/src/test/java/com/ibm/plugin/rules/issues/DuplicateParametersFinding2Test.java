@@ -19,18 +19,17 @@
  */
 package com.ibm.plugin.rules.issues;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.ibm.engine.detection.DetectionStore;
+import com.ibm.engine.detection.Finding;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
+import com.ibm.engine.utils.DetectionStoreLogger;
 import com.ibm.mapper.model.INode;
 import com.ibm.plugin.TestBase;
-import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.sonar.java.checks.verifier.CheckVerifier;
@@ -38,6 +37,11 @@ import org.sonar.plugins.java.api.JavaCheck;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class DuplicateParametersFinding2Test extends TestBase {
 
@@ -129,5 +133,15 @@ class DuplicateParametersFinding2Test extends TestBase {
                 .onFile("src/test/files/rules/issues/DuplicateParametersFinding2TestFile.java")
                 .withChecks(this)
                 .verifyIssues();
+    }
+
+    @Override
+    public void update(@Nonnull Finding<JavaCheck, Tree, Symbol, JavaFileScannerContext> finding) {
+        final DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore =
+                finding.detectionStore();
+        (new DetectionStoreLogger<JavaCheck, Tree, Symbol, JavaFileScannerContext>()).print(detectionStore);
+        detectionStore.getDetectionValues().forEach(iValue -> {
+            this.reportIssue(iValue.getLocation(), iValue.asString());
+        });
     }
 }

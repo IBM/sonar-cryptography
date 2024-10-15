@@ -16,11 +16,11 @@ public class BcKGCMBlockCipherTestFile {
         secureRandom.nextBytes(keyBytes);
 
         // Create a block cipher engine
-        BlockCipher aesEngine = new AESEngine(); // Noncompliant {{AESEngine}}
+        BlockCipher aesEngine = new AESEngine(); // Noncompliant {{(BlockCipher) AES}}
 
         // Instantiate KGCMBlockCipher with constructor
         KGCMBlockCipher constructor =
-                new KGCMBlockCipher(aesEngine); // Noncompliant {{KGCMBlockCipher}}
+                new KGCMBlockCipher(aesEngine); // Noncompliant {{(AuthenticatedEncryption) AES-GCM}}
 
         // Initialize cipher with key and parameters
         KeyParameter keyParameter = new KeyParameter(keyBytes);

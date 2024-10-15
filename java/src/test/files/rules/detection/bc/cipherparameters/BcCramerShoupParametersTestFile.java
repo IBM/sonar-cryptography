@@ -11,7 +11,7 @@ public class BcCramerShoupParametersTestFile {
 
     public static void testCramerShoupParameters() {
         // Create a block cipher engine
-        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
+        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{(BlockCipher) AES}}
 
         Digest digest = new SHA256Digest();
         CramerShoupParameters parameters =
@@ -23,7 +23,7 @@ public class BcCramerShoupParametersTestFile {
 
     public static void testCramerShoupPrivateKeyParameters() {
         // Create a block cipher engine
-        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
+        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{(BlockCipher) AES}}
 
         Digest digest = new SHA256Digest();
         CramerShoupParameters base =
@@ -44,7 +44,7 @@ public class BcCramerShoupParametersTestFile {
 
     public static void testCramerShoupPublicKeyParameters() {
         // Create a block cipher engine
-        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
+        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{(BlockCipher) AES}}
 
         Digest digest = new SHA256Digest();
         CramerShoupParameters base =
