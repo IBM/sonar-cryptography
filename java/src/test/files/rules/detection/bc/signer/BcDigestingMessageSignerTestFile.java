@@ -19,7 +19,7 @@ public class BcDigestingMessageSignerTestFile {
 
         // Initialize DigestingMessageSigner with SPHINCS signer and SHAKEDigest
         DigestingMessageSigner signer = new DigestingMessageSigner(sphincsSigner, digest);
-         // Noncompliant@-1 {{DigestingMessageSigner}}
+         // Noncompliant@-1 {{(Signature) SPHINCS-256}}
 
         signer.init(true, new RSAKeyParameters(true, new BigInteger("0"), new BigInteger("1")));
 

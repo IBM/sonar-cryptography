@@ -14,7 +14,7 @@ public class BcOpenSSLPBEParametersGeneratorTestFile {
 
         // Create the OpenSSLPBEParametersGenerator
         OpenSSLPBEParametersGenerator generator =
-                new OpenSSLPBEParametersGenerator(); // Noncompliant {{OpenSSLPBEParametersGenerator[MD5]}}
+                new OpenSSLPBEParametersGenerator(); // Noncompliant {{(PasswordBasedEncryption) PBES1}}
 
         // Initialize the generator with password and salt
         generator.init(password.getBytes(), salt, 1000); // 1000 is the iteration count
@@ -42,7 +42,7 @@ public class BcOpenSSLPBEParametersGeneratorTestFile {
 
         // Create the OpenSSLPBEParametersGenerator with the digest
         OpenSSLPBEParametersGenerator generator =
-                new OpenSSLPBEParametersGenerator(sha256Digest); // Noncompliant {{OpenSSLPBEParametersGenerator}}
+                new OpenSSLPBEParametersGenerator(sha256Digest); // Noncompliant {{(PasswordBasedEncryption) PBES1}}
 
         // Initialize the generator with password and salt
         generator.init(password.getBytes(), salt, 1000); // 1000 is the iteration count

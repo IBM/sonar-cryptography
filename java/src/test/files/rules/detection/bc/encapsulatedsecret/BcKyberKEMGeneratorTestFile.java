@@ -16,7 +16,7 @@ public class BcKyberKEMGeneratorTestFile {
                 new KyberKeyGenerationParameters(random, KyberParameters.kyber512);
 
         // Initialize the Kyber key generator
-        KyberKEMGenerator kemGenerator = new KyberKEMGenerator(random); // Noncompliant {{KyberKEMGenerator}}
+        KyberKEMGenerator kemGenerator = new KyberKEMGenerator(random); // Noncompliant {{(KeyEncapsulationMechanism) Kyber}}
 
         // Generate secret
         SecretWithEncapsulation secret =

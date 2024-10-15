@@ -13,7 +13,7 @@ public class BcDSTUMacTestFile {
         int macSizeInBits = 128; // 128 bits = 16 bytes
 
         // Initialize DSTU7564Mac with the cipher
-        DSTU7564Mac mac = new DSTU7564Mac(macSizeInBits); // Noncompliant {{DSTU7564Mac}}
+        DSTU7564Mac mac = new DSTU7564Mac(macSizeInBits); // Noncompliant {{(Mac) Kupyna}}
 
         // Compute MAC
         mac.init(new KeyParameter(key)); // Initialize MAC with the same key as the cipher
@@ -29,7 +29,7 @@ public class BcDSTUMacTestFile {
         int macSizeInBits = 128; // 128 bits = 16 bytes
 
         // Initialize DSTU7624Mac with the cipher
-        DSTU7624Mac mac = new DSTU7624Mac(macSizeInBits, 0); // Noncompliant {{DSTU7624Mac}}
+        DSTU7624Mac mac = new DSTU7624Mac(macSizeInBits, 0); // Noncompliant {{(Mac) Kalyna}}
 
         // Compute MAC
         mac.init(new KeyParameter(key)); // Initialize MAC with the same key as the cipher

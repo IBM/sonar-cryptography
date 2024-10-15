@@ -27,11 +27,11 @@ import org.bouncycastle.crypto.params.KeyParameter;
 public class BcBlockCipherMacTestFile {
 
     public static byte[] generateBlockCipherMac(byte[] key, byte[] input) { 
-        AESEngine cipher = new AESEngine(); // Noncompliant {{AESEngine}}
+        AESEngine cipher = new AESEngine(); // Noncompliant {{(BlockCipher) AES}}
         int macSizeInBits = 128;
 
         BlockCipherMac mac =
-                new BlockCipherMac(cipher, macSizeInBits); // Noncompliant {{BlockCipherMac}}
+                new BlockCipherMac(cipher, macSizeInBits); // Noncompliant {{(Mac) AES}}
         CipherParameters params = new KeyParameter(key);
 
         mac.init(params);

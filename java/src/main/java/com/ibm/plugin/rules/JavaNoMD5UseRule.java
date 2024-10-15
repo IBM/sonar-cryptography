@@ -20,10 +20,9 @@
 package com.ibm.plugin.rules;
 
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.algorithms.MD5;
 import com.ibm.plugin.rules.detection.JavaBaseDetectionRule;
 import com.ibm.rules.Issue;
-import com.ibm.rules.IssueCreator;
+import com.ibm.rules.NoMD5UseForMessageDigestRule;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.check.Rule;
@@ -38,8 +37,6 @@ public class JavaNoMD5UseRule extends JavaBaseDetectionRule {
     @Override
     @Nonnull public List<Issue<Tree>> report(
             @Nonnull Tree markerTree, @NotNull @Unmodifiable List<INode> translatedNodes) {
-        return IssueCreator.using(markerTree, translatedNodes)
-                .matchesCondition((node, parent) -> node instanceof MD5)
-                .create((markedTree, node, parent) -> new Issue<>(markedTree, "Do not use MD5"));
+        return new NoMD5UseForMessageDigestRule<Tree>().report(markerTree, translatedNodes);
     }
 }

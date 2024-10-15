@@ -18,7 +18,7 @@ public class BcDigestingStateAwareMessageSignerTestFile {
 
         // Initialize DigestingStateAwareMessageSigner with SPHINCS signer and SHAKEDigest
         DigestingStateAwareMessageSigner signer = new DigestingStateAwareMessageSigner(gmssSigner, digest);
-        // Noncompliant@-1 {{DigestingStateAwareMessageSigner}}
+        // Noncompliant@-1 {{(Signature) GMSS}}
 
         signer.init(true, new RSAKeyParameters(true, new BigInteger("0"), new BigInteger("1")));
 

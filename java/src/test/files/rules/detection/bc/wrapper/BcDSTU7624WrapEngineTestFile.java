@@ -14,7 +14,7 @@ public class BcDSTU7624WrapEngineTestFile {
         random.nextBytes(wrappingKey);
 
         // Wrap the key (block size: 256 bits)
-        DSTU7624WrapEngine wrapper = new DSTU7624WrapEngine(256); // Noncompliant {{DSTU7624WrapEngine}}
+        DSTU7624WrapEngine wrapper = new DSTU7624WrapEngine(256); // Noncompliant {{(KeyWrap) Kalyna-256}}
         KeyParameter keyParameter = new KeyParameter(wrappingKey);
         wrapper.init(true, keyParameter);
 

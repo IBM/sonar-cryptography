@@ -14,7 +14,7 @@ public class BcRSADigestSignerTestFile {
 
         // Initialize RSADigestSigner
         RSADigestSigner signer = new RSADigestSigner(digest, new ASN1ObjectIdentifier("1234"));
-        // Noncompliant@-1 {{RSADigestSigner}}
+        // Noncompliant@-1 {{(Signature) SHA256withRSA}}
 
         signer.init(true, new RSAKeyParameters(true, new BigInteger("0"), new BigInteger("1")));
 

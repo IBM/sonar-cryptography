@@ -14,12 +14,12 @@ public class BcDSADigestSignerTestFile {
         Digest digest = new SHA256Digest(); // Initialize your digest, e.g., new SHA256Digest()
 
         // Initialize DSASginer
-        DSASigner dsa = new DSASigner(); // Noncompliant {{DSASigner}}
+        DSASigner dsa = new DSASigner(); // Noncompliant {{(Signature) DSA}}
 
         // Initialize DSADigestSigner
         DSADigestSigner signer =
                 new DSADigestSigner(dsa, digest, new StandardDSAEncoding());
-        // Noncompliant@-1 {{DSADigestSigner}}
+        // Noncompliant@-1 {{(Signature) SHA256withDSA}}
 
         signer.init(true, new RSAKeyParameters(true, new BigInteger("0"), new BigInteger("1")));
 

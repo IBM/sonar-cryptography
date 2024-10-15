@@ -28,8 +28,8 @@ import org.bouncycastle.crypto.params.KeyParameter;
 public class BcCMacTestFile {
     public byte[] generateCMac(byte[] key, byte[] data) throws Exception {
         // Using AES engine with a 128-bit MAC size
-        Mac mac = new CMac(new AESEngine(), 128); // Noncompliant {{CMac}}
-        // Noncompliant@-1 {{AESEngine}}
+        Mac mac = new CMac(new AESEngine(), 128); // Noncompliant {{(Mac) AES-CMAC}}
+        // Noncompliant@-1 {{(BlockCipher) AES}}
 
         CipherParameters params = new KeyParameter(key);
         mac.init(params);
