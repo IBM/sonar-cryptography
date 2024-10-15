@@ -80,11 +80,12 @@ public abstract class TestBase extends JavaInventoryRule {
         asserts(findingId, detectionStore, nodes);
         findingId++;
         // report
-        Optional.ofNullable(this.report(finding.getMarkerTree(), nodes))
-                .ifPresent(issue -> finding
-                        .detectionStore()
-                        .getScanContext()
-                        .reportIssue(this, issue.tree(), issue.message()));
+        this.report(finding.getMarkerTree(), nodes)
+                .forEach(
+                        issue ->
+                                finding.detectionStore()
+                                        .getScanContext()
+                                        .reportIssue(this, issue.tree(), issue.message()));
     }
 
     public abstract void asserts(

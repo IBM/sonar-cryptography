@@ -21,10 +21,9 @@ package com.ibm.engine.detection;
 
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.rule.IBundle;
-import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nonnull;
 import java.util.List;
+import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public record Finding<R, T, S, P>(@Nonnull DetectionStore<R, T, S, P> detectionStore) {
 

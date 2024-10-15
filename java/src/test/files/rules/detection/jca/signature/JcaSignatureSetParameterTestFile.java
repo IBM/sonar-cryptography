@@ -6,7 +6,7 @@ import java.security.spec.PSSParameterSpec;
 public class JcaSignatureSetParameterTestFile {
 
     public void test() throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
-        Signature signature = Signature.getInstance("RSASSA-PSS"); // Noncompliant {{RSASSA-PSS}}
+        Signature signature = Signature.getInstance("RSASSA-PSS"); // Noncompliant {{(ProbabilisticSignatureScheme) RSASSA-PSS}}
         signature.setParameter(new PSSParameterSpec(20));
     }
 }

@@ -22,14 +22,15 @@ package com.ibm.plugin.rules.detection.random;
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.mapper.model.INode;
 import com.ibm.plugin.TestBase;
-import java.util.List;
-import javax.annotation.Nonnull;
 import org.junit.jupiter.api.Test;
 import org.sonar.java.checks.verifier.CheckVerifier;
 import org.sonar.plugins.java.api.JavaCheck;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
+
+import javax.annotation.Nonnull;
+import java.util.List;
 
 class SecureRandomGetInstanceTest extends TestBase {
 
@@ -43,7 +44,7 @@ class SecureRandomGetInstanceTest extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/random/SecureRandomGetInstanceTestFile.java")
                 .withChecks(this)
-                .verifyIssues();
+                .verifyNoIssues();
     }
 
     @Override

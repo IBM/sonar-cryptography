@@ -40,12 +40,12 @@ import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 public abstract class JavaBaseDetectionRule extends IssuableSubscriptionVisitor
-        implements IObserver<Finding<JavaCheck, Tree, Symbol, JavaFileScannerContext>>, IReportableDetectionRule<Tree> {
+        implements IObserver<Finding<JavaCheck, Tree, Symbol, JavaFileScannerContext>>,
+                IReportableDetectionRule<Tree> {
 
     @Nonnull protected final JavaTranslationProcess javaTranslationProcess;
     @Nonnull protected final List<IDetectionRule<Tree>> detectionRules;
@@ -101,17 +101,18 @@ public abstract class JavaBaseDetectionRule extends IssuableSubscriptionVisitor
         final List<INode> nodes = javaTranslationProcess.initiate(finding.detectionStore());
         JavaAggregator.addNodes(nodes);
         // report
-        Optional.ofNullable(this.report(finding.getMarkerTree(), nodes))
-                .ifPresent(issue -> finding
-                        .detectionStore()
-                        .getScanContext()
-                        .reportIssue(this, issue.tree(), issue.message()));
+        this.report(finding.getMarkerTree(), nodes)
+                .forEach(
+                        issue ->
+                                finding.detectionStore()
+                                        .getScanContext()
+                                        .reportIssue(this, issue.tree(), issue.message()));
     }
 
     @Override
-    @Nullable
-    public Issue<Tree> report(@Nonnull Tree markerTree, @NotNull @Unmodifiable List<INode> translatedNodes) {
+    @Nonnull public @NotNull List<Issue<Tree>> report(
+            @Nonnull Tree markerTree, @NotNull @Unmodifiable List<INode> translatedNodes) {
         // override by higher level rule, to report an issue
-        return null;
+        return Collections.emptyList();
     }
 }

@@ -27,6 +27,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public interface IFunctionReport<T> extends Function3<T, INode, INode, Issue<T>> {
+
     @Override
-    @Nonnull Issue<T> apply(@Nonnull T markedTree, @Nonnull INode node, @Nullable INode parent);
+    @Nonnull
+    Issue<T> apply(@Nonnull T markedTree, @Nonnull INode node, @Nullable INode parent);
 }

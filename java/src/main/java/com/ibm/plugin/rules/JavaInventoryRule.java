@@ -20,7 +20,10 @@
 package com.ibm.plugin.rules;
 
 import com.ibm.engine.rule.IDetectionRule;
+import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.Key;
+import com.ibm.mapper.model.Protocol;
 import com.ibm.plugin.rules.detection.JavaBaseDetectionRule;
 import com.ibm.plugin.translation.reorganizer.JavaReorganizerRules;
 import com.ibm.rules.Issue;
@@ -43,10 +46,20 @@ public class JavaInventoryRule extends JavaBaseDetectionRule {
     }
 
     @Override
-    public Issue<Tree> report(@Nonnull Tree markerTree, @NotNull @Unmodifiable List<INode> translatedNodes) {
-        return IssueCreator
-                .using(markerTree, translatedNodes)
-                .matchesCondition((node, parent) -> true)
-                .create((markedTree, node, parent) -> new Issue<>(markedTree, node.asString()));
+    @Nonnull public List<Issue<Tree>> report(
+            @Nonnull Tree markerTree, @NotNull @Unmodifiable List<INode> translatedNodes) {
+        return IssueCreator.using(markerTree, translatedNodes)
+                .matchesCondition((node, parent) -> {
+                    // report only asserts
+                    return (node instanceof Algorithm || node instanceof Protocol || node instanceof Key)
+                            && parent == null;
+                })
+                .create(
+                        (markedTree, node, parent) ->
+                                new Issue<>(
+                                        markedTree,
+                                        String.format(
+                                                "(%s) %s",
+                                                node.getKind().getSimpleName(), node.asString())));
     }
 }

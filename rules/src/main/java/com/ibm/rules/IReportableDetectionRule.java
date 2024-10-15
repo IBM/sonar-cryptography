@@ -27,5 +27,6 @@ import java.util.List;
 
 public interface IReportableDetectionRule<T> {
 
-    Issue<T> report(@Nonnull T markerTree, @Nonnull @Unmodifiable List<INode> translatedNodes);
+    @Nonnull
+    List<Issue<T>> report(@Nonnull T markerTree, @Nonnull @Unmodifiable List<INode> translatedNodes);
 }

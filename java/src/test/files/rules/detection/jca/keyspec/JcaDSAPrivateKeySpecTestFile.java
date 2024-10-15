@@ -8,7 +8,7 @@ import java.security.spec.KeySpec;
 public class JcaDSAPrivateKeySpecTestFile {
 
     public void test() throws NoSuchAlgorithmException, InvalidKeySpecException {
-        SecretKeyFactory factory = SecretKeyFactory.getInstance("DSA"); // Noncompliant {{DSA}}
+        SecretKeyFactory factory = SecretKeyFactory.getInstance("DSA"); // Noncompliant {{(SecretKey) DSA}}
         factory.generateSecret(spec());
     }
 
