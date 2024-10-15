@@ -17,19 +17,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.rules;
+package com.ibm.rules.issue;
 
 import com.ibm.mapper.model.INode;
 import com.ibm.rules.builder.IFunctionMatchCondition;
 import com.ibm.rules.builder.IFunctionReport;
-import org.jetbrains.annotations.Unmodifiable;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 public final class IssueCreator<T> {
     @Nonnull @Unmodifiable private final List<INode> nodes;
@@ -86,8 +85,6 @@ public final class IssueCreator<T> {
         }
         return new IssueCreator<>(nodes, markedTree, newMatchedNodes, null);
     }
-
-
 
     @Nonnull
     public List<Issue<T>> create(@Nonnull IFunctionReport<T> report) {

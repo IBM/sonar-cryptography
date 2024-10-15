@@ -19,16 +19,18 @@
  */
 package com.ibm.plugin.rules.detection;
 
-import com.ibm.engine.detection.DetectionStore;
+import com.ibm.common.IObserver;
 import com.ibm.engine.detection.Finding;
 import com.ibm.engine.executive.DetectionExecutive;
 import com.ibm.engine.language.python.PythonScanContext;
 import com.ibm.engine.rule.IDetectionRule;
-import com.ibm.mapper.IReportableDetectionRule;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.plugin.PythonAggregator;
 import com.ibm.plugin.translation.PythonTranslationProcess;
+import com.ibm.rules.IReportableDetectionRule;
+import com.ibm.rules.issue.Issue;
+import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +43,8 @@ import org.sonar.plugins.python.api.tree.CallExpression;
 import org.sonar.plugins.python.api.tree.Tree;
 
 public abstract class PythonBaseDetectionRule extends PythonVisitorCheck
-        implements IReportableDetectionRule<PythonCheck, Tree, Symbol, PythonVisitorContext> {
+        implements IObserver<Finding<PythonCheck, Tree, Symbol, PythonVisitorContext>>,
+                IReportableDetectionRule<Tree> {
 
     @Nonnull protected final PythonTranslationProcess pythonTranslationProcess;
     @Nonnull protected final List<IDetectionRule<Tree>> detectionRules;
@@ -79,14 +82,20 @@ public abstract class PythonBaseDetectionRule extends PythonVisitorCheck
     public void update(@Nonnull Finding<PythonCheck, Tree, Symbol, PythonVisitorContext> finding) {
         List<INode> nodes = pythonTranslationProcess.initiate(finding.detectionStore());
         PythonAggregator.addNodes(nodes);
-        this.report(finding.detectionStore(), this);
+        // report
+        this.report(finding.getMarkerTree(), nodes)
+                .forEach(
+                        issue ->
+                                finding.detectionStore()
+                                        .getScanContext()
+                                        .reportIssue(this, issue.tree(), issue.message()));
     }
 
     @Override
-    public void report(
-            @NotNull @Unmodifiable
-                    DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> detectionStore,
-            @NotNull PythonCheck rule) {
+    @Nonnull
+    public @NotNull List<Issue<Tree>> report(
+            @Nonnull Tree markerTree, @NotNull @Unmodifiable List<INode> translatedNodes) {
         // override by higher level rule, to report an issue
+        return Collections.emptyList();
     }
 }

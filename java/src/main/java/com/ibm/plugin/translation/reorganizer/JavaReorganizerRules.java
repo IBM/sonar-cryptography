@@ -27,9 +27,8 @@ import com.ibm.mapper.reorganizer.rules.CipherParameterReorganizer;
 import com.ibm.mapper.reorganizer.rules.CipherSuiteReorganizer;
 import com.ibm.mapper.reorganizer.rules.MacReorganizer;
 import com.ibm.mapper.reorganizer.rules.SignatureReorganizer;
-
-import javax.annotation.Nonnull;
 import java.util.List;
+import javax.annotation.Nonnull;
 
 public final class JavaReorganizerRules {
     private JavaReorganizerRules() {

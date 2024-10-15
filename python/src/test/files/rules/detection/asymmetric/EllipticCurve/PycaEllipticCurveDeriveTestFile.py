@@ -3,7 +3,7 @@
 import cryptography.hazmat.primitives.asymmetric.ec
 import base64
 
-TEST_PRIVATE_KEY = cryptography.hazmat.primitives.asymmetric.ec.derive_private_key( # Noncompliant {{SECP256R1}}
+TEST_PRIVATE_KEY = cryptography.hazmat.primitives.asymmetric.ec.derive_private_key( # Noncompliant {{(PrivateKey) EC-secp256r1}}
     int.from_bytes(
         base64.urlsafe_b64decode("870MB6gfuTJ4HtUnUvYMyJpr5eUZNP4Bk43bVdj3eAE" + "==="),
         "big",

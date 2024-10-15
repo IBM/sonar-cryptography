@@ -21,8 +21,7 @@ package com.ibm.rules.builder;
 
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.Function3;
-import com.ibm.rules.Issue;
-
+import com.ibm.rules.issue.Issue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

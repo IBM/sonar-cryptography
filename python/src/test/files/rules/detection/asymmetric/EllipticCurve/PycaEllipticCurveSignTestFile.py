@@ -5,7 +5,7 @@ from cryptography.hazmat.primitives.asymmetric import utils
 # param = ec.SECP192R1()
 param = ec.SECP384R1()
 # private_key, other_var = ec.generate_private_key(param), 42 # TODO: because of TraceSeymbols not yet supporting multi-var assignments, this does not work
-private_key = ec.generate_private_key(param) # Noncompliant {{SECP384R1}}
+private_key = ec.generate_private_key(param) # Noncompliant {{(PrivateKey) EC-secp384r1}}
 
 # Ploys that should not be detected
 b = ec.ECDSA(utils.Prehashed(hashes.SHA3_224())) # TODO: The test should pass also when removing "b ="

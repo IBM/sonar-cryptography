@@ -20,22 +20,18 @@
 package com.ibm.plugin.rules;
 
 import com.ibm.engine.rule.IDetectionRule;
-import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Key;
-import com.ibm.mapper.model.Protocol;
 import com.ibm.plugin.rules.detection.JavaBaseDetectionRule;
 import com.ibm.plugin.translation.reorganizer.JavaReorganizerRules;
-import com.ibm.rules.Issue;
-import com.ibm.rules.IssueCreator;
+import com.ibm.rules.InventoryRule;
+import com.ibm.rules.issue.Issue;
+import java.util.List;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.tree.Tree;
-
-import javax.annotation.Nonnull;
-import java.util.List;
 
 @Rule(key = "Inventory")
 public class JavaInventoryRule extends JavaBaseDetectionRule {
@@ -46,20 +42,9 @@ public class JavaInventoryRule extends JavaBaseDetectionRule {
     }
 
     @Override
-    @Nonnull public List<Issue<Tree>> report(
+    @Nonnull
+    public List<Issue<Tree>> report(
             @Nonnull Tree markerTree, @NotNull @Unmodifiable List<INode> translatedNodes) {
-        return IssueCreator.using(markerTree, translatedNodes)
-                .matchesCondition((node, parent) -> {
-                    // report only asserts
-                    return (node instanceof Algorithm || node instanceof Protocol || node instanceof Key)
-                            && parent == null;
-                })
-                .create(
-                        (markedTree, node, parent) ->
-                                new Issue<>(
-                                        markedTree,
-                                        String.format(
-                                                "(%s) %s",
-                                                node.getKind().getSimpleName(), node.asString())));
+        return new InventoryRule<Tree>().report(markerTree, translatedNodes);
     }
 }

@@ -71,7 +71,13 @@ public abstract class TestBase extends PythonInventoryRule {
         List<INode> nodes = pythonTranslationProcess.initiate(detectionStore);
         asserts(findingId, detectionStore, nodes);
         findingId++;
-        this.report(finding.detectionStore(), this);
+        // report
+        this.report(finding.getMarkerTree(), nodes)
+                .forEach(
+                        issue ->
+                                finding.detectionStore()
+                                        .getScanContext()
+                                        .reportIssue(this, issue.tree(), issue.message()));
     }
 
     public abstract void asserts(

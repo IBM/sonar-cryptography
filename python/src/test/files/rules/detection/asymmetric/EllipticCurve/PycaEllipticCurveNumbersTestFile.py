@@ -50,4 +50,4 @@ class Key(object):
         return cls(keyObject)
     
 some_var = b'ecdsa-sha2-nistp256'
-Key._fromECComponents(None, None, None, some_var, None) # Noncompliant {{ecdsa-sha2-nistp256}}
+Key._fromECComponents(None, None, None, some_var, None)

@@ -1,7 +1,7 @@
 from cryptography.fernet import Fernet, MultiFernet
 
-key1 = Fernet(Fernet.generate_key()) # Noncompliant {{GENERATION}}
-key2 = Fernet(Fernet.generate_key()) # Noncompliant {{GENERATION}}
+key1 = Fernet(Fernet.generate_key()) # Noncompliant {{(SecretKey) Fernet}}
+key2 = Fernet(Fernet.generate_key()) # Noncompliant {{(SecretKey) Fernet}}
 
 def enc(data):
     return MultiFernet([key1, key2]).encrypt(data)

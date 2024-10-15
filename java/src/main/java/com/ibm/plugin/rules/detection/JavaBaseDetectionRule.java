@@ -30,7 +30,10 @@ import com.ibm.plugin.JavaAggregator;
 import com.ibm.plugin.translation.JavaTranslationProcess;
 import com.ibm.plugin.translation.reorganizer.JavaReorganizerRules;
 import com.ibm.rules.IReportableDetectionRule;
-import com.ibm.rules.Issue;
+import com.ibm.rules.issue.Issue;
+import java.util.Collections;
+import java.util.List;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
@@ -38,10 +41,6 @@ import org.sonar.plugins.java.api.JavaCheck;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
-
-import javax.annotation.Nonnull;
-import java.util.Collections;
-import java.util.List;
 
 public abstract class JavaBaseDetectionRule extends IssuableSubscriptionVisitor
         implements IObserver<Finding<JavaCheck, Tree, Symbol, JavaFileScannerContext>>,
@@ -110,7 +109,8 @@ public abstract class JavaBaseDetectionRule extends IssuableSubscriptionVisitor
     }
 
     @Override
-    @Nonnull public @NotNull List<Issue<Tree>> report(
+    @Nonnull
+    public @NotNull List<Issue<Tree>> report(
             @Nonnull Tree markerTree, @NotNull @Unmodifiable List<INode> translatedNodes) {
         // override by higher level rule, to report an issue
         return Collections.emptyList();

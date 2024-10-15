@@ -19,10 +19,10 @@
  */
 package com.ibm.plugin;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.jupiter.api.Test;
 import org.sonar.plugins.java.api.CheckRegistrar;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class JavaFileCheckRegistrarTest {
 
@@ -33,7 +33,7 @@ class JavaFileCheckRegistrarTest {
         JavaCheckRegistrar registrar = new JavaCheckRegistrar();
         registrar.register(context);
 
-        assertThat(context.checkClasses()).hasSize(1);
+        assertThat(context.checkClasses()).hasSize(2);
         assertThat(context.testCheckClasses()).isEmpty();
     }
 }

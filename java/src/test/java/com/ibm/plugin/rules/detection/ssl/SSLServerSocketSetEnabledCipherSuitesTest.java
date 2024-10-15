@@ -19,6 +19,8 @@
  */
 package com.ibm.plugin.rules.detection.ssl;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.CipherSuite;
 import com.ibm.engine.model.IValue;
@@ -28,6 +30,7 @@ import com.ibm.mapper.model.collections.AssetCollection;
 import com.ibm.mapper.model.collections.IdentifierCollection;
 import com.ibm.mapper.model.protocol.TLS;
 import com.ibm.plugin.TestBase;
+import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.sonar.java.checks.verifier.CheckVerifier;
@@ -35,10 +38,6 @@ import org.sonar.plugins.java.api.JavaCheck;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class SSLServerSocketSetEnabledCipherSuitesTest extends TestBase {
 
@@ -74,25 +73,26 @@ class SSLServerSocketSetEnabledCipherSuitesTest extends TestBase {
          */
         assertThat(nodes).hasSize(1);
 
-// TLS
+        // TLS
         INode tLSNode = nodes.get(0);
         assertThat(tLSNode.getKind()).isEqualTo(TLS.class);
         assertThat(tLSNode.getChildren()).hasSize(1);
         assertThat(tLSNode.asString()).isEqualTo("TLS");
 
-// CipherSuite under TLS
+        // CipherSuite under TLS
         INode cipherSuiteNode = tLSNode.getChildren().get(com.ibm.mapper.model.CipherSuite.class);
         assertThat(cipherSuiteNode).isNotNull();
         assertThat(cipherSuiteNode.getChildren()).hasSize(2);
         assertThat(cipherSuiteNode.asString()).isEqualTo("TLS_DHE_DSS_WITH_AES_256_CBC_SHA256");
 
-// IdentifierCollection under CipherSuite under TLS
-        INode identifierCollectionNode = cipherSuiteNode.getChildren().get(IdentifierCollection.class);
+        // IdentifierCollection under CipherSuite under TLS
+        INode identifierCollectionNode =
+                cipherSuiteNode.getChildren().get(IdentifierCollection.class);
         assertThat(identifierCollectionNode).isNotNull();
         assertThat(identifierCollectionNode.getChildren()).isEmpty();
         assertThat(identifierCollectionNode.asString()).isEqualTo("[0x00, 0x6A]");
 
-// AssetCollection under CipherSuite under TLS
+        // AssetCollection under CipherSuite under TLS
         INode assetCollectionNode = cipherSuiteNode.getChildren().get(AssetCollection.class);
         assertThat(assetCollectionNode).isNotNull();
         assertThat(assetCollectionNode.getChildren()).isEmpty();

@@ -27,6 +27,9 @@ import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import com.ibm.engine.utils.DetectionStoreLogger;
 import com.ibm.mapper.model.INode;
 import com.ibm.plugin.TestBase;
+import java.util.List;
+import java.util.Optional;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.sonar.check.Rule;
@@ -35,10 +38,6 @@ import org.sonar.plugins.java.api.JavaCheck;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
-
-import javax.annotation.Nonnull;
-import java.util.List;
-import java.util.Optional;
 
 @Rule(key = "Test")
 class DetectionRuleMatchingExactTypesExceptParametersTest extends TestBase {
@@ -99,9 +98,13 @@ class DetectionRuleMatchingExactTypesExceptParametersTest extends TestBase {
     public void update(@Nonnull Finding<JavaCheck, Tree, Symbol, JavaFileScannerContext> finding) {
         final DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore =
                 finding.detectionStore();
-        (new DetectionStoreLogger<JavaCheck, Tree, Symbol, JavaFileScannerContext>()).print(detectionStore);
-        detectionStore.getDetectionValues().forEach(iValue -> {
-            this.reportIssue(iValue.getLocation(), iValue.asString());
-        });
+        (new DetectionStoreLogger<JavaCheck, Tree, Symbol, JavaFileScannerContext>())
+                .print(detectionStore);
+        detectionStore
+                .getDetectionValues()
+                .forEach(
+                        iValue -> {
+                            this.reportIssue(iValue.getLocation(), iValue.asString());
+                        });
     }
 }

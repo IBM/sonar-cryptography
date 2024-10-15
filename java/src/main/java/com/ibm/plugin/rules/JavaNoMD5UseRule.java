@@ -21,21 +21,21 @@ package com.ibm.plugin.rules;
 
 import com.ibm.mapper.model.INode;
 import com.ibm.plugin.rules.detection.JavaBaseDetectionRule;
-import com.ibm.rules.Issue;
 import com.ibm.rules.NoMD5UseForMessageDigestRule;
+import com.ibm.rules.issue.Issue;
+import java.util.List;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.tree.Tree;
 
-import javax.annotation.Nonnull;
-import java.util.List;
-
 @Rule(key = "JavaNoMD5use")
 public class JavaNoMD5UseRule extends JavaBaseDetectionRule {
 
     @Override
-    @Nonnull public List<Issue<Tree>> report(
+    @Nonnull
+    public List<Issue<Tree>> report(
             @Nonnull Tree markerTree, @NotNull @Unmodifiable List<INode> translatedNodes) {
         return new NoMD5UseForMessageDigestRule<Tree>().report(markerTree, translatedNodes);
     }

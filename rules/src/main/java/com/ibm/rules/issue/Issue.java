@@ -17,9 +17,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.rules;
+package com.ibm.rules.issue;
 
 import javax.annotation.Nonnull;
 
-public record Issue<T>(@Nonnull T tree, @Nonnull String message) {
-}
+public record Issue<T>(@Nonnull T tree, @Nonnull String message) {}

@@ -20,9 +20,12 @@
 package com.ibm.plugin.rules.resolve;
 
 import com.ibm.engine.detection.DetectionStore;
+import com.ibm.engine.detection.Finding;
+import com.ibm.engine.utils.DetectionStoreLogger;
 import com.ibm.mapper.model.INode;
 import com.ibm.plugin.TestBase;
 import java.util.List;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.sonar.plugins.python.api.PythonCheck;
@@ -53,5 +56,25 @@ class ResolveScopeValuesTest extends TestBase {
     void test() {
         PythonCheckVerifier.verify(
                 "src/test/files/rules/resolve/ResolveScopeValuesTestFile.py", this);
+    }
+
+    @Override
+    public void update(@Nonnull Finding<PythonCheck, Tree, Symbol, PythonVisitorContext> finding) {
+        final DetectionStore<
+                        PythonCheck,
+                        Tree,
+                        org.sonar.plugins.python.api.symbols.Symbol,
+                        PythonVisitorContext>
+                detectionStore = finding.detectionStore();
+        (new DetectionStoreLogger<PythonCheck, Tree, Symbol, PythonVisitorContext>())
+                .print(detectionStore);
+        detectionStore
+                .getDetectionValues()
+                .forEach(
+                        iValue -> {
+                            detectionStore
+                                    .getScanContext()
+                                    .reportIssue(this, iValue.getLocation(), iValue.asString());
+                        });
     }
 }
