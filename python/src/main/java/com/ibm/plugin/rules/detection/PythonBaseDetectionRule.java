@@ -47,18 +47,22 @@ public abstract class PythonBaseDetectionRule extends PythonVisitorCheck
         implements IObserver<Finding<PythonCheck, Tree, Symbol, PythonVisitorContext>>,
                 IReportableDetectionRule<Tree> {
 
+    private final boolean isInventory;
     @Nonnull protected final PythonTranslationProcess pythonTranslationProcess;
     @Nonnull protected final List<IDetectionRule<Tree>> detectionRules;
 
     protected PythonBaseDetectionRule() {
+        this.isInventory = false;
         this.detectionRules = PythonDetectionRules.rules();
         this.pythonTranslationProcess =
                 new PythonTranslationProcess(PythonReorganizerRules.rules());
     }
 
     protected PythonBaseDetectionRule(
+            final boolean isInventory,
             @Nonnull List<IDetectionRule<Tree>> detectionRules,
             @Nonnull List<IReorganizerRule> reorganizerRules) {
+        this.isInventory = isInventory;
         this.detectionRules = detectionRules;
         this.pythonTranslationProcess = new PythonTranslationProcess(reorganizerRules);
     }
@@ -88,7 +92,9 @@ public abstract class PythonBaseDetectionRule extends PythonVisitorCheck
     @Override
     public void update(@Nonnull Finding<PythonCheck, Tree, Symbol, PythonVisitorContext> finding) {
         List<INode> nodes = pythonTranslationProcess.initiate(finding.detectionStore());
-        PythonAggregator.addNodes(nodes);
+        if (isInventory) {
+            PythonAggregator.addNodes(nodes);
+        }
         // report
         this.report(finding.getMarkerTree(), nodes)
                 .forEach(

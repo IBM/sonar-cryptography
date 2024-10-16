@@ -46,17 +46,21 @@ public abstract class JavaBaseDetectionRule extends IssuableSubscriptionVisitor
         implements IObserver<Finding<JavaCheck, Tree, Symbol, JavaFileScannerContext>>,
                 IReportableDetectionRule<Tree> {
 
+    private final boolean isInventory;
     @Nonnull protected final JavaTranslationProcess javaTranslationProcess;
     @Nonnull protected final List<IDetectionRule<Tree>> detectionRules;
 
     protected JavaBaseDetectionRule() {
+        this.isInventory = false;
         this.detectionRules = JavaDetectionRules.rules();
         this.javaTranslationProcess = new JavaTranslationProcess(JavaReorganizerRules.rules());
     }
 
     protected JavaBaseDetectionRule(
+            final boolean isInventory,
             @Nonnull List<IDetectionRule<Tree>> detectionRules,
             @Nonnull List<IReorganizerRule> reorganizerRules) {
+        this.isInventory = isInventory;
         this.detectionRules = detectionRules;
         this.javaTranslationProcess = new JavaTranslationProcess(reorganizerRules);
     }
@@ -98,7 +102,9 @@ public abstract class JavaBaseDetectionRule extends IssuableSubscriptionVisitor
     @Override
     public void update(@Nonnull Finding<JavaCheck, Tree, Symbol, JavaFileScannerContext> finding) {
         final List<INode> nodes = javaTranslationProcess.initiate(finding.detectionStore());
-        JavaAggregator.addNodes(nodes);
+        if (isInventory) {
+            JavaAggregator.addNodes(nodes);
+        }
         // report
         this.report(finding.getMarkerTree(), nodes)
                 .forEach(
