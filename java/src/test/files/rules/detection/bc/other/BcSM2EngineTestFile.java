@@ -18,13 +18,13 @@ public class BcSM2EngineTestFile {
 
         // Generate key pair
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("EC", "BC");
-        // Noncompliant@-1 {{EC}}
+        // Noncompliant@-1 {{(Key) EC}}
         keyPairGenerator.initialize(new ECGenParameterSpec("sm2p256v1"));
         KeyPair keyPair = keyPairGenerator.generateKeyPair();
 
         // Create SM2Engine instance
         SM2Engine sm2Engine = new SM2Engine(new SHA256Digest(), SM2Engine.Mode.C1C3C2);
-        // Noncompliant@-1 {{SM2Engine}}
+        // Noncompliant@-1 {{(PublicKeyEncryption) SM2}}
 
         // Encrypt
         byte[] plaintext = "Hello, SM2!".getBytes();

@@ -24,6 +24,7 @@ import com.ibm.mapper.reorganizer.rules.AeadBlockCipherReorganizer;
 import com.ibm.mapper.reorganizer.rules.AsymmetricBlockCipherReorganizer;
 import com.ibm.mapper.reorganizer.rules.BlockCipherReorganizer;
 import com.ibm.mapper.reorganizer.rules.CipherParameterReorganizer;
+import com.ibm.mapper.reorganizer.rules.CipherSuiteReorganizer;
 import com.ibm.mapper.reorganizer.rules.MacReorganizer;
 import com.ibm.mapper.reorganizer.rules.SignatureReorganizer;
 import java.util.List;
@@ -45,6 +46,7 @@ public final class JavaReorganizerRules {
                 CipherParameterReorganizer.MOVE_KEY_LENGTH_UNDER_TAG_LENGTH_UP,
                 CipherParameterReorganizer.MOVE_NODES_UNDER_DECRYPT_UP,
                 CipherParameterReorganizer.MOVE_NODES_UNDER_ENCRYPT_UP,
+                CipherSuiteReorganizer.ADD_TLS_PROTOCOL_AS_PARENT_NODE,
                 MacReorganizer.MERGE_UNKNOWN_MAC_PARENT_AND_CIPHER_CHILD,
                 MacReorganizer.MOVE_SOME_MAC_CHILDREN_UNDER_BLOCKCIPHER,
                 MacReorganizer.MOVE_TAG_LENGTH_UNDER_MAC,

@@ -30,7 +30,7 @@ public class BcBlake3MacTestFile {
         Blake3Digest blake3Digest = new Blake3Digest();
         KeyParameter keyParameter = new KeyParameter(key);
 
-        Mac blake3Mac = new Blake3Mac(blake3Digest); // Noncompliant {{Blake3Mac}}
+        Mac blake3Mac = new Blake3Mac(blake3Digest); // Noncompliant {{(Mac) BLAKE3}}
         blake3Mac.init(keyParameter);
 
         blake3Mac.update(message, 0, message.length);

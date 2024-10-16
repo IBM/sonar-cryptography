@@ -31,7 +31,7 @@ public class BcGOST28147MacTestFile {
             byte[] key = Hex.decode("0123456789abcdef0123456789abcdef");
             byte[] input = "Hello, BouncyCastle!".getBytes();
 
-            GOST28147Mac mac = new GOST28147Mac(); // Noncompliant {{GOST28147Mac}}
+            GOST28147Mac mac = new GOST28147Mac(); // Noncompliant {{(Mac) GOST28147}}
             CipherParameters params = new ParametersWithIV(new KeyParameter(key), new byte[10]);
             mac.init(params);
 

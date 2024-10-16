@@ -51,10 +51,8 @@ public class KEMEnricher implements IEnricher {
                 case "512" -> mlkem.put(new Oid("2.16.840.1.101.3.4.4.1", detectionLocation));
                 case "768" -> mlkem.put(new Oid("2.16.840.1.101.3.4.4.2", detectionLocation));
                 case "1024" -> mlkem.put(new Oid("2.16.840.1.101.3.4.4.3", detectionLocation));
-                default -> {
-                    // the base OID for NIST KEM
-                    mlkem.put(new Oid("2.16.840.1.101.3.4.4", detectionLocation));
-                }
+                default -> // the base OID for NIST KEM
+                        mlkem.put(new Oid("2.16.840.1.101.3.4.4", detectionLocation));
             }
         }
         return mlkem;

@@ -30,12 +30,12 @@ import org.bouncycastle.crypto.params.ParametersWithIV;
 
 public class BcCFBBlockCipherMacTestFile {
     public static byte[] generateCFBMac(byte[] key, byte[] iv, byte[] data) throws Exception {
-        BlockCipher cipher = new AESEngine(); // Noncompliant {{AESEngine}}
+        BlockCipher cipher = new AESEngine(); // Noncompliant {{(BlockCipher) AES}}
         int cfbBitSize = 64;
         int macSizeInBits = 128;
         BlockCipherPadding padding = new PKCS7Padding();
         CFBBlockCipherMac mac =
-                new CFBBlockCipherMac( // Noncompliant {{CFBBlockCipherMac}}
+                new CFBBlockCipherMac( // Noncompliant {{(Mac) AES}}
                         cipher,
                         cfbBitSize,
                         macSizeInBits,

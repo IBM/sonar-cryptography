@@ -6,7 +6,7 @@ import java.security.NoSuchAlgorithmException;
 public class JcaKeyGeneratorInitParameterSpecTestFile {
 
     public void generateKey() throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
-        KeyGenerator keyGenerator = KeyGenerator.getInstance("DES"); // Noncompliant {{DES}}
+        KeyGenerator keyGenerator = KeyGenerator.getInstance("DES"); // Noncompliant {{(SecretKey) DES}}
     }
 
 }

@@ -8,7 +8,7 @@ public class Issue16TestFile {
     public static void test() {
         // Instantiate GCMBlockCipher with newInstance() method
         GCMBlockCipher newInstance =
-                (GCMBlockCipher) GCMBlockCipher.newInstance(AESEngine.newInstance()); // Noncompliant {{AESEngine}} {{GCMBlockCipher}}
+                (GCMBlockCipher) GCMBlockCipher.newInstance(AESEngine.newInstance());  // Noncompliant {{(AuthenticatedEncryption) AES-GCM}} {{(BlockCipher) AES}}
     }
 
 }

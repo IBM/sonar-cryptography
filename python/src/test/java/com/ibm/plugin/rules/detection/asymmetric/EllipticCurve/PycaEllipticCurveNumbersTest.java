@@ -37,7 +37,7 @@ class PycaEllipticCurveNumbersTest extends TestBase {
     @Ignore("In this testcase the name of a var is resolved, but not teh actual value.")
     @Test
     void test() {
-        PythonCheckVerifier.verify(
+        PythonCheckVerifier.verifyNoIssue(
                 "src/test/files/rules/detection/asymmetric/EllipticCurve/PycaEllipticCurveNumbersTestFile.py",
                 this);
     }

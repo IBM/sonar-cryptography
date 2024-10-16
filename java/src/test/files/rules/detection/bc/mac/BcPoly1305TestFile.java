@@ -10,10 +10,10 @@ public class BcPoly1305TestFile {
         byte[] key = "0123456789abcdef".getBytes(StandardCharsets.UTF_8);
 
         // Initialize AES cipher
-        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
+        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{(BlockCipher) AES}}
 
         // Initialize Poly1305 with the block cipher
-        Poly1305 poly1305 = new Poly1305(aesEngine); // Noncompliant {{Poly1305}}
+        Poly1305 poly1305 = new Poly1305(aesEngine); // Noncompliant {{(Mac) Poly1305}}
 
         // Compute MAC
         poly1305.init(new KeyParameter(key)); // Initialize MAC with the same key as the cipher
@@ -26,7 +26,7 @@ public class BcPoly1305TestFile {
         byte[] key = "0123456789abcdef".getBytes(StandardCharsets.UTF_8);
 
         // Initialize Poly1305 with the block cipher
-        Poly1305 poly1305 = new Poly1305(); // Noncompliant {{Poly1305}}
+        Poly1305 poly1305 = new Poly1305(); // Noncompliant {{(Mac) Poly1305}}
 
         // Compute MAC
         poly1305.init(new KeyParameter(key)); // Initialize MAC with the same key as the cipher

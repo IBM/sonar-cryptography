@@ -8,7 +8,7 @@ public class BcMGF1BytesGeneratorTestFile {
 
         Digest digest = new SHA256Digest();
         MGF1BytesGenerator mgfFunction = new MGF1BytesGenerator(digest);
-        // Noncompliant@-1 {{MGF1BytesGenerator}}
+        // Noncompliant@-1 {{(MaskGenerationFunction) MGF1}}
 
         // ...
     }

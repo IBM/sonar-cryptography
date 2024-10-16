@@ -14,14 +14,14 @@ public class BcECIESKEMExtractorTestFile {
         Digest digest = new SHA256Digest(); // Digest
         DerivationFunction kdf =
                 new HKDFBytesGenerator(digest); // Your DerivationFunction implementation
-        // Noncompliant@-1 {{HKDFBytesGenerator}}
+        // Noncompliant@-1 {{(KeyDerivationFunction) HKDF-SHA256}}
 
         // Create a RSAKeyParameters object named privParams
         ECPrivateKeyParameters privParams = new ECPrivateKeyParameters(new BigInteger("1"), null);
 
         // Instantiate the ECIESKEMExtractor
         ECIESKEMExtractor extractor =
-                new ECIESKEMExtractor(privParams, keyLen, kdf); // Noncompliant {{ECIESKEMExtractor}}
+                new ECIESKEMExtractor(privParams, keyLen, kdf); // Noncompliant {{(KeyEncapsulationMechanism) ECIES-KEM}}
 
         // Extract the shared secret key using the private key parameters
         byte[] sharedSecret = extractor.extractSecret(null);

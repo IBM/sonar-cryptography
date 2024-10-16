@@ -5,7 +5,7 @@ import java.security.NoSuchAlgorithmException;
 public class JcaKeyGeneratorGetInstanceTestFile {
 
     public void generateKey() throws NoSuchAlgorithmException {
-        KeyGenerator keyGenerator = KeyGenerator.getInstance("AES"); // Noncompliant {{AES}}
+        KeyGenerator keyGenerator = KeyGenerator.getInstance("AES"); // Noncompliant {{(SecretKey) AES}}
     }
 
 }

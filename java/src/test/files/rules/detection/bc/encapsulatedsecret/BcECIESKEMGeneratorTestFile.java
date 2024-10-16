@@ -16,11 +16,11 @@ public class BcECIESKEMGeneratorTestFile {
         Digest digest = new SHA256Digest(); // Digest
         DerivationFunction kdf =
                 new HKDFBytesGenerator(digest); // Your DerivationFunction implementation
-        // Noncompliant@-1 {{HKDFBytesGenerator}}
+        // Noncompliant@-1 {{(KeyDerivationFunction) HKDF-SHA256}}
 
         // Initialize the ECIESKEMGenerator
         ECIESKEMGenerator kemGenerator =
-                new ECIESKEMGenerator(keyLen, kdf, rnd, true, true, true); // Noncompliant {{ECIESKEMGenerator}}
+                new ECIESKEMGenerator(keyLen, kdf, rnd, true, true, true); // Noncompliant {{(KeyEncapsulationMechanism) ECIES-KEM}}
 
         // Generate secret
         SecretWithEncapsulation secret =

@@ -6,7 +6,7 @@ def generate_cmac(key, data):
     algorithm = algorithms.AES(key)
     
     # Creating the CMAC context
-    cmac_ctx = cmac.CMAC(algorithm) # Noncompliant {{AES}}
+    cmac_ctx = cmac.CMAC(algorithm) # Noncompliant {{(Mac) AES-CMAC}}
     
     # Updating the context with the data
     cmac_ctx.update(data)

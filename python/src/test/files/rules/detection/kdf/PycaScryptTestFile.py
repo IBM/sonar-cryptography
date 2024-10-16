@@ -4,7 +4,7 @@ from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 salt = os.urandom(16)
 
 # derive
-kdf = Scrypt( # Noncompliant {{Scrypt}}
+kdf = Scrypt( # Noncompliant {{(PasswordBasedKeyDerivationFunction) SCRYPT}}
     salt=salt,
     length=32,
     n=2**14,

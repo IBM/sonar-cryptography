@@ -11,7 +11,7 @@ public class BcPaddedBufferedBlockCipherCustomPaddingTestFile {
 
     public static void test1() {
         
-        CBCBlockCipher blockCipher = CBCBlockCipher.newInstance(AESEngine.newInstance()); // Noncompliant {{CBC}}
+        CBCBlockCipher blockCipher = CBCBlockCipher.newInstance(AESEngine.newInstance()); // Noncompliant {{(BlockCipher) AES-CBC}}
         
         // Wrap the block cipher with PaddedBufferedBlockCipher
         PaddedBufferedBlockCipher paddedBlockCipher = new PaddedBufferedBlockCipher(blockCipher); // Noncompliant {{PaddedBuffered(PKCS7)}}

@@ -51,12 +51,6 @@ class JcaTripleDESKeySpecTest extends TestBase {
                 .verifyIssues();
     }
 
-    /**
-     * DEBUG [detectionStore] (SecretKeyContext, Algorithm) DESede DEBUG [detectionStore] └─
-     * (KeyContext<DESede>, KeySize) 64 DEBUG [translation] (SecretKey) DESede DEBUG [translation]
-     * └─ (KeyLength) 64 DEBUG [translation] └─ (BlockCipher) DESede DEBUG [translation] └─
-     * (KeyLength) 168
-     */
     @Override
     public void asserts(
             int findingId,

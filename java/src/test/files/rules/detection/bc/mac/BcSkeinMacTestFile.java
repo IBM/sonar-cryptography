@@ -30,7 +30,7 @@ public class BcSkeinMacTestFile {
         // Initialize SkeinMac with state size and digest size
         int stateSizeBits = 128; // Example state size
         int digestSizeBits = 256; // Example digest size
-        Mac skeinMac = new SkeinMac(stateSizeBits, digestSizeBits); // Noncompliant {{SkeinMac}}
+        Mac skeinMac = new SkeinMac(stateSizeBits, digestSizeBits); // Noncompliant {{(Mac) Skein}}
 
         // Provide input data
         byte[] data = "Hello, Bouncy Castle!".getBytes();

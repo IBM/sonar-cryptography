@@ -10,7 +10,7 @@ public class JcaSecretKeyFactoryGenerateSecretTestFile {
     public void des() throws InvalidKeyException {
         byte[] keyBytes = new byte[8];
         DESKeySpec dkey = new DESKeySpec(keyBytes);
-        SecretKey secretKey = SecretKeyFactory.getInstance("DES").generateSecret(dkey); // Noncompliant {{DES}}
+        SecretKey secretKey = SecretKeyFactory.getInstance("DES").generateSecret(dkey); // Noncompliant {{(SecretKey) DES}}
     }
 
 }

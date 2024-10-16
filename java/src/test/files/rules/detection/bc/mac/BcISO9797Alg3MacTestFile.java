@@ -29,9 +29,9 @@ import org.bouncycastle.crypto.params.ParametersWithIV;
 public class BcISO9797Alg3MacTestFile {
 
     public static byte[] calculateMac(byte[] key, byte[] iv, byte[] data) {
-        BlockCipher cipher = new AESEngine(); // Noncompliant {{AESEngine}}
+        BlockCipher cipher = new AESEngine(); // Noncompliant {{(BlockCipher) AES}}
         ISO9797Alg3Mac mac = new ISO9797Alg3Mac(cipher, 64, new ISO7816d4Padding());
-        // Noncompliant@-1 {{ISO9797Alg3Mac}}
+        // Noncompliant@-1 {{(Mac) AES}}
 
         KeyParameter keyParam = new KeyParameter(key);
         ParametersWithIV keyParamWithIV = new ParametersWithIV(keyParam, iv);

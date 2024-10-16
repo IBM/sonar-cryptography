@@ -13,7 +13,7 @@ public class BcHMacTestFile {
         Digest digest = new SHA256Digest();
 
         // Initialize HMac with the digest
-        HMac hmac = new HMac(digest); // Noncompliant {{HMac}}
+        HMac hmac = new HMac(digest); // Noncompliant {{(Mac) HMAC-SHA256}}
 
         // Compute HMAC
         hmac.init(new KeyParameter(key)); // Initialize MAC with the same key as the cipher

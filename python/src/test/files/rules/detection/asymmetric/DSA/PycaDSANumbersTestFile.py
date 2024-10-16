@@ -8,6 +8,6 @@ def generate_dsa_key_from_parameters(
     """
     Generates a DSA private key from parameters p, q, g, x, and y.
     """
-    public_numbers = dsa.DSAPublicNumbers(y, dsa.DSAParameterNumbers(p, q, g)) # Noncompliant {{GENERATION}}
-    private_numbers = DSAPrivateNumbers(x, public_numbers) # Noncompliant {{GENERATION}}
+    public_numbers = dsa.DSAPublicNumbers(y, dsa.DSAParameterNumbers(p, q, g)) # Noncompliant {{(PublicKey) DSA}}
+    private_numbers = DSAPrivateNumbers(x, public_numbers) # Noncompliant {{(PrivateKey) DSA}}
     return private_numbers.private_key(default_backend())

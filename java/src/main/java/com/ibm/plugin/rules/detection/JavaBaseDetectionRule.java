@@ -19,16 +19,19 @@
  */
 package com.ibm.plugin.rules.detection;
 
-import com.ibm.engine.detection.DetectionStore;
+import com.ibm.common.IObserver;
 import com.ibm.engine.detection.Finding;
 import com.ibm.engine.executive.DetectionExecutive;
 import com.ibm.engine.language.java.JavaScanContext;
-import com.ibm.engine.rule.IBaseDetectionRule;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.plugin.JavaAggregator;
 import com.ibm.plugin.translation.JavaTranslationProcess;
+import com.ibm.plugin.translation.reorganizer.JavaReorganizerRules;
+import com.ibm.rules.IReportableDetectionRule;
+import com.ibm.rules.issue.Issue;
+import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
@@ -40,14 +43,24 @@ import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public abstract class JavaBaseDetectionRule extends IssuableSubscriptionVisitor
-        implements IBaseDetectionRule<JavaCheck, Tree, Symbol, JavaFileScannerContext> {
+        implements IObserver<Finding<JavaCheck, Tree, Symbol, JavaFileScannerContext>>,
+                IReportableDetectionRule<Tree> {
 
+    private final boolean isInventory;
     @Nonnull protected final JavaTranslationProcess javaTranslationProcess;
     @Nonnull protected final List<IDetectionRule<Tree>> detectionRules;
 
+    protected JavaBaseDetectionRule() {
+        this.isInventory = false;
+        this.detectionRules = JavaDetectionRules.rules();
+        this.javaTranslationProcess = new JavaTranslationProcess(JavaReorganizerRules.rules());
+    }
+
     protected JavaBaseDetectionRule(
+            final boolean isInventory,
             @Nonnull List<IDetectionRule<Tree>> detectionRules,
             @Nonnull List<IReorganizerRule> reorganizerRules) {
+        this.isInventory = isInventory;
         this.detectionRules = detectionRules;
         this.javaTranslationProcess = new JavaTranslationProcess(reorganizerRules);
     }
@@ -88,16 +101,24 @@ public abstract class JavaBaseDetectionRule extends IssuableSubscriptionVisitor
      */
     @Override
     public void update(@Nonnull Finding<JavaCheck, Tree, Symbol, JavaFileScannerContext> finding) {
-        List<INode> nodes = javaTranslationProcess.initiate(finding.detectionStore());
-        JavaAggregator.addNodes(nodes);
-        this.report(finding.detectionStore(), this);
+        final List<INode> nodes = javaTranslationProcess.initiate(finding.detectionStore());
+        if (isInventory) {
+            JavaAggregator.addNodes(nodes);
+        }
+        // report
+        this.report(finding.getMarkerTree(), nodes)
+                .forEach(
+                        issue ->
+                                finding.detectionStore()
+                                        .getScanContext()
+                                        .reportIssue(this, issue.tree(), issue.message()));
     }
 
     @Override
-    public void report(
-            @NotNull @Unmodifiable
-                    DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
-            @NotNull JavaCheck rule) {
+    @Nonnull
+    public @NotNull List<Issue<Tree>> report(
+            @Nonnull Tree markerTree, @NotNull @Unmodifiable List<INode> translatedNodes) {
         // override by higher level rule, to report an issue
+        return Collections.emptyList();
     }
 }

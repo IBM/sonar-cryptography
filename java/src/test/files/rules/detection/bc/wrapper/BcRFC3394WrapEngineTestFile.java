@@ -16,8 +16,8 @@ public class BcRFC3394WrapEngineTestFile {
         random.nextBytes(wrappingKey);
 
         // Wrap the key
-        AESFastEngine aesEngine = new AESFastEngine(); // Noncompliant {{AESFastEngine}}
-        RFC3394WrapEngine wrapper = new RFC3394WrapEngine(aesEngine); // Noncompliant {{RFC3394WrapEngine}}
+        AESFastEngine aesEngine = new AESFastEngine(); // Noncompliant {{(BlockCipher) AES}}
+        RFC3394WrapEngine wrapper = new RFC3394WrapEngine(aesEngine); // Noncompliant {{(KeyWrap) AES}}
         KeyParameter keyParameter = new KeyParameter(wrappingKey);
         wrapper.init(true, keyParameter);
 
@@ -35,9 +35,9 @@ public class BcRFC3394WrapEngineTestFile {
         random.nextBytes(wrappingKey);
 
         // Wrap the key in the forward direction
-        AESFastEngine aesEngine = new AESFastEngine(); // Noncompliant {{AESFastEngine}}
+        AESFastEngine aesEngine = new AESFastEngine(); // Noncompliant {{(BlockCipher) AES}}
         RFC3394WrapEngine forwardWrapper = // Forward direction
-                new RFC3394WrapEngine(aesEngine, false); // Noncompliant {{RFC3394WrapEngine}}
+                new RFC3394WrapEngine(aesEngine, false); // Noncompliant {{(KeyWrap) AES}}
         KeyParameter forwardKeyParameter = new KeyParameter(wrappingKey);
         forwardWrapper.init(true, forwardKeyParameter);
 

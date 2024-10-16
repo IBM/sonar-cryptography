@@ -19,6 +19,7 @@
  */
 package com.ibm.engine.detection;
 
+import com.ibm.engine.model.IValue;
 import com.ibm.engine.rule.IBundle;
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -33,6 +34,14 @@ public record Finding<R, T, S, P>(@Nonnull DetectionStore<R, T, S, P> detectionS
     @Nonnull
     public IBundle bundle() {
         return detectionStore.getDetectionRule().bundle();
+    }
+
+    @Nonnull
+    public T getMarkerTree() {
+        return detectionStore.getDetectionValues().stream()
+                .map(IValue::getLocation)
+                .findFirst()
+                .orElseThrow();
     }
 
     @Override

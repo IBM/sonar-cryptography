@@ -9,9 +9,9 @@ import java.security.spec.InvalidKeySpecException;
 public class JcaSecretKeyFactoryTranslateKeyTestFile {
 
     public void des() throws InvalidKeyException, InvalidKeySpecException, NoSuchAlgorithmException {
-        SecretKeyFactory factory = SecretKeyFactory.getInstance("DES"); // Noncompliant {{DES}}
+        SecretKeyFactory factory = SecretKeyFactory.getInstance("DES"); // Noncompliant {{(SecretKey) DES}}
         byte[] newKeyBytes = new byte[16];
-        SecretKeySpec newSpec = new SecretKeySpec(newKeyBytes, "DESede"); // Noncompliant {{DESede}}
+        SecretKeySpec newSpec = new SecretKeySpec(newKeyBytes, "DESede"); // Noncompliant {{(SecretKey) 3DES}}
         SecretKey secretKey = factory.translateKey(newSpec);
     }
 
