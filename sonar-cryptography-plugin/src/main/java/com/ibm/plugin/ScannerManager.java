@@ -56,6 +56,10 @@ public final class ScannerManager {
                                                 INode::getKind, Collectors.counting())));
     }
 
+    public boolean hasResults() {
+        return !this.getAggregatedNodes().isEmpty();
+    }
+
     @Nonnull
     private List<INode> getAggregatedNodes() {
         List<INode> nodes = new ArrayList<>();
