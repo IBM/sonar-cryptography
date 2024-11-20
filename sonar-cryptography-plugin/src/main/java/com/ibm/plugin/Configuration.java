@@ -22,6 +22,7 @@ package com.ibm.plugin;
 import java.util.List;
 import javax.annotation.Nonnull;
 import org.sonar.api.config.PropertyDefinition;
+import org.sonar.api.resources.Qualifiers;
 
 public final class Configuration {
 
@@ -30,7 +31,7 @@ public final class Configuration {
     public static @Nonnull List<PropertyDefinition> getPropertyDefinitions() {
         return List.of(
                 PropertyDefinition.builder(Constants.CBOM_OUTPUT_NAME)
-                        .onConfigScopes(PropertyDefinition.ConfigScope.PROJECT)
+                        .onQualifiers(Qualifiers.PROJECT)
                         .subCategory(Constants.SUB_CATEGORY_GENERAL)
                         .name("CBOM filename")
                         .description("Filename for the generated CBOM")
