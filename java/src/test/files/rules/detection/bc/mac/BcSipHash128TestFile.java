@@ -25,14 +25,14 @@ import org.bouncycastle.crypto.params.KeyParameter;
 
 public class BcSipHash128TestFile {
     public static long sipHash(byte[] data, byte[] key) {
-        SipHash sipHash = new SipHash(); // Noncompliant {{SipHash}}
+        SipHash sipHash = new SipHash(); // Noncompliant {{(Mac) SipHash}}
         sipHash.init(new KeyParameter(key));
         sipHash.update(data, 0, data.length);
         return sipHash.doFinal();
     }
 
     public static long sipHash128(byte[] data, byte[] key) {
-        SipHash128 sipHash = new SipHash128(); // Noncompliant {{SipHash128}}
+        SipHash128 sipHash = new SipHash128(); // Noncompliant {{(Mac) SipHash}}
         sipHash.init(new KeyParameter(key));
         sipHash.update(data, 0, data.length);
         return sipHash.doFinal();

@@ -10,7 +10,7 @@ public class BcBIKEKEMExtractorTestFile {
                 new BIKEPrivateKeyParameters(BIKEParameters.bike128, null, null, null);
 
         // Instantiate the BIKEKEMExtractor
-        BIKEKEMExtractor extractor = new BIKEKEMExtractor(privParams); // Noncompliant {{BIKEKEMExtractor}}
+        BIKEKEMExtractor extractor = new BIKEKEMExtractor(privParams); // Noncompliant {{(KeyEncapsulationMechanism) BIKE}}
 
         // Extract the shared secret key using the private key parameters
         byte[] sharedSecret = extractor.extractSecret(null);

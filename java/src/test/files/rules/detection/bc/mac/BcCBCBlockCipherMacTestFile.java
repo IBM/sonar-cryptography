@@ -15,12 +15,12 @@ public class BcCBCBlockCipherMacTestFile {
         byte[] iv = "0123456789abcdef".getBytes(StandardCharsets.UTF_8);
 
         // Initialize AES cipher with CBC mode
-        BlockCipher cipher = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
+        BlockCipher cipher = AESEngine.newInstance(); // Noncompliant {{(BlockCipher) AES}}
         ParametersWithIV params = new ParametersWithIV(new KeyParameter(key), iv);
         cipher.init(true, params); // true for encryption, false for decryption
 
         // Initialize CBCBlockCipherMac with the cipher
-        CBCBlockCipherMac mac = new CBCBlockCipherMac(cipher); // Noncompliant {{CBCBlockCipherMac}}
+        CBCBlockCipherMac mac = new CBCBlockCipherMac(cipher); // Noncompliant {{(Mac) AES}}
 
         // CipherParameter
         CCMParameters parameters = new CCMParameters(new KeyParameter(key), 128, new byte[12], new byte[12]);
@@ -37,7 +37,7 @@ public class BcCBCBlockCipherMacTestFile {
         byte[] iv = "0123456789abcdef".getBytes(StandardCharsets.UTF_8);
 
         // Initialize AES cipher with CBC mode
-        BlockCipher cipher = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
+        BlockCipher cipher = AESEngine.newInstance(); // Noncompliant {{(BlockCipher) AES}}
         ParametersWithIV params = new ParametersWithIV(new KeyParameter(key), iv);
         cipher.init(true, params); // true for encryption, false for decryption
 
@@ -45,7 +45,7 @@ public class BcCBCBlockCipherMacTestFile {
         BlockCipherPadding padding = new PKCS7Padding();
 
         // Initialize CBCBlockCipherMac with the cipher
-        CBCBlockCipherMac mac = new CBCBlockCipherMac(cipher, padding); // Noncompliant {{CBCBlockCipherMac}}
+        CBCBlockCipherMac mac = new CBCBlockCipherMac(cipher, padding); // Noncompliant {{(Mac) AES}}
 
         // Compute MAC
         mac.init(new KeyParameter(key)); // Initialize MAC with the same key as the cipher
@@ -59,7 +59,7 @@ public class BcCBCBlockCipherMacTestFile {
         byte[] iv = "0123456789abcdef".getBytes(StandardCharsets.UTF_8);
 
         // Initialize AES cipher with CBC mode
-        BlockCipher cipher = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
+        BlockCipher cipher = AESEngine.newInstance(); // Noncompliant {{(BlockCipher) AES}}
         ParametersWithIV params = new ParametersWithIV(new KeyParameter(key), iv);
         cipher.init(true, params); // true for encryption, false for decryption
 
@@ -67,7 +67,7 @@ public class BcCBCBlockCipherMacTestFile {
         int macSizeInBits = 128; // 128 bits = 16 bytes
 
         // Initialize CBCBlockCipherMac with the cipher
-        CBCBlockCipherMac mac = new CBCBlockCipherMac(cipher, macSizeInBits); // Noncompliant {{CBCBlockCipherMac}}
+        CBCBlockCipherMac mac = new CBCBlockCipherMac(cipher, macSizeInBits); // Noncompliant {{(Mac) AES}}
 
         // Compute MAC
         mac.init(new KeyParameter(key)); // Initialize MAC with the same key as the cipher
@@ -81,7 +81,7 @@ public class BcCBCBlockCipherMacTestFile {
         byte[] iv = "0123456789abcdef".getBytes(StandardCharsets.UTF_8);
 
         // Initialize AES cipher with CBC mode
-        BlockCipher cipher = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
+        BlockCipher cipher = AESEngine.newInstance(); // Noncompliant {{(BlockCipher) AES}}
         ParametersWithIV params = new ParametersWithIV(new KeyParameter(key), iv);
         cipher.init(true, params); // true for encryption, false for decryption
 
@@ -92,7 +92,7 @@ public class BcCBCBlockCipherMacTestFile {
         BlockCipherPadding padding = new PKCS7Padding();
 
         // Initialize CBCBlockCipherMac with the cipher
-        CBCBlockCipherMac mac = new CBCBlockCipherMac(cipher, macSizeInBits, padding); // Noncompliant {{CBCBlockCipherMac}}
+        CBCBlockCipherMac mac = new CBCBlockCipherMac(cipher, macSizeInBits, padding); // Noncompliant {{(Mac) AES}}
 
         // Compute MAC
         mac.init(new KeyParameter(key)); // Initialize MAC with the same key as the cipher

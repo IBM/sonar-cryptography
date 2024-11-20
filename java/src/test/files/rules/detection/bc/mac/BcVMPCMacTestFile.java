@@ -25,7 +25,7 @@ import org.bouncycastle.crypto.params.KeyParameter;
 public class BcVMPCMacTestFile {
 
     public static byte[] calculateMac(byte[] key, byte[] data) {
-        VMPCMac vmpcMac = new VMPCMac(); // Noncompliant {{VMPCMac}}
+        VMPCMac vmpcMac = new VMPCMac(); // Noncompliant {{(Mac) VMPC-MAC}}
         vmpcMac.init(new KeyParameter(key));
         vmpcMac.update(data, 0, data.length);
         byte[] mac = new byte[vmpcMac.getMacSize()];

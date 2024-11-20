@@ -19,45 +19,37 @@
  */
 package com.ibm.plugin.rules;
 
-import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.rule.IDetectionRule;
+import com.ibm.mapper.model.INode;
 import com.ibm.plugin.rules.detection.JavaBaseDetectionRule;
 import com.ibm.plugin.rules.detection.JavaDetectionRules;
 import com.ibm.plugin.translation.reorganizer.JavaReorganizerRules;
+import com.ibm.rules.InventoryRule;
+import com.ibm.rules.issue.Issue;
 import java.util.List;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.sonar.check.Rule;
-import org.sonar.plugins.java.api.JavaCheck;
-import org.sonar.plugins.java.api.JavaFileScannerContext;
-import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
 @Rule(key = "Inventory")
 public class JavaInventoryRule extends JavaBaseDetectionRule {
+
     public JavaInventoryRule() {
-        super(JavaDetectionRules.rules(), JavaReorganizerRules.rules());
+        super(true, JavaDetectionRules.rules(), JavaReorganizerRules.rules());
     }
 
     @VisibleForTesting
     protected JavaInventoryRule(@Nonnull List<IDetectionRule<Tree>> detectionRules) {
-        super(detectionRules, JavaReorganizerRules.rules());
+        super(true, detectionRules, JavaReorganizerRules.rules());
     }
 
     @Override
-    public void report(
-            @NotNull @Unmodifiable
-                    DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
-            @NotNull JavaCheck rule) {
-        detectionStore
-                .getDetectionValues()
-                .forEach(
-                        iValue ->
-                                detectionStore
-                                        .getScanContext()
-                                        .reportIssue(
-                                                rule, iValue.getLocation(), iValue.asString()));
+    @Nonnull
+    public List<Issue<Tree>> report(
+            @Nonnull Tree markerTree, @NotNull @Unmodifiable List<INode> translatedNodes) {
+        return new InventoryRule<Tree>().report(markerTree, translatedNodes);
     }
 }

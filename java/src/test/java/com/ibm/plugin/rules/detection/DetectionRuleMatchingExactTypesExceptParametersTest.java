@@ -20,13 +20,16 @@
 package com.ibm.plugin.rules.detection;
 
 import com.ibm.engine.detection.DetectionStore;
+import com.ibm.engine.detection.Finding;
 import com.ibm.engine.model.IAction;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
+import com.ibm.engine.utils.DetectionStoreLogger;
 import com.ibm.mapper.model.INode;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.sonar.check.Rule;
@@ -89,5 +92,19 @@ class DetectionRuleMatchingExactTypesExceptParametersTest extends TestBase {
                         "src/test/files/rules/detection/DetectionRuleMatchingExactTypesExceptParametersTestFile.java")
                 .withChecks(this)
                 .verifyIssues();
+    }
+
+    @Override
+    public void update(@Nonnull Finding<JavaCheck, Tree, Symbol, JavaFileScannerContext> finding) {
+        final DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore =
+                finding.detectionStore();
+        (new DetectionStoreLogger<JavaCheck, Tree, Symbol, JavaFileScannerContext>())
+                .print(detectionStore);
+        detectionStore
+                .getDetectionValues()
+                .forEach(
+                        iValue -> {
+                            this.reportIssue(iValue.getLocation(), iValue.asString());
+                        });
     }
 }

@@ -26,6 +26,9 @@ import com.ibm.engine.model.CipherSuite;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.context.ProtocolContext;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.collections.AssetCollection;
+import com.ibm.mapper.model.collections.IdentifierCollection;
+import com.ibm.mapper.model.protocol.TLS;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -70,10 +73,29 @@ class SSLServerSocketSetEnabledCipherSuitesTest extends TestBase {
          */
         assertThat(nodes).hasSize(1);
 
-        // CipherSuite
-        INode cipherSuiteNode = nodes.get(0);
-        assertThat(cipherSuiteNode.getKind()).isEqualTo(com.ibm.mapper.model.CipherSuite.class);
+        // TLS
+        INode tLSNode = nodes.get(0);
+        assertThat(tLSNode.getKind()).isEqualTo(TLS.class);
+        assertThat(tLSNode.getChildren()).hasSize(1);
+        assertThat(tLSNode.asString()).isEqualTo("TLS");
+
+        // CipherSuite under TLS
+        INode cipherSuiteNode = tLSNode.getChildren().get(com.ibm.mapper.model.CipherSuite.class);
+        assertThat(cipherSuiteNode).isNotNull();
         assertThat(cipherSuiteNode.getChildren()).hasSize(2);
         assertThat(cipherSuiteNode.asString()).isEqualTo("TLS_DHE_DSS_WITH_AES_256_CBC_SHA256");
+
+        // IdentifierCollection under CipherSuite under TLS
+        INode identifierCollectionNode =
+                cipherSuiteNode.getChildren().get(IdentifierCollection.class);
+        assertThat(identifierCollectionNode).isNotNull();
+        assertThat(identifierCollectionNode.getChildren()).isEmpty();
+        assertThat(identifierCollectionNode.asString()).isEqualTo("[0x00, 0x6A]");
+
+        // AssetCollection under CipherSuite under TLS
+        INode assetCollectionNode = cipherSuiteNode.getChildren().get(AssetCollection.class);
+        assertThat(assetCollectionNode).isNotNull();
+        assertThat(assetCollectionNode.getChildren()).isEmpty();
+        assertThat(assetCollectionNode.asString()).isEqualTo("[DH, AES256-CBC, SHA256withDSA]");
     }
 }

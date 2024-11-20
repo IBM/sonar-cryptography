@@ -17,15 +17,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.engine.rule;
+package com.ibm.rules;
 
-import com.ibm.common.IObserver;
-import com.ibm.engine.detection.DetectionStore;
-import com.ibm.engine.detection.Finding;
-import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
-
-public interface IBaseDetectionRule<R, T, S, P> extends IObserver<Finding<R, T, S, P>> {
-
-    void report(@Nonnull @Unmodifiable DetectionStore<R, T, S, P> detectionStore, @Nonnull R rule);
-}
+public class MockTree implements IMockTree {}

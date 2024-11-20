@@ -18,7 +18,7 @@ public class BcGCMSIVBlockCipherTestFile {
 
         // Instantiate GCMSIVBlockCipher with constructor
         GCMSIVBlockCipher constructor =
-                new GCMSIVBlockCipher(); // Noncompliant {{GCMSIVBlockCipher}}
+                new GCMSIVBlockCipher(); // Noncompliant {{(AuthenticatedEncryption) AES-GCM-SIV}}
 
         // Initialize cipher with key and parameters
         KeyParameter keyParameter = new KeyParameter(keyBytes);
@@ -33,11 +33,11 @@ public class BcGCMSIVBlockCipherTestFile {
         secureRandom.nextBytes(keyBytes);
 
         // Create a block cipher engine
-        BlockCipher aesEngine = new RijndaelEngine(); // Noncompliant {{RijndaelEngine}}
+        BlockCipher aesEngine = new RijndaelEngine(); // Noncompliant {{(BlockCipher) AES}}
 
         // Instantiate GCMSIVBlockCipher with constructor
         GCMSIVBlockCipher constructor =
-                new GCMSIVBlockCipher(aesEngine); // Noncompliant {{GCMSIVBlockCipher}}
+                new GCMSIVBlockCipher(aesEngine); // Noncompliant {{(AuthenticatedEncryption) AES-GCM-SIV}}
 
         // Initialize cipher with key and parameters
         KeyParameter keyParameter = new KeyParameter(keyBytes);
@@ -52,14 +52,14 @@ public class BcGCMSIVBlockCipherTestFile {
         secureRandom.nextBytes(keyBytes);
 
         // Create a block cipher engine
-        BlockCipher aesEngine = new AESEngine(); // Noncompliant {{AESEngine}}
+        BlockCipher aesEngine = new AESEngine(); // Noncompliant {{(BlockCipher) AES}}
 
         // Create a GCMMultiplier (e.g., Tables8kGCMMultiplier)
         GCMMultiplier multiplier = new Tables8kGCMMultiplier();
 
         // Instantiate GCMSIVBlockCipher with constructor
         GCMSIVBlockCipher constructor =
-                new GCMSIVBlockCipher(aesEngine, multiplier); // Noncompliant {{GCMSIVBlockCipher}}
+                new GCMSIVBlockCipher(aesEngine, multiplier); // Noncompliant {{(AuthenticatedEncryption) AES-GCM-SIV}}
 
         // Initialize cipher with key and parameters
         KeyParameter keyParameter = new KeyParameter(keyBytes);

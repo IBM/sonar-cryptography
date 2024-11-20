@@ -3,7 +3,7 @@ from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives.kdf.hkdf import HKDF
 
 # Generate a private key for use in the exchange.
-server_private_key = ec.generate_private_key( # Noncompliant {{SECP384R1}}
+server_private_key = ec.generate_private_key( # Noncompliant {{(PrivateKey) EC-secp384r1}}
     ec.SECP384R1()
 )
 
@@ -12,7 +12,7 @@ def exchange(public_key):
         ec.ECDH(), public_key)
     
     # Perform key derivation. // TODO: How should this key derivation be linked to the private key?
-    derived_key = HKDF( # Noncompliant {{SHA256}}
+    derived_key = HKDF( # Noncompliant {{(KeyDerivationFunction) HKDF-SHA256}}
          algorithm=hashes.SHA256(),
          length=32,
          salt=None,

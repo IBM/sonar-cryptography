@@ -20,10 +20,13 @@
 package com.ibm.plugin.rules.detection;
 
 import com.ibm.engine.detection.DetectionStore;
+import com.ibm.engine.detection.Finding;
+import com.ibm.engine.utils.DetectionStoreLogger;
 import com.ibm.mapper.model.INode;
 import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.jca.cipher.JcaCipherGetInstance;
 import java.util.List;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -56,5 +59,19 @@ class DetectionWithSubRuleTest extends TestBase {
                 .onFile("src/test/files/rules/detection/DetectionWithSubRuleTestFile.java")
                 .withChecks(this)
                 .verifyIssues();
+    }
+
+    @Override
+    public void update(@Nonnull Finding<JavaCheck, Tree, Symbol, JavaFileScannerContext> finding) {
+        final DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore =
+                finding.detectionStore();
+        (new DetectionStoreLogger<JavaCheck, Tree, Symbol, JavaFileScannerContext>())
+                .print(detectionStore);
+        detectionStore
+                .getDetectionValues()
+                .forEach(
+                        iValue -> {
+                            this.reportIssue(iValue.getLocation(), iValue.asString());
+                        });
     }
 }

@@ -48,11 +48,11 @@ public abstract class TestBase extends PythonInventoryRule {
 
     private int findingId = 0;
 
-    protected TestBase(@NotNull List<IDetectionRule<Tree>> detectionRules) {
+    public TestBase(@NotNull List<IDetectionRule<Tree>> detectionRules) {
         super(detectionRules);
     }
 
-    protected TestBase() {
+    public TestBase() {
         super(PythonDetectionRules.rules());
     }
 
@@ -71,7 +71,13 @@ public abstract class TestBase extends PythonInventoryRule {
         List<INode> nodes = pythonTranslationProcess.initiate(detectionStore);
         asserts(findingId, detectionStore, nodes);
         findingId++;
-        this.report(finding.detectionStore(), this);
+        // report
+        this.report(finding.getMarkerTree(), nodes)
+                .forEach(
+                        issue ->
+                                finding.detectionStore()
+                                        .getScanContext()
+                                        .reportIssue(this, issue.tree(), issue.message()));
     }
 
     public abstract void asserts(

@@ -7,8 +7,8 @@ public class JcaECPrivateKeySpecTestFile {
 
     public static final String p = "4451685225093714772084598273548427";
     public void base() {
-        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding"); // Noncompliant {{AES/ECB/PKCS5Padding}}
-        KeyPairGenerator kpg = KeyPairGenerator.getInstance("EC"); // Noncompliant {{EC}}
+        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding"); // Noncompliant {{(BlockCipher) AES128-ECB-PKCS5}}
+        KeyPairGenerator kpg = KeyPairGenerator.getInstance("EC"); // Noncompliant {{(Key) EC}}
         kpg.initialize(new ECGenParameterSpec("secp256r1"));
         KeyPair ecKeyPair = kpg.generateKeyPair();
         PrivateKey privateKey = ecKeyPair.getPrivate();

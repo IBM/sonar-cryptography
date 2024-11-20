@@ -43,7 +43,7 @@ class SecureRandomGetInstanceTest extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/random/SecureRandomGetInstanceTestFile.java")
                 .withChecks(this)
-                .verifyIssues();
+                .verifyNoIssues();
     }
 
     @Override

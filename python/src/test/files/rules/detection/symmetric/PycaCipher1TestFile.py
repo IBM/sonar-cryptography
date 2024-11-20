@@ -5,7 +5,7 @@ from cryptography.hazmat.primitives.padding import PKCS7
 key = os.urandom(32)
 iv = os.urandom(16)
 # Create a cipher object
-cipher = Cipher(algorithms.AES(key), modes.CBC(iv)) # Noncompliant {{AES}}
+cipher = Cipher(algorithms.AES(key), modes.CBC(iv)) # Noncompliant {{(BlockCipher) AES-CBC-PKCS7}}
 
 # Specify padding (PKCS7 in this case)
 padder = PKCS7(algorithms.AES.block_size).padder()

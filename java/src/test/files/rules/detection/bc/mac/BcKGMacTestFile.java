@@ -31,9 +31,9 @@ public class BcKGMacTestFile {
         byte[] key = Hex.decode("00112233445566778899AABBCCDDEEFF");
         byte[] input = Hex.decode("48656c6c6f20576f726c64"); // "Hello World" in hex
 
-        DSTU7624Engine engine = new DSTU7624Engine(64); // Noncompliant {{DSTU7624Engine}}
-        KGCMBlockCipher blockCipher = new KGCMBlockCipher(engine); // Noncompliant {{KGCMBlockCipher}}
-        KGMac gmac = new KGMac(blockCipher, 128); // Noncompliant {{KGMac}}
+        DSTU7624Engine engine = new DSTU7624Engine(64); // Noncompliant {{(BlockCipher) Kalyna-64}}
+        KGCMBlockCipher blockCipher = new KGCMBlockCipher(engine); // Noncompliant {{(AuthenticatedEncryption) Kalyna-64}}
+        KGMac gmac = new KGMac(blockCipher, 128); // Noncompliant {{(Mac) Kalyna}}
 
         CipherParameters params = new KeyParameter(key);
         gmac.init(params);

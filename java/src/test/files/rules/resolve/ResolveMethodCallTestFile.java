@@ -28,7 +28,7 @@ public class ResolveMethodCallTestFile {
     }
 
     private static KeyPair generateEcdsaKey(String ecDomainParamName) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
-        KeyPairGenerator keyGen = KeyPairGenerator.getInstance("EC"); // Noncompliant {{EC}}
+        KeyPairGenerator keyGen = KeyPairGenerator.getInstance("EC"); // Noncompliant {{(Key) EC}}
         SecureRandom randomGen = SecureRandom.getInstance("SHA1PRNG");
         ECGenParameterSpec ecSpec = new ECGenParameterSpec(ecDomainParamName);
         keyGen.initialize(ecSpec, randomGen);

@@ -9,7 +9,7 @@ public class BcNISTCTSBlockCipherTestFile {
 
     public static void test1() {
         // Create a block cipher (AES in this case)
-        BlockCipher cipher = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
+        BlockCipher cipher = AESEngine.newInstance(); // Noncompliant {{(BlockCipher) AES}}
 
         // Initialize the cipher with the key
         byte[] keyData = "0123456789abcdef".getBytes(StandardCharsets.UTF_8); // 128-bit key
@@ -21,7 +21,7 @@ public class BcNISTCTSBlockCipherTestFile {
 
         // Wrap the block cipher with NISTCTSBlockCipher
         NISTCTSBlockCipher ctsCipher =
-                new NISTCTSBlockCipher(0, cipher); // Noncompliant {{NISTCTSBlockCipher}}
+                new NISTCTSBlockCipher(0, cipher); // Noncompliant {{(BlockCipher) AES-CTS}}
 
         // Initialize the NISTCTSBlockCipher with the parameters
         ctsCipher.init(true, parametersWithIV); // true for encryption, false for decryption

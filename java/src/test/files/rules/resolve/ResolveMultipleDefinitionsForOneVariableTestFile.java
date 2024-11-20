@@ -26,15 +26,15 @@ public class ResolveMultipleDefinitionsForOneVariableTestFile {
         Cipher cipher;
         int mode;
         if ( message.length > 5 ) {
-            // Noncompliant@+1 {{AES/ECB/PKCS5Padding}}
+            // Noncompliant@+1 {{(BlockCipher) AES128-ECB-PKCS5}}
             cipher = Cipher.getInstance(TRANSFORMATION);
             mode = Cipher.DECRYPT_MODE;
         } else {
-            // Noncompliant@+1 {{AES/CBC/NoPadding}}
+            // Noncompliant@+1 {{(BlockCipher) AES128-CBC}}
             cipher = Cipher.getInstance("AES/CBC/NoPadding");
             mode = Cipher.ENCRYPT_MODE;
         }
-        SecretKey secretKey = new SecretKeySpec(MERCHANT_KEY.getBytes(), "AES");  // Noncompliant {{AES}}
+        SecretKey secretKey = new SecretKeySpec(MERCHANT_KEY.getBytes(), "AES");  // Noncompliant {{(SecretKey) AES}}
         cipher.init(mode, secretKey);
     }
 

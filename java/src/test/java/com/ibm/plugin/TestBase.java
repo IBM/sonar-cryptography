@@ -26,6 +26,7 @@ import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.utils.DetectionStoreLogger;
 import com.ibm.mapper.model.INode;
 import com.ibm.plugin.rules.JavaInventoryRule;
+import com.ibm.plugin.rules.detection.JavaDetectionRules;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -54,7 +55,7 @@ public abstract class TestBase extends JavaInventoryRule {
     }
 
     public TestBase() {
-        super();
+        super(JavaDetectionRules.rules());
     }
 
     @BeforeEach
@@ -77,7 +78,13 @@ public abstract class TestBase extends JavaInventoryRule {
         final List<INode> nodes = javaTranslationProcess.initiate(detectionStore);
         asserts(findingId, detectionStore, nodes);
         findingId++;
-        this.report(finding.detectionStore(), this);
+        // report
+        this.report(finding.getMarkerTree(), nodes)
+                .forEach(
+                        issue ->
+                                finding.detectionStore()
+                                        .getScanContext()
+                                        .reportIssue(this, issue.tree(), issue.message()));
     }
 
     public abstract void asserts(

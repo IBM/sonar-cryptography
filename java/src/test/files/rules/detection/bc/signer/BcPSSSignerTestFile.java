@@ -21,11 +21,11 @@ public class BcPSSSignerTestFile {
         byte trailer = 0x01; // Trailer field value
 
         // Initialize the AsymmetricBlockCipher
-        AsymmetricBlockCipher cipher = new RSAEngine(); // Noncompliant {{RSAEngine}}
+        AsymmetricBlockCipher cipher = new RSAEngine(); // Noncompliant {{(PublicKeyEncryption) RSA}}
 
         // Initialize PSSSigner
         PSSSigner signer = new PSSSigner(cipher, contentDigest, mgfDigest, salt, trailer);
-        // Noncompliant@-1 {{PSSSigner}}
+        // Noncompliant@-1 {{(ProbabilisticSignatureScheme) RSASSA-PSS}}
 
         signer.init(true, new RSAKeyParameters(true, new BigInteger("0"), new BigInteger("1")));
 

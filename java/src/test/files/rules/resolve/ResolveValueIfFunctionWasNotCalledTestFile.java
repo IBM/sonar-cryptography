@@ -9,7 +9,7 @@ import javax.crypto.Cipher;
 public class ResolveValueIfFunctionWasNotCalledTestFile {
     private static ECParameterSpec getECParameterSpec(String curveName) throws VertxException {
         try {
-            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("EC"); // Noncompliant {{EC}}
+            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("EC"); // Noncompliant {{(Key) EC}}
             keyPairGenerator.initialize(new ECGenParameterSpec(curveName));
             ECPublicKey publicKey = (ECPublicKey) keyPairGenerator.generateKeyPair().getPublic();
             return publicKey.getParams();

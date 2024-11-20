@@ -11,7 +11,7 @@ public class BcPaddedBufferedBlockCipherTestFile {
 
     public static void test1() {
         // Create a block cipher (AES in this case)
-        BlockCipher cipher = AESEngine.newInstance(); // Noncompliant {{AES}}
+        BlockCipher cipher = AESEngine.newInstance(); // Noncompliant {{(BlockCipher) AES}}
 
         // Initialize the cipher with the key
         byte[] keyData = "0123456789abcdef".getBytes(StandardCharsets.UTF_8); // 128-bit key
@@ -22,7 +22,7 @@ public class BcPaddedBufferedBlockCipherTestFile {
         ParametersWithIV parametersWithIV = new ParametersWithIV(key, ivData);
 
 
-        CBCBlockCipher blockCipher = CBCBlockCipher.newInstance(cipher); // Noncompliant {{CBC}}
+        CBCBlockCipher blockCipher = CBCBlockCipher.newInstance(cipher); // Noncompliant {{(BlockCipher) AES-CBC}}
 
         // Wrap the block cipher with PaddedBufferedBlockCipher
         PaddedBufferedBlockCipher paddedBlockCipher =

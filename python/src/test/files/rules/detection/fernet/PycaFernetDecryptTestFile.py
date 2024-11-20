@@ -1,14 +1,14 @@
 from cryptography.fernet import Fernet
 
 def test1():
-    key = Fernet.generate_key() # Noncompliant {{GENERATION}}
+    key = Fernet.generate_key() # Noncompliant {{(SecretKey) Fernet}}
 
     def dec(ciphertext):
         f = Fernet(key)
         return f.decrypt(ciphertext)
     
 def test2():
-    key = Fernet.generate_key() # Noncompliant {{GENERATION}}
+    key = Fernet.generate_key() # Noncompliant {{(SecretKey) Fernet}}
 
     def dec(ciphertext, time):
         f = Fernet(key)

@@ -7,7 +7,7 @@ public class JcaCipher1TestFile {
     private static final String TRANSFORMATION = "AES/ECB/PKCS5Padding";
 
     public void cipher1() {
-        Cipher c = Cipher.getInstance(TRANSFORMATION); // Noncompliant {{AES/ECB/PKCS5Padding}}
+        Cipher c = Cipher.getInstance(TRANSFORMATION); // Noncompliant {{(BlockCipher) AES128-ECB-PKCS5}}
     }
 
 }

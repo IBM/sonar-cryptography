@@ -17,7 +17,7 @@ public class BcPKCS5S1ParametersGeneratorTestFile {
 
         // Create the PKCS5S1ParametersGenerator with the digest
         PKCS5S1ParametersGenerator generator =
-                new PKCS5S1ParametersGenerator(sha256Digest); // Noncompliant {{PKCS5S1ParametersGenerator}}
+                new PKCS5S1ParametersGenerator(sha256Digest); // Noncompliant {{(PasswordBasedEncryption) PBES1}}
 
         // Initialize the generator with password and salt
         generator.init(password.getBytes(), salt, 1000); // 1000 is the iteration count

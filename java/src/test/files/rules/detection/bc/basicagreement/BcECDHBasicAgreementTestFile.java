@@ -16,7 +16,7 @@ public class BcECDHBasicAgreementTestFile {
         // Create a key pair generator
         KeyPairGenerator keyPairGen = null; // Add this line
         try {
-            keyPairGen = KeyPairGenerator.getInstance("EC", BouncyCastleProvider.PROVIDER_NAME); // Noncompliant {{EC}}
+            keyPairGen = KeyPairGenerator.getInstance("EC", BouncyCastleProvider.PROVIDER_NAME); // Noncompliant {{(Key) EC}}
             keyPairGen.initialize(256);
         } catch (Exception e) {
             e.printStackTrace();
@@ -34,7 +34,7 @@ public class BcECDHBasicAgreementTestFile {
                 new ECDomainParameters(
                         ecSpec.getCurve(), ecSpec.getG(), ecSpec.getN(), ecSpec.getH());
         // Initialize agreement with private key
-        final ECDHBasicAgreement agreement = new ECDHBasicAgreement(); // Noncompliant {{ECDHBasicAgreement}}
+        final ECDHBasicAgreement agreement = new ECDHBasicAgreement(); // Noncompliant {{(KeyAgreement) ECDH}}
         agreement.init(new ECPrivateKeyParameters(privKey.getD(), CURVE));
 
         // Initialize the ECPoint (use inifinity here for simpler demo code)

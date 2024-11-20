@@ -17,7 +17,7 @@ public class BcNTRUParametersTestFile {
 
     public static void testNTRUEncryptionKeyParameters() {
         // Create a block cipher engine
-        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
+        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{(BlockCipher) AES}}
 
         Digest digest = new SHA256Digest();
         NTRUEncryptionParameters base =
@@ -31,7 +31,7 @@ public class BcNTRUParametersTestFile {
 
     public static void testNTRUEncryptionPublicKeyParameters() {
         // Create a block cipher engine
-        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
+        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{(BlockCipher) AES}}
 
         Digest digest = new SHA256Digest();
         NTRUEncryptionParameters base =
@@ -46,7 +46,7 @@ public class BcNTRUParametersTestFile {
 
     public static void testNTRUEncryptionPrivateKeyParameters() {
         // Create a block cipher engine
-        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
+        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{(BlockCipher) AES}}
 
         Digest digest = new SHA256Digest();
         NTRUEncryptionParameters base =
@@ -65,7 +65,7 @@ public class BcNTRUParametersTestFile {
 
     public static void testNTRUSigningPrivateKeyParameters1() {
         // Create a block cipher engine
-        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
+        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{(BlockCipher) AES}}
 
         Digest digest = new SHA256Digest();
         NTRUSigningKeyGenerationParameters base =
@@ -84,7 +84,7 @@ public class BcNTRUParametersTestFile {
 
     public static void testNTRUSigningPrivateKeyParameters2() {
         // Create a block cipher engine
-        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
+        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{(BlockCipher) AES}}
 
         Digest digest = new SHA256Digest();
         NTRUSigningParameters base = new NTRUSigningParameters(0, 0, 0, 0, 1.0d, 1.0d, digest);
@@ -102,7 +102,7 @@ public class BcNTRUParametersTestFile {
 
     public static void testNTRUSigningPublicKeyParameters() {
         // Create a block cipher engine
-        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{AESEngine}}
+        BlockCipher aesEngine = AESEngine.newInstance(); // Noncompliant {{(BlockCipher) AES}}
 
         Digest digest = new SHA256Digest();
         NTRUSigningParameters base = new NTRUSigningParameters(0, 0, 0, 0, 1.0d, 1.0d, digest);
