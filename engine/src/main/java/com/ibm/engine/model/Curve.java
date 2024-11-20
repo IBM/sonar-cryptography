@@ -20,7 +20,6 @@
 package com.ibm.engine.model;
 
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public class Curve<T> extends AbstractValue<T> {
     @Nonnull private final String value;
@@ -36,7 +35,8 @@ public class Curve<T> extends AbstractValue<T> {
         return value;
     }
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public T getLocation() {
         return this.location;
     }

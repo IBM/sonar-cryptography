@@ -27,7 +27,6 @@ import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -50,16 +49,16 @@ import org.jetbrains.annotations.NotNull;
 public final class SM4 extends Algorithm implements BlockCipher, AuthenticatedEncryption, Mac {
     private static final String NAME = "SM4";
 
-    public SM4(@NotNull DetectionLocation detectionLocation) {
+    public SM4(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
     }
 
-    public SM4(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+    public SM4(@Nonnull Mode mode, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(mode);
     }
 
-    public SM4(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull SM4 sm4) {
+    public SM4(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull SM4 sm4) {
         super(sm4, asKind);
     }
 }

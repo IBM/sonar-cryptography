@@ -45,7 +45,6 @@ import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
 
 public class DetectionStore<R, T, S, P> implements IHookDetectionObserver<R, T, S, P> {
     protected final int level;
@@ -120,7 +119,6 @@ public class DetectionStore<R, T, S, P> implements IHookDetectionObserver<R, T, 
      * @return a list of all detection values in the order they were added to the store.
      */
     @Nonnull
-    @Unmodifiable
     public List<IValue<T>> getDetectionValues() {
         if (actionValue == null) {
             return detectionValues.values().stream().flatMap(List::stream).toList();
@@ -142,7 +140,7 @@ public class DetectionStore<R, T, S, P> implements IHookDetectionObserver<R, T, 
      *     inputs.
      */
     public void detectionValuesForEachParameter(
-            @Nonnull BiConsumer<Integer, @Unmodifiable List<IValue<T>>> consumer) {
+            @Nonnull BiConsumer<Integer, List<IValue<T>>> consumer) {
         this.detectionValues.forEach(
                 (k, v) ->
                         consumer.accept(
@@ -159,7 +157,6 @@ public class DetectionStore<R, T, S, P> implements IHookDetectionObserver<R, T, 
      * @return an immutable and non-null list of all the children stores
      */
     @Nonnull
-    @Unmodifiable
     public List<DetectionStore<R, T, S, P>> getChildren() {
         return children.values().stream().flatMap(List::stream).toList();
     }
@@ -170,7 +167,6 @@ public class DetectionStore<R, T, S, P> implements IHookDetectionObserver<R, T, 
      * @return the eventual child detection stores, whose detection rule relates to the method
      */
     @Nonnull
-    @Unmodifiable
     public List<DetectionStore<R, T, S, P>> getChildrenForMethod() {
         return Optional.ofNullable(this.children.get(-1)).orElse(List.of());
     }
@@ -186,7 +182,7 @@ public class DetectionStore<R, T, S, P> implements IHookDetectionObserver<R, T, 
      *     on these inputs.
      */
     public void childrenForEachParameter(
-            @Nonnull BiConsumer<Integer, @Unmodifiable List<DetectionStore<R, T, S, P>>> consumer) {
+            @Nonnull BiConsumer<Integer, List<DetectionStore<R, T, S, P>>> consumer) {
         for (Map.Entry<Integer, List<DetectionStore<R, T, S, P>>> entry :
                 this.children.entrySet()) {
             if (entry.getKey() == -1) {

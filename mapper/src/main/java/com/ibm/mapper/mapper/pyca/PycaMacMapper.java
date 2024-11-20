@@ -26,6 +26,7 @@ import com.ibm.mapper.model.algorithms.AES;
 import com.ibm.mapper.model.algorithms.Blowfish;
 import com.ibm.mapper.model.algorithms.Camellia;
 import com.ibm.mapper.model.algorithms.ChaCha20;
+import com.ibm.mapper.model.algorithms.Fernet;
 import com.ibm.mapper.model.algorithms.IDEA;
 import com.ibm.mapper.model.algorithms.MD5;
 import com.ibm.mapper.model.algorithms.Poly1305;
@@ -40,17 +41,18 @@ import com.ibm.mapper.model.algorithms.SM4;
 import com.ibm.mapper.model.algorithms.TripleDES;
 import com.ibm.mapper.model.algorithms.blake.BLAKE2b;
 import com.ibm.mapper.model.algorithms.blake.BLAKE2s;
+import com.ibm.mapper.model.algorithms.cast.CAST128;
 import com.ibm.mapper.model.algorithms.shake.SHAKE;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class PycaMacMapper implements IMapper {
 
     @Override
-    public @NotNull Optional<? extends INode> parse(
-            @Nullable String str, @NotNull DetectionLocation detectionLocation) {
+    public @Nonnull Optional<? extends INode> parse(
+            @Nullable String str, @Nonnull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }
@@ -63,7 +65,7 @@ public class PycaMacMapper implements IMapper {
                     Optional.of(new Camellia(Mac.class, new Camellia(detectionLocation)));
             case "TRIPLEDES" ->
                     Optional.of(new TripleDES(Mac.class, new TripleDES(detectionLocation)));
-            case "CAST5" -> Optional.empty(); // TODO: create algorithm object
+            case "CAST5" -> Optional.of(new CAST128(Mac.class, new CAST128(detectionLocation)));
             case "SEED" -> Optional.of(new SEED(Mac.class, new SEED(detectionLocation)));
             case "SM4" -> Optional.of(new SM4(Mac.class, new SM4(detectionLocation)));
             case "BLOWFISH" ->
@@ -72,7 +74,7 @@ public class PycaMacMapper implements IMapper {
             case "CHACHA20" ->
                     Optional.of(new ChaCha20(Mac.class, new ChaCha20(detectionLocation)));
             case "ARC4" -> Optional.of(new RC4(Mac.class, new RC4(detectionLocation)));
-            case "FERNET" -> Optional.empty(); // TODO: create algorithm object
+            case "FERNET" -> Optional.of(new Fernet(Mac.class, new Fernet(detectionLocation)));
             case "RSA" -> Optional.of(new RSA(Mac.class, detectionLocation));
             case "SHA1" -> Optional.of(new SHA(Mac.class, new SHA(detectionLocation)));
             case "SHA512_224" ->

@@ -32,8 +32,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.python.api.tree.Tree;
 
 @SuppressWarnings("java:S1192")
@@ -48,7 +46,7 @@ public final class PycaAES {
 
     private static final String AEAD_TYPE_PREFIX = "cryptography.hazmat.primitives.ciphers.aead.";
 
-    private static @NotNull IDetectionRule<Tree> encryptAES(String aesAlgorithm) {
+    private static @Nonnull IDetectionRule<Tree> encryptAES(String aesAlgorithm) {
         return new DetectionRuleBuilder<Tree>()
                 .createDetectionRule()
                 .forObjectTypes(AEAD_TYPE_PREFIX + aesAlgorithm)
@@ -61,7 +59,7 @@ public final class PycaAES {
                 .withoutDependingDetectionRules();
     }
 
-    private static @NotNull IDetectionRule<Tree> decryptAES(String aesAlgorithm) {
+    private static @Nonnull IDetectionRule<Tree> decryptAES(String aesAlgorithm) {
         return new DetectionRuleBuilder<Tree>()
                 .createDetectionRule()
                 .forObjectTypes(AEAD_TYPE_PREFIX + aesAlgorithm)
@@ -74,7 +72,7 @@ public final class PycaAES {
                 .withoutDependingDetectionRules();
     }
 
-    private static @NotNull List<IDetectionRule<Tree>> generationRulesAES() {
+    private static @Nonnull List<IDetectionRule<Tree>> generationRulesAES() {
         LinkedList<IDetectionRule<Tree>> rules = new LinkedList<>();
         for (String aesAlgorithm : aesAlgorithms) {
             rules.add(
@@ -94,7 +92,6 @@ public final class PycaAES {
         return rules;
     }
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return generationRulesAES();

@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
@@ -128,9 +127,9 @@ public class PythonDetectionEngine implements IDetectionEngine<Tree, Symbol> {
     }
 
     @Override
-    public <O> @NotNull List<ResolvedValue<O, Tree>> resolveValuesInInnerScope(
-            @NotNull Class<O> clazz,
-            @NotNull Tree expression,
+    public <O> @Nonnull List<ResolvedValue<O, Tree>> resolveValuesInInnerScope(
+            @Nonnull Class<O> clazz,
+            @Nonnull Tree expression,
             @Nullable IValueFactory<Tree> valueFactory) {
         if (expression instanceof Expression expressionTree) {
             return PythonSemantic.resolveValues(
@@ -194,7 +193,7 @@ public class PythonDetectionEngine implements IDetectionEngine<Tree, Symbol> {
             if (this.detectionStore
                     instanceof
                     final DetectionStoreWithHook<PythonCheck, Tree, Symbol, PythonVisitorContext>
-                                    detectionStoreWithHook) {
+                            detectionStoreWithHook) {
                 detectionStoreWithHook.onSuccessiveHook(methodInvocationHookWithReturnResolvement);
             } else {
                 handler.addHookToHookRepository(methodInvocationHookWithReturnResolvement);
@@ -211,7 +210,7 @@ public class PythonDetectionEngine implements IDetectionEngine<Tree, Symbol> {
         if (this.detectionStore
                 instanceof
                 final DetectionStoreWithHook<PythonCheck, Tree, Symbol, PythonVisitorContext>
-                                detectionStoreWithHook) {
+                        detectionStoreWithHook) {
             detectionStoreWithHook.onSuccessiveHook(methodInvocationHookWithParameterResolvement);
         } else {
             handler.addHookToHookRepository(methodInvocationHookWithParameterResolvement);

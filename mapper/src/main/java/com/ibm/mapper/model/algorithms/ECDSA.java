@@ -24,7 +24,7 @@ import com.ibm.mapper.model.EllipticCurve;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  *
@@ -47,19 +47,20 @@ import org.jetbrains.annotations.NotNull;
 public final class ECDSA extends Algorithm implements Signature {
     private static final String NAME = "ECDSA";
 
+    @Nonnull
     @Override
-    public @NotNull String asString() {
+    public String asString() {
         return this.hasChildOfType(MessageDigest.class)
                 .map(node -> node.asString() + "with" + this.name)
                 .orElse(this.name);
     }
 
-    public ECDSA(@NotNull DetectionLocation detectionLocation) {
+    public ECDSA(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, Signature.class, detectionLocation);
     }
 
     public ECDSA(
-            @NotNull EllipticCurve ellipticCurve, @NotNull DetectionLocation detectionLocation) {
+            @Nonnull EllipticCurve ellipticCurve, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(ellipticCurve);
     }

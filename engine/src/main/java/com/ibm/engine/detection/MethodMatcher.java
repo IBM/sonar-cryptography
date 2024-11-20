@@ -26,7 +26,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.TestOnly;
 import org.sonarsource.analyzer.commons.collections.SetUtils;
 
 public final class MethodMatcher<T> {
@@ -175,17 +174,17 @@ public final class MethodMatcher<T> {
                 && this.parameterTypes.test(param);
     }
 
-    @TestOnly
+    @Nonnull
     public List<String> getInvokedObjectTypeStringsSerializable() {
         return this.invokedObjectTypeStringsSerializable;
     }
 
-    @TestOnly
+    @Nonnull
     public List<String> getMethodNamesSerializable() {
         return this.methodNamesSerializable;
     }
 
-    @TestOnly
+    @Nonnull
     public List<String> getParameterTypesSerializable() {
         return this.parameterTypesSerializable;
     }

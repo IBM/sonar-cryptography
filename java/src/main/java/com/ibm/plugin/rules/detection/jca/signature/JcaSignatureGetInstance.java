@@ -28,7 +28,6 @@ import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.List;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class JcaSignatureGetInstance {
@@ -84,7 +83,6 @@ public final class JcaSignatureGetInstance {
         // nothing
     }
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return List.of(SIGNATURE_1, SIGNATURE_2, SIGNATURE_3);

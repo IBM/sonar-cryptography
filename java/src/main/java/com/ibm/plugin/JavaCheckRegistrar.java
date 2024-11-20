@@ -20,8 +20,7 @@
 package com.ibm.plugin;
 
 import java.util.List;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
+import javax.annotation.Nonnull;
 import org.sonar.plugins.java.api.CheckRegistrar;
 import org.sonar.plugins.java.api.JavaCheck;
 import org.sonarsource.api.sonarlint.SonarLintSide;
@@ -37,12 +36,12 @@ public class JavaCheckRegistrar implements CheckRegistrar {
     }
 
     /** Lists all the main checks provided by the java-translation */
-    public static @NotNull @Unmodifiable List<Class<? extends JavaCheck>> checkClasses() {
+    public static @Nonnull List<Class<? extends JavaCheck>> checkClasses() {
         return JavaRuleList.getJavaChecks();
     }
 
     /** Lists all the test checks provided by the java-translation */
-    public static @NotNull @Unmodifiable List<Class<? extends JavaCheck>> testCheckClasses() {
+    public static @Nonnull List<Class<? extends JavaCheck>> testCheckClasses() {
         return JavaRuleList.getJavaTestChecks();
     }
 }

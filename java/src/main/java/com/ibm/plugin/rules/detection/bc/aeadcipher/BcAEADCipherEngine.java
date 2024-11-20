@@ -30,8 +30,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class BcAEADCipherEngine {
@@ -54,7 +52,7 @@ public final class BcAEADCipherEngine {
 
     // Because these AEAD engines are not used as engines for other classes, we assume that they are
     // only used alone. It is then safe to add them "init" as depending detection rule.
-    private static @NotNull List<IDetectionRule<Tree>> constructors() {
+    private static @Nonnull List<IDetectionRule<Tree>> constructors() {
         List<IDetectionRule<Tree>> constructorsList = new LinkedList<>();
 
         for (Map.Entry<String, BouncyCastleInfoMap.Info> entry : infoMap.entrySet()) {
@@ -96,7 +94,6 @@ public final class BcAEADCipherEngine {
         return constructorsList;
     }
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return constructors();

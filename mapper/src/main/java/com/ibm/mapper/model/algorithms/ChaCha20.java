@@ -28,7 +28,6 @@ import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -51,7 +50,7 @@ import org.jetbrains.annotations.NotNull;
 public final class ChaCha20 extends Algorithm implements StreamCipher {
     private static final String NAME = "ChaCha20";
 
-    public ChaCha20(@NotNull DetectionLocation detectionLocation) {
+    public ChaCha20(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, StreamCipher.class, detectionLocation);
     }
 
@@ -65,19 +64,19 @@ public final class ChaCha20 extends Algorithm implements StreamCipher {
                 .orElse(this.name);
     }
 
-    public ChaCha20(int keyLength, @NotNull DetectionLocation detectionLocation) {
+    public ChaCha20(int keyLength, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
     }
 
     public ChaCha20(
-            int keyLength, @Nonnull Padding padding, @NotNull DetectionLocation detectionLocation) {
+            int keyLength, @Nonnull Padding padding, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(padding);
     }
 
-    public ChaCha20(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull ChaCha20 chaCha20) {
+    public ChaCha20(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull ChaCha20 chaCha20) {
         super(chaCha20, asKind);
     }
 }

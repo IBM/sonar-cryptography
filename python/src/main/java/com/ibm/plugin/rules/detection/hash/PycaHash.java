@@ -27,8 +27,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.python.api.tree.Tree;
 
 @SuppressWarnings("java:S1192")
@@ -59,7 +57,7 @@ public final class PycaHash {
                     "BLAKE2s",
                     "SM3");
 
-    private static @NotNull List<IDetectionRule<Tree>> hashesRules() {
+    private static @Nonnull List<IDetectionRule<Tree>> hashesRules() {
         LinkedList<IDetectionRule<Tree>> rules = new LinkedList<>();
         for (final String hash : PycaHash.hashes) {
             rules.add(
@@ -87,7 +85,6 @@ public final class PycaHash {
                     .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         final List<IDetectionRule<Tree>> hashAndPrehashRules = new LinkedList<>(hashesRules());

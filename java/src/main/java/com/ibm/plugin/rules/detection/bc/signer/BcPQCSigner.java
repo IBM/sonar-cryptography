@@ -29,8 +29,6 @@ import com.ibm.plugin.rules.detection.bc.messagesigner.BcStateAwareMessageSigner
 import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class BcPQCSigner {
@@ -39,7 +37,7 @@ public final class BcPQCSigner {
         // nothing
     }
 
-    private static @NotNull List<IDetectionRule<Tree>> specialConstructors() {
+    private static @Nonnull List<IDetectionRule<Tree>> specialConstructors() {
         List<IDetectionRule<Tree>> constructorsList = new LinkedList<>();
 
         constructorsList.add(
@@ -75,7 +73,6 @@ public final class BcPQCSigner {
         return constructorsList;
     }
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return specialConstructors();

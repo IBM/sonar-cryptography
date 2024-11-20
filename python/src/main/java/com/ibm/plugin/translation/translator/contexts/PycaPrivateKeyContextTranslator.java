@@ -59,19 +59,19 @@ import com.ibm.mapper.model.curves.Sect571r1;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.sonar.plugins.python.api.tree.Tree;
 
 @SuppressWarnings("java:S1301")
 public final class PycaPrivateKeyContextTranslator implements IContextTranslation<Tree> {
 
     @Override
-    public @NotNull Optional<INode> translate(
-            @NotNull IBundle bundleIdentifier,
-            @NotNull IValue<Tree> value,
-            @NotNull IDetectionContext detectionContext,
-            @NotNull DetectionLocation detectionLocation) {
+    public @Nonnull Optional<INode> translate(
+            @Nonnull IBundle bundleIdentifier,
+            @Nonnull IValue<Tree> value,
+            @Nonnull IDetectionContext detectionContext,
+            @Nonnull DetectionLocation detectionLocation) {
         if (value instanceof KeyAction<Tree>
                 && detectionContext instanceof DetectionContext context) {
             return getPrivateKey(context, null, detectionLocation);
@@ -127,10 +127,10 @@ public final class PycaPrivateKeyContextTranslator implements IContextTranslatio
         return Optional.empty();
     }
 
-    private static @NotNull Optional<INode> getPrivateKey(
-            @NotNull DetectionContext context,
+    private static @Nonnull Optional<INode> getPrivateKey(
+            @Nonnull DetectionContext context,
             @Nullable Integer keySize,
-            @NotNull DetectionLocation detectionLocation) {
+            @Nonnull DetectionLocation detectionLocation) {
         return context.get("algorithm")
                 .map(
                         str ->

@@ -34,7 +34,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
 
 public abstract class ITranslator<R, T, S, P> {
 
@@ -189,7 +188,7 @@ public abstract class ITranslator<R, T, S, P> {
 
         private void append(
                 @Nonnull List<INode> parentNodes, @Nonnull List<INode> newNodesCollection) {
-            @Unmodifiable
+
             final List<INode> copyParentNodes = List.copyOf(parentNodes); // copy of references
             for (INode parentNode : copyParentNodes) {
                 newNodesCollection.forEach(

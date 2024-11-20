@@ -28,7 +28,6 @@ import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 import org.cyclonedx.model.component.crypto.enums.Mode;
 import org.cyclonedx.model.component.crypto.enums.Padding;
-import org.jetbrains.annotations.NotNull;
 
 public final class Utils {
 
@@ -36,19 +35,19 @@ public final class Utils {
         // nothing
     }
 
-    public static @NotNull Optional<Mode> parseStringToMode(@Nonnull String string) {
+    public static @Nonnull Optional<Mode> parseStringToMode(@Nonnull String string) {
         return Arrays.stream(org.cyclonedx.model.component.crypto.enums.Mode.values())
                 .filter(k -> k.name().equalsIgnoreCase(string))
                 .findFirst();
     }
 
-    public static @NotNull Optional<Padding> parseStringToPadding(@Nonnull String string) {
+    public static @Nonnull Optional<Padding> parseStringToPadding(@Nonnull String string) {
         return Arrays.stream(org.cyclonedx.model.component.crypto.enums.Padding.values())
                 .filter(k -> k.name().equalsIgnoreCase(string))
                 .findFirst();
     }
 
-    public static <T> @NotNull Predicate<T> distinctByKey(
+    public static <T> @Nonnull Predicate<T> distinctByKey(
             @Nonnull Function<? super T, Object> keyExtractor) {
         Map<Object, Boolean> map = new ConcurrentHashMap<>();
         return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;

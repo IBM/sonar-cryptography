@@ -22,12 +22,12 @@ package com.ibm.mapper.model.algorithms.isap;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.InitializationVectorLength;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class IsapA128 extends Isap {
     private static final String NAME = "Isap-A-128";
 
-    public IsapA128(@NotNull DetectionLocation detectionLocation) {
+    public IsapA128(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, detectionLocation);
         this.put(new BlockSize(64, detectionLocation));
         this.put(new InitializationVectorLength(192, detectionLocation));

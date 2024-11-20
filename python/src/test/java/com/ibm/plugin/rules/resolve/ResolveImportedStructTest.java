@@ -26,7 +26,6 @@ import com.ibm.mapper.model.INode;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.sonar.plugins.python.api.PythonCheck;
@@ -49,8 +48,8 @@ class ResolveImportedStructTest extends TestBase {
     @Override
     public void asserts(
             int findingId,
-            @NotNull DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> detectionStore,
-            @NotNull List<INode> nodes) {
+            @Nonnull DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> detectionStore,
+            @Nonnull List<INode> nodes) {
         // nothing
     }
 

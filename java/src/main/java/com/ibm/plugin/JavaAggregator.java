@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.JavaCheck;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
@@ -49,7 +48,6 @@ public final class JavaAggregator implements IAggregator {
     }
 
     @Nonnull
-    @Unmodifiable
     public static List<INode> getDetectedNodes() {
         return Collections.unmodifiableList(detectedNodes);
     }

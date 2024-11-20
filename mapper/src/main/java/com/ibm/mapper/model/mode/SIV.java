@@ -21,10 +21,10 @@ package com.ibm.mapper.model.mode;
 
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public final class SIV extends Mode {
-    public SIV(@NotNull DetectionLocation detectionLocation) {
+    public SIV(@Nonnull DetectionLocation detectionLocation) {
         super("SIV", detectionLocation);
     }
 }

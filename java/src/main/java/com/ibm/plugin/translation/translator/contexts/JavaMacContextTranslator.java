@@ -32,19 +32,16 @@ import com.ibm.mapper.model.ParameterSetIdentifier;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.annotation.Nonnull;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslator {
-    private static final Logger LOGGER = LoggerFactory.getLogger(JavaMacContextTranslator.class);
 
     @Override
-    protected @NotNull Optional<INode> translateJCA(
-            @NotNull IValue<Tree> value,
-            @NotNull IDetectionContext detectionContext,
-            @NotNull DetectionLocation detectionLocation) {
+    protected @Nonnull Optional<INode> translateJCA(
+            @Nonnull IValue<Tree> value,
+            @Nonnull IDetectionContext detectionContext,
+            @Nonnull DetectionLocation detectionLocation) {
         if (value instanceof com.ibm.engine.model.Algorithm<Tree>) {
             JcaMacMapper jcaMacMapper = new JcaMacMapper();
             return jcaMacMapper.parse(value.asString(), detectionLocation).map(a -> a);
@@ -61,10 +58,10 @@ public final class JavaMacContextTranslator extends JavaAbstractLibraryTranslato
     }
 
     @Override
-    protected @NotNull Optional<INode> translateBC(
-            @NotNull IValue<Tree> value,
-            @NotNull IDetectionContext detectionContext,
-            @NotNull DetectionLocation detectionLocation) {
+    protected @Nonnull Optional<INode> translateBC(
+            @Nonnull IValue<Tree> value,
+            @Nonnull IDetectionContext detectionContext,
+            @Nonnull DetectionLocation detectionLocation) {
         if (value instanceof ValueAction<Tree> valueAction) {
             BcMacMapper bcMacMapper = new BcMacMapper();
             return bcMacMapper.parse(valueAction.asString(), detectionLocation).map(f -> f);

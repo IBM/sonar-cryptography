@@ -28,7 +28,6 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
 
 final class DetectionRuleBuilderImpl<T>
         implements IDetectionRule.TypeBuilder<T>,
@@ -244,9 +243,10 @@ final class DetectionRuleBuilderImpl<T>
                 bundle);
     }
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public IDetectionRule.ParametersFactoryBuilder<T> withMethodParameterMatchExactType(
-            @NotNull String type) {
+            @Nonnull String type) {
         checkDetectionParameterState();
         this.buildingNewDetectionParameter = false;
         this.capturedParameterScope = CapturedParameterScope.SOME;
@@ -270,7 +270,8 @@ final class DetectionRuleBuilderImpl<T>
                 bundle);
     }
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public IDetectionRule.FinalDetectionRuleBuilder<T> withoutParameters() {
         capturedParameterScope = CapturedParameterScope.NONE;
         return new DetectionRuleBuilderImpl<>(
@@ -291,7 +292,8 @@ final class DetectionRuleBuilderImpl<T>
                 bundle);
     }
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public IDetectionRule.FinalDetectionRuleBuilder<T> withAnyParameters() {
         capturedParameterScope = CapturedParameterScope.ANY;
         return new DetectionRuleBuilderImpl<>(
@@ -406,9 +408,10 @@ final class DetectionRuleBuilderImpl<T>
                 bundle);
     }
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public IDetectionRule.InvokedObjectDependingDetectionRules<T> inBundle(
-            @NotNull IBundle bundle) {
+            @Nonnull IBundle bundle) {
         this.bundle = bundle;
         return new DetectionRuleBuilderImpl<>(
                 objectTypes,

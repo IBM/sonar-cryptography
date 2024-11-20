@@ -29,7 +29,6 @@ import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 // https://docs.oracle.com/javase/8/docs/api/java/security/spec/PSSParameterSpec.html
@@ -69,7 +68,6 @@ public final class JcaPSSParameterSpec {
         // nothing
     }
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return List.of(PSS_1, PSS_2);

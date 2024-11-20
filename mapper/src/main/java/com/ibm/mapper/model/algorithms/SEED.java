@@ -29,7 +29,6 @@ import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -53,13 +52,13 @@ public final class SEED extends Algorithm implements BlockCipher, KeyWrap {
 
     private static final String NAME = "SEED";
 
-    public SEED(@NotNull DetectionLocation detectionLocation) {
+    public SEED(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
         this.put(new BlockSize(128, detectionLocation));
         this.put(new KeyLength(128, detectionLocation));
     }
 
-    public SEED(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+    public SEED(@Nonnull Mode mode, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(mode);
     }
@@ -67,13 +66,13 @@ public final class SEED extends Algorithm implements BlockCipher, KeyWrap {
     public SEED(
             @Nonnull Mode mode,
             @Nonnull Padding padding,
-            @NotNull DetectionLocation detectionLocation) {
+            @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(mode);
         this.put(padding);
     }
 
-    public SEED(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull SEED seed) {
+    public SEED(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull SEED seed) {
         super(seed, asKind);
     }
 }

@@ -20,7 +20,6 @@
 package com.ibm.engine.model.context;
 
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public class ProtocolContext implements IDetectionContext, ISupportKind<ProtocolContext.Kind> {
 
@@ -39,12 +38,14 @@ public class ProtocolContext implements IDetectionContext, ISupportKind<Protocol
         this.kind = ProtocolContext.Kind.NONE;
     }
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public Class<? extends IDetectionContext> type() {
         return ProtocolContext.class;
     }
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public Kind kind() {
         return this.kind;
     }

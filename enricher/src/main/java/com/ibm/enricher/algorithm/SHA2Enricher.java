@@ -30,11 +30,11 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public class SHA2Enricher implements IEnricher {
-    @NotNull @Override
-    public INode enrich(@NotNull INode node) {
+    @Nonnull
+    @Override
+    public INode enrich(@Nonnull INode node) {
         if (node instanceof SHA2 sha2) {
             return enrich(sha2);
         }

@@ -20,8 +20,7 @@
 package com.ibm.plugin;
 
 import java.util.List;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
+import javax.annotation.Nonnull;
 import org.sonar.api.config.PropertyDefinition;
 import org.sonar.api.resources.Qualifiers;
 
@@ -29,7 +28,7 @@ public final class Configuration {
 
     private Configuration() {}
 
-    public static @NotNull @Unmodifiable List<PropertyDefinition> getPropertyDefinitions() {
+    public static @Nonnull List<PropertyDefinition> getPropertyDefinitions() {
         return List.of(
                 PropertyDefinition.builder(Constants.CBOM_OUTPUT_NAME)
                         .onQualifiers(Qualifiers.PROJECT)

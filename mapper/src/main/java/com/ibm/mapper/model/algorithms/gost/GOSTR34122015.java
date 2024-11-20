@@ -28,7 +28,6 @@ import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -51,20 +50,20 @@ import org.jetbrains.annotations.NotNull;
 public final class GOSTR34122015 extends Algorithm implements BlockCipher, AuthenticatedEncryption {
     private static final String NAME = "GOSTR34122015";
 
-    public GOSTR34122015(@NotNull DetectionLocation detectionLocation) {
+    public GOSTR34122015(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
         this.put(new BlockSize(128, detectionLocation));
         this.put(new KeyLength(256, detectionLocation));
     }
 
-    public GOSTR34122015(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+    public GOSTR34122015(@Nonnull Mode mode, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(mode);
     }
 
     public GOSTR34122015(
             @Nonnull final Class<? extends IPrimitive> asKind,
-            @NotNull GOSTR34122015 gostr34122015) {
+            @Nonnull GOSTR34122015 gostr34122015) {
         super(gostr34122015, asKind);
     }
 }

@@ -21,7 +21,6 @@ package com.ibm.mapper.model;
 
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public final class Unknown extends Property implements IPrimitive {
 
@@ -46,7 +45,8 @@ public final class Unknown extends Property implements IPrimitive {
         return detectionLocation.hashCode();
     }
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public String asString() {
         return "Unknown";
     }
@@ -57,7 +57,8 @@ public final class Unknown extends Property implements IPrimitive {
         return this.asString();
     }
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public INode deepCopy() {
         Unknown copy = new Unknown(this);
         for (INode child : this.children.values()) {
@@ -66,7 +67,8 @@ public final class Unknown extends Property implements IPrimitive {
         return copy;
     }
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public String getName() {
         return this.asString();
     }

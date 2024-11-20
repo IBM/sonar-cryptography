@@ -24,7 +24,7 @@ import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.algorithms.shake.SHAKE;
 import com.ibm.mapper.model.curves.Edwards448;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  *
@@ -47,7 +47,7 @@ import org.jetbrains.annotations.NotNull;
 public final class Ed448 extends EdDSA implements Signature {
     private static final String NAME = "Ed448";
 
-    public Ed448(@NotNull DetectionLocation detectionLocation) {
+    public Ed448(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, detectionLocation);
         this.put(new Edwards448(detectionLocation));
         this.put(new SHAKE(256, detectionLocation));

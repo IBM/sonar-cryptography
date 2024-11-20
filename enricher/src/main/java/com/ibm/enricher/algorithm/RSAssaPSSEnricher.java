@@ -23,11 +23,11 @@ import com.ibm.enricher.IEnricher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.algorithms.RSAssaPSS;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class RSAssaPSSEnricher implements IEnricher {
     @Override
-    public @NotNull INode enrich(@NotNull INode node) {
+    public @Nonnull INode enrich(@Nonnull INode node) {
         if (node instanceof RSAssaPSS rsaSsaPSS) {
             rsaSsaPSS.put(new Oid("1.2.840.113549.1.1.10", rsaSsaPSS.getDetectionContext()));
             return rsaSsaPSS;

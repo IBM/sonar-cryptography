@@ -37,7 +37,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
@@ -62,28 +61,29 @@ public class PythonLanguageSupport
     }
 
     @Override
-    public @NotNull DetectionExecutive<PythonCheck, Tree, Symbol, PythonVisitorContext>
+    public @Nonnull DetectionExecutive<PythonCheck, Tree, Symbol, PythonVisitorContext>
             createDetectionExecutive(
-                    @NotNull Tree tree,
-                    @NotNull IDetectionRule<Tree> detectionRule,
-                    @NotNull IScanContext<PythonCheck, Tree> scanContext) {
+                    @Nonnull Tree tree,
+                    @Nonnull IDetectionRule<Tree> detectionRule,
+                    @Nonnull IScanContext<PythonCheck, Tree> scanContext) {
         return new DetectionExecutive<>(tree, detectionRule, scanContext, this.handler);
     }
 
     @Override
-    public @NotNull IDetectionEngine<Tree, Symbol> createDetectionEngineInstance(
-            @NotNull DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext>
+    public @Nonnull IDetectionEngine<Tree, Symbol> createDetectionEngineInstance(
+            @Nonnull
+                    DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext>
                             detectionStore) {
         return new PythonDetectionEngine(detectionStore, this.handler);
     }
 
     @Override
-    public @NotNull IBaseMethodVisitorFactory<Tree, Symbol> getBaseMethodVisitorFactory() {
+    public @Nonnull IBaseMethodVisitorFactory<Tree, Symbol> getBaseMethodVisitorFactory() {
         return PythonBaseMethodVisitor::new;
     }
 
     @Override
-    public @NotNull Optional<Tree> getEnclosingMethod(@NotNull Tree expression) {
+    public @Nonnull Optional<Tree> getEnclosingMethod(@Nonnull Tree expression) {
         // In Python, there isn't necessarily an enclosing method: we return it if it exists,
         // otherwise we return the highest level root node corresponding to all the content of the
         // current file.
@@ -98,7 +98,7 @@ public class PythonLanguageSupport
     }
 
     @Override
-    public MethodMatcher<Tree> createMethodMatcherBasedOn(@NotNull Tree methodDefinition) {
+    public MethodMatcher<Tree> createMethodMatcherBasedOn(@Nonnull Tree methodDefinition) {
         if (methodDefinition instanceof FunctionDef functionDefTree) {
             // The `invocationObjectName` consists of the filename + the class(es). We use
             // `fullyQualifiedName`, here that basically is `invocationObjectName` + the function
@@ -135,7 +135,7 @@ public class PythonLanguageSupport
 
     @Override
     public EnumMatcher<Tree> createSimpleEnumMatcherFor(
-            @NotNull Tree enumIdentifier, @Nonnull MatchContext matchContext) {
+            @Nonnull Tree enumIdentifier, @Nonnull MatchContext matchContext) {
         Optional<String> enumIdentifierName =
                 translation().getEnumIdentifierName(matchContext, enumIdentifier);
         return enumIdentifierName.<EnumMatcher<Tree>>map(EnumMatcher::new).orElse(null);

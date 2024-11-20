@@ -52,16 +52,17 @@ import com.ibm.mapper.model.functionality.Encapsulate;
 import com.ibm.mapper.utils.DetectionLocation;
 import com.ibm.mapper.utils.Utils;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class JavaCipherContextTranslator extends JavaAbstractLibraryTranslator {
 
     @Override
-    @NotNull public Optional<INode> translateJCA(
-            @NotNull IValue<Tree> value,
-            @NotNull IDetectionContext detectionContext,
-            @NotNull DetectionLocation detectionLocation) {
+    @Nonnull
+    public Optional<INode> translateJCA(
+            @Nonnull IValue<Tree> value,
+            @Nonnull IDetectionContext detectionContext,
+            @Nonnull DetectionLocation detectionLocation) {
         if (value instanceof Algorithm<Tree>) {
             JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
             return jcaAlgorithmMapper.parse(value.asString(), detectionLocation).map(a -> a);
@@ -81,14 +82,15 @@ public final class JavaCipherContextTranslator extends JavaAbstractLibraryTransl
     }
 
     @Override
-    @NotNull public Optional<INode> translateBC(
-            @NotNull IValue<Tree> value,
-            @NotNull IDetectionContext detectionContext,
-            @NotNull DetectionLocation detectionLocation) {
+    @Nonnull
+    public Optional<INode> translateBC(
+            @Nonnull IValue<Tree> value,
+            @Nonnull IDetectionContext detectionContext,
+            @Nonnull DetectionLocation detectionLocation) {
 
         if (value instanceof OperationMode<Tree> operationMode
                 && detectionContext instanceof DetectionContext context) {
-            String kind = context.get("kind").map(k -> k).orElse("");
+            String kind = context.get("kind").orElse("");
             return switch (kind) {
                 case "ENCRYPTION_STATUS" -> {
                     BcOperationModeEncryptionMapper bcCipherOperationModeMapper =

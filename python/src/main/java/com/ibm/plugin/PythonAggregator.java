@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
@@ -50,7 +49,6 @@ public final class PythonAggregator implements IAggregator {
     }
 
     @Nonnull
-    @Unmodifiable
     public static List<INode> getDetectedNodes() {
         return Collections.unmodifiableList(detectedNodes);
     }

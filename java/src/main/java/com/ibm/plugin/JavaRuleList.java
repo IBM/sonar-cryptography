@@ -24,16 +24,14 @@ import com.ibm.plugin.rules.JavaNoMD5UseRule;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
-import org.jetbrains.annotations.UnmodifiableView;
+import javax.annotation.Nonnull;
 import org.sonar.plugins.java.api.JavaCheck;
 
 public final class JavaRuleList {
 
     private JavaRuleList() {}
 
-    public static @NotNull @UnmodifiableView List<Class<?>> getChecks() {
+    public static @Nonnull List<Class<?>> getChecks() {
         List<Class<? extends JavaCheck>> checks = new ArrayList<>();
         checks.addAll(getJavaChecks());
         checks.addAll(getJavaTestChecks());
@@ -41,12 +39,12 @@ public final class JavaRuleList {
     }
 
     /** These rules are going to target MAIN code only */
-    public static @NotNull @Unmodifiable List<Class<? extends JavaCheck>> getJavaChecks() {
+    public static @Nonnull List<Class<? extends JavaCheck>> getJavaChecks() {
         return List.of(JavaInventoryRule.class, JavaNoMD5UseRule.class);
     }
 
     /** These rules are going to target TEST code only */
-    public static @NotNull @Unmodifiable List<Class<? extends JavaCheck>> getJavaTestChecks() {
+    public static @Nonnull List<Class<? extends JavaCheck>> getJavaTestChecks() {
         return List.of();
     }
 }

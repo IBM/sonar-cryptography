@@ -27,7 +27,6 @@ import com.ibm.plugin.rules.detection.bc.asymmetricblockcipher.BcAsymmetricBlock
 import com.ibm.plugin.rules.detection.bc.digest.BcDigests;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class BcX931Signer {
@@ -67,7 +66,6 @@ public final class BcX931Signer {
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return List.of(CONSTRUCTOR_1, CONSTRUCTOR_2);

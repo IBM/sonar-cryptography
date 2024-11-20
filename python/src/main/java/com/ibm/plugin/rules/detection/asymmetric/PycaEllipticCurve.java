@@ -37,7 +37,6 @@ import com.ibm.plugin.rules.detection.hash.PycaHash;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.python.api.tree.Tree;
 
 @SuppressWarnings("java:S1192")
@@ -143,7 +142,6 @@ public final class PycaEllipticCurve {
                     .inBundle(() -> "Pyca")
                     .withDependingDetectionRules(List.of(PRIVATE_NUMBERS_EC));
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return List.of(GENERATION_EC, DERIVATION_EC, PUBLIC_NUMBERS_EC);

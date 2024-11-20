@@ -21,13 +21,13 @@ package com.ibm.mapper.model.padding;
 
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public final class ANSIX923 extends Padding {
 
     private static final String NAME = "ANSI X9.23"; // ANSIX923, X9.23
 
-    public ANSIX923(@NotNull DetectionLocation detectionLocation) {
+    public ANSIX923(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, detectionLocation);
     }
 }

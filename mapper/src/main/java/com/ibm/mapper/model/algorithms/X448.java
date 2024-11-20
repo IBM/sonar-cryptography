@@ -24,7 +24,7 @@ import com.ibm.mapper.model.KeyAgreement;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.curves.Curve448;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  *
@@ -47,7 +47,7 @@ import org.jetbrains.annotations.NotNull;
 public final class X448 extends Algorithm implements KeyAgreement {
     private static final String NAME = "x448";
 
-    public X448(@NotNull DetectionLocation detectionLocation) {
+    public X448(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, KeyAgreement.class, detectionLocation);
         this.put(new Curve448(detectionLocation));
         this.put(new Oid("1.3.101.111", detectionLocation));

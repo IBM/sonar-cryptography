@@ -31,8 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class BcMessageSigner {
@@ -65,7 +63,7 @@ public final class BcMessageSigner {
                 .putType("org.bouncycastle.pqc.crypto.sphincsplus.");
     }
 
-    private static @NotNull List<IDetectionRule<Tree>> simpleConstructors() {
+    private static @Nonnull List<IDetectionRule<Tree>> simpleConstructors() {
         List<IDetectionRule<Tree>> constructorsList = new LinkedList<>();
 
         for (Map.Entry<String, BouncyCastleInfoMap.Info> entry : infoMap.entrySet()) {
@@ -86,7 +84,7 @@ public final class BcMessageSigner {
         return constructorsList;
     }
 
-    private static @NotNull List<IDetectionRule<Tree>> specialConstructors() {
+    private static @Nonnull List<IDetectionRule<Tree>> specialConstructors() {
         List<IDetectionRule<Tree>> constructorsList = new LinkedList<>();
 
         constructorsList.add(
@@ -110,7 +108,6 @@ public final class BcMessageSigner {
         return constructorsList;
     }
 
-    @Unmodifiable
     @Nonnull
     // Includes StateAwareMessageSigner rules
     public static List<IDetectionRule<Tree>> rules() {

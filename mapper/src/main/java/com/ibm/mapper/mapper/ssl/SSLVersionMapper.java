@@ -25,13 +25,14 @@ import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class SSLVersionMapper implements IMapper {
-    @NotNull @Override
+    @Nonnull
+    @Override
     public Optional<Version> parse(
-            @Nullable String str, @NotNull DetectionLocation detectionLocation) {
+            @Nullable String str, @Nonnull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }

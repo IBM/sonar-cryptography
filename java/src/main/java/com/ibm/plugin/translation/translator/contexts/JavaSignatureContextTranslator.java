@@ -37,16 +37,16 @@ import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.model.functionality.Verify;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class JavaSignatureContextTranslator extends JavaAbstractLibraryTranslator {
 
     @Override
-    protected @NotNull Optional<INode> translateJCA(
-            @NotNull IValue<Tree> value,
-            @NotNull IDetectionContext detectionContext,
-            @NotNull DetectionLocation detectionLocation) {
+    protected @Nonnull Optional<INode> translateJCA(
+            @Nonnull IValue<Tree> value,
+            @Nonnull IDetectionContext detectionContext,
+            @Nonnull DetectionLocation detectionLocation) {
         if (value instanceof com.ibm.engine.model.Algorithm<Tree>) {
             final JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
             return jcaAlgorithmMapper.parse(value.asString(), detectionLocation).map(a -> a);
@@ -62,13 +62,13 @@ public final class JavaSignatureContextTranslator extends JavaAbstractLibraryTra
     }
 
     @Override
-    protected @NotNull Optional<INode> translateBC(
-            @NotNull IValue<Tree> value,
-            @NotNull IDetectionContext detectionContext,
-            @NotNull DetectionLocation detectionLocation) {
+    protected @Nonnull Optional<INode> translateBC(
+            @Nonnull IValue<Tree> value,
+            @Nonnull IDetectionContext detectionContext,
+            @Nonnull DetectionLocation detectionLocation) {
         if (value instanceof ValueAction<Tree> valueAction
                 && detectionContext instanceof DetectionContext context) {
-            String kind = context.get("kind").map(k -> k).orElse("");
+            final String kind = context.get("kind").orElse("");
             switch (kind) {
                 case "DSA":
                     BcDsaMapper bcDSAMapper = new BcDsaMapper();

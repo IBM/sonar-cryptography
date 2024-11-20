@@ -21,12 +21,10 @@ package com.ibm.mapper.model;
 
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 
 public interface IPrimitive extends IAlgorithm {
 
     @Nonnull
-    @Unmodifiable
     static List<Class<? extends INode>> getKinds() {
         return List.of(
                 AuthenticatedEncryption.class,

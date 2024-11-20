@@ -25,7 +25,6 @@ import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -49,20 +48,20 @@ public class Ascon extends Algorithm implements BlockCipher {
 
     private static final String NAME = "Ascon";
 
-    public Ascon(@NotNull DetectionLocation detectionLocation) {
+    public Ascon(@Nonnull DetectionLocation detectionLocation) {
         this(NAME, AuthenticatedEncryption.class, detectionLocation);
     }
 
     public Ascon(
             @Nonnull final Class<? extends IPrimitive> asKind,
-            @NotNull DetectionLocation detectionLocation) {
+            @Nonnull DetectionLocation detectionLocation) {
         this(NAME, asKind, detectionLocation);
     }
 
     protected Ascon(
             @Nonnull String name,
             @Nonnull final Class<? extends IPrimitive> asKind,
-            @NotNull DetectionLocation detectionLocation) {
+            @Nonnull DetectionLocation detectionLocation) {
         super(name, asKind, detectionLocation);
     }
 }

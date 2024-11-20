@@ -31,8 +31,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.python.api.tree.Tree;
 
 @SuppressWarnings("java:S1192")
@@ -42,7 +40,7 @@ public final class PycaFernet {
         // private
     }
 
-    private static @NotNull List<IDetectionRule<Tree>> encryptDecryptFernet() {
+    private static @Nonnull List<IDetectionRule<Tree>> encryptDecryptFernet() {
         List<String> methodNames =
                 List.of("encrypt", "encrypt_at_time", "decrypt", "decrypt_at_time");
         List<String> objectNames = List.of("Fernet", "MultiFernet");
@@ -80,7 +78,6 @@ public final class PycaFernet {
                     .inBundle(() -> "Pyca")
                     .withDependingDetectionRules(encryptDecryptFernet());
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return List.of(GENERATION_FERNET);

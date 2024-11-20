@@ -25,12 +25,11 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.algorithms.SHA3;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public class SHA3Enricher implements IEnricher {
 
     @Override
-    public @NotNull INode enrich(@NotNull INode node) {
+    public @Nonnull INode enrich(@Nonnull INode node) {
         if (node instanceof SHA3 sha3) {
             return enrich(sha3);
         }

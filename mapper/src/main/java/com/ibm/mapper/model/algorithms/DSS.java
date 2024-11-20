@@ -20,7 +20,7 @@
 package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The National Institute of Standards and Technology (NIST) proposed DSA for use in their Digital
@@ -32,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class DSS extends DSA {
 
-    public DSS(@NotNull DetectionLocation detectionLocation) {
+    public DSS(@Nonnull DetectionLocation detectionLocation) {
         super(detectionLocation);
     }
 }

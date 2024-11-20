@@ -30,7 +30,6 @@ import com.ibm.plugin.translation.translator.JavaTranslator;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.JavaCheck;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
@@ -45,7 +44,7 @@ public final class JavaTranslationProcess
 
     @Override
     @Nonnull
-    public @Unmodifiable List<INode> initiate(
+    public List<INode> initiate(
             @Nonnull
                     DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext>
                             rootDetectionStore) {

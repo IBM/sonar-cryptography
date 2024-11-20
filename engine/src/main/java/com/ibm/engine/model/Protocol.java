@@ -20,7 +20,6 @@
 package com.ibm.engine.model;
 
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public class Protocol<T> extends AbstractValue<T> {
 
@@ -32,12 +31,14 @@ public class Protocol<T> extends AbstractValue<T> {
         this.value = value;
     }
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public T getLocation() {
         return this.location;
     }
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public String asString() {
         return this.value;
     }

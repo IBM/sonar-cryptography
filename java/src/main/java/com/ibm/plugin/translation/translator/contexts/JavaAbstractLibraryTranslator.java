@@ -27,17 +27,18 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public abstract class JavaAbstractLibraryTranslator implements IContextTranslation<Tree> {
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public Optional<INode> translate(
-            @NotNull IBundle bundleIdentifier,
-            @NotNull IValue<Tree> value,
-            @NotNull IDetectionContext detectionContext,
-            @NotNull DetectionLocation detectionLocation) {
+            @Nonnull IBundle bundleIdentifier,
+            @Nonnull IValue<Tree> value,
+            @Nonnull IDetectionContext detectionContext,
+            @Nonnull DetectionLocation detectionLocation) {
         return switch (bundleIdentifier.getIdentifier()) {
             case "Jca" -> translateJCA(value, detectionContext, detectionLocation);
             case "Bc" -> translateBC(value, detectionContext, detectionLocation);
@@ -45,13 +46,15 @@ public abstract class JavaAbstractLibraryTranslator implements IContextTranslati
         };
     }
 
-    @NotNull protected abstract Optional<INode> translateJCA(
-            @NotNull IValue<Tree> value,
-            @NotNull IDetectionContext detectionContext,
-            @NotNull DetectionLocation detectionLocation);
+    @Nonnull
+    protected abstract Optional<INode> translateJCA(
+            @Nonnull IValue<Tree> value,
+            @Nonnull IDetectionContext detectionContext,
+            @Nonnull DetectionLocation detectionLocation);
 
-    @NotNull protected abstract Optional<INode> translateBC(
-            @NotNull IValue<Tree> value,
-            @NotNull IDetectionContext detectionContext,
-            @NotNull DetectionLocation detectionLocation);
+    @Nonnull
+    protected abstract Optional<INode> translateBC(
+            @Nonnull IValue<Tree> value,
+            @Nonnull IDetectionContext detectionContext,
+            @Nonnull DetectionLocation detectionLocation);
 }

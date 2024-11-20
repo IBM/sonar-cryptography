@@ -25,7 +25,6 @@ import com.ibm.mapper.model.KeyDerivationFunction;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -60,7 +59,7 @@ public final class HKDF extends Algorithm implements KeyDerivationFunction {
     }
 
     @Override
-    public @NotNull String asString() {
+    public @Nonnull String asString() {
         return this.hasChildOfType(MessageDigest.class)
                 .map(digest -> this.name + "-" + ((IAlgorithm) digest).getName())
                 .orElse(this.name);

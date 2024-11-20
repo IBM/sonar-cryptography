@@ -21,10 +21,10 @@ package com.ibm.mapper.model.curves;
 
 import com.ibm.mapper.model.EllipticCurve;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public final class Sect571r1 extends EllipticCurve {
-    public Sect571r1(@NotNull DetectionLocation detectionLocation) {
+    public Sect571r1(@Nonnull DetectionLocation detectionLocation) {
         super("sect571r1", detectionLocation);
     }
 }

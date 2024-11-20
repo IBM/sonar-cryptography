@@ -26,7 +26,6 @@ import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import com.ibm.plugin.rules.detection.jca.keyspec.JcaSecretKeySpec;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class JcaSecretKeyFactoryTranslateKey {
@@ -46,7 +45,6 @@ public final class JcaSecretKeyFactoryTranslateKey {
         // nothing
     }
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return List.of(TRANSLATE_KEY_1);

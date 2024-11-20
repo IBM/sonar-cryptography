@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * This class contains public static {@code Function3} implementing usual reorganization actions,
@@ -122,7 +121,7 @@ public final class UsualPerformActions {
     @Nonnull
     private static List<INode> replaceNode(
             @Nonnull INode newNode,
-            @NotNull INode originalNode,
+            @Nonnull INode originalNode,
             @Nullable INode parent,
             @Nonnull List<INode> roots) {
         // Add all the children to the new node

@@ -21,7 +21,7 @@ package com.ibm.engine.model.context;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class KeyAgreementContext extends DetectionContext {
 
@@ -29,11 +29,12 @@ public class KeyAgreementContext extends DetectionContext {
         super(new HashMap<>());
     }
 
-    public KeyAgreementContext(@NotNull Map<String, String> properties) {
+    public KeyAgreementContext(@Nonnull Map<String, String> properties) {
         super(properties);
     }
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public Class<? extends IDetectionContext> type() {
         return KeyAgreementContext.class;
     }

@@ -21,11 +21,11 @@ package com.ibm.mapper.model.mode;
 
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public final class PCBC extends Mode {
 
-    public PCBC(@NotNull DetectionLocation detectionLocation) {
+    public PCBC(@Nonnull DetectionLocation detectionLocation) {
         super("PCBC", detectionLocation);
     }
 }

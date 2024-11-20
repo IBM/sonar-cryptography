@@ -36,7 +36,6 @@ import com.ibm.mapper.model.INode;
 import com.ibm.plugin.TestBase;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.sonar.java.checks.verifier.CheckVerifier;
 import org.sonar.plugins.java.api.JavaCheck;
@@ -48,7 +47,8 @@ class DuplicateDependingRules2Test extends TestBase {
 
     static IDetectionContext detectionContext =
             new IDetectionContext() {
-                @NotNull @Override
+                @Nonnull
+                @Override
                 public Class<? extends IDetectionContext> type() {
                     return IDetectionContext.class;
                 }
@@ -86,8 +86,8 @@ class DuplicateDependingRules2Test extends TestBase {
     @Override
     public void asserts(
             int findingId,
-            @NotNull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
-            @NotNull List<INode> nodes) {
+            @Nonnull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
+            @Nonnull List<INode> nodes) {
         /*
          * Detection Store
          */

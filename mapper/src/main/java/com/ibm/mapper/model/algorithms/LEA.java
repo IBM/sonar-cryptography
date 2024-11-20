@@ -28,7 +28,6 @@ import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -52,17 +51,17 @@ public final class LEA extends Algorithm implements BlockCipher {
 
     private static final String NAME = "LEA";
 
-    public LEA(@NotNull DetectionLocation detectionLocation) {
+    public LEA(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
         this.put(new BlockSize(128, detectionLocation));
     }
 
-    public LEA(int keyLength, @NotNull DetectionLocation detectionLocation) {
+    public LEA(int keyLength, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
     }
 
-    public LEA(int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+    public LEA(int keyLength, @Nonnull Mode mode, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
@@ -72,14 +71,14 @@ public final class LEA extends Algorithm implements BlockCipher {
             int keyLength,
             @Nonnull Mode mode,
             @Nonnull Padding padding,
-            @NotNull DetectionLocation detectionLocation) {
+            @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
         this.put(padding);
     }
 
-    public LEA(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull LEA lea) {
+    public LEA(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull LEA lea) {
         super(lea, asKind);
     }
 }

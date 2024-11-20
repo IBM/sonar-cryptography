@@ -22,13 +22,23 @@ package com.ibm.engine.language.java;
 import com.ibm.engine.detection.IType;
 import com.ibm.engine.detection.MatchContext;
 import com.ibm.engine.language.ILanguageTranslation;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.java.model.ExpressionUtils;
-import org.sonar.plugins.java.api.tree.*;
+import org.sonar.plugins.java.api.tree.Arguments;
+import org.sonar.plugins.java.api.tree.ClassTree;
+import org.sonar.plugins.java.api.tree.ExpressionTree;
+import org.sonar.plugins.java.api.tree.IdentifierTree;
+import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
+import org.sonar.plugins.java.api.tree.MethodInvocationTree;
+import org.sonar.plugins.java.api.tree.NewClassTree;
+import org.sonar.plugins.java.api.tree.Tree;
 
 public class JavaLanguageTranslation implements ILanguageTranslation<Tree> {
     @Nonnull
@@ -126,7 +136,7 @@ public class JavaLanguageTranslation implements ILanguageTranslation<Tree> {
 
     @Nonnull
     @Override
-    public @NotNull Optional<IType> getMethodReturnTypeString(
+    public Optional<IType> getMethodReturnTypeString(
             @Nonnull MatchContext matchContext, @Nonnull Tree methodInvocation) {
         if (methodInvocation instanceof MethodInvocationTree methodInvocationTree) {
             return Optional.of(methodInvocationTree.methodSymbol())
@@ -146,7 +156,7 @@ public class JavaLanguageTranslation implements ILanguageTranslation<Tree> {
 
     @Nonnull
     @Override
-    public @NotNull List<IType> getMethodParameterTypes(
+    public List<IType> getMethodParameterTypes(
             @Nonnull MatchContext matchContext, @Nonnull Tree methodInvocation) {
         Arguments arguments;
         if (methodInvocation instanceof MethodInvocationTree methodInvocationTree) {
@@ -203,7 +213,7 @@ public class JavaLanguageTranslation implements ILanguageTranslation<Tree> {
 
     @Nonnull
     @Override
-    public @NotNull Optional<String> resolveIdentifierAsString(
+    public Optional<String> resolveIdentifierAsString(
             @Nonnull MatchContext matchContext, @Nonnull Tree identifier) {
         if (identifier instanceof IdentifierTree identifierTree) {
             return Optional.of(identifierTree.identifierToken().text());
@@ -213,7 +223,7 @@ public class JavaLanguageTranslation implements ILanguageTranslation<Tree> {
 
     @Nonnull
     @Override
-    public @NotNull Optional<String> getEnumIdentifierName(
+    public Optional<String> getEnumIdentifierName(
             @Nonnull MatchContext matchContext, @Nonnull Tree enumIdentifier) {
         if (enumIdentifier instanceof IdentifierTree identifierTree) {
             return Optional.of(identifierTree.name());
@@ -223,7 +233,7 @@ public class JavaLanguageTranslation implements ILanguageTranslation<Tree> {
 
     @Nonnull
     @Override
-    public @NotNull Optional<String> getEnumClassName(
+    public Optional<String> getEnumClassName(
             @Nonnull MatchContext matchContext, @Nonnull Tree enumClass) {
         if (enumClass instanceof ClassTree classTree) {
             IdentifierTree enumClassIdentifier = classTree.simpleName();

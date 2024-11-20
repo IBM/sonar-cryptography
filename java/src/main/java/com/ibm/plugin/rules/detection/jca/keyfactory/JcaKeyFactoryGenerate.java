@@ -31,7 +31,6 @@ import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import com.ibm.plugin.rules.detection.jca.keyspec.JcaKeySpec;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class JcaKeyFactoryGenerate {
@@ -64,7 +63,6 @@ public final class JcaKeyFactoryGenerate {
         // nothing
     }
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return List.of(GENERATE_PRIVATE, GENERATE_PUBLIC);

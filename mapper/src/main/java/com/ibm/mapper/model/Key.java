@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public class Key implements IAsset {
     @Nonnull protected final Map<Class<? extends INode>, INode> children;
@@ -117,7 +116,7 @@ public class Key implements IAsset {
     }
 
     @Override
-    public void removeChildOfType(@NotNull Class<? extends INode> nodeType) {
+    public void removeChildOfType(@Nonnull Class<? extends INode> nodeType) {
         this.children.remove(nodeType);
     }
 

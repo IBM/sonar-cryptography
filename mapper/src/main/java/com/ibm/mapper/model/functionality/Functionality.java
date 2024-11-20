@@ -24,7 +24,6 @@ import com.ibm.mapper.model.Property;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 
 public abstract class Functionality extends Property {
 
@@ -44,7 +43,6 @@ public abstract class Functionality extends Property {
         return type.getSimpleName().toUpperCase();
     }
 
-    @Unmodifiable
     @Nonnull
     public static List<Class<? extends INode>> getKinds() {
         return List.of(

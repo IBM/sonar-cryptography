@@ -31,7 +31,6 @@ import com.ibm.plugin.rules.detection.jca.keyspec.JcaKeySpec;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class JcaCipherInit {
@@ -152,7 +151,6 @@ public final class JcaCipherInit {
         // nothing
     }
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return List.of(

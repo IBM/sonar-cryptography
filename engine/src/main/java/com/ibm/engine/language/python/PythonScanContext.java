@@ -21,7 +21,6 @@ package com.ibm.engine.language.python;
 
 import com.ibm.engine.language.IScanContext;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.plugins.python.api.IssueLocation;
 import org.sonar.plugins.python.api.PythonCheck;
@@ -34,14 +33,14 @@ public record PythonScanContext(@Nonnull PythonVisitorContext pythonVisitorConte
 
     @Override
     public void reportIssue(
-            @NotNull PythonCheck currentRule, @NotNull Tree tree, @NotNull String message) {
+            @Nonnull PythonCheck currentRule, @Nonnull Tree tree, @Nonnull String message) {
         PreciseIssue newIssue =
                 new PreciseIssue(currentRule, IssueLocation.preciseLocation(tree, message));
         pythonVisitorContext.addIssue(newIssue);
     }
 
     @Override
-    public @NotNull InputFile getInputFile() {
+    public @Nonnull InputFile getInputFile() {
         // There is no trivial way to get the InputFile from the `pythonVisitorContext`.
         // Using `.pythonFile()` does not return the correct format, and there doesn't
         // seem to be a converter.
@@ -49,7 +48,7 @@ public record PythonScanContext(@Nonnull PythonVisitorContext pythonVisitorConte
     }
 
     @Override
-    public @NotNull String getFilePath() {
+    public @Nonnull String getFilePath() {
         return pythonVisitorContext.pythonFile().uri().getPath();
     }
 }

@@ -25,7 +25,6 @@ import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -49,16 +48,16 @@ import org.jetbrains.annotations.NotNull;
 public final class IDEA extends Algorithm implements BlockCipher {
     private static final String NAME = "IDEA";
 
-    public IDEA(@NotNull DetectionLocation detectionLocation) {
+    public IDEA(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
     }
 
-    public IDEA(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+    public IDEA(@Nonnull Mode mode, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(mode);
     }
 
-    public IDEA(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull IDEA idea) {
+    public IDEA(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull IDEA idea) {
         super(idea, asKind);
     }
 }

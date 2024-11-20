@@ -25,7 +25,6 @@ import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class SSLServerSocketSetEnabledCipherSuites {
@@ -45,7 +44,6 @@ public final class SSLServerSocketSetEnabledCipherSuites {
         // nothing
     }
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return List.of(SSL_CIPHER_SUITES);

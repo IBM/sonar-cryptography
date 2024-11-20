@@ -23,15 +23,14 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Identifier;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public class IdentifierCollection extends AbstractAssetCollection<Identifier> {
 
-    public IdentifierCollection(@NotNull List<Identifier> collection) {
+    public IdentifierCollection(@Nonnull List<Identifier> collection) {
         super(collection, IdentifierCollection.class);
     }
 
-    private IdentifierCollection(@NotNull IdentifierCollection identifierCollection) {
+    private IdentifierCollection(@Nonnull IdentifierCollection identifierCollection) {
         super(identifierCollection.collection, identifierCollection.kind);
     }
 

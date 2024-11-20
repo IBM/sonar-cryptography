@@ -31,7 +31,6 @@ import com.ibm.mapper.model.mode.GCM;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
 
 public class AESEnricher implements IEnricher, IEnrichWithDefaultKeySize {
     private static final String BASE_OID = "2.16.840.1.101.3.4.1";
@@ -52,8 +51,9 @@ public class AESEnricher implements IEnricher, IEnrichWithDefaultKeySize {
                     192, 2,
                     256, 4);
 
-    @NotNull @Override
-    public INode enrich(@NotNull INode node) {
+    @Nonnull
+    @Override
+    public INode enrich(@Nonnull INode node) {
         if (node instanceof AES aes) {
             return enrich(aes);
         }
@@ -61,7 +61,7 @@ public class AESEnricher implements IEnricher, IEnrichWithDefaultKeySize {
     }
 
     @Nonnull
-    private INode enrich(@NotNull AES aes) {
+    private INode enrich(@Nonnull AES aes) {
         @Nullable KeyLength keyLength = aes.getKeyLength().orElse(null);
         @Nullable final Mode mode = aes.getMode().orElse(null);
         this.applyDefaultKeySizeForJca(aes, 128);

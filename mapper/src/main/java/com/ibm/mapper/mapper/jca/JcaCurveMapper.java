@@ -31,14 +31,15 @@ import com.ibm.mapper.model.curves.Secp384r1;
 import com.ibm.mapper.model.curves.Secp521r1;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class JcaCurveMapper implements IMapper {
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public Optional<? extends Algorithm> parse(
-            @Nullable String str, @NotNull DetectionLocation detectionLocation) {
+            @Nullable String str, @Nonnull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }

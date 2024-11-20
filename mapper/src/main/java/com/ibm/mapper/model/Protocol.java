@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public class Protocol implements IAsset {
     @Nonnull protected final Map<Class<? extends INode>, INode> children;
@@ -89,7 +88,8 @@ public class Protocol implements IAsset {
         return type;
     }
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public DetectionLocation getDetectionContext() {
         return detectionLocation;
     }
@@ -106,7 +106,7 @@ public class Protocol implements IAsset {
     }
 
     @Override
-    public void removeChildOfType(@NotNull Class<? extends INode> nodeType) {
+    public void removeChildOfType(@Nonnull Class<? extends INode> nodeType) {
         this.children.remove(nodeType);
     }
 

@@ -23,7 +23,7 @@ import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.KeyDerivationFunction;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  *
@@ -47,11 +47,11 @@ public final class ANSIX963 extends Algorithm implements KeyDerivationFunction {
 
     private static final String NAME = "ANSI X9.63";
 
-    public ANSIX963(@NotNull DetectionLocation detectionLocation) {
+    public ANSIX963(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, KeyDerivationFunction.class, detectionLocation);
     }
 
-    public ANSIX963(@NotNull MessageDigest messageDigest) {
+    public ANSIX963(@Nonnull MessageDigest messageDigest) {
         this(messageDigest.getDetectionContext());
         this.put(messageDigest);
     }

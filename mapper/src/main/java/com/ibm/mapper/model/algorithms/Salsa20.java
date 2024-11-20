@@ -25,7 +25,6 @@ import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -58,7 +57,7 @@ public final class Salsa20 extends Algorithm implements StreamCipher {
         this.put(new KeyLength(keyLength, detectionLocation));
     }
 
-    public Salsa20(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull Salsa20 salsa20) {
+    public Salsa20(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull Salsa20 salsa20) {
         super(salsa20, asKind);
     }
 }

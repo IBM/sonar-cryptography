@@ -29,8 +29,6 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class BcAsymCipherEngine {
@@ -48,7 +46,7 @@ public final class BcAsymCipherEngine {
                     "RSABlindingEngine",
                     "RSAEngine");
 
-    private static @NotNull List<IDetectionRule<Tree>> constructors(
+    private static @Nonnull List<IDetectionRule<Tree>> constructors(
             @Nullable IDetectionContext detectionValueContext) {
         List<IDetectionRule<Tree>> constructorsList = new LinkedList<>();
         IDetectionContext context =
@@ -71,13 +69,11 @@ public final class BcAsymCipherEngine {
         return constructorsList;
     }
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return rules(null);
     }
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules(
             @Nullable IDetectionContext detectionValueContext) {

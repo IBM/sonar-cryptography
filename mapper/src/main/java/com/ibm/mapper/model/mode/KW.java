@@ -21,12 +21,12 @@ package com.ibm.mapper.model.mode;
 
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 // Key wrap
 public final class KW extends Mode {
 
-    public KW(@NotNull DetectionLocation detectionLocation) {
+    public KW(@Nonnull DetectionLocation detectionLocation) {
         super("WRAP", detectionLocation);
     }
 }

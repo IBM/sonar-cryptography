@@ -22,7 +22,11 @@ package com.ibm.plugin.rules.resolve;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.engine.detection.DetectionStore;
-import com.ibm.engine.model.*;
+import com.ibm.engine.model.Algorithm;
+import com.ibm.engine.model.CipherAction;
+import com.ibm.engine.model.IValue;
+import com.ibm.engine.model.KeySize;
+import com.ibm.engine.model.OperationMode;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.SecretKeyContext;
 import com.ibm.mapper.model.INode;

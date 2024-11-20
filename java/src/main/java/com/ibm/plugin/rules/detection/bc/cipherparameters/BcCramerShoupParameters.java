@@ -27,7 +27,6 @@ import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import com.ibm.plugin.rules.detection.bc.digest.BcDigests;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class BcCramerShoupParameters {
@@ -84,7 +83,6 @@ public final class BcCramerShoupParameters {
                     .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return List.of(BASE_CONSTRUCTOR, PRIVATE_KEY_CONSTRUCTOR, PUBLIC_KEY_CONSTRUCTOR);

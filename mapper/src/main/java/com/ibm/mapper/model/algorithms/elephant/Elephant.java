@@ -25,7 +25,6 @@ import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.NonceLength;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -49,11 +48,11 @@ public class Elephant extends Algorithm implements AuthenticatedEncryption {
 
     private static final String NAME = "Elephant";
 
-    public Elephant(@NotNull DetectionLocation detectionLocation) {
+    public Elephant(@Nonnull DetectionLocation detectionLocation) {
         this(NAME, detectionLocation);
     }
 
-    protected Elephant(@Nonnull String name, @NotNull DetectionLocation detectionLocation) {
+    protected Elephant(@Nonnull String name, @Nonnull DetectionLocation detectionLocation) {
         super(name, AuthenticatedEncryption.class, detectionLocation);
         this.put(new KeyLength(128, detectionLocation));
         this.put(new NonceLength(96, detectionLocation));

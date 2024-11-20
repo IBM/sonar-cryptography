@@ -28,7 +28,6 @@ import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -52,16 +51,16 @@ import org.jetbrains.annotations.NotNull;
 public final class RC2 extends Algorithm implements BlockCipher, KeyWrap {
     private static final String NAME = "RC2"; // ARC2
 
-    public RC2(@NotNull DetectionLocation detectionLocation) {
+    public RC2(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
     }
 
-    public RC2(int keyLength, @NotNull DetectionLocation detectionLocation) {
+    public RC2(int keyLength, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
     }
 
-    public RC2(int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+    public RC2(int keyLength, @Nonnull Mode mode, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
@@ -71,14 +70,14 @@ public final class RC2 extends Algorithm implements BlockCipher, KeyWrap {
             int keyLength,
             @Nonnull Mode mode,
             @Nonnull Padding padding,
-            @NotNull DetectionLocation detectionLocation) {
+            @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
         this.put(padding);
     }
 
-    public RC2(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull RC2 rc2) {
+    public RC2(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull RC2 rc2) {
         super(rc2, asKind);
     }
 }

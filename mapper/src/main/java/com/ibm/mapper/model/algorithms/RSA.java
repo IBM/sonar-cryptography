@@ -33,7 +33,6 @@ import com.ibm.mapper.model.padding.OAEP;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -58,7 +57,7 @@ public final class RSA extends Algorithm implements KeyAgreement, Signature, Pub
     private static final String OID = "1.2.840.113549.1.1.1";
 
     @Override
-    public @NotNull String asString() {
+    public @Nonnull String asString() {
         if (this.is(Signature.class)) {
             return this.hasChildOfType(MessageDigest.class)
                     .map(node -> node.asString() + "with" + this.name)
@@ -74,7 +73,7 @@ public final class RSA extends Algorithm implements KeyAgreement, Signature, Pub
         return this.name;
     }
 
-    public RSA(@NotNull DetectionLocation detectionLocation) {
+    public RSA(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, PublicKeyEncryption.class, detectionLocation);
         this.put(new Oid(OID, detectionLocation));
     }
@@ -87,12 +86,12 @@ public final class RSA extends Algorithm implements KeyAgreement, Signature, Pub
 
     public RSA(
             @Nonnull final Class<? extends IPrimitive> asKind,
-            @NotNull DetectionLocation detectionLocation) {
+            @Nonnull DetectionLocation detectionLocation) {
         super(NAME, asKind, detectionLocation);
         this.put(new Oid(OID, detectionLocation));
     }
 
-    public RSA(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull RSA rsa) {
+    public RSA(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull RSA rsa) {
         super(rsa, asKind);
     }
 }

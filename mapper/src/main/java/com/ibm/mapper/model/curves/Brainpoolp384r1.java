@@ -21,10 +21,10 @@ package com.ibm.mapper.model.curves;
 
 import com.ibm.mapper.model.EllipticCurve;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public final class Brainpoolp384r1 extends EllipticCurve {
-    public Brainpoolp384r1(@NotNull DetectionLocation detectionLocation) {
+    public Brainpoolp384r1(@Nonnull DetectionLocation detectionLocation) {
         super("Brainpoolp384r1", detectionLocation);
     }
 }

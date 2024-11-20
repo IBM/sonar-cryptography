@@ -29,7 +29,6 @@ import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -52,16 +51,16 @@ import org.jetbrains.annotations.NotNull;
 public final class Aria extends Algorithm implements BlockCipher, AuthenticatedEncryption, KeyWrap {
     private static final String NAME = "Aria";
 
-    public Aria(@NotNull DetectionLocation detectionLocation) {
+    public Aria(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
     }
 
-    public Aria(int keyLength, @NotNull DetectionLocation detectionLocation) {
+    public Aria(int keyLength, @Nonnull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
     }
 
-    public Aria(int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+    public Aria(int keyLength, @Nonnull Mode mode, @Nonnull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
@@ -71,14 +70,14 @@ public final class Aria extends Algorithm implements BlockCipher, AuthenticatedE
             int keyLength,
             @Nonnull Mode mode,
             @Nonnull Padding padding,
-            @NotNull DetectionLocation detectionLocation) {
+            @Nonnull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
         this.put(padding);
     }
 
-    public Aria(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull Aria aria) {
+    public Aria(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull Aria aria) {
         super(aria, asKind);
     }
 }

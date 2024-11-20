@@ -30,7 +30,6 @@ import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -58,19 +57,19 @@ public final class GOST28147 extends Algorithm
 
     private static final String NAME = "GOST28147";
 
-    public GOST28147(@NotNull DetectionLocation detectionLocation) {
+    public GOST28147(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
         this.put(new BlockSize(64, detectionLocation));
         this.put(new KeyLength(256, detectionLocation));
     }
 
-    public GOST28147(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+    public GOST28147(@Nonnull Mode mode, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(mode);
     }
 
     public GOST28147(
-            @Nonnull final Class<? extends IPrimitive> asKind, @NotNull GOST28147 gost28147) {
+            @Nonnull final Class<? extends IPrimitive> asKind, @Nonnull GOST28147 gost28147) {
         super(gost28147, asKind);
     }
 }

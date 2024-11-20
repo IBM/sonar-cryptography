@@ -29,8 +29,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class BcPBEParametersGenerator {
@@ -50,7 +48,7 @@ public final class BcPBEParametersGenerator {
                     "PKCS5S1ParametersGenerator",
                     "PKCS5S2ParametersGenerator");
 
-    private static @NotNull List<IDetectionRule<Tree>> simpleConstructors() {
+    private static @Nonnull List<IDetectionRule<Tree>> simpleConstructors() {
         List<IDetectionRule<Tree>> constructorsList = new LinkedList<>();
 
         /* Constructor without argument */
@@ -104,7 +102,6 @@ public final class BcPBEParametersGenerator {
         return constructorsList;
     }
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return simpleConstructors();

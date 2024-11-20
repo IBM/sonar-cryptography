@@ -24,17 +24,17 @@ import com.ibm.plugin.rules.detection.PythonBaseDetectionRule;
 import com.ibm.rules.NoMD5UseForMessageDigestRule;
 import com.ibm.rules.issue.Issue;
 import java.util.List;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
+import javax.annotation.Nonnull;
 import org.sonar.check.Rule;
 import org.sonar.plugins.python.api.tree.Tree;
 
 @Rule(key = "PythonNoMD5use")
 public final class PythonNoMD5UseRule extends PythonBaseDetectionRule {
 
+    @Nonnull
     @Override
-    public @NotNull List<Issue<Tree>> report(
-            @NotNull Tree markerTree, @NotNull @Unmodifiable List<INode> translatedNodes) {
+    public List<Issue<Tree>> report(
+            @Nonnull Tree markerTree, @Nonnull List<INode> translatedNodes) {
         return new NoMD5UseForMessageDigestRule<Tree>().report(markerTree, translatedNodes);
     }
 }

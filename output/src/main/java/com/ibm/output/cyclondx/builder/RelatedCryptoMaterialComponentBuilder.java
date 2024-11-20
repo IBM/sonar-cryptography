@@ -40,7 +40,6 @@ import org.cyclonedx.model.component.crypto.RelatedCryptoMaterialProperties;
 import org.cyclonedx.model.component.crypto.enums.AssetType;
 import org.cyclonedx.model.component.crypto.enums.RelatedCryptoMaterialType;
 import org.cyclonedx.model.component.evidence.Occurrence;
-import org.jetbrains.annotations.NotNull;
 
 public class RelatedCryptoMaterialComponentBuilder
         implements IRelatedCryptoMaterialComponentBuilder {
@@ -164,7 +163,7 @@ public class RelatedCryptoMaterialComponentBuilder
     }
 
     @Override
-    public @NotNull IRelatedCryptoMaterialComponentBuilder occurrences(
+    public @Nonnull IRelatedCryptoMaterialComponentBuilder occurrences(
             @Nullable Occurrence... occurrences) {
         if (occurrences == null) {
             return new RelatedCryptoMaterialComponentBuilder(
@@ -178,7 +177,7 @@ public class RelatedCryptoMaterialComponentBuilder
     }
 
     @Override
-    public @NotNull Component build() {
+    public @Nonnull Component build() {
         this.cryptoProperties.setAssetType(AssetType.RELATED_CRYPTO_MATERIAL);
         this.cryptoProperties.setRelatedCryptoMaterialProperties(relatedCryptoMaterialProperties);
 

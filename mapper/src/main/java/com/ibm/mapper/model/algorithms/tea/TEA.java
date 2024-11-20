@@ -28,7 +28,6 @@ import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -53,13 +52,13 @@ public final class TEA extends Algorithm implements BlockCipher {
 
     private static final String NAME = "TEA";
 
-    public TEA(@NotNull DetectionLocation detectionLocation) {
+    public TEA(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
         this.put(new BlockSize(64, detectionLocation));
         this.put(new KeyLength(128, detectionLocation));
     }
 
-    public TEA(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+    public TEA(@Nonnull Mode mode, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(mode);
     }
@@ -67,13 +66,13 @@ public final class TEA extends Algorithm implements BlockCipher {
     public TEA(
             @Nonnull Mode mode,
             @Nonnull Padding padding,
-            @NotNull DetectionLocation detectionLocation) {
+            @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(mode);
         this.put(padding);
     }
 
-    public TEA(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull TEA tea) {
+    public TEA(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull TEA tea) {
         super(tea, asKind);
     }
 }

@@ -20,7 +20,6 @@
 package com.ibm.engine.model;
 
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public class Padding<T> extends AbstractValue<T> {
     @Nonnull private final String value;
@@ -32,7 +31,7 @@ public class Padding<T> extends AbstractValue<T> {
     }
 
     @Override
-    public @NotNull T getLocation() {
+    public @Nonnull T getLocation() {
         return this.location;
     }
 
@@ -42,7 +41,7 @@ public class Padding<T> extends AbstractValue<T> {
     }
 
     @Override
-    public @NotNull String asString() {
+    public @Nonnull String asString() {
         return this.value;
     }
 

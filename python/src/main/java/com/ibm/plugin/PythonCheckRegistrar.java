@@ -32,9 +32,8 @@ public class PythonCheckRegistrar implements PythonCustomRuleRepository {
         return PythonScannerRuleDefinition.REPOSITORY_KEY;
     }
 
-    @SuppressWarnings({"rawtypes"})
     @Override
-    public List<Class> checkClasses() {
+    public List<Class<?>> checkClasses() {
         // Creating a new list is necessary to return a type
         // List<Class> from the type List<Class<? extends PythonCheck>>
         return new ArrayList<>(PythonRuleList.getPythonChecks());

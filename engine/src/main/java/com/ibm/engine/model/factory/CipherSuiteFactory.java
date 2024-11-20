@@ -25,7 +25,6 @@ import com.ibm.engine.model.IValue;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
 
 public class CipherSuiteFactory<T> implements IValueFactory<T> {
 
@@ -41,7 +40,7 @@ public class CipherSuiteFactory<T> implements IValueFactory<T> {
 
     @Nonnull
     @Override
-    public Optional<IValue<T>> apply(@NotNull ResolvedValue<Object, T> objectTResolvedValue) {
+    public Optional<IValue<T>> apply(@Nonnull ResolvedValue<Object, T> objectTResolvedValue) {
         if (constant != null) {
             return Optional.of(new CipherSuite<>(constant, objectTResolvedValue.tree()));
         }

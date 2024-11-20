@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.BiFunction;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Evidence;
 import org.cyclonedx.model.component.crypto.CryptoProperties;
@@ -38,8 +39,6 @@ import org.cyclonedx.model.component.crypto.ProtocolProperties;
 import org.cyclonedx.model.component.crypto.enums.AssetType;
 import org.cyclonedx.model.component.crypto.enums.ProtocolType;
 import org.cyclonedx.model.component.evidence.Occurrence;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class ProtocolComponentBuilder implements IProtocolComponentBuilder {
     @Nonnull private final Component component;
@@ -72,7 +71,8 @@ public class ProtocolComponentBuilder implements IProtocolComponentBuilder {
         return new ProtocolComponentBuilder(algorithmComponentBuilder);
     }
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public IProtocolComponentBuilder name(@Nullable Protocol name) {
         if (name == null) {
             return new ProtocolComponentBuilder(
@@ -84,7 +84,8 @@ public class ProtocolComponentBuilder implements IProtocolComponentBuilder {
                 component, cryptoProperties, protocolProperties, algorithmComponentBuilder);
     }
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public IProtocolComponentBuilder type(@Nullable Protocol type) {
         if (type == null) {
             protocolProperties.setType(ProtocolType.UNKNOWN);
@@ -102,7 +103,8 @@ public class ProtocolComponentBuilder implements IProtocolComponentBuilder {
                 component, cryptoProperties, protocolProperties, algorithmComponentBuilder);
     }
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public IProtocolComponentBuilder version(@Nullable INode version) {
         if (version == null) {
             return new ProtocolComponentBuilder(
@@ -113,7 +115,8 @@ public class ProtocolComponentBuilder implements IProtocolComponentBuilder {
                 component, cryptoProperties, protocolProperties, algorithmComponentBuilder);
     }
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public IProtocolComponentBuilder cipherSuites(@Nullable INode node) {
         if (node == null) {
             return new ProtocolComponentBuilder(
@@ -164,7 +167,8 @@ public class ProtocolComponentBuilder implements IProtocolComponentBuilder {
                 component, cryptoProperties, protocolProperties, algorithmComponentBuilder);
     }
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public IProtocolComponentBuilder occurrences(@Nullable Occurrence... occurrences) {
         if (occurrences == null) {
             return new ProtocolComponentBuilder(
@@ -177,7 +181,8 @@ public class ProtocolComponentBuilder implements IProtocolComponentBuilder {
                 component, cryptoProperties, protocolProperties, algorithmComponentBuilder);
     }
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public Component build() {
         this.cryptoProperties.setAssetType(AssetType.PROTOCOL);
         this.cryptoProperties.setProtocolProperties(protocolProperties);

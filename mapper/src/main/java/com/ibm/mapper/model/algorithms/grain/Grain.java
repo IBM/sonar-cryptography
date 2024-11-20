@@ -24,19 +24,18 @@ import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public class Grain extends Algorithm implements StreamCipher {
     private static final String NAME = "Grain";
 
-    public Grain(@NotNull DetectionLocation detectionLocation) {
+    public Grain(@Nonnull DetectionLocation detectionLocation) {
         this(NAME, StreamCipher.class, detectionLocation);
     }
 
     protected Grain(
             @Nonnull String name,
             @Nonnull final Class<? extends IPrimitive> asKind,
-            @NotNull DetectionLocation detectionLocation) {
+            @Nonnull DetectionLocation detectionLocation) {
         super(name, asKind, detectionLocation);
     }
 }

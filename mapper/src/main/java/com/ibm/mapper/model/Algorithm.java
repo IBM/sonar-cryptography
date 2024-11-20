@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public class Algorithm implements IAlgorithm {
     @Nonnull protected final Map<Class<? extends INode>, INode> children;
@@ -73,7 +72,7 @@ public class Algorithm implements IAlgorithm {
     }
 
     @Nonnull
-    public @NotNull String getName() {
+    public String getName() {
         return name;
     }
 
@@ -101,7 +100,7 @@ public class Algorithm implements IAlgorithm {
     }
 
     @Override
-    public void removeChildOfType(@NotNull Class<? extends INode> nodeType) {
+    public void removeChildOfType(@Nonnull Class<? extends INode> nodeType) {
         this.children.remove(nodeType);
     }
 

@@ -31,8 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class BcBufferedBlockCipher {
@@ -53,7 +51,7 @@ public final class BcBufferedBlockCipher {
         infoMap.putKey("PaddedBlockCipher").putType(typePrefix + "modes.");
     }
 
-    private static @NotNull List<IDetectionRule<Tree>> simpleConstructors() {
+    private static @Nonnull List<IDetectionRule<Tree>> simpleConstructors() {
         List<IDetectionRule<Tree>> constructorsList = new LinkedList<>();
         for (Map.Entry<String, BouncyCastleInfoMap.Info> entry : infoMap.entrySet()) {
             String blockCipher = entry.getKey();
@@ -74,7 +72,7 @@ public final class BcBufferedBlockCipher {
         return constructorsList;
     }
 
-    private static @NotNull List<IDetectionRule<Tree>> specialConstructors() {
+    private static @Nonnull List<IDetectionRule<Tree>> specialConstructors() {
         List<IDetectionRule<Tree>> constructorsList = new LinkedList<>();
 
         constructorsList.add(
@@ -123,7 +121,6 @@ public final class BcBufferedBlockCipher {
         return constructorsList;
     }
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return Stream.of(simpleConstructors().stream(), specialConstructors().stream())

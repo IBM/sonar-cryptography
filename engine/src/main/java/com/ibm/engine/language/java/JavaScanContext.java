@@ -21,7 +21,6 @@ package com.ibm.engine.language.java;
 
 import com.ibm.engine.language.IScanContext;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.plugins.java.api.JavaCheck;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
@@ -37,13 +36,13 @@ public record JavaScanContext(@Nonnull JavaFileScannerContext javaFileScannerCon
 
     @Nonnull
     @Override
-    public @NotNull InputFile getInputFile() {
+    public InputFile getInputFile() {
         return this.javaFileScannerContext.getInputFile();
     }
 
     @Nonnull
     @Override
-    public @NotNull String getFilePath() {
+    public String getFilePath() {
         return this.javaFileScannerContext.getInputFile().uri().getPath();
     }
 }

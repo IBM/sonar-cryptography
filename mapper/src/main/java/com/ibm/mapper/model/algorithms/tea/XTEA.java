@@ -28,7 +28,6 @@ import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -54,13 +53,13 @@ public final class XTEA extends Algorithm implements BlockCipher {
 
     private static final String NAME = "XTEA";
 
-    public XTEA(@NotNull DetectionLocation detectionLocation) {
+    public XTEA(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
         this.put(new BlockSize(64, detectionLocation));
         this.put(new KeyLength(128, detectionLocation));
     }
 
-    public XTEA(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+    public XTEA(@Nonnull Mode mode, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(mode);
     }
@@ -68,13 +67,13 @@ public final class XTEA extends Algorithm implements BlockCipher {
     public XTEA(
             @Nonnull Mode mode,
             @Nonnull Padding padding,
-            @NotNull DetectionLocation detectionLocation) {
+            @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(mode);
         this.put(padding);
     }
 
-    public XTEA(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull XTEA xtea) {
+    public XTEA(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull XTEA xtea) {
         super(xtea, asKind);
     }
 }

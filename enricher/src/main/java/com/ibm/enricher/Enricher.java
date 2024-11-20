@@ -37,7 +37,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * This enricher instance operates on a language-agnostic level, meaning it will enrich the given
@@ -56,7 +55,8 @@ public class Enricher implements IEnricher {
         return nodes.stream().map(Enricher::enrichTree).toList();
     }
 
-    @NotNull private static INode enrichTree(@Nonnull INode node) {
+    @Nonnull
+    private static INode enrichTree(@Nonnull INode node) {
         final Enricher enricher = new Enricher();
         final INode enriched = enricher.enrich(node);
 
@@ -97,7 +97,8 @@ public class Enricher implements IEnricher {
      *
      * @param node The node to enrich
      */
-    @NotNull @Override
+    @Nonnull
+    @Override
     public INode enrich(@Nonnull INode node) {
         for (final IEnricher enricher : enrichers) {
             node = enricher.enrich(node);
