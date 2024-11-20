@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class BcAsymmetricBlockCipher {
@@ -34,13 +33,11 @@ public final class BcAsymmetricBlockCipher {
         // nothing
     }
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return rules(null, null);
     }
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules(
             @Nullable IDetectionContext encodingDetectionValueContext,

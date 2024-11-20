@@ -29,7 +29,6 @@ import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.List;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 @SuppressWarnings("java:S1192")
@@ -87,7 +86,6 @@ public final class JcaCipherGetInstance {
         // nothing
     }
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return List.of(CIPHER_GET_INSTANCE_1, CIPHER_GET_INSTANCE_2, CIPHER_GET_INSTANCE_3);

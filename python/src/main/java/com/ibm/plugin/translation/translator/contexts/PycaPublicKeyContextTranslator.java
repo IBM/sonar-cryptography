@@ -33,18 +33,18 @@ import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.sonar.plugins.python.api.tree.Tree;
 
 @SuppressWarnings("java:S1301")
 public final class PycaPublicKeyContextTranslator implements IContextTranslation<Tree> {
 
     @Override
-    public @NotNull Optional<INode> translate(
-            @NotNull IBundle bundleIdentifier,
-            @NotNull IValue<Tree> value,
-            @NotNull IDetectionContext detectionContext,
-            @NotNull DetectionLocation detectionLocation) {
+    public @Nonnull Optional<INode> translate(
+            @Nonnull IBundle bundleIdentifier,
+            @Nonnull IValue<Tree> value,
+            @Nonnull IDetectionContext detectionContext,
+            @Nonnull DetectionLocation detectionLocation) {
         if (value instanceof KeyAction<Tree>
                 && detectionContext instanceof DetectionContext context) {
             return context.get("algorithm")

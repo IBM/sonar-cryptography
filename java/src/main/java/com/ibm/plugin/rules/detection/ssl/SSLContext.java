@@ -25,7 +25,6 @@ import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 @SuppressWarnings("java:S1192")
@@ -70,7 +69,6 @@ public final class SSLContext {
         // nothing
     }
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return List.of(SSLContext_1, SSLContext_2, SSLContext_3);

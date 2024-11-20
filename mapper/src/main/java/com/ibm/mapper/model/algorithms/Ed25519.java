@@ -23,7 +23,7 @@ import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.curves.Edwards25519;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  *
@@ -46,7 +46,7 @@ import org.jetbrains.annotations.NotNull;
 public final class Ed25519 extends EdDSA implements Signature {
     private static final String NAME = "Ed25519";
 
-    public Ed25519(@NotNull DetectionLocation detectionLocation) {
+    public Ed25519(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, detectionLocation);
         this.put(new Edwards25519(detectionLocation));
         this.put(new SHA2(512, detectionLocation));

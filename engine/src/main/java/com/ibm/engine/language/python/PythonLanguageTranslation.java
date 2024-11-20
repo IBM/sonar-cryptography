@@ -26,7 +26,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.python.api.symbols.Symbol;
 import org.sonar.plugins.python.api.tree.*;
 
@@ -35,7 +34,7 @@ public class PythonLanguageTranslation implements ILanguageTranslation<Tree> {
     @Nonnull
     @Override
     public Optional<String> getMethodName(
-            @Nonnull MatchContext matchContext, @NotNull Tree methodInvocation) {
+            @Nonnull MatchContext matchContext, @Nonnull Tree methodInvocation) {
         if (methodInvocation instanceof CallExpression callExpression) {
             // We use "name" and not "fullyQualifiedName" to make it like in the Java implementation
             Symbol methodInvocationSymbol = callExpression.calleeSymbol();
@@ -53,7 +52,7 @@ public class PythonLanguageTranslation implements ILanguageTranslation<Tree> {
     @Nonnull
     @Override
     public Optional<IType> getInvokedObjectTypeString(
-            @Nonnull MatchContext matchContext, @NotNull Tree methodInvocation) {
+            @Nonnull MatchContext matchContext, @Nonnull Tree methodInvocation) {
         // This method should return the type of the *invoked object* (or qualifier): for a method
         // invocation `X25519PrivateKey.generate()`, it should return
         // `cryptography.hazmat.primitives.asymmetric.X25519PrivateKey`, and for
@@ -73,16 +72,16 @@ public class PythonLanguageTranslation implements ILanguageTranslation<Tree> {
     }
 
     @Override
-    public @NotNull Optional<IType> getMethodReturnTypeString(
-            @Nonnull MatchContext matchContext, @NotNull Tree methodInvocation) {
+    public @Nonnull Optional<IType> getMethodReturnTypeString(
+            @Nonnull MatchContext matchContext, @Nonnull Tree methodInvocation) {
         // TODO: This does not take the subscriptionIndex into account, so it will return an IType
         // accepting the type of all
         return PythonSemantic.resolveTreeType(methodInvocation);
     }
 
     @Override
-    public @NotNull List<IType> getMethodParameterTypes(
-            @Nonnull MatchContext matchContext, @NotNull Tree methodInvocation) {
+    public @Nonnull List<IType> getMethodParameterTypes(
+            @Nonnull MatchContext matchContext, @Nonnull Tree methodInvocation) {
         if (methodInvocation instanceof CallExpression callExpression) {
             List<Argument> arguments = callExpression.arguments();
             if (!arguments.isEmpty()) {
@@ -101,8 +100,8 @@ public class PythonLanguageTranslation implements ILanguageTranslation<Tree> {
     }
 
     @Override
-    public @NotNull Optional<String> resolveIdentifierAsString(
-            @Nonnull MatchContext matchContext, @NotNull Tree name) {
+    public @Nonnull Optional<String> resolveIdentifierAsString(
+            @Nonnull MatchContext matchContext, @Nonnull Tree name) {
         if (name instanceof Name nameTree) {
             return Optional.of(nameTree.name());
         }
@@ -110,15 +109,15 @@ public class PythonLanguageTranslation implements ILanguageTranslation<Tree> {
     }
 
     @Override
-    public @NotNull Optional<String> getEnumIdentifierName(
-            @Nonnull MatchContext matchContext, @NotNull Tree enumIdentifier) {
+    public @Nonnull Optional<String> getEnumIdentifierName(
+            @Nonnull MatchContext matchContext, @Nonnull Tree enumIdentifier) {
         // TODO: Implement enums in the Python case?
         return Optional.empty();
     }
 
     @Override
-    public @NotNull Optional<String> getEnumClassName(
-            @Nonnull MatchContext matchContext, @NotNull Tree enumClass) {
+    public @Nonnull Optional<String> getEnumClassName(
+            @Nonnull MatchContext matchContext, @Nonnull Tree enumClass) {
         // TODO: Implement enums in the Python case?
         return Optional.empty();
     }

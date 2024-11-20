@@ -27,7 +27,6 @@ import com.ibm.mapper.model.NonceLength;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -51,7 +50,7 @@ public class Isap extends Algorithm implements AuthenticatedEncryption {
 
     private static final String NAME = "Isap";
 
-    public Isap(@NotNull DetectionLocation detectionLocation) {
+    public Isap(@Nonnull DetectionLocation detectionLocation) {
         this(NAME, detectionLocation);
     }
 
@@ -59,7 +58,7 @@ public class Isap extends Algorithm implements AuthenticatedEncryption {
         super(isap, asKind);
     }
 
-    protected Isap(@Nonnull String name, @NotNull DetectionLocation detectionLocation) {
+    protected Isap(@Nonnull String name, @Nonnull DetectionLocation detectionLocation) {
         super(name, AuthenticatedEncryption.class, detectionLocation);
         this.put(new KeyLength(128, detectionLocation));
         this.put(new NonceLength(128, detectionLocation));

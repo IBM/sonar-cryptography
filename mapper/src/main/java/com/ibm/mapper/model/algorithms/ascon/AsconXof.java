@@ -22,7 +22,7 @@ package com.ibm.mapper.model.algorithms.ascon;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.ExtendableOutputFunction;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  *
@@ -45,7 +45,7 @@ import org.jetbrains.annotations.NotNull;
 public final class AsconXof extends Ascon implements ExtendableOutputFunction {
     private static final String NAME = "Ascon-Xof";
 
-    public AsconXof(@NotNull DetectionLocation detectionLocation) {
+    public AsconXof(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, ExtendableOutputFunction.class, detectionLocation);
         this.put(new BlockSize(64, detectionLocation));
     }

@@ -22,7 +22,7 @@ package com.ibm.mapper.model.algorithms;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.KeyAgreement;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  *
@@ -45,11 +45,11 @@ import org.jetbrains.annotations.NotNull;
 public final class Kerberos extends Algorithm implements KeyAgreement {
     private static final String NAME = "KRB";
 
-    public Kerberos(@NotNull DetectionLocation detectionLocation) {
+    public Kerberos(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, KeyAgreement.class, detectionLocation);
     }
 
-    public Kerberos(int version, @NotNull DetectionLocation detectionLocation) {
+    public Kerberos(int version, @Nonnull DetectionLocation detectionLocation) {
         super(NAME + version, KeyAgreement.class, detectionLocation);
     }
 }

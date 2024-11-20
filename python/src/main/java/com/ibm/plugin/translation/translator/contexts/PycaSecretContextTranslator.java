@@ -31,16 +31,16 @@ import com.ibm.mapper.model.algorithms.Fernet;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.sonar.plugins.python.api.tree.Tree;
 
 public final class PycaSecretContextTranslator implements IContextTranslation<Tree> {
     @Override
-    public @NotNull Optional<INode> translate(
-            @NotNull IBundle bundleIdentifier,
-            @NotNull IValue<Tree> value,
-            @NotNull IDetectionContext detectionContext,
-            @NotNull DetectionLocation detectionLocation) {
+    public @Nonnull Optional<INode> translate(
+            @Nonnull IBundle bundleIdentifier,
+            @Nonnull IValue<Tree> value,
+            @Nonnull IDetectionContext detectionContext,
+            @Nonnull DetectionLocation detectionLocation) {
         if (value instanceof KeyAction<Tree>
                 && detectionContext instanceof DetectionContext context) {
             // action is always "generate"

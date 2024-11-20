@@ -22,12 +22,12 @@ package com.ibm.mapper.model.algorithms.ntru;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class NTRUSign extends Algorithm implements Signature {
     private static final String NAME = "NTRUSign";
 
-    public NTRUSign(@NotNull DetectionLocation detectionLocation) {
+    public NTRUSign(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, Signature.class, detectionLocation);
     }
 }

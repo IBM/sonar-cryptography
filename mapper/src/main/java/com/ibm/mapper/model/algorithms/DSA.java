@@ -24,24 +24,25 @@ import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class DSA extends Algorithm implements Signature {
     private static final String NAME = "DSA";
 
+    @Nonnull
     @Override
-    public @NotNull String asString() {
+    public String asString() {
         return this.hasChildOfType(MessageDigest.class)
                 .map(node -> node.asString() + "with" + this.name)
                 .orElse(this.name);
     }
 
-    public DSA(@NotNull DetectionLocation detectionLocation) {
+    public DSA(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, Signature.class, detectionLocation);
         this.put(new Oid("1.2.840.10040.4.1", detectionLocation));
     }
 
-    public DSA(@NotNull MessageDigest messageDigest) {
+    public DSA(@Nonnull MessageDigest messageDigest) {
         this(messageDigest.getDetectionContext());
         this.put(messageDigest);
     }

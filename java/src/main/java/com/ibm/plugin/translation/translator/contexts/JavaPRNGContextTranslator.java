@@ -30,17 +30,18 @@ import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.Seed;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class JavaPRNGContextTranslator implements IContextTranslation<Tree> {
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public Optional<INode> translate(
-            @NotNull IBundle bundleIdentifier,
-            @NotNull IValue<Tree> value,
-            @NotNull IDetectionContext detectionContext,
-            @NotNull DetectionLocation detectionLocation) {
+            @Nonnull IBundle bundleIdentifier,
+            @Nonnull IValue<Tree> value,
+            @Nonnull IDetectionContext detectionContext,
+            @Nonnull DetectionLocation detectionLocation) {
         if (!bundleIdentifier.getIdentifier().equals("Random")) {
             return Optional.empty();
         }

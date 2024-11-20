@@ -21,11 +21,11 @@ package com.ibm.mapper.model.curves;
 
 import com.ibm.mapper.model.EllipticCurve;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public final class Edwards25519 extends EllipticCurve {
 
-    public Edwards25519(@NotNull DetectionLocation detectionLocation) {
+    public Edwards25519(@Nonnull DetectionLocation detectionLocation) {
         super("Edwards25519", detectionLocation);
     }
 }

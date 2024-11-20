@@ -22,7 +22,7 @@ package com.ibm.mapper.model.algorithms.elephant;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  *
@@ -45,7 +45,7 @@ import org.jetbrains.annotations.NotNull;
 public class Jumbo extends Elephant {
     private static final String NAME = "Jumbo"; // Elephant-Spongent-π[176]
 
-    public Jumbo(@NotNull DetectionLocation detectionLocation) {
+    public Jumbo(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, detectionLocation);
         this.put(new BlockSize(176, detectionLocation));
         this.put(new TagLength(64, detectionLocation));

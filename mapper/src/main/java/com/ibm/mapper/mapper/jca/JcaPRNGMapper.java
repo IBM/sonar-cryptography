@@ -44,10 +44,10 @@ public class JcaPRNGMapper implements IMapper {
 
         return switch (str.toUpperCase().trim()) {
             case "NATIVEPRNG",
-                            "DRBG",
-                            "NATIVEPRNGBLOCKING",
-                            "NATIVEPRNGNONBLOCKING",
-                            "WINDOWS-PRNG" ->
+                    "DRBG",
+                    "NATIVEPRNGBLOCKING",
+                    "NATIVEPRNGNONBLOCKING",
+                    "WINDOWS-PRNG" ->
                     Optional.empty(); // todo
             default -> Optional.empty();
         };

@@ -49,7 +49,6 @@ import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
@@ -141,7 +140,7 @@ public class PythonTranslator extends ITranslator<PythonCheck, Tree, Symbol, Pyt
      */
     @Override
     protected @Nullable DetectionLocation getDetectionContextFrom(
-            @NotNull Tree location, @NotNull IBundle bundle, @NotNull String filePath) {
+            @Nonnull Tree location, @Nonnull IBundle bundle, @Nonnull String filePath) {
         Token firstToken = location.firstToken();
         Token lastToken = location.lastToken();
         if (firstToken != null && lastToken != null) {

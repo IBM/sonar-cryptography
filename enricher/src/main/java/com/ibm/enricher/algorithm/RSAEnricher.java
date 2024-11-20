@@ -22,19 +22,21 @@ package com.ibm.enricher.algorithm;
 import com.ibm.enricher.IEnricher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.algorithms.RSA;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class RSAEnricher implements IEnricher, IEnrichWithDefaultKeySize {
 
-    @NotNull @Override
-    public INode enrich(@NotNull INode node) {
+    @Nonnull
+    @Override
+    public INode enrich(@Nonnull INode node) {
         if (node instanceof RSA rsa) {
             return enrich(rsa);
         }
         return node;
     }
 
-    @NotNull private RSA enrich(@NotNull RSA rsa) {
+    @Nonnull
+    private RSA enrich(@Nonnull RSA rsa) {
         this.applyDefaultKeySizeForJca(rsa, 2048);
         return rsa;
     }

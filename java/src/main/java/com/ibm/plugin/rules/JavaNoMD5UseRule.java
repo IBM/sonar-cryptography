@@ -25,8 +25,6 @@ import com.ibm.rules.NoMD5UseForMessageDigestRule;
 import com.ibm.rules.issue.Issue;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.tree.Tree;
 
@@ -36,7 +34,7 @@ public class JavaNoMD5UseRule extends JavaBaseDetectionRule {
     @Override
     @Nonnull
     public List<Issue<Tree>> report(
-            @Nonnull Tree markerTree, @NotNull @Unmodifiable List<INode> translatedNodes) {
+            @Nonnull Tree markerTree, @Nonnull List<INode> translatedNodes) {
         return new NoMD5UseForMessageDigestRule<Tree>().report(markerTree, translatedNodes);
     }
 }

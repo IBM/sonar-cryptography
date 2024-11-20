@@ -22,15 +22,15 @@ package com.ibm.mapper.model.mode;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public final class OCB extends Mode {
 
-    public OCB(@NotNull DetectionLocation detectionLocation) {
+    public OCB(@Nonnull DetectionLocation detectionLocation) {
         super("OCB", detectionLocation);
     }
 
-    public OCB(int blockSize, @NotNull DetectionLocation detectionLocation) {
+    public OCB(int blockSize, @Nonnull DetectionLocation detectionLocation) {
         super("OCB", detectionLocation);
         this.put(new BlockSize(blockSize, detectionLocation));
     }

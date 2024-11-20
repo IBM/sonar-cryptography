@@ -32,14 +32,15 @@ import com.ibm.mapper.model.algorithms.SRP;
 import com.ibm.mapper.model.algorithms.gost.GOSTR341112;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class KeyExchangeAlgorithmMapper implements IMapper {
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public Optional<? extends Algorithm> parse(
-            @Nullable String str, @NotNull DetectionLocation detectionLocation) {
+            @Nullable String str, @Nonnull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }

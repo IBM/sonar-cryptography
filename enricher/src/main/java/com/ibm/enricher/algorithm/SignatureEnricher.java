@@ -35,12 +35,11 @@ import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.model.algorithms.SHA3;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public class SignatureEnricher implements IEnricher {
 
     @Override
-    public @NotNull INode enrich(@NotNull INode node) {
+    public @Nonnull INode enrich(@Nonnull INode node) {
         if (node.is(Signature.class)) {
             if (node instanceof DSA dsa) {
                 return enrichDSA(dsa);
@@ -57,7 +56,7 @@ public class SignatureEnricher implements IEnricher {
 
     @SuppressWarnings("java:S3776")
     @Nonnull
-    private Signature enrichRSA(@NotNull RSA rsa) {
+    private Signature enrichRSA(@Nonnull RSA rsa) {
         Optional<INode> possibleDigest = rsa.hasChildOfType(MessageDigest.class);
         if (possibleDigest.isEmpty()) {
             return rsa;
@@ -183,7 +182,7 @@ public class SignatureEnricher implements IEnricher {
     }
 
     @Nonnull
-    private Signature enrichECDSA(@NotNull ECDSA ecdsa) {
+    private Signature enrichECDSA(@Nonnull ECDSA ecdsa) {
         Optional<INode> possibleDigest = ecdsa.hasChildOfType(MessageDigest.class);
         if (possibleDigest.isEmpty()) {
             return ecdsa;
@@ -257,7 +256,7 @@ public class SignatureEnricher implements IEnricher {
     }
 
     @Nonnull
-    private Signature enrichDSA(@NotNull DSA dsa) {
+    private Signature enrichDSA(@Nonnull DSA dsa) {
         Optional<INode> possibleDigest = dsa.hasChildOfType(MessageDigest.class);
         if (possibleDigest.isEmpty()) {
             return dsa;

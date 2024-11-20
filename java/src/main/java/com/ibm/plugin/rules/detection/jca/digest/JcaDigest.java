@@ -23,7 +23,6 @@ import com.ibm.engine.rule.IDetectionRule;
 import java.util.List;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class JcaDigest {
@@ -32,7 +31,6 @@ public final class JcaDigest {
         // nothing
     }
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return Stream.of(JcaMessageDigestGetInstance.rules().stream()).flatMap(i -> i).toList();

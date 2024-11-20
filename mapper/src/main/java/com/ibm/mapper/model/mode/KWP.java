@@ -21,11 +21,11 @@ package com.ibm.mapper.model.mode;
 
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 // Key wrap pad, warppad
 public final class KWP extends Mode {
-    public KWP(@NotNull DetectionLocation detectionLocation) {
+    public KWP(@Nonnull DetectionLocation detectionLocation) {
         super("WRAP-PAD", detectionLocation);
     }
 }

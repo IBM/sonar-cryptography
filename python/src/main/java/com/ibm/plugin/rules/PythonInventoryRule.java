@@ -28,10 +28,8 @@ import com.ibm.rules.InventoryRule;
 import com.ibm.rules.issue.Issue;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
-import org.jetbrains.annotations.VisibleForTesting;
 import org.sonar.check.Rule;
+import org.sonar.java.annotations.VisibleForTesting;
 import org.sonar.plugins.python.api.tree.Tree;
 
 @Rule(key = "Inventory")
@@ -47,8 +45,8 @@ public class PythonInventoryRule extends PythonBaseDetectionRule {
     }
 
     @Override
-    public @NotNull List<Issue<Tree>> report(
-            @NotNull Tree markerTree, @NotNull @Unmodifiable List<INode> translatedNodes) {
+    public @Nonnull List<Issue<Tree>> report(
+            @Nonnull Tree markerTree, @Nonnull List<INode> translatedNodes) {
         return new InventoryRule<Tree>().report(markerTree, translatedNodes);
     }
 }

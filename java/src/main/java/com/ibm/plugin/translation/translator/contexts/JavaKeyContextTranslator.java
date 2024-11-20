@@ -46,16 +46,16 @@ import com.ibm.mapper.model.SecretKey;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class JavaKeyContextTranslator extends JavaAbstractLibraryTranslator {
 
     @Override
-    protected @NotNull Optional<INode> translateJCA(
-            @NotNull IValue<Tree> value,
-            @NotNull IDetectionContext detectionContext,
-            @NotNull DetectionLocation detectionLocation) {
+    protected @Nonnull Optional<INode> translateJCA(
+            @Nonnull IValue<Tree> value,
+            @Nonnull IDetectionContext detectionContext,
+            @Nonnull DetectionLocation detectionLocation) {
         if (value instanceof Algorithm<Tree> algorithm) {
             JcaAlgorithmMapper jcaAlgorithmMapper = new JcaAlgorithmMapper();
             return jcaAlgorithmMapper
@@ -93,13 +93,13 @@ public final class JavaKeyContextTranslator extends JavaAbstractLibraryTranslato
     }
 
     @Override
-    protected @NotNull Optional<INode> translateBC(
-            @NotNull IValue<Tree> value,
-            @NotNull IDetectionContext detectionContext,
-            @NotNull DetectionLocation detectionLocation) {
+    protected @Nonnull Optional<INode> translateBC(
+            @Nonnull IValue<Tree> value,
+            @Nonnull IDetectionContext detectionContext,
+            @Nonnull DetectionLocation detectionLocation) {
         if (value instanceof ValueAction<Tree> valueAction
                 && detectionContext instanceof DetectionContext context) {
-            String kind = context.get("kind").map(k -> k).orElse("");
+            String kind = context.get("kind").orElse("");
             switch (kind) {
                 case "DH":
                     BcAgreementMapper bcAgreementMapper = new BcAgreementMapper();

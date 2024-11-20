@@ -31,8 +31,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.python.api.tree.Tree;
 
 @SuppressWarnings({"java:S2386", "java:S1192"})
@@ -81,7 +79,7 @@ public final class PycaCipher {
                     .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
-    private static @NotNull List<IDetectionRule<Tree>> followingNewCipherRules() {
+    private static @Nonnull List<IDetectionRule<Tree>> followingNewCipherRules() {
         final List<IDetectionRule<Tree>> encryptionRules =
                 new LinkedList<>(List.of(DECRYPT_CIPHER, ENCRYPT_CIPHER));
         encryptionRules.addAll(PycaPadding.rules());
@@ -103,7 +101,6 @@ public final class PycaCipher {
                     .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return List.of(NEW_CIPHER);

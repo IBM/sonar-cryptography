@@ -21,7 +21,7 @@ package com.ibm.mapper.model.mode;
 
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public final class OFB extends Mode {
 
@@ -30,11 +30,11 @@ public final class OFB extends Mode {
      * CFB/OFB with no specified value defaults to the block size of the algorithm.
      * (i.e. AES is 128; Blowfish, DES, DESede, and RC2 are 64.)
      */
-    public OFB(@NotNull DetectionLocation detectionLocation) {
+    public OFB(@Nonnull DetectionLocation detectionLocation) {
         super("OFB", detectionLocation);
     }
 
-    public OFB(int s, @NotNull DetectionLocation detectionLocation) {
+    public OFB(int s, @Nonnull DetectionLocation detectionLocation) {
         super("OFB-" + s, detectionLocation);
     }
 }

@@ -31,7 +31,7 @@ import com.ibm.mapper.model.collections.IdentifierCollection;
 import com.ibm.mapper.model.protocol.TLS;
 import com.ibm.plugin.TestBase;
 import java.util.List;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.jupiter.api.Test;
 import org.sonar.java.checks.verifier.CheckVerifier;
 import org.sonar.plugins.java.api.JavaCheck;
@@ -57,8 +57,8 @@ class SSLServerSocketSetEnabledCipherSuitesTest extends TestBase {
     @Override
     public void asserts(
             int findingId,
-            @NotNull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
-            @NotNull List<INode> nodes) {
+            @Nonnull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
+            @Nonnull List<INode> nodes) {
         /*
          * Detection Store
          */

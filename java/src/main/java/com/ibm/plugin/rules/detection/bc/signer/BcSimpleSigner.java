@@ -27,8 +27,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class BcSimpleSigner {
@@ -45,7 +43,7 @@ public final class BcSimpleSigner {
                     "Ed448Signer" /* standard algorithm */,
                     "Ed448phSigner" /* prehashed variant */);
 
-    private static @NotNull List<IDetectionRule<Tree>> simpleConstructors() {
+    private static @Nonnull List<IDetectionRule<Tree>> simpleConstructors() {
         List<IDetectionRule<Tree>> constructorsList = new LinkedList<>();
 
         for (String signer : simpleSigners) {
@@ -64,7 +62,6 @@ public final class BcSimpleSigner {
         return constructorsList;
     }
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return simpleConstructors();

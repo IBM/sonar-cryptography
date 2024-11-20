@@ -32,13 +32,13 @@ import com.ibm.mapper.model.algorithms.blake.BLAKE2s;
 import com.ibm.mapper.model.algorithms.shake.SHAKE;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class PycaDigestMapper implements IMapper {
     @Override
-    public @NotNull Optional<MessageDigest> parse(
-            @Nullable String str, @NotNull DetectionLocation detectionLocation) {
+    public @Nonnull Optional<MessageDigest> parse(
+            @Nullable String str, @Nonnull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }

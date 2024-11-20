@@ -22,7 +22,7 @@ package com.ibm.mapper.model.algorithms.vmpc;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  *
@@ -47,7 +47,7 @@ public class VMPC extends Algorithm implements StreamCipher {
 
     private static final String NAME = "VMPC";
 
-    public VMPC(@NotNull DetectionLocation detectionLocation) {
+    public VMPC(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, StreamCipher.class, detectionLocation);
     }
 }

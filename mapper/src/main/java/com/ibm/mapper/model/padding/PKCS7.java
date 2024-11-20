@@ -21,10 +21,10 @@ package com.ibm.mapper.model.padding;
 
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public final class PKCS7 extends Padding {
-    public PKCS7(@NotNull DetectionLocation detectionLocation) {
+    public PKCS7(@Nonnull DetectionLocation detectionLocation) {
         super("PKCS7", detectionLocation);
     }
 }

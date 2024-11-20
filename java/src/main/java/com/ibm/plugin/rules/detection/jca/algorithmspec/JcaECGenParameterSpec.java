@@ -27,7 +27,6 @@ import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 @SuppressWarnings("java:S1192")
@@ -47,7 +46,6 @@ public final class JcaECGenParameterSpec {
         // nothing
     }
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return List.of(EC_GEN_PARAMETER_SPEC2);

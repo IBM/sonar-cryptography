@@ -22,7 +22,7 @@ package com.ibm.mapper.model.algorithms;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.KeyDerivationFunction;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  *
@@ -46,7 +46,7 @@ public final class ANSIX942 extends Algorithm implements KeyDerivationFunction {
 
     private static final String NAME = "ANSI X9.42";
 
-    public ANSIX942(@NotNull DetectionLocation detectionLocation) {
+    public ANSIX942(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, KeyDerivationFunction.class, detectionLocation);
     }
 }

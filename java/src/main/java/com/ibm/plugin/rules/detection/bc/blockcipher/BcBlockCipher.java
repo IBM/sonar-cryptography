@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class BcBlockCipher {
@@ -200,21 +199,18 @@ public final class BcBlockCipher {
         return constructorsList;
     }
 
-    @Unmodifiable
     @Nonnull
     // Rules defined in this file (classes finishing with BlockCipher)
     public static List<IDetectionRule<Tree>> rules() {
         return rules(null);
     }
 
-    @Unmodifiable
     @Nonnull
     // All BlockCipher rules including all the engines
     public static List<IDetectionRule<Tree>> all() {
         return all(null);
     }
 
-    @Unmodifiable
     @Nonnull
     // Rules defined in this file (classes finishing with BlockCipher)
     public static List<IDetectionRule<Tree>> rules(
@@ -226,7 +222,6 @@ public final class BcBlockCipher {
                 .toList();
     }
 
-    @Unmodifiable
     @Nonnull
     // All BlockCipher rules including all the engines
     public static List<IDetectionRule<Tree>> all(

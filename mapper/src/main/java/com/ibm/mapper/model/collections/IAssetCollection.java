@@ -22,11 +22,9 @@ package com.ibm.mapper.model.collections;
 import com.ibm.mapper.model.INode;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 
 public interface IAssetCollection<K extends INode> extends INode {
 
     @Nonnull
-    @Unmodifiable
     List<K> getCollection();
 }

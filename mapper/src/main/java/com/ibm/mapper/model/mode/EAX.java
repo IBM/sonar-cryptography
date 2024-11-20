@@ -21,11 +21,11 @@ package com.ibm.mapper.model.mode;
 
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public final class EAX extends Mode {
 
-    public EAX(@NotNull DetectionLocation detectionLocation) {
+    public EAX(@Nonnull DetectionLocation detectionLocation) {
         super("EAX", detectionLocation);
     }
 }

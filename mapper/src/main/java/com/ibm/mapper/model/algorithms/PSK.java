@@ -22,7 +22,7 @@ package com.ibm.mapper.model.algorithms;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.KeyAgreement;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  *
@@ -45,7 +45,7 @@ import org.jetbrains.annotations.NotNull;
 public final class PSK extends Algorithm implements KeyAgreement {
     private static final String NAME = "PSK";
 
-    public PSK(@NotNull DetectionLocation detectionLocation) {
+    public PSK(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, KeyAgreement.class, detectionLocation);
     }
 }

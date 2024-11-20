@@ -30,23 +30,22 @@ import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public final class Camellia extends Algorithm
         implements BlockCipher, AuthenticatedEncryption, KeyWrap, Mac {
     private static final String NAME = "Camellia";
 
-    public Camellia(@NotNull DetectionLocation detectionLocation) {
+    public Camellia(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
     }
 
-    public Camellia(int keyLength, @NotNull DetectionLocation detectionLocation) {
+    public Camellia(int keyLength, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
     }
 
     public Camellia(
-            int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+            int keyLength, @Nonnull Mode mode, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
@@ -56,14 +55,14 @@ public final class Camellia extends Algorithm
             int keyLength,
             @Nonnull Mode mode,
             @Nonnull Padding padding,
-            @NotNull DetectionLocation detectionLocation) {
+            @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
         this.put(padding);
     }
 
-    public Camellia(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull Camellia camellia) {
+    public Camellia(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull Camellia camellia) {
         super(camellia, asKind);
     }
 }

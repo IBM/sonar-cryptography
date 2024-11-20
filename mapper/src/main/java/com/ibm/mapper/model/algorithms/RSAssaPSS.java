@@ -22,7 +22,7 @@ package com.ibm.mapper.model.algorithms;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.ProbabilisticSignatureScheme;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  *
@@ -44,7 +44,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class RSAssaPSS extends Algorithm implements ProbabilisticSignatureScheme {
 
-    public RSAssaPSS(@NotNull DetectionLocation detectionLocation) {
+    public RSAssaPSS(@Nonnull DetectionLocation detectionLocation) {
         super("RSASSA-PSS", ProbabilisticSignatureScheme.class, detectionLocation);
     }
 }

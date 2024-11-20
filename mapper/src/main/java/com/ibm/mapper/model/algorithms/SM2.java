@@ -26,7 +26,6 @@ import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -50,7 +49,7 @@ public final class SM2 extends Algorithm implements Signature, PublicKeyEncrypti
 
     private static final String NAME = "SM2";
 
-    public SM2(@NotNull DetectionLocation detectionLocation) {
+    public SM2(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, Signature.class, detectionLocation);
     }
 

@@ -31,8 +31,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.python.api.tree.Tree;
 
 @SuppressWarnings("java:S1192")
@@ -44,7 +42,7 @@ public final class PycaPadding {
 
     private static final List<String> paddings = Arrays.asList("PKCS7", "ANSIX923");
 
-    private static @NotNull List<IDetectionRule<Tree>> newPadding() {
+    private static @Nonnull List<IDetectionRule<Tree>> newPadding() {
         final LinkedList<IDetectionRule<Tree>> rules = new LinkedList<>();
 
         for (String padding : paddings) {
@@ -87,7 +85,7 @@ public final class PycaPadding {
     // It should be better to only detect Padding when it actually gets implied (i.e. there is
     // `padder.update` function call). However, it does not bring much, and creates problems
     // because the type handler may not distinguish an `encryptor.update` from `padder.update`.
-    @Unmodifiable
+
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return newPadding();

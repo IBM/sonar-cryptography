@@ -23,11 +23,9 @@ import com.ibm.mapper.model.INode;
 import com.ibm.rules.issue.Issue;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 
 public interface IReportableDetectionRule<T> {
 
     @Nonnull
-    List<Issue<T>> report(
-            @Nonnull T markerTree, @Nonnull @Unmodifiable List<INode> translatedNodes);
+    List<Issue<T>> report(@Nonnull T markerTree, @Nonnull List<INode> translatedNodes);
 }

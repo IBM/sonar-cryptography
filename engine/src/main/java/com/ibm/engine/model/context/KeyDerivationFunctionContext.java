@@ -21,7 +21,7 @@ package com.ibm.engine.model.context;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class KeyDerivationFunctionContext extends DetectionContext implements IDetectionContext {
 
@@ -29,12 +29,12 @@ public class KeyDerivationFunctionContext extends DetectionContext implements ID
         super(new HashMap<>());
     }
 
-    public KeyDerivationFunctionContext(@NotNull Map<String, String> properties) {
+    public KeyDerivationFunctionContext(@Nonnull Map<String, String> properties) {
         super(properties);
     }
 
     @Override
-    public @NotNull Class<? extends IDetectionContext> type() {
+    public @Nonnull Class<? extends IDetectionContext> type() {
         return KeyDerivationFunctionContext.class;
     }
 }

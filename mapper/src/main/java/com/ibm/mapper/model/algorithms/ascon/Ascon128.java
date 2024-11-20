@@ -25,7 +25,7 @@ import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.NonceLength;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  *
@@ -48,7 +48,7 @@ import org.jetbrains.annotations.NotNull;
 public final class Ascon128 extends Ascon implements AuthenticatedEncryption {
     private static final String NAME = "Ascon-128";
 
-    public Ascon128(@NotNull DetectionLocation detectionLocation) {
+    public Ascon128(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, AuthenticatedEncryption.class, detectionLocation);
         this.put(new KeyLength(128, detectionLocation));
         this.put(new NonceLength(128, detectionLocation));

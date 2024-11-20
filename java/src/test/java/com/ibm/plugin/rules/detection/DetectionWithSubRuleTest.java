@@ -27,7 +27,6 @@ import com.ibm.plugin.TestBase;
 import com.ibm.plugin.rules.detection.jca.cipher.JcaCipherGetInstance;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.sonar.check.Rule;
@@ -47,8 +46,8 @@ class DetectionWithSubRuleTest extends TestBase {
     @Override
     public void asserts(
             int findingId,
-            @NotNull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
-            @NotNull List<INode> nodes) {
+            @Nonnull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
+            @Nonnull List<INode> nodes) {
         // nothing
     }
 

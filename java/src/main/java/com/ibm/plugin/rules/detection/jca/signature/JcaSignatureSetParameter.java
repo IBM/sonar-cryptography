@@ -25,7 +25,6 @@ import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import com.ibm.plugin.rules.detection.jca.algorithmspec.JcaAlgorithmParameterSpec;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class JcaSignatureSetParameter {
@@ -45,7 +44,6 @@ public final class JcaSignatureSetParameter {
         // nothing
     }
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return List.of(SIGNATURE_SET_PARAMETER);

@@ -62,9 +62,9 @@ public class BcBufferedBlockCipherMapper implements IMapper {
                             Utils.unknownWithPadding(
                                     new PKCS7(detectionLocation), BlockCipher.class));
             case "BufferedBlockCipher",
-                            "DefaultBufferedBlockCipher",
-                            "PaddedBlockCipher",
-                            "PaddedBufferedBlockCipher" ->
+                    "DefaultBufferedBlockCipher",
+                    "PaddedBlockCipher",
+                    "PaddedBufferedBlockCipher" ->
                     Optional.of(Utils.unknown(BlockCipher.class, detectionLocation));
             default -> {
                 Mode mode = new Mode(blockCipherString, detectionLocation);

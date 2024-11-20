@@ -21,11 +21,11 @@ package com.ibm.mapper.model.padding;
 
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public final class ISO10126 extends Padding {
 
-    public ISO10126(@NotNull DetectionLocation detectionLocation) {
+    public ISO10126(@Nonnull DetectionLocation detectionLocation) {
         super("ISO 10126", detectionLocation);
     }
 }

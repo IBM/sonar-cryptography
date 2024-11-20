@@ -26,8 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
 
 public abstract class AbstractAssetCollection<K extends INode> implements IAssetCollection<K> {
     @Nonnull protected final Map<Class<? extends INode>, INode> children;
@@ -41,14 +39,14 @@ public abstract class AbstractAssetCollection<K extends INode> implements IAsset
         this.kind = kind;
     }
 
-    @NotNull @Unmodifiable
+    @Nonnull
     @Override
     public List<K> getCollection() {
         return Collections.unmodifiableList(collection);
     }
 
     @Override
-    public void put(@NotNull INode child) {
+    public void put(@Nonnull INode child) {
         this.children.put(child.getKind(), child);
     }
 
@@ -57,22 +55,25 @@ public abstract class AbstractAssetCollection<K extends INode> implements IAsset
         return !this.children.isEmpty();
     }
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public Map<Class<? extends INode>, INode> getChildren() {
         return this.children;
     }
 
     @Override
-    public boolean is(@NotNull Class<? extends INode> type) {
+    public boolean is(@Nonnull Class<? extends INode> type) {
         return this.getKind().equals(type);
     }
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public Class<? extends INode> getKind() {
         return this.kind;
     }
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public String asString() {
         final StringBuilder sb = new StringBuilder("[");
         for (int i = 0; i < this.collection.size(); i++) {
@@ -84,13 +85,14 @@ public abstract class AbstractAssetCollection<K extends INode> implements IAsset
         return sb.append("]").toString();
     }
 
-    @NotNull @Override
-    public Optional<INode> hasChildOfType(@NotNull Class<? extends INode> nodeType) {
+    @Nonnull
+    @Override
+    public Optional<INode> hasChildOfType(@Nonnull Class<? extends INode> nodeType) {
         return Optional.ofNullable(children.get(nodeType));
     }
 
     @Override
-    public void removeChildOfType(@NotNull Class<? extends INode> nodeType) {
+    public void removeChildOfType(@Nonnull Class<? extends INode> nodeType) {
         this.children.remove(nodeType);
     }
 }

@@ -26,14 +26,13 @@ import com.ibm.mapper.model.Protocol;
 import com.ibm.rules.issue.Issue;
 import com.ibm.rules.issue.IssueCreator;
 import java.util.List;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
+import javax.annotation.Nonnull;
 
 public final class InventoryRule<T> implements IReportableDetectionRule<T> {
 
     @Override
-    public @NotNull List<Issue<T>> report(
-            @NotNull T markerTree, @NotNull @Unmodifiable List<INode> translatedNodes) {
+    public @Nonnull List<Issue<T>> report(
+            @Nonnull T markerTree, @Nonnull List<INode> translatedNodes) {
         return IssueCreator.using(markerTree, translatedNodes)
                 .matchesCondition(
                         (node, parent) -> {

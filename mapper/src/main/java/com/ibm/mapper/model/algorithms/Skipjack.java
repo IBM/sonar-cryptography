@@ -28,7 +28,6 @@ import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -52,13 +51,13 @@ public final class Skipjack extends Algorithm implements BlockCipher {
 
     private static final String NAME = "Skipjack";
 
-    public Skipjack(@NotNull DetectionLocation detectionLocation) {
+    public Skipjack(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
         this.put(new BlockSize(64, detectionLocation));
         this.put(new KeyLength(80, detectionLocation));
     }
 
-    public Skipjack(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+    public Skipjack(@Nonnull Mode mode, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(mode);
     }
@@ -66,13 +65,13 @@ public final class Skipjack extends Algorithm implements BlockCipher {
     public Skipjack(
             @Nonnull Mode mode,
             @Nonnull Padding padding,
-            @NotNull DetectionLocation detectionLocation) {
+            @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(mode);
         this.put(padding);
     }
 
-    public Skipjack(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull Skipjack skipjack) {
+    public Skipjack(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull Skipjack skipjack) {
         super(skipjack, asKind);
     }
 }

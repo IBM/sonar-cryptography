@@ -23,12 +23,11 @@ import com.ibm.enricher.IEnricher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.algorithms.DH;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public class DHEnricher implements IEnricher, IEnrichWithDefaultKeySize {
 
     @Override
-    public @NotNull INode enrich(@NotNull INode node) {
+    public @Nonnull INode enrich(@Nonnull INode node) {
         if (node instanceof DH dh) {
             return enrich(dh);
         }

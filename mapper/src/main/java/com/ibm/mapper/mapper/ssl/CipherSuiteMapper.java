@@ -35,14 +35,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public final class CipherSuiteMapper implements IMapper {
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public Optional<? extends INode> parse(
-            @Nullable String str, @NotNull DetectionLocation detectionLocation) {
+            @Nullable String str, @Nonnull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }

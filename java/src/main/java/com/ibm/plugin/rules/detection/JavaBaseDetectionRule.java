@@ -34,8 +34,6 @@ import com.ibm.rules.issue.Issue;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
 import org.sonar.plugins.java.api.JavaCheck;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
@@ -116,8 +114,8 @@ public abstract class JavaBaseDetectionRule extends IssuableSubscriptionVisitor
 
     @Override
     @Nonnull
-    public @NotNull List<Issue<Tree>> report(
-            @Nonnull Tree markerTree, @NotNull @Unmodifiable List<INode> translatedNodes) {
+    public List<Issue<Tree>> report(
+            @Nonnull Tree markerTree, @Nonnull List<INode> translatedNodes) {
         // override by higher level rule, to report an issue
         return Collections.emptyList();
     }

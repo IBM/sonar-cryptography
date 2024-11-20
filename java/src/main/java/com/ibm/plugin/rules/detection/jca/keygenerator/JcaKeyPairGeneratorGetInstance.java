@@ -27,7 +27,6 @@ import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class JcaKeyPairGeneratorGetInstance {
@@ -71,7 +70,6 @@ public final class JcaKeyPairGeneratorGetInstance {
         // nothing
     }
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return List.of(KEY_PAIR_GENERATOR_1, KEY_PAIR_GENERATOR_2, KEY_PAIR_GENERATOR_3);

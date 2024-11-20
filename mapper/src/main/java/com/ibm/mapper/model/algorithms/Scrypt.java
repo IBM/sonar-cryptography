@@ -22,7 +22,7 @@ package com.ibm.mapper.model.algorithms;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  *
@@ -45,7 +45,7 @@ import org.jetbrains.annotations.NotNull;
 public final class Scrypt extends Algorithm implements PasswordBasedKeyDerivationFunction {
     private static final String NAME = "SCRYPT";
 
-    public Scrypt(@NotNull DetectionLocation detectionLocation) {
+    public Scrypt(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, PasswordBasedKeyDerivationFunction.class, detectionLocation);
     }
 }

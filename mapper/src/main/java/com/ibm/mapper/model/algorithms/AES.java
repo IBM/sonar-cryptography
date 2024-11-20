@@ -31,7 +31,6 @@ import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -58,7 +57,7 @@ public final class AES extends Algorithm
     private static final String NAME = "AES";
 
     @Override
-    public @NotNull String asString() {
+    public @Nonnull String asString() {
         final StringBuilder sb = new StringBuilder(this.name);
         this.hasChildOfType(KeyLength.class).ifPresent(k -> sb.append(k.asString()));
         this.hasChildOfType(Mode.class).ifPresent(m -> sb.append("-").append(m.asString()));
@@ -66,21 +65,21 @@ public final class AES extends Algorithm
         return sb.toString();
     }
 
-    public AES(@NotNull DetectionLocation detectionLocation) {
+    public AES(@Nonnull DetectionLocation detectionLocation) {
         this(BlockCipher.class, detectionLocation);
     }
 
-    public AES(int keyLength, @NotNull DetectionLocation detectionLocation) {
+    public AES(int keyLength, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
     }
 
-    public AES(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+    public AES(@Nonnull Mode mode, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(mode);
     }
 
-    public AES(int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+    public AES(int keyLength, @Nonnull Mode mode, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
@@ -90,7 +89,7 @@ public final class AES extends Algorithm
             int keyLength,
             @Nonnull Mode mode,
             @Nonnull Padding padding,
-            @NotNull DetectionLocation detectionLocation) {
+            @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
@@ -103,7 +102,7 @@ public final class AES extends Algorithm
 
     public AES(
             @Nonnull final Class<? extends IPrimitive> asKind,
-            @NotNull DetectionLocation detectionLocation) {
+            @Nonnull DetectionLocation detectionLocation) {
         super(NAME, asKind, detectionLocation);
         this.put(new BlockSize(128, detectionLocation));
     }

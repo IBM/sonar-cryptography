@@ -35,16 +35,16 @@ import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.List;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class JavaDigestContextTranslator extends JavaAbstractLibraryTranslator {
 
     @Override
-    protected @NotNull Optional<INode> translateJCA(
-            @NotNull IValue<Tree> value,
-            @NotNull IDetectionContext detectionContext,
-            @NotNull DetectionLocation detectionLocation) {
+    protected @Nonnull Optional<INode> translateJCA(
+            @Nonnull IValue<Tree> value,
+            @Nonnull IDetectionContext detectionContext,
+            @Nonnull DetectionLocation detectionLocation) {
         if (value instanceof Algorithm<Tree>) {
             JcaMessageDigestMapper messageDigestMapper = new JcaMessageDigestMapper();
             return messageDigestMapper
@@ -59,10 +59,10 @@ public final class JavaDigestContextTranslator extends JavaAbstractLibraryTransl
     }
 
     @Override
-    protected @NotNull Optional<INode> translateBC(
-            @NotNull IValue<Tree> value,
-            @NotNull IDetectionContext detectionContext,
-            @NotNull DetectionLocation detectionLocation) {
+    protected @Nonnull Optional<INode> translateBC(
+            @Nonnull IValue<Tree> value,
+            @Nonnull IDetectionContext detectionContext,
+            @Nonnull DetectionLocation detectionLocation) {
         if (value instanceof ValueAction && detectionContext instanceof DetectionContext context) {
             String kind = context.get("kind").map(k -> k).orElse("");
             switch (kind) {
@@ -84,7 +84,7 @@ public final class JavaDigestContextTranslator extends JavaAbstractLibraryTransl
                     return bcDigestsMapper.parse(value.asString(), detectionLocation).map(f -> f);
                 }
             }
-        } else if (value instanceof com.ibm.engine.model.DigestSize digestSize) {
+        } else if (value instanceof com.ibm.engine.model.DigestSize<Tree> digestSize) {
             return Optional.of(new DigestSize(digestSize.getValue(), detectionLocation));
         }
         return Optional.empty();

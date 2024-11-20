@@ -55,9 +55,9 @@ public class BcSignatureMapper implements IMapper {
             @Nonnull String signerString, @Nonnull DetectionLocation detectionLocation) {
         return switch (signerString) {
             case "DigestingMessageSigner",
-                            "DigestingStateAwareMessageSigner",
-                            "GenericSigner",
-                            "DSADigestSigner" ->
+                    "DigestingStateAwareMessageSigner",
+                    "GenericSigner",
+                    "DSADigestSigner" ->
                     Optional.of(
                             new Algorithm(ITranslator.UNKNOWN, Signature.class, detectionLocation));
             case "Ed25519ctxSigner" -> Optional.of(new Ed25519(detectionLocation));

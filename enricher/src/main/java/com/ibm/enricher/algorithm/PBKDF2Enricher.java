@@ -25,12 +25,12 @@ import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.algorithms.PBKDF2;
 import com.ibm.mapper.model.algorithms.SHA;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class PBKDF2Enricher implements IEnricher {
 
     @Override
-    public @NotNull INode enrich(@NotNull INode node) {
+    public @Nonnull INode enrich(@Nonnull INode node) {
         if (node instanceof PBKDF2 pbkdf2) {
             pbkdf2.hasChildOfType(Mac.class)
                     .ifPresent(

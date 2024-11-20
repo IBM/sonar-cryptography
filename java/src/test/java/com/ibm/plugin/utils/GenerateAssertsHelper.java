@@ -32,7 +32,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.plugins.java.api.JavaCheck;
@@ -60,8 +60,8 @@ public class GenerateAssertsHelper {
      * @param translationRoots - The list of root nodes of translation trees
      */
     public static void generate(
-            @NotNull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
-            @NotNull List<INode> translationRoots) {
+            @Nonnull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
+            @Nonnull List<INode> translationRoots) {
         // Create a directories if they do not yet exist
         try {
             Files.createDirectories(Paths.get(filePath));

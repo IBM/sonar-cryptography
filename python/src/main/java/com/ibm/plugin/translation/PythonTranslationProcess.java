@@ -29,8 +29,7 @@ import com.ibm.mapper.utils.Utils;
 import com.ibm.plugin.translation.translator.PythonTranslator;
 import java.util.Collections;
 import java.util.List;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
+import javax.annotation.Nonnull;
 import org.sonar.plugins.python.api.PythonCheck;
 import org.sonar.plugins.python.api.PythonVisitorContext;
 import org.sonar.plugins.python.api.symbols.Symbol;
@@ -39,13 +38,15 @@ import org.sonar.plugins.python.api.tree.Tree;
 public final class PythonTranslationProcess
         extends ITranslationProcess<PythonCheck, Tree, Symbol, PythonVisitorContext> {
 
-    public PythonTranslationProcess(@NotNull List<IReorganizerRule> reorganizerRules) {
+    public PythonTranslationProcess(@Nonnull List<IReorganizerRule> reorganizerRules) {
         super(reorganizerRules);
     }
 
-    @NotNull @Override
-    public @Unmodifiable List<INode> initiate(
-            @NotNull DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext>
+    @Nonnull
+    @Override
+    public List<INode> initiate(
+            @Nonnull
+                    DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext>
                             rootDetectionStore) {
         // 1. Translate
         final PythonTranslator pythonTranslator = new PythonTranslator();

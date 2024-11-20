@@ -87,13 +87,13 @@ public final class DetectionStoreWithHook<R, T, S, P> extends DetectionStore<R, 
         if (hook
                 instanceof
                 MethodInvocationHookWithParameterResolvement<R, T, S, P>
-                                methodInvocationHookWithParameterResolvement) {
+                        methodInvocationHookWithParameterResolvement) {
             handleMethodInvocationHookWithParameterResolvement(
                     invocationTree, methodInvocationHookWithParameterResolvement, isSuccessive);
         } else if (hook
                 instanceof
                 MethodInvocationHookWithReturnResolvement<R, T, S, P>
-                                methodInvocationHookWithReturnResolvement) {
+                        methodInvocationHookWithReturnResolvement) {
             handleMethodInvocationHookWithReturnResolvement(
                     methodInvocationHookWithReturnResolvement, isSuccessive);
         } else if (hook instanceof EnumHook<R, T, S, P> enumHook) {

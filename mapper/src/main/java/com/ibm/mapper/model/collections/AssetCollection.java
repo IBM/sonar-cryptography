@@ -22,11 +22,10 @@ package com.ibm.mapper.model.collections;
 import com.ibm.mapper.model.INode;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public class AssetCollection extends AbstractAssetCollection<INode> {
 
-    public AssetCollection(@NotNull List<INode> collection) {
+    public AssetCollection(@Nonnull List<INode> collection) {
         super(collection, AssetCollection.class);
     }
 

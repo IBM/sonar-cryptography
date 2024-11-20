@@ -36,14 +36,14 @@ import com.ibm.mapper.model.algorithms.TripleDES;
 import com.ibm.mapper.model.algorithms.cast.CAST128;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class PycaCipherMapper implements IMapper {
 
     @Override
-    public @NotNull Optional<? extends INode> parse(
-            @Nullable String str, @NotNull DetectionLocation detectionLocation) {
+    public @Nonnull Optional<? extends INode> parse(
+            @Nullable String str, @Nonnull DetectionLocation detectionLocation) {
         if (str == null) {
             return Optional.empty();
         }

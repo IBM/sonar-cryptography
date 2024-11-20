@@ -520,7 +520,7 @@ public final class PythonSemantic {
                             if (usageNameTree.parent()
                                             instanceof
                                             org.sonar.plugins.python.api.tree.Parameter
-                                                            parameterTree
+                                                    parameterTree
                                     && !argsMappingList.isEmpty()) {
                                 Argument argument = argsMappingList.pollLast().get(parameterTree);
                                 if (argument instanceof RegularArgument regularArgument) {

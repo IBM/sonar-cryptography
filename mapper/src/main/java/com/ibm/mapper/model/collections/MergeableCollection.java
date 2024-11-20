@@ -22,7 +22,6 @@ package com.ibm.mapper.model.collections;
 import com.ibm.mapper.model.INode;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * This is a special collection of INode: when multiple {@code MergeableCollection} are appended to
@@ -35,7 +34,7 @@ import org.jetbrains.annotations.NotNull;
 // TODO: handle this in the output layer
 public class MergeableCollection extends AbstractAssetCollection<INode> {
 
-    public MergeableCollection(@NotNull List<INode> collection) {
+    public MergeableCollection(@Nonnull List<INode> collection) {
         super(collection, MergeableCollection.class);
     }
 

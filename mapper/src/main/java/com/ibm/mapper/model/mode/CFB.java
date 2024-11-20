@@ -21,7 +21,7 @@ package com.ibm.mapper.model.mode;
 
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public final class CFB extends Mode {
 
@@ -30,7 +30,7 @@ public final class CFB extends Mode {
      * CFB/OFB with no specified value defaults to the block size of the algorithm.
      * (i.e. AES is 128; Blowfish, DES, DESede, and RC2 are 64.)
      */
-    public CFB(@NotNull DetectionLocation detectionLocation) {
+    public CFB(@Nonnull DetectionLocation detectionLocation) {
         super("CFB", detectionLocation);
     }
 
@@ -41,7 +41,7 @@ public final class CFB extends Mode {
      * of s is sometimes incorporated into the name of the mode, e.g., the 1-bit CFB mode,
      * the 8-bit CFB mode, the 64-bit CFB mode, or the 128-bit CFB mode.
      */
-    public CFB(int s, @NotNull DetectionLocation detectionLocation) {
+    public CFB(int s, @Nonnull DetectionLocation detectionLocation) {
         super("CFB" + s, detectionLocation);
     }
 }

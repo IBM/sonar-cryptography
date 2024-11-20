@@ -28,10 +28,9 @@ import java.util.List;
 import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
 
 public final class IssueCreator<T> {
-    @Nonnull @Unmodifiable private final List<INode> nodes;
+    @Nonnull private final List<INode> nodes;
     @Nonnull private final T markedTree;
     @Nonnull private final Set<INode> matchedNodes;
     @Nullable private final INode matchedParentNode;
@@ -55,8 +54,7 @@ public final class IssueCreator<T> {
     }
 
     @Nonnull
-    public static <T> IssueCreator<T> using(
-            @Nonnull T markedTree, @Nonnull @Unmodifiable List<INode> nodes) {
+    public static <T> IssueCreator<T> using(@Nonnull T markedTree, @Nonnull List<INode> nodes) {
         return new IssueCreator<>(nodes, markedTree);
     }
 

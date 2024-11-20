@@ -32,7 +32,6 @@ import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.python.api.tree.Tree;
 
 @SuppressWarnings("java:S1192")
@@ -95,7 +94,6 @@ public final class PycaDiffieHellman {
                     .inBundle(() -> "CryptographyDiffieHellman")
                     .withoutDependingDetectionRules();
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return List.of(GENERATION_DH, PUBLIC_NUMBERS_DH, PRIVATE_NUMBERS_DH);

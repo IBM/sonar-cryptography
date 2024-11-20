@@ -24,12 +24,11 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.ParameterIdentifier;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public class ParameterIdentifierFactory<T> implements IValueFactory<T> {
     @Nonnull
     @Override
-    public Optional<IValue<T>> apply(@NotNull ResolvedValue<Object, T> objectTResolvedValue) {
+    public Optional<IValue<T>> apply(@Nonnull ResolvedValue<Object, T> objectTResolvedValue) {
         if (objectTResolvedValue.value() instanceof String str) {
             return Optional.of(new ParameterIdentifier<>(str, objectTResolvedValue.tree()));
         } else if (objectTResolvedValue.value() instanceof Integer number) {

@@ -36,7 +36,6 @@ import com.ibm.plugin.rules.detection.hash.PycaHash;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.python.api.tree.Tree;
 
 @SuppressWarnings("java:S1192")
@@ -98,7 +97,6 @@ public final class PycaDSA {
                     .inBundle(() -> "Pyca")
                     .withoutDependingDetectionRules();
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return List.of(GENERATION_DSA, PUBLIC_NUMBERS_DSA, PRIVATE_NUMBERS_DSA);

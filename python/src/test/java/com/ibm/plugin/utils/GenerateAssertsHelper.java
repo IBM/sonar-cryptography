@@ -32,7 +32,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.plugins.python.api.PythonCheck;
@@ -60,8 +60,8 @@ public class GenerateAssertsHelper {
      * @param translationRoots - The list of root nodes of translation trees
      */
     public static void generate(
-            @NotNull DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> detectionStore,
-            @NotNull List<INode> translationRoots) {
+            @Nonnull DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> detectionStore,
+            @Nonnull List<INode> translationRoots) {
         // Create a directories if they do not yet exist
         try {
             Files.createDirectories(Paths.get(filePath));
@@ -103,8 +103,8 @@ public class GenerateAssertsHelper {
     }
 
     private static void generateDetectionStoreAssertions(
-            @NotNull FileWriter writer,
-            @NotNull DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> detectionStore,
+            @Nonnull FileWriter writer,
+            @Nonnull DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> detectionStore,
             String detectionStoreVarName)
             throws IOException {
         writer.write(
@@ -178,7 +178,7 @@ public class GenerateAssertsHelper {
     }
 
     private static void generateNodeAssertions(
-            @NotNull FileWriter writer, @NotNull List<INode> nodes) throws IOException {
+            @Nonnull FileWriter writer, @Nonnull List<INode> nodes) throws IOException {
         writer.write(
                 String.format(
                         "assertThat(%s).hasSize(%d);%n%n",
@@ -199,7 +199,7 @@ public class GenerateAssertsHelper {
 
     private static void generateNodeAssertionsRecursive(
             FileWriter writer,
-            @NotNull INode node,
+            @Nonnull INode node,
             String previousNodeVarName,
             int index,
             String previousTitle)

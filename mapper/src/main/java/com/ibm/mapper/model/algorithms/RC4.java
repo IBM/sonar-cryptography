@@ -27,7 +27,6 @@ import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -52,16 +51,16 @@ import org.jetbrains.annotations.NotNull;
 public final class RC4 extends Algorithm implements StreamCipher {
     private static final String NAME = "RC4";
 
-    public RC4(@NotNull DetectionLocation detectionLocation) {
+    public RC4(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, StreamCipher.class, detectionLocation);
     }
 
-    public RC4(int keyLength, @NotNull DetectionLocation detectionLocation) {
+    public RC4(int keyLength, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
     }
 
-    public RC4(int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+    public RC4(int keyLength, @Nonnull Mode mode, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
@@ -71,14 +70,14 @@ public final class RC4 extends Algorithm implements StreamCipher {
             int keyLength,
             @Nonnull Mode mode,
             @Nonnull Padding padding,
-            @NotNull DetectionLocation detectionLocation) {
+            @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
         this.put(padding);
     }
 
-    public RC4(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull RC4 rc4) {
+    public RC4(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull RC4 rc4) {
         super(rc4, asKind);
     }
 }

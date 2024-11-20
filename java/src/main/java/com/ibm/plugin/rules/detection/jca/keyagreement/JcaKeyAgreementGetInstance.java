@@ -28,7 +28,6 @@ import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.List;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 @SuppressWarnings("java:S1192")
@@ -84,7 +83,6 @@ public final class JcaKeyAgreementGetInstance {
         // nothing
     }
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return List.of(KEY_AGREEMENT1, KEY_AGREEMENT2, KEY_AGREEMENT3);

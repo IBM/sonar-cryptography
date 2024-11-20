@@ -26,11 +26,10 @@ import com.ibm.mapper.model.collections.CipherSuiteCollection;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public final class TLS extends Protocol {
 
-    public TLS(@NotNull DetectionLocation detectionLocation) {
+    public TLS(@Nonnull DetectionLocation detectionLocation) {
         super(new Protocol("TLS", detectionLocation), TLS.class);
     }
 

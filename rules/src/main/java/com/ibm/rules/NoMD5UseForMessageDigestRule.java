@@ -25,8 +25,7 @@ import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.rules.issue.Issue;
 import com.ibm.rules.issue.IssueCreator;
 import java.util.List;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
+import javax.annotation.Nonnull;
 
 /**
  * While MD5 is still used in some applications, it is no longer considered secure for cryptographic
@@ -44,8 +43,8 @@ import org.jetbrains.annotations.Unmodifiable;
  */
 public final class NoMD5UseForMessageDigestRule<T> implements IReportableDetectionRule<T> {
     @Override
-    public @NotNull List<Issue<T>> report(
-            @NotNull T markerTree, @NotNull @Unmodifiable List<INode> translatedNodes) {
+    public @Nonnull List<Issue<T>> report(
+            @Nonnull T markerTree, @Nonnull List<INode> translatedNodes) {
         return IssueCreator.using(markerTree, translatedNodes)
                 .matchesCondition(
                         (node, parent) -> {

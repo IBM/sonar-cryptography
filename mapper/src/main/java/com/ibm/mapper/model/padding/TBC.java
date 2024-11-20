@@ -21,13 +21,13 @@ package com.ibm.mapper.model.padding;
 
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public final class TBC extends Padding {
 
     private static final String NAME = "TBC"; // Trailing Bit Complement
 
-    public TBC(@NotNull DetectionLocation detectionLocation) {
+    public TBC(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, detectionLocation);
     }
 }

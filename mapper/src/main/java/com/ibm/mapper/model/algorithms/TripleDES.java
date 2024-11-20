@@ -28,7 +28,6 @@ import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -51,18 +50,18 @@ import org.jetbrains.annotations.NotNull;
 public final class TripleDES extends Algorithm implements BlockCipher {
     private static final String NAME = "3DES";
 
-    public TripleDES(@NotNull DetectionLocation detectionLocation) {
+    public TripleDES(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
         this.put(new BlockSize(64, detectionLocation));
     }
 
-    public TripleDES(int keyLength, @NotNull DetectionLocation detectionLocation) {
+    public TripleDES(int keyLength, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
     }
 
     public TripleDES(
-            int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+            int keyLength, @Nonnull Mode mode, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
@@ -72,14 +71,14 @@ public final class TripleDES extends Algorithm implements BlockCipher {
             int keyLength,
             @Nonnull Mode mode,
             @Nonnull Padding padding,
-            @NotNull DetectionLocation detectionLocation) {
+            @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
         this.put(padding);
     }
 
-    public TripleDES(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+    public TripleDES(@Nonnull Mode mode, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(mode);
     }
@@ -87,14 +86,14 @@ public final class TripleDES extends Algorithm implements BlockCipher {
     public TripleDES(
             @Nonnull Mode mode,
             @Nonnull Padding padding,
-            @NotNull DetectionLocation detectionLocation) {
+            @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(mode);
         this.put(padding);
     }
 
     public TripleDES(
-            @Nonnull final Class<? extends IPrimitive> asKind, @NotNull TripleDES tripleDES) {
+            @Nonnull final Class<? extends IPrimitive> asKind, @Nonnull TripleDES tripleDES) {
         super(tripleDES, asKind);
     }
 }

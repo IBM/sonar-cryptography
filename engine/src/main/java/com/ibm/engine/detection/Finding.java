@@ -23,7 +23,6 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.rule.IBundle;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public record Finding<R, T, S, P>(@Nonnull DetectionStore<R, T, S, P> detectionStore) {
 
@@ -58,7 +57,7 @@ public record Finding<R, T, S, P>(@Nonnull DetectionStore<R, T, S, P> detectionS
                 + calculateHashCodeForChildren(detectionStore.getChildren());
     }
 
-    private int calculateHashCodeForChildren(@NotNull List<DetectionStore<R, T, S, P>> children) {
+    private int calculateHashCodeForChildren(@Nonnull List<DetectionStore<R, T, S, P>> children) {
         return children.stream()
                 .map(
                         store ->

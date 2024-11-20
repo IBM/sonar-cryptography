@@ -29,7 +29,6 @@ import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -54,7 +53,7 @@ public final class DES extends Algorithm implements BlockCipher, Mac {
     private static final String NAME = "DES";
 
     @Override
-    public @NotNull String asString() {
+    public @Nonnull String asString() {
         final StringBuilder sb = new StringBuilder(this.name);
         this.hasChildOfType(KeyLength.class).ifPresent(k -> sb.append(k.asString()));
         this.hasChildOfType(Mode.class).ifPresent(m -> sb.append("-").append(m.asString()));
@@ -62,24 +61,24 @@ public final class DES extends Algorithm implements BlockCipher, Mac {
         return sb.toString();
     }
 
-    public DES(@NotNull DetectionLocation detectionLocation) {
+    public DES(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, BlockCipher.class, detectionLocation);
         this.put(new KeyLength(56, detectionLocation));
         this.put(new BlockSize(64, detectionLocation));
     }
 
-    public DES(int keyLength, @NotNull DetectionLocation detectionLocation) {
+    public DES(int keyLength, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
     }
 
-    public DES(int keyLength, @Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+    public DES(int keyLength, @Nonnull Mode mode, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
     }
 
-    public DES(@Nonnull Mode mode, @NotNull DetectionLocation detectionLocation) {
+    public DES(@Nonnull Mode mode, @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(mode);
     }
@@ -88,7 +87,7 @@ public final class DES extends Algorithm implements BlockCipher, Mac {
             int keyLength,
             @Nonnull Mode mode,
             @Nonnull Padding padding,
-            @NotNull DetectionLocation detectionLocation) {
+            @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(new KeyLength(keyLength, detectionLocation));
         this.put(mode);
@@ -98,13 +97,13 @@ public final class DES extends Algorithm implements BlockCipher, Mac {
     public DES(
             @Nonnull Mode mode,
             @Nonnull Padding padding,
-            @NotNull DetectionLocation detectionLocation) {
+            @Nonnull DetectionLocation detectionLocation) {
         this(detectionLocation);
         this.put(mode);
         this.put(padding);
     }
 
-    public DES(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull DES des) {
+    public DES(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull DES des) {
         super(des, asKind);
     }
 }

@@ -25,7 +25,6 @@ import com.ibm.mapper.model.PseudorandomNumberGenerator;
 import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -53,7 +52,7 @@ public final class ISAAC extends Algorithm implements StreamCipher, Pseudorandom
         super(NAME, StreamCipher.class, detectionLocation);
     }
 
-    public ISAAC(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull ISAAC isaac) {
+    public ISAAC(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull ISAAC isaac) {
         super(isaac, asKind);
     }
 }

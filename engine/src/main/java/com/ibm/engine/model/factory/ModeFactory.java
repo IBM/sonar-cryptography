@@ -23,12 +23,12 @@ import com.ibm.engine.detection.ResolvedValue;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.Mode;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ModeFactory<T> implements IValueFactory<T> {
 
     @Override
-    public Optional<IValue<T>> apply(@NotNull ResolvedValue<Object, T> objectTResolvedValue) {
+    public Optional<IValue<T>> apply(@Nonnull ResolvedValue<Object, T> objectTResolvedValue) {
         if (objectTResolvedValue.value() instanceof String s) {
             return Optional.of(new Mode<>(s, objectTResolvedValue.tree()));
         }

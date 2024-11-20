@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.slf4j.event.Level;
 import org.sonar.api.testfixtures.log.LogTesterJUnit5;
@@ -48,7 +47,7 @@ public abstract class TestBase extends PythonInventoryRule {
 
     private int findingId = 0;
 
-    public TestBase(@NotNull List<IDetectionRule<Tree>> detectionRules) {
+    public TestBase(@Nonnull List<IDetectionRule<Tree>> detectionRules) {
         super(detectionRules);
     }
 

@@ -22,7 +22,6 @@ package com.ibm.engine.model.context;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public class AlgorithmParameterContext extends DetectionContext {
 
@@ -34,7 +33,8 @@ public class AlgorithmParameterContext extends DetectionContext {
         super(properties);
     }
 
-    @NotNull @Override
+    @Nonnull
+    @Override
     public Class<? extends IDetectionContext> type() {
         return AlgorithmParameterContext.class;
     }

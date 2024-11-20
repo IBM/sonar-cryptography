@@ -21,11 +21,11 @@ package com.ibm.mapper.model.mode;
 
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public final class CNT extends Mode {
 
-    public CNT(@NotNull DetectionLocation detectionLocation) {
+    public CNT(@Nonnull DetectionLocation detectionLocation) {
         super("CNT", detectionLocation);
     }
 }

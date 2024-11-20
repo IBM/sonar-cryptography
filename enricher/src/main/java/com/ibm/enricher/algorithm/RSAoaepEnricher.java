@@ -26,12 +26,12 @@ import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.padding.OAEP;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class RSAoaepEnricher implements IEnricher {
 
     @Override
-    public @NotNull INode enrich(@NotNull INode node) {
+    public @Nonnull INode enrich(@Nonnull INode node) {
         if (node instanceof RSA rsa) {
             final Optional<INode> padding = rsa.hasChildOfType(Padding.class);
             if (padding.isEmpty()) {

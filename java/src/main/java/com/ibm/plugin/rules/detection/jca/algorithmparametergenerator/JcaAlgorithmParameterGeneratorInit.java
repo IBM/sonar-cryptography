@@ -27,7 +27,6 @@ import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import com.ibm.plugin.rules.detection.jca.algorithmspec.JcaAlgorithmParameterSpec;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class JcaAlgorithmParameterGeneratorInit {
@@ -81,7 +80,6 @@ public final class JcaAlgorithmParameterGeneratorInit {
         // nothing
     }
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return List.of(PARAMETER_INIT_1, PARAMETER_INIT_2, PARAMETER_INIT_3, PARAMETER_INIT_4);

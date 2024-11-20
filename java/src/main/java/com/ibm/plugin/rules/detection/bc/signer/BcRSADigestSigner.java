@@ -26,7 +26,6 @@ import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import com.ibm.plugin.rules.detection.bc.digest.BcDigests;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class BcRSADigestSigner {
@@ -62,7 +61,6 @@ public final class BcRSADigestSigner {
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcSignerInit.rules());
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return List.of(CONSTRUCTOR_1, CONSTRUCTOR_2);

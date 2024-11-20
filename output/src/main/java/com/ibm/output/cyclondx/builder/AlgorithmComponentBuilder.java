@@ -64,7 +64,6 @@ import org.cyclonedx.model.component.crypto.enums.AssetType;
 import org.cyclonedx.model.component.crypto.enums.CryptoFunction;
 import org.cyclonedx.model.component.crypto.enums.Primitive;
 import org.cyclonedx.model.component.evidence.Occurrence;
-import org.jetbrains.annotations.NotNull;
 
 public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
     @Nonnull private final Component component;
@@ -109,7 +108,7 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
     }
 
     @Override
-    public @NotNull IAlgorithmComponentBuilder algorithm(@Nullable INode algorithm) {
+    public @Nonnull IAlgorithmComponentBuilder algorithm(@Nullable INode algorithm) {
         this.algorithm = algorithm;
         return new AlgorithmComponentBuilder(
                 component,
@@ -123,7 +122,7 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
     }
 
     @Override
-    public @NotNull IAlgorithmComponentBuilder parameterSetIdentifier(
+    public @Nonnull IAlgorithmComponentBuilder parameterSetIdentifier(
             @Nullable INode parameterSetIdentifier) {
         return new AlgorithmComponentBuilder(
                 component,
@@ -137,7 +136,7 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
     }
 
     @Override
-    public @NotNull IAlgorithmComponentBuilder mode(@Nullable INode mode) {
+    public @Nonnull IAlgorithmComponentBuilder mode(@Nullable INode mode) {
         if (mode == null) {
             return new AlgorithmComponentBuilder(
                     component,
@@ -165,7 +164,7 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
     }
 
     @Override
-    public @NotNull IAlgorithmComponentBuilder primitive(@Nullable INode primitive) {
+    public @Nonnull IAlgorithmComponentBuilder primitive(@Nullable INode primitive) {
         if (primitive == null) {
             return new AlgorithmComponentBuilder(
                     component,
@@ -221,7 +220,7 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
     }
 
     @Override
-    public @NotNull IAlgorithmComponentBuilder padding(@Nullable INode padding) {
+    public @Nonnull IAlgorithmComponentBuilder padding(@Nullable INode padding) {
         if (padding == null) {
             return new AlgorithmComponentBuilder(
                     component,
@@ -250,7 +249,7 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
     }
 
     @Override
-    public @NotNull IAlgorithmComponentBuilder curve(@Nullable INode curve) {
+    public @Nonnull IAlgorithmComponentBuilder curve(@Nullable INode curve) {
         this.curve = curve;
         if (curve instanceof EllipticCurve ellipticCurve) {
             this.algorithmProperties.setCurve(ellipticCurve.asString());
@@ -267,7 +266,7 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
     }
 
     @Override
-    public @NotNull IAlgorithmComponentBuilder cryptoFunctions(@Nullable INode... cryptoFunctions) {
+    public @Nonnull IAlgorithmComponentBuilder cryptoFunctions(@Nullable INode... cryptoFunctions) {
         if (cryptoFunctions == null || cryptoFunctions.length == 0) {
             return new AlgorithmComponentBuilder(
                     component,
@@ -327,7 +326,7 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
     }
 
     @Override
-    public @NotNull IAlgorithmComponentBuilder occurrences(@Nullable Occurrence... occurrences) {
+    public @Nonnull IAlgorithmComponentBuilder occurrences(@Nullable Occurrence... occurrences) {
         if (occurrences == null) {
             return new AlgorithmComponentBuilder(
                     component,
@@ -356,7 +355,7 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
     }
 
     @Override
-    public @NotNull IAlgorithmComponentBuilder oid(@Nullable INode oid) {
+    public @Nonnull IAlgorithmComponentBuilder oid(@Nullable INode oid) {
         if (oid instanceof Oid oid1) {
             this.cryptoProperties.setOid(oid1.getValue());
         }
@@ -372,7 +371,7 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
     }
 
     @Override
-    public @NotNull Component build() {
+    public @Nonnull Component build() {
 
         if (parameterSetIdentifier != null) {
             this.algorithmProperties.setParameterSetIdentifier(parameterSetIdentifier.asString());

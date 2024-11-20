@@ -22,7 +22,7 @@ package com.ibm.mapper.model.algorithms.vmpc;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  *
@@ -46,7 +46,7 @@ public final class VMPCMAC extends Algorithm implements Mac {
 
     private static final String NAME = "VMPC-MAC";
 
-    public VMPCMAC(@NotNull DetectionLocation detectionLocation) {
+    public VMPCMAC(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, Mac.class, detectionLocation);
         this.put(new VMPC(detectionLocation));
     }

@@ -23,11 +23,10 @@ import com.ibm.mapper.model.CipherSuite;
 import com.ibm.mapper.model.INode;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public class CipherSuiteCollection extends AbstractAssetCollection<CipherSuite> {
 
-    public CipherSuiteCollection(@NotNull List<CipherSuite> collection) {
+    public CipherSuiteCollection(@Nonnull List<CipherSuite> collection) {
         super(collection, CipherSuiteCollection.class);
     }
 

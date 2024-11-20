@@ -27,8 +27,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class BcBlockCipherPadding {
@@ -45,7 +43,7 @@ public final class BcBlockCipherPadding {
                     "X923Padding",
                     "ZeroBytePadding");
 
-    private static @NotNull List<IDetectionRule<Tree>> simpleConstructors() {
+    private static @Nonnull List<IDetectionRule<Tree>> simpleConstructors() {
         List<IDetectionRule<Tree>> constructorsList = new LinkedList<>();
 
         for (String padding : paddings) {
@@ -63,7 +61,6 @@ public final class BcBlockCipherPadding {
         return constructorsList;
     }
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return simpleConstructors();

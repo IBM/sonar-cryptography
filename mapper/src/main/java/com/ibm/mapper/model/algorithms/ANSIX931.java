@@ -22,7 +22,7 @@ package com.ibm.mapper.model.algorithms;
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  *
@@ -46,7 +46,7 @@ public final class ANSIX931 extends Algorithm implements Signature {
 
     private static final String NAME = "ANSI X9.31";
 
-    public ANSIX931(@NotNull DetectionLocation detectionLocation) {
+    public ANSIX931(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, Signature.class, detectionLocation);
     }
 }

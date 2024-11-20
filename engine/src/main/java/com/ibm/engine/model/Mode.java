@@ -20,7 +20,6 @@
 package com.ibm.engine.model;
 
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public class Mode<T> extends AbstractValue<T> {
 
@@ -38,12 +37,12 @@ public class Mode<T> extends AbstractValue<T> {
     }
 
     @Override
-    public @NotNull T getLocation() {
+    public @Nonnull T getLocation() {
         return this.location;
     }
 
     @Override
-    public @NotNull String asString() {
+    public @Nonnull String asString() {
         return this.value;
     }
 

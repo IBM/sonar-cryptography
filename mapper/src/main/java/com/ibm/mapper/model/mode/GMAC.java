@@ -21,12 +21,12 @@ package com.ibm.mapper.model.mode;
 
 import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public final class GMAC extends Mode {
     // https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38d.pdf
 
-    public GMAC(@NotNull DetectionLocation detectionLocation) {
+    public GMAC(@Nonnull DetectionLocation detectionLocation) {
         super("GMAC", detectionLocation);
     }
 }

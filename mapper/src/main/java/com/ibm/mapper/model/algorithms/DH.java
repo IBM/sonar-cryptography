@@ -28,7 +28,6 @@ import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -53,7 +52,7 @@ public final class DH extends Algorithm implements Signature, KeyAgreement, Publ
     private static final String NAME = "DH";
 
     @Override
-    public @NotNull String asString() {
+    public @Nonnull String asString() {
         final StringBuilder sb = new StringBuilder(this.name);
         if (this.is(PublicKeyEncryption.class)) {
             this.hasChildOfType(KeyLength.class)
@@ -62,13 +61,13 @@ public final class DH extends Algorithm implements Signature, KeyAgreement, Publ
         return sb.toString();
     }
 
-    public DH(@NotNull DetectionLocation detectionLocation) {
+    public DH(@Nonnull DetectionLocation detectionLocation) {
         this(PublicKeyEncryption.class, detectionLocation);
     }
 
     public DH(
             @Nonnull final Class<? extends IPrimitive> asKind,
-            @NotNull DetectionLocation detectionLocation) {
+            @Nonnull DetectionLocation detectionLocation) {
         super(NAME, asKind, detectionLocation);
         this.put(new Oid("1.2.840.113549.1.3.1", detectionLocation));
     }

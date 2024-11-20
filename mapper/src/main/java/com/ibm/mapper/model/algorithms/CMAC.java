@@ -26,7 +26,6 @@ import com.ibm.mapper.model.IAlgorithm;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -49,7 +48,7 @@ import org.jetbrains.annotations.NotNull;
 public final class CMAC extends Algorithm implements Mac {
     private static final String NAME = "CMAC";
 
-    public CMAC(@NotNull DetectionLocation detectionLocation) {
+    public CMAC(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, Mac.class, detectionLocation);
     }
 
@@ -59,7 +58,7 @@ public final class CMAC extends Algorithm implements Mac {
     }
 
     @Override
-    public @NotNull String asString() {
+    public @Nonnull String asString() {
         return this.hasChildOfType(BlockCipher.class)
                 .map(node -> ((IAlgorithm) node).getName() + "-" + this.name)
                 .orElse(this.name);

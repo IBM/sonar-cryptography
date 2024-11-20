@@ -28,8 +28,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class BcStreamCipherEngine {
@@ -60,7 +58,7 @@ public final class BcStreamCipherEngine {
                     "Zuc128Engine",
                     "Zuc256Engine");
 
-    private static @NotNull List<IDetectionRule<Tree>> constructors() {
+    private static @Nonnull List<IDetectionRule<Tree>> constructors() {
         List<IDetectionRule<Tree>> constructorsList = new LinkedList<>();
 
         for (String engine : engines) {
@@ -80,7 +78,6 @@ public final class BcStreamCipherEngine {
         return constructorsList;
     }
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return constructors();

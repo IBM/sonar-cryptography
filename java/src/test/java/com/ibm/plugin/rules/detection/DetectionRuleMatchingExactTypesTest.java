@@ -30,7 +30,6 @@ import com.ibm.plugin.TestBase;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.verifier.CheckVerifier;
@@ -54,12 +53,14 @@ class DetectionRuleMatchingExactTypesTest extends TestBase {
                                         objectTreeResolvedValue -> {
                                             final IValue<Tree> testValue =
                                                     new IValue<>() {
-                                                        @NotNull @Override
+                                                        @Nonnull
+                                                        @Override
                                                         public Tree getLocation() {
                                                             return objectTreeResolvedValue.tree();
                                                         }
 
-                                                        @NotNull @Override
+                                                        @Nonnull
+                                                        @Override
                                                         public String asString() {
                                                             return "value";
                                                         }
@@ -68,7 +69,8 @@ class DetectionRuleMatchingExactTypesTest extends TestBase {
                                         })
                                 .buildForContext(
                                         new IDetectionContext() {
-                                            @NotNull @Override
+                                            @Nonnull
+                                            @Override
                                             public Class<? extends IDetectionContext> type() {
                                                 return IDetectionContext.class;
                                             }
@@ -80,8 +82,8 @@ class DetectionRuleMatchingExactTypesTest extends TestBase {
     @Override
     public void asserts(
             int findingId,
-            @NotNull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
-            @NotNull List<INode> nodes) {
+            @Nonnull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
+            @Nonnull List<INode> nodes) {
         // nothing
     }
 

@@ -36,7 +36,6 @@ import java.util.LinkedList;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.java.model.ExpressionUtils;
@@ -66,7 +65,7 @@ public final class JavaLanguageSupport
 
     @Nonnull
     @Override
-    public @NotNull DetectionExecutive<JavaCheck, Tree, Symbol, JavaFileScannerContext>
+    public DetectionExecutive<JavaCheck, Tree, Symbol, JavaFileScannerContext>
             createDetectionExecutive(
                     @Nonnull Tree tree,
                     @Nonnull IDetectionRule<Tree> detectionRule,
@@ -76,7 +75,7 @@ public final class JavaLanguageSupport
 
     @Nonnull
     @Override
-    public @NotNull IDetectionEngine<Tree, Symbol> createDetectionEngineInstance(
+    public IDetectionEngine<Tree, Symbol> createDetectionEngineInstance(
             @Nonnull
                     DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext>
                             detectionStore) {
@@ -85,13 +84,13 @@ public final class JavaLanguageSupport
 
     @Nonnull
     @Override
-    public @NotNull IBaseMethodVisitorFactory<Tree, Symbol> getBaseMethodVisitorFactory() {
+    public IBaseMethodVisitorFactory<Tree, Symbol> getBaseMethodVisitorFactory() {
         return JavaBaseMethodVisitor::new;
     }
 
     @Nonnull
     @Override
-    public @NotNull Optional<Tree> getEnclosingMethod(@Nonnull Tree expression) {
+    public Optional<Tree> getEnclosingMethod(@Nonnull Tree expression) {
         if (expression instanceof ExpressionTree expressionTree) {
             return Optional.ofNullable(ExpressionUtils.getEnclosingMethod(expressionTree));
         }

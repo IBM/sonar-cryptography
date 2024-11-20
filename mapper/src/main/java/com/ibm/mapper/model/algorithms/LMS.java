@@ -25,7 +25,6 @@ import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -51,7 +50,7 @@ public final class LMS extends Algorithm implements Signature, MessageDigest {
     private static final String NAME = "LMS";
 
     @Override
-    public @NotNull String asString() {
+    public @Nonnull String asString() {
         return this.hasChildOfType(MessageDigest.class)
                 .map(node -> node.asString() + "with" + this.name)
                 .orElse(this.name);

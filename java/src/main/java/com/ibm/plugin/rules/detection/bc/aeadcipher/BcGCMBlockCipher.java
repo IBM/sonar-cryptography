@@ -27,7 +27,6 @@ import com.ibm.plugin.rules.detection.bc.blockcipher.BcBlockCipher;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class BcGCMBlockCipher {
@@ -100,7 +99,6 @@ public final class BcGCMBlockCipher {
                     .inBundle(() -> "Bc")
                     .withDependingDetectionRules(BcAEADCipherInit.rules());
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return List.of(NEW_INSTANCE_1, NEW_INSTANCE_2, CONSTRUCTOR_1, CONSTRUCTOR_2);

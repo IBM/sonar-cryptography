@@ -24,16 +24,14 @@ import com.ibm.plugin.rules.PythonNoMD5UseRule;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
-import org.jetbrains.annotations.UnmodifiableView;
+import javax.annotation.Nonnull;
 import org.sonar.plugins.python.api.PythonCheck;
 
 public final class PythonRuleList {
 
     private PythonRuleList() {}
 
-    public static @NotNull @UnmodifiableView List<Class<?>> getChecks() {
+    public static @Nonnull List<Class<?>> getChecks() {
         List<Class<? extends PythonCheck>> checks = new ArrayList<>();
         checks.addAll(getPythonChecks());
         checks.addAll(getPythonTestChecks());
@@ -41,12 +39,12 @@ public final class PythonRuleList {
     }
 
     /** These rules are going to target MAIN code only */
-    public static @NotNull @Unmodifiable List<Class<? extends PythonCheck>> getPythonChecks() {
+    public static @Nonnull List<Class<? extends PythonCheck>> getPythonChecks() {
         return List.of(PythonInventoryRule.class, PythonNoMD5UseRule.class);
     }
 
     /** These rules are going to target TEST code only */
-    public static @Unmodifiable List<Class<? extends PythonCheck>> getPythonTestChecks() {
+    public static List<Class<? extends PythonCheck>> getPythonTestChecks() {
         return List.of();
     }
 }

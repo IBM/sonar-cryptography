@@ -24,13 +24,12 @@ import com.ibm.engine.model.Curve;
 import com.ibm.engine.model.IValue;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public class CurveFactory<T> implements IValueFactory<T> {
 
     @Nonnull
     @Override
-    public Optional<IValue<T>> apply(@NotNull ResolvedValue<Object, T> objectTResolvedValue) {
+    public Optional<IValue<T>> apply(@Nonnull ResolvedValue<Object, T> objectTResolvedValue) {
         if (objectTResolvedValue.value() instanceof String str) {
             return Optional.of(new Curve<>(str, objectTResolvedValue.tree()));
         }

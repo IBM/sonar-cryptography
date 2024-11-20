@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 public final class CipherSuite implements IAsset {
     @Nonnull private final Map<Class<? extends INode>, INode> children;
@@ -120,7 +119,7 @@ public final class CipherSuite implements IAsset {
     }
 
     @Override
-    public void removeChildOfType(@NotNull Class<? extends INode> nodeType) {
+    public void removeChildOfType(@Nonnull Class<? extends INode> nodeType) {
         this.children.remove(nodeType);
     }
 

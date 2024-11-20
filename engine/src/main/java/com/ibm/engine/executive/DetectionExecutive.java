@@ -21,12 +21,15 @@ package com.ibm.engine.executive;
 
 import com.ibm.common.IDomainEvent;
 import com.ibm.common.IObserver;
-import com.ibm.engine.detection.*;
+import com.ibm.engine.detection.DetectionStore;
+import com.ibm.engine.detection.Finding;
+import com.ibm.engine.detection.Handler;
 import com.ibm.engine.language.IScanContext;
 import com.ibm.engine.rule.IDetectionRule;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 
 public class DetectionExecutive<R, T, S, P>
         implements IStatusReporting<R, T, S, P>, IDomainEvent<Finding<R, T, S, P>> {
@@ -81,7 +84,6 @@ public class DetectionExecutive<R, T, S, P>
     }
 
     @Nonnull
-    @Unmodifiable
     private List<DetectionStore<R, T, S, P>> getRootStoresWithValue(
             @Nonnull DetectionStore<R, T, S, P> detectionStore) {
         if (!detectionStore.getDetectionValues().isEmpty()

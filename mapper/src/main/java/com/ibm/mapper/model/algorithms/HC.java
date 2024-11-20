@@ -26,7 +26,6 @@ import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.StreamCipher;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -65,7 +64,7 @@ public final class HC extends Algorithm implements StreamCipher {
         this.put(new InitializationVectorLength(keyLength, detectionLocation));
     }
 
-    public HC(@Nonnull final Class<? extends IPrimitive> asKind, @NotNull HC hc) {
+    public HC(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull HC hc) {
         super(hc, asKind);
     }
 }

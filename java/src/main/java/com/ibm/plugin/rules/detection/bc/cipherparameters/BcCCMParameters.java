@@ -28,7 +28,6 @@ import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.sonar.plugins.java.api.tree.Tree;
 
 public final class BcCCMParameters {
@@ -52,7 +51,6 @@ public final class BcCCMParameters {
                     .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
-    @Unmodifiable
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return List.of(CONSTRUCTOR_1);

@@ -23,7 +23,7 @@ import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  *
@@ -46,7 +46,7 @@ import org.jetbrains.annotations.NotNull;
 public final class AsconHash extends Ascon implements MessageDigest {
     private static final String NAME = "Ascon-Hash";
 
-    public AsconHash(@NotNull DetectionLocation detectionLocation) {
+    public AsconHash(@Nonnull DetectionLocation detectionLocation) {
         super(NAME, MessageDigest.class, detectionLocation);
         this.put(new DigestSize(256, detectionLocation));
         this.put(new BlockSize(64, detectionLocation));

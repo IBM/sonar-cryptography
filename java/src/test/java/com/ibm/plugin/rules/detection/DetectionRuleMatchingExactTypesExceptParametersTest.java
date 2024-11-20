@@ -30,7 +30,6 @@ import com.ibm.plugin.TestBase;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.sonar.check.Rule;
 import org.sonar.java.checks.verifier.CheckVerifier;
@@ -54,12 +53,14 @@ class DetectionRuleMatchingExactTypesExceptParametersTest extends TestBase {
                                         tree ->
                                                 Optional.of(
                                                         new IAction<>() {
-                                                            @NotNull @Override
+                                                            @Nonnull
+                                                            @Override
                                                             public Tree getLocation() {
                                                                 return tree;
                                                             }
 
-                                                            @NotNull @Override
+                                                            @Nonnull
+                                                            @Override
                                                             public String asString() {
                                                                 return "chooseShape";
                                                             }
@@ -68,7 +69,8 @@ class DetectionRuleMatchingExactTypesExceptParametersTest extends TestBase {
                                         "com.ibm.example.DetectionRuleMatchingExactTypesExceptParametersTestFile$Shape")
                                 .buildForContext(
                                         new IDetectionContext() {
-                                            @NotNull @Override
+                                            @Nonnull
+                                            @Override
                                             public Class<? extends IDetectionContext> type() {
                                                 return IDetectionContext.class;
                                             }
@@ -80,8 +82,8 @@ class DetectionRuleMatchingExactTypesExceptParametersTest extends TestBase {
     @Override
     public void asserts(
             int findingId,
-            @NotNull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
-            @NotNull List<INode> nodes) {
+            @Nonnull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
+            @Nonnull List<INode> nodes) {
         // nothing
     }
 

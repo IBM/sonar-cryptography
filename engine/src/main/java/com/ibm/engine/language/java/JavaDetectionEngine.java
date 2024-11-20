@@ -431,7 +431,7 @@ public final class JavaDetectionEngine implements IDetectionEngine<Tree, Symbol>
             if (this.detectionStore
                     instanceof
                     final DetectionStoreWithHook<JavaCheck, Tree, Symbol, JavaFileScannerContext>
-                                    detectionStoreWithHook) {
+                            detectionStoreWithHook) {
                 detectionStoreWithHook.onSuccessiveHook(methodInvocationHookWithReturnResolvement);
             } else {
                 if (handler.addHookToHookRepository(methodInvocationHookWithReturnResolvement)) {
@@ -449,7 +449,7 @@ public final class JavaDetectionEngine implements IDetectionEngine<Tree, Symbol>
         if (this.detectionStore
                 instanceof
                 final DetectionStoreWithHook<JavaCheck, Tree, Symbol, JavaFileScannerContext>
-                                detectionStoreWithHook) {
+                        detectionStoreWithHook) {
             detectionStoreWithHook.onSuccessiveHook(methodInvocationHookWithParameterResolvement);
         } else {
             if (handler.addHookToHookRepository(methodInvocationHookWithParameterResolvement)) {

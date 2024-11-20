@@ -22,11 +22,11 @@ package com.ibm.enricher.algorithm;
 import com.ibm.enricher.IEnricher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.algorithms.DSA;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class DSAEnricher implements IEnricher, IEnrichWithDefaultKeySize {
     @Override
-    public @NotNull INode enrich(@NotNull INode node) {
+    public @Nonnull INode enrich(@Nonnull INode node) {
         if (node instanceof DSA dsa) {
             this.applyDefaultKeySizeForJca(dsa, 2048);
             return dsa;
