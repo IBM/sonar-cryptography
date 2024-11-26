@@ -75,7 +75,7 @@ public abstract class ITranslator<R, T, S, P> {
                 .ifPresent(
                         actionValue -> {
                             final Optional<INode> translatedNode =
-                                    translate(bundle, actionValue, context, filePath);
+                                    this.translate(bundle, actionValue, context, filePath);
                             translatedNode.ifPresent(
                                     node -> {
                                         final List<INode> newNodes = new ArrayList<>();
@@ -88,7 +88,7 @@ public abstract class ITranslator<R, T, S, P> {
                     final List<INode> translatedNodesForId = new ArrayList<>();
                     for (IValue<T> value : values) {
                         final Optional<INode> translatedNode =
-                                translate(bundle, value, context, filePath);
+                                this.translate(bundle, value, context, filePath);
                         translatedNode.ifPresent(translatedNodesForId::add);
                     }
                     // to get the list for the key, or create a new one if it doesn't exist and add
@@ -224,8 +224,9 @@ public abstract class ITranslator<R, T, S, P> {
                                             .forEach(mergedCollectionNode::put);
 
                                     parentNode.put(mergedCollectionNode);
-
-                                } else {
+                                } else if (existingNode.is(childNode.getKind())
+                                        && !existingNode.asString().equals(childNode.asString())) {
+                                    // add node to new roots
                                     final INode newParent = parentNode.deepCopy();
                                     newParent.put(childNode);
                                     newRoots.add(newParent);

@@ -16,7 +16,7 @@ public class ClientEncryptionJavaDuplicatedRSADetectionTestFile {
         try {
             MGF1ParameterSpec mgf1ParameterSpec = new MGF1ParameterSpec(oaepDigestAlgorithm);
             String asymmetricCipher = ASYMMETRIC_CYPHER.replace("{ALG}", mgf1ParameterSpec.getDigestAlgorithm());
-            Cipher cipher = Cipher.getInstance(asymmetricCipher);
+            Cipher cipher = Cipher.getInstance(asymmetricCipher); // Noncompliant {{(PublicKeyEncryption) RSA-OAEP}}
             cipher.init(Cipher.WRAP_MODE, publicKey, getOaepParameterSpec(mgf1ParameterSpec));
             return cipher.wrap(privateKey);
         } catch (GeneralSecurityException e) {
@@ -31,7 +31,7 @@ public class ClientEncryptionJavaDuplicatedRSADetectionTestFile {
         try {
             MGF1ParameterSpec mgf1ParameterSpec = new MGF1ParameterSpec(oaepDigestAlgorithm);
             String asymmetricCipher = ASYMMETRIC_CYPHER.replace("{ALG}", mgf1ParameterSpec.getDigestAlgorithm());
-            Cipher cipher = Cipher.getInstance(asymmetricCipher);
+            Cipher cipher = Cipher.getInstance(asymmetricCipher);  // Noncompliant {{(PublicKeyEncryption) RSA-OAEP}}
             cipher.init(Cipher.UNWRAP_MODE, decryptionKey, getOaepParameterSpec(mgf1ParameterSpec));
             return cipher.unwrap(keyBytes, SYMMETRIC_KEY_TYPE, Cipher.SECRET_KEY);
         } catch (GeneralSecurityException e) {

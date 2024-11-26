@@ -66,4 +66,18 @@ public final class OAEP extends Padding {
         }
         return Optional.of((MaskGenerationFunction) node);
     }
+
+    private OAEP(@Nonnull OAEP oaep) {
+        super(oaep.getName(), oaep.getDetectionContext(), Padding.class);
+    }
+
+    @Nonnull
+    @Override
+    public INode deepCopy() {
+        OAEP copy = new OAEP(this);
+        for (INode child : this.children.values()) {
+            copy.children.put(child.getKind(), child.deepCopy());
+        }
+        return copy;
+    }
 }
