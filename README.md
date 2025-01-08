@@ -10,10 +10,11 @@ It is part of **the [CBOMKit](https://github.com/IBM/cbomkit) toolset**.
 
 ## Version compatibility
 
-| Plugin Version | SonarQube Version      |
-|----------------|------------------------|
-| 1.3.2 and up   | SonarQube 9.8 and up   | 
-| 1.2.0 to 1.3.1 | SonarQube 9.8 and 10.4 |      
+| Plugin Version  | SonarQube Version              |
+|-----------------|--------------------------------|
+| 1.3.7 and up    | SonarQube 9.9 (LTS) and up     |
+| 1.3.2 and 1.3.6 | SonarQube 9.8 (LTS) up to 10.8 | 
+| 1.2.0 to 1.3.1  | SonarQube 9.8 (LTS) up to 10.4 |      
 
 
 ## Supported languages and libraries
