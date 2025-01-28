@@ -51,7 +51,7 @@
 
         <junit.jupiter.version>5.11.4</junit.jupiter.version>
 
-        <google-java-format.version>1.25.0</google-java-format.version>
+        <google-java-format.version>1.25.2</google-java-format.version>
     </properties>
 
     <distributionManagement>
