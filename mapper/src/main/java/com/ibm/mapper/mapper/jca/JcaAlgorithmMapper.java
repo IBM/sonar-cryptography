@@ -44,9 +44,9 @@ public class JcaAlgorithmMapper implements IMapper {
                     new JcaMGFMapper(),
                     new JcaPasswordBasedEncryptionMapper(),
                     new JcaPBKDFMapper(),
-                    new JcaPRNGMapper(),
                     new JcaKeyAgreementMapper(),
-                    new JcaSignatureMapper());
+                    new JcaSignatureMapper(),
+                    new JcaPRNGMapper());
 
     @Nonnull
     @Override
