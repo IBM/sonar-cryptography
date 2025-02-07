@@ -21,7 +21,7 @@ package com.ibm.mapper.mapper.jca;
 
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.algorithms.kyber.MLKEM;
+import com.ibm.mapper.model.algorithms.MLKEM;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;

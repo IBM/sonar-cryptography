@@ -24,17 +24,21 @@ import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Oid;
+import com.ibm.mapper.model.ParameterSetIdentifier;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.algorithms.DSA;
 import com.ibm.mapper.model.algorithms.ECDSA;
 import com.ibm.mapper.model.algorithms.MD2;
 import com.ibm.mapper.model.algorithms.MD5;
+import com.ibm.mapper.model.algorithms.MLDSA;
 import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.algorithms.SHA;
 import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.model.algorithms.SHA3;
-import java.util.Optional;
+import com.ibm.mapper.utils.DetectionLocation;
+
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 public class SignatureEnricher implements IEnricher {
 
@@ -50,8 +54,46 @@ public class SignatureEnricher implements IEnricher {
             if (node instanceof RSA rsa) {
                 return enrichRSA(rsa);
             }
+            if (node instanceof MLDSA mldsa) {
+                return enrichMLDSA(mldsa);
+            }
         }
         return node;
+    }
+
+    @Nonnull
+    private Signature enrichMLDSA(@Nonnull MLDSA mldsa) {
+        final Optional<INode> parameterSetIdentifierOptional =
+                mldsa.hasChildOfType(ParameterSetIdentifier.class);
+        if (parameterSetIdentifierOptional.isPresent()
+                && parameterSetIdentifierOptional.get()
+                instanceof ParameterSetIdentifier parameterSetIdentifier) {
+            final Optional<MessageDigest> optionalPreHash = mldsa.getDigest();
+
+            final DetectionLocation detectionLocation =
+                    parameterSetIdentifier.getDetectionContext();
+            switch (parameterSetIdentifier.asString()) {
+                case "44" -> optionalPreHash.ifPresentOrElse(hash -> {
+                    if (hash instanceof SHA2 sha2 && sha2.getDigestSize().isPresent() && sha2.getDigestSize().get().getValue().equals(512)) {
+                        mldsa.put(new Oid("2.16.840.1.101.3.4.3.32", detectionLocation));
+                    }
+                }, () -> mldsa.put(new Oid("2.16.840.1.101.3.4.3.17", detectionLocation)));
+
+                case "65" -> optionalPreHash.ifPresentOrElse(hash -> {
+                    if (hash instanceof SHA2 sha2 && sha2.getDigestSize().isPresent() && sha2.getDigestSize().get().getValue().equals(512)) {
+                        mldsa.put(new Oid("2.16.840.1.101.3.4.3.33", detectionLocation));
+                    }
+                }, () -> mldsa.put(new Oid("2.16.840.1.101.3.4.3.18", detectionLocation)));
+                case "87" -> optionalPreHash.ifPresentOrElse(hash -> {
+                    if (hash instanceof SHA2 sha2 && sha2.getDigestSize().isPresent() && sha2.getDigestSize().get().getValue().equals(512)) {
+                        mldsa.put(new Oid("2.16.840.1.101.3.4.3.34", detectionLocation));
+                    }
+                }, () -> mldsa.put(new Oid("2.16.840.1.101.3.4.3.19", detectionLocation)));
+                default -> // the base OID for NIST Signature
+                        mldsa.put(new Oid("2.16.840.1.101.3.4.3", detectionLocation));
+            }
+        }
+        return mldsa;
     }
 
     @SuppressWarnings("java:S3776")

@@ -17,15 +17,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.mapper.model.algorithms.kyber;
+package com.ibm.mapper.model.algorithms;
 
 import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyEncapsulationMechanism;
 import com.ibm.mapper.model.ParameterSetIdentifier;
 import com.ibm.mapper.utils.DetectionLocation;
-import java.util.Optional;
+
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 /**
  *
@@ -47,7 +48,7 @@ import javax.annotation.Nonnull;
  *   <li>Standardized version of Kyber
  * </ul>
  */
-public class MLKEM extends Algorithm implements KeyEncapsulationMechanism {
+public final class MLKEM extends Algorithm implements KeyEncapsulationMechanism {
 
     private static final String NAME = "ML-KEM";
 

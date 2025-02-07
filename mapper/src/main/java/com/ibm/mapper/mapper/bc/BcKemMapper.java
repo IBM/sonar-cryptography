@@ -32,7 +32,7 @@ import com.ibm.mapper.model.algorithms.RSAKEM;
 import com.ibm.mapper.model.algorithms.SABER;
 import com.ibm.mapper.model.algorithms.ies.ECIESKEM;
 import com.ibm.mapper.model.algorithms.kyber.Kyber;
-import com.ibm.mapper.model.algorithms.kyber.MLKEM;
+import com.ibm.mapper.model.algorithms.MLKEM;
 import com.ibm.mapper.model.algorithms.ntru.NTRU;
 import com.ibm.mapper.model.algorithms.ntru.NTRULPrime;
 import com.ibm.mapper.model.algorithms.ntru.StreamlinedNTRUPrime;
