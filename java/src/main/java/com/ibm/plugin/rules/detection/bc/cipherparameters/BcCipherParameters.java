@@ -43,7 +43,13 @@ public final class BcCipherParameters {
                         BcNTRUEncryptionParameters.rules().stream(),
                         BcNTRUSigningPrivateKeyParameters.rules().stream(),
                         BcNTRUSigningPublicKeyParameters.rules().stream(),
-                        BcSABERParameters.rules().stream())
+                        BcSABERParameters.rules().stream(),
+                        BcMLKEMKeyParameters.rules().stream(),
+                        BcMLKEMPrivateKeyParameters.rules().stream(),
+                        BcMLKEMPublicKeyParameters.rules().stream(),
+                        BcMLDSAKeyParameters.rules().stream(),
+                        BcMLDSAPrivateKeyParameters.rules().stream(),
+                        BcMLDSAPublicKeyParameters.rules().stream())
                 .flatMap(i -> i)
                 .toList();
     }

@@ -42,7 +42,9 @@ public final class BcSigner {
                         BcRSADigestSigner.rules().stream(),
                         BcSimpleSigner.rules().stream(),
                         BcSM2Signer.rules().stream(),
-                        BcX931Signer.rules().stream())
+                        BcX931Signer.rules().stream(),
+                        BcMLDSASigner.rules().stream(),
+                        BcHashMLDSASigner.rules().stream())
                 .flatMap(i -> i)
                 .toList();
     }

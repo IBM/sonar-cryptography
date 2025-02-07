@@ -51,7 +51,7 @@ class BcPKCS5S1ParametersGeneratorTest extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/bc/pbe/BcPKCS5S1ParametersGeneratorTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

@@ -57,7 +57,7 @@ class ParameterValuesNotCapturedTest extends TestBase {
         CheckVerifier.newVerifier()
                 .onFile("src/test/files/rules/issues/ParameterValuesNotCapturedTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

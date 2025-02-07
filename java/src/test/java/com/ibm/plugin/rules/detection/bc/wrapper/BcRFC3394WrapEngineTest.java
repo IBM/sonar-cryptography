@@ -50,7 +50,7 @@ class BcRFC3394WrapEngineTest extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/bc/wrapper/BcRFC3394WrapEngineTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

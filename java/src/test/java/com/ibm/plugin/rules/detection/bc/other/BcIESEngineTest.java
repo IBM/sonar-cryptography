@@ -57,7 +57,7 @@ class BcIESEngineTest extends TestBase {
         CheckVerifier.newVerifier()
                 .onFile("src/test/files/rules/detection/bc/other/BcIESEngineTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

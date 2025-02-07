@@ -19,6 +19,7 @@
  */
 package com.ibm.plugin.translation.translator.contexts;
 
+import com.ibm.engine.model.AlgorithmParameter;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.OperationMode;
 import com.ibm.engine.model.SaltSize;
@@ -29,6 +30,7 @@ import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.mapper.mapper.bc.BcDsaMapper;
 import com.ibm.mapper.mapper.bc.BcMessageSignerMapper;
 import com.ibm.mapper.mapper.bc.BcOperationModeSigningMapper;
+import com.ibm.mapper.mapper.bc.BcParameterMapper;
 import com.ibm.mapper.mapper.bc.BcSignatureMapper;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.model.INode;
@@ -92,6 +94,11 @@ public final class JavaSignatureContextTranslator extends JavaAbstractLibraryTra
                     .map(f -> f);
         } else if (value instanceof SaltSize<Tree> saltSize) {
             return Optional.of(new SaltLength(saltSize.getValue(), detectionLocation));
+        } else if (value instanceof AlgorithmParameter<Tree> algorithmParameter) {
+            final BcParameterMapper bcParameterMapper = new BcParameterMapper();
+            return bcParameterMapper
+                    .parse(algorithmParameter.asString(), detectionLocation)
+                    .map(f -> f);
         }
         return Optional.empty();
     }

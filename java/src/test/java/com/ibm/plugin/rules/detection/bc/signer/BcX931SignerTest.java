@@ -55,7 +55,7 @@ class BcX931SignerTest extends TestBase {
         CheckVerifier.newVerifier()
                 .onFile("src/test/files/rules/detection/bc/signer/BcX931SignerTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

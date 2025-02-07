@@ -20,10 +20,14 @@
 package com.ibm.mapper.reorganizer;
 
 import com.ibm.mapper.model.INode;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,14 +39,30 @@ public final class Reorganizer implements IReorganizer {
     private static final int MAX_ITERATIONS = 10;
 
     private final List<IReorganizerRule> rules;
+    private final Map<INode, IReorganizerRule> alreadyAppliedRules;
 
     public Reorganizer(@Nonnull List<IReorganizerRule> rules) {
         this.rules = rules;
+        this.alreadyAppliedRules = new HashMap<>();
     }
 
     @Override
     @Nonnull
     public List<INode> reorganize(@Nonnull final List<INode> rootNodes) {
+        final List<INode> reorganizedNodes = this.reorganize(rootNodes, 0);
+        this.alreadyAppliedRules.forEach(
+                (node, rule) -> {
+                    String message =
+                            String.format(
+                                    "[reorganizer] MATCH: Node '%s' & Rule %s",
+                                    node.asString(), rule.asString());
+                    LOGGER.debug(message);
+                });
+        return reorganizedNodes;
+    }
+
+    @Nonnull
+    private List<INode> reorganize(@Nonnull final List<INode> rootNodes, int iterations) {
         /*
          * Idea: We iterate on all nodes of the tree with a BFS (done by `reorganizeRecursive`),
          * and we check for each node if it matches with a reorganization rule (in `applyReorganizerRules`).
@@ -55,24 +75,19 @@ public final class Reorganizer implements IReorganizer {
          */
         List<INode> lastRootNodes = rootNodes;
         Optional<List<INode>> newRootNodes = Optional.of(rootNodes);
-        int counter = 0;
-        while (newRootNodes.isPresent() && counter < MAX_ITERATIONS) {
+        while (newRootNodes.isPresent() && iterations < MAX_ITERATIONS) {
             lastRootNodes = newRootNodes.get();
             newRootNodes =
                     reorganizeRecursive(
                             lastRootNodes.stream()
                                     .map(childNode -> Pair.<INode, INode>of(childNode, null))
                                     .toList(),
-                            lastRootNodes);
-            counter += 1;
+                            lastRootNodes,
+                            iterations);
+            iterations += 1;
         }
-        if (counter == MAX_ITERATIONS) {
-            String message =
-                    String.format(
-                            "The reorganizer stopped because it exceeded the maximum number of iterations (%d). "
-                                    + "Check for a possible infinite loop in your reorganization rules.",
-                            MAX_ITERATIONS);
-            LOGGER.warn(message);
+        if (iterations == MAX_ITERATIONS) {
+            return lastRootNodes;
         }
         return lastRootNodes;
     }
@@ -90,14 +105,14 @@ public final class Reorganizer implements IReorganizer {
     @Nonnull
     private Optional<List<INode>> reorganizeRecursive(
             @Nonnull final List<Pair<INode, INode>> currentNodeParentPairs,
-            @Nonnull final List<INode> rootNodes) {
+            @Nonnull final List<INode> rootNodes,
+            int iterations) {
         List<Pair<INode, INode>> nextPairs = new LinkedList<>();
-
         for (Pair<INode, INode> pair : currentNodeParentPairs) {
-            INode node = pair.getLeft();
-            INode parent = pair.getRight();
-            Optional<List<INode>> optionalUpdatedRootNodes =
-                    applyReorganizerRules(node, parent, rootNodes);
+            final INode node = pair.getLeft();
+            final INode parent = pair.getRight();
+            final Optional<List<INode>> optionalUpdatedRootNodes =
+                    applyReorganizerRules(node, parent, rootNodes, iterations);
             if (optionalUpdatedRootNodes.isPresent()) {
                 return optionalUpdatedRootNodes;
             }
@@ -109,7 +124,7 @@ public final class Reorganizer implements IReorganizer {
         if (nextPairs.isEmpty()) {
             return Optional.empty();
         }
-        return reorganizeRecursive(nextPairs, rootNodes);
+        return reorganizeRecursive(nextPairs, rootNodes, iterations);
     }
 
     /**
@@ -124,19 +139,27 @@ public final class Reorganizer implements IReorganizer {
      */
     @Nonnull
     private Optional<List<INode>> applyReorganizerRules(
-            @Nonnull INode node, @Nonnull INode parent, @Nonnull final List<INode> rootNodes) {
+            @Nonnull INode node,
+            @Nonnull INode parent,
+            @Nonnull final List<INode> rootNodes,
+            int iterations) {
         for (IReorganizerRule reorganizerRule : this.rules) {
+            if (this.alreadyAppliedRules.containsKey(node)
+                    && this.alreadyAppliedRules.get(node).equals(reorganizerRule)) {
+                continue;
+            }
             if (reorganizerRule.match(node, parent, rootNodes)) {
-                String message =
-                        String.format(
-                                "[reorganizer] MATCH: Node '%s' & Rule %s",
-                                node.asString(), reorganizerRule.asString());
-                LOGGER.debug(message);
-                return Optional.ofNullable(
-                        reorganizerRule.applyReorganization(node, parent, rootNodes)); // new root
+                this.alreadyAppliedRules.put(node, reorganizerRule);
+                @Nullable final List<INode> newRootNodes =
+                        reorganizerRule.applyReorganization(node, parent, rootNodes);
+                // the recursion helps to apply reorganizer rules based on the result of the
+                // previous
+                return Optional.of(
+                        this.reorganize(
+                                Objects.requireNonNullElse(newRootNodes, rootNodes),
+                                iterations + 1));
             }
         }
-
         return Optional.empty();
     }
 }

@@ -51,7 +51,7 @@ class BcGCMSIVBlockCipherTest extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/bc/aeadcipher/BcGCMSIVBlockCipherTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

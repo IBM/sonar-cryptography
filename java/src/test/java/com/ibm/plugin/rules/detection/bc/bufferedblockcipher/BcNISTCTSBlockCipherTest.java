@@ -48,7 +48,7 @@ class BcNISTCTSBlockCipherTest extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/bc/bufferedblockcipher/BcNISTCTSBlockCipherTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

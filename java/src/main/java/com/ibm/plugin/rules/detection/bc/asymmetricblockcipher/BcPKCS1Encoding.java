@@ -39,7 +39,8 @@ public final class BcPKCS1Encoding {
         // nothing
     }
 
-    private static final List<IDetectionRule<Tree>> constructors(
+    @Nonnull
+    private static List<IDetectionRule<Tree>> constructors(
             @Nullable IDetectionContext encodingDetectionValueContext,
             @Nullable IDetectionContext engineDetectionValueContext) {
         List<IDetectionRule<Tree>> constructorsList = new LinkedList<>();

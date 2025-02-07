@@ -19,6 +19,8 @@
  */
 package com.ibm.plugin.translation.reorganizer;
 
+import com.ibm.mapper.model.Signature;
+import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.reorganizer.IReorganizerRule;
 import com.ibm.mapper.reorganizer.rules.AeadBlockCipherReorganizer;
 import com.ibm.mapper.reorganizer.rules.AsymmetricBlockCipherReorganizer;
@@ -50,6 +52,9 @@ public final class JavaReorganizerRules {
                 MacReorganizer.MERGE_UNKNOWN_MAC_PARENT_AND_CIPHER_CHILD,
                 MacReorganizer.MOVE_SOME_MAC_CHILDREN_UNDER_BLOCKCIPHER,
                 MacReorganizer.MOVE_TAG_LENGTH_UNDER_MAC,
-                SignatureReorganizer.MERGE_UNKNOWN_SIGNATURE_PARENT_AND_CHILD);
+                SignatureReorganizer.MERGE_UNKNOWN_SIGNATURE_PARENT_AND_CHILD,
+                SignatureReorganizer.moveNodesFromUnderFunctionalityUnderParent(
+                        Sign.class, Signature.class),
+                SignatureReorganizer.MERGE_SIGNATURE_PARENT_AND_CHILD);
     }
 }

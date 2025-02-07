@@ -28,6 +28,7 @@ import com.ibm.mapper.model.algorithms.BIKE;
 import com.ibm.mapper.model.algorithms.ClassicMcEliece;
 import com.ibm.mapper.model.algorithms.FrodoKEM;
 import com.ibm.mapper.model.algorithms.HQC;
+import com.ibm.mapper.model.algorithms.MLKEM;
 import com.ibm.mapper.model.algorithms.RSAKEM;
 import com.ibm.mapper.model.algorithms.SABER;
 import com.ibm.mapper.model.algorithms.ies.ECIESKEM;
@@ -117,6 +118,16 @@ public class BcKemMapper implements IMapper {
                 var kyber = new Kyber(detectionLocation);
                 kyber.put(new Encapsulate(detectionLocation));
                 yield Optional.of(kyber);
+            }
+            case "MLKEMExtractor" -> {
+                var mlkem = new MLKEM(detectionLocation);
+                mlkem.put(new Decapsulate(detectionLocation));
+                yield Optional.of(mlkem);
+            }
+            case "MLKEMGenerator" -> {
+                var mlkem = new MLKEM(detectionLocation);
+                mlkem.put(new Encapsulate(detectionLocation));
+                yield Optional.of(mlkem);
             }
             case "NTRUKEMExtractor" -> {
                 var ntru = new NTRU(detectionLocation);

@@ -281,7 +281,7 @@ public class DetectionStore<R, T, S, P> implements IHookDetectionObserver<R, T, 
             }
 
             final List<IDetectionRule<T>> nextDetectionRulesFinal = nextDetectionRules;
-            final TraceSymbol<S> traceSymbol = TraceSymbol.createWithStateNoSymbol();
+            final TraceSymbol<S> traceSymbol = getAssignedTraceSymbol(methodDetection.expression());
 
             this.statusReporting.addAdditionalExpectedRuleVisits(nextDetectionRulesFinal.size());
             handler.getLanguageSupport()
@@ -290,6 +290,7 @@ public class DetectionStore<R, T, S, P> implements IHookDetectionObserver<R, T, 
                             methodDef ->
                                     followNextRules(
                                             -1, methodDef, traceSymbol, nextDetectionRulesFinal));
+
         } else if (detection instanceof ValueDetection<?, T> valueDetection) {
             final DetectableParameter<T> detectableParameter = valueDetection.detectableParameter();
 

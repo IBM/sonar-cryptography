@@ -27,6 +27,7 @@ import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.Signature;
 import com.ibm.mapper.model.algorithms.DSA;
 import com.ibm.mapper.model.algorithms.ECDSA;
+import com.ibm.mapper.model.algorithms.MLDSA;
 import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.model.algorithms.SHA3;
@@ -85,5 +86,22 @@ class SignatureEnricherTest extends TestBase {
         assertThat(rsa.hasChildOfType(Oid.class)).isPresent();
         assertThat(rsa.hasChildOfType(Oid.class).get().asString())
                 .isEqualTo("1.2.840.113549.1.1.15");
+    }
+
+    @Test
+    void shaAndMLDSA() {
+        DetectionLocation testDetectionLocation =
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "Bc");
+        final MLDSA mldsa = new MLDSA(44, testDetectionLocation);
+        mldsa.put(new SHA2(512, testDetectionLocation));
+        this.logBefore(mldsa);
+
+        final SignatureEnricher signatureEnricher = new SignatureEnricher();
+        final INode enriched = signatureEnricher.enrich(mldsa);
+        this.logAfter(enriched);
+
+        assertThat(mldsa.hasChildOfType(Oid.class)).isPresent();
+        assertThat(mldsa.hasChildOfType(Oid.class).get().asString())
+                .isEqualTo("2.16.840.1.101.3.4.3.32");
     }
 }

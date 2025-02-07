@@ -52,7 +52,7 @@ class BcOCBBlockCipherTest extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/bc/aeadcipher/BcOCBBlockCipherTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

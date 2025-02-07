@@ -55,7 +55,7 @@ class BcDigestingMessageSignerTest extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/bc/signer/BcDigestingMessageSignerTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

@@ -39,7 +39,7 @@ class BcECDHBasicAgreementTest extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/bc/basicagreement/BcECDHBasicAgreementTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

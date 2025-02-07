@@ -30,6 +30,7 @@ import com.ibm.mapper.model.algorithms.ANSIX931;
 import com.ibm.mapper.model.algorithms.Ed25519;
 import com.ibm.mapper.model.algorithms.Ed448;
 import com.ibm.mapper.model.algorithms.ISO9796;
+import com.ibm.mapper.model.algorithms.MLDSA;
 import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.algorithms.RSAssaPSS;
 import com.ibm.mapper.model.algorithms.SM2;
@@ -60,11 +61,9 @@ public class BcSignatureMapper implements IMapper {
                     "DSADigestSigner" ->
                     Optional.of(
                             new Algorithm(ITranslator.UNKNOWN, Signature.class, detectionLocation));
-            case "Ed25519ctxSigner" -> Optional.of(new Ed25519(detectionLocation));
-            case "Ed25519phSigner" -> Optional.of(new Ed25519(detectionLocation));
-            case "Ed25519Signer" -> Optional.of(new Ed25519(detectionLocation));
-            case "Ed448phSigner" -> Optional.of(new Ed448(detectionLocation));
-            case "Ed448Signer" -> Optional.of(new Ed448(detectionLocation));
+            case "Ed25519ctxSigner", "Ed25519phSigner", "Ed25519Signer" ->
+                    Optional.of(new Ed25519(detectionLocation));
+            case "Ed448phSigner", "Ed448Signer" -> Optional.of(new Ed448(detectionLocation));
             case "ISO9796d2PSSSigner" ->
                     Optional.of(new ISO9796(ProbabilisticSignatureScheme.class, detectionLocation));
             case "ISO9796d2Signer" -> Optional.of(new ISO9796(detectionLocation));
@@ -72,6 +71,7 @@ public class BcSignatureMapper implements IMapper {
             case "RSADigestSigner" -> Optional.of(new RSA(Signature.class, detectionLocation));
             case "SM2Signer" -> Optional.of(new SM2(detectionLocation));
             case "X931Signer" -> Optional.of(new ANSIX931(detectionLocation));
+            case "MLDSASigner", "HashMLDSASigner" -> Optional.of(new MLDSA(detectionLocation));
             default -> {
                 final Algorithm algorithm =
                         new Algorithm(signerString, Signature.class, detectionLocation);

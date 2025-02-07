@@ -20,6 +20,7 @@
 package com.ibm.plugin.translation.translator.contexts;
 
 import com.ibm.engine.model.Algorithm;
+import com.ibm.engine.model.AlgorithmParameter;
 import com.ibm.engine.model.Curve;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.KeySize;
@@ -34,6 +35,7 @@ import com.ibm.mapper.mapper.bc.BcAgreementMapper;
 import com.ibm.mapper.mapper.bc.BcDerivationFunctionMapper;
 import com.ibm.mapper.mapper.bc.BcKemMapper;
 import com.ibm.mapper.mapper.bc.BcOperationModeKDFMapper;
+import com.ibm.mapper.mapper.bc.BcParameterMapper;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.mapper.jca.JcaCurveMapper;
 import com.ibm.mapper.model.IAlgorithm;
@@ -122,9 +124,15 @@ public final class JavaKeyContextTranslator extends JavaAbstractLibraryTranslato
             KeyLength keyLength = new KeyLength(keySize.getValue(), detectionLocation);
             return Optional.of(keyLength);
         } else if (value instanceof OperationMode<Tree> operationMode) {
-            BcOperationModeKDFMapper bcOperationModeKDFMapper = new BcOperationModeKDFMapper();
+            final BcOperationModeKDFMapper bcOperationModeKDFMapper =
+                    new BcOperationModeKDFMapper();
             return bcOperationModeKDFMapper
                     .parse(operationMode.asString(), detectionLocation)
+                    .map(f -> f);
+        } else if (value instanceof AlgorithmParameter<Tree> algorithmParameter) {
+            final BcParameterMapper bcParameterMapper = new BcParameterMapper();
+            return bcParameterMapper
+                    .parse(algorithmParameter.asString(), detectionLocation)
                     .map(f -> f);
         }
         return Optional.empty();

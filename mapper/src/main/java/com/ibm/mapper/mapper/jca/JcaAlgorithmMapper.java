@@ -46,6 +46,7 @@ public class JcaAlgorithmMapper implements IMapper {
                     new JcaPBKDFMapper(),
                     new JcaKeyAgreementMapper(),
                     new JcaSignatureMapper(),
+                    new JcaKemMapper(),
                     new JcaPRNGMapper());
 
     @Nonnull
