@@ -49,7 +49,7 @@ class BcISO9796d1EncodingTest extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/bc/asymmetricblockcipher/BcISO9796d1EncodingTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

@@ -32,6 +32,7 @@ import com.ibm.mapper.model.algorithms.RSAKEM;
 import com.ibm.mapper.model.algorithms.SABER;
 import com.ibm.mapper.model.algorithms.ies.ECIESKEM;
 import com.ibm.mapper.model.algorithms.kyber.Kyber;
+import com.ibm.mapper.model.algorithms.kyber.MLKEM;
 import com.ibm.mapper.model.algorithms.ntru.NTRU;
 import com.ibm.mapper.model.algorithms.ntru.NTRULPrime;
 import com.ibm.mapper.model.algorithms.ntru.StreamlinedNTRUPrime;
@@ -117,6 +118,16 @@ public class BcKemMapper implements IMapper {
                 var kyber = new Kyber(detectionLocation);
                 kyber.put(new Encapsulate(detectionLocation));
                 yield Optional.of(kyber);
+            }
+            case "MLKEMExtractor" -> {
+                var mlkem = new MLKEM(detectionLocation);
+                mlkem.put(new Decapsulate(detectionLocation));
+                yield Optional.of(mlkem);
+            }
+            case "MLKEMGenerator" -> {
+                var mlkem = new MLKEM(detectionLocation);
+                mlkem.put(new Encapsulate(detectionLocation));
+                yield Optional.of(mlkem);
             }
             case "NTRUKEMExtractor" -> {
                 var ntru = new NTRU(detectionLocation);

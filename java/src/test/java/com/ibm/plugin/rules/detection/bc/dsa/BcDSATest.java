@@ -46,7 +46,7 @@ class BcDSATest extends TestBase {
         CheckVerifier.newVerifier()
                 .onFile("src/test/files/rules/detection/bc/dsa/BcDSATestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

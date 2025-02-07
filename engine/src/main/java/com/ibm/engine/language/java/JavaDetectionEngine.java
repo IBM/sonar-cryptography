@@ -305,7 +305,7 @@ public final class JavaDetectionEngine implements IDetectionEngine<Tree, Symbol>
         return Collections.emptyList();
     }
 
-    @SuppressWarnings("java:S3776")
+    @SuppressWarnings({"java:S3776", "java:S6541"})
     @Override
     public void resolveValuesInOuterScope(
             @Nonnull final Tree expression, @Nonnull final Parameter<Tree> parameter) {
@@ -714,7 +714,7 @@ public final class JavaDetectionEngine implements IDetectionEngine<Tree, Symbol>
     private void analyseExpression(
             @Nonnull TraceSymbol<Symbol> traceSymbol, @Nonnull ExpressionTree expressionTree) {
         /*
-         * This statement will check if the mit was already analyzed.
+         * This statement will check if the method invocation was already analyzed.
          * In case the parsed code uses a builder-pattern or just chain multiple function calls, the parser
          * will parse the call-chain iteratively.
          * That is for 'foo().goo()' the function 'foo()' will be parsed two times.

@@ -20,7 +20,7 @@ public class BcKyberKEMGeneratorTestFile {
 
         // Generate secret
         SecretWithEncapsulation secret =
-                kemGenerator.generateEncapsulated(new AsymmetricKeyParameter(true));
+                kemGenerator.generateEncapsulated(params);
 
         // ...
     }

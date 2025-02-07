@@ -50,7 +50,7 @@ class BcParametersWithTest extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/bc/cipherparameters/BcParametersWithTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

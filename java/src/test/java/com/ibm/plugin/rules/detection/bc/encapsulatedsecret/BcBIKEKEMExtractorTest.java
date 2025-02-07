@@ -46,7 +46,7 @@ class BcBIKEKEMExtractorTest extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/bc/encapsulatedsecret/BcBIKEKEMExtractorTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

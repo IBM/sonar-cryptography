@@ -48,7 +48,7 @@ class BcAsymmetricBlockCipherTest extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/bc/asymmetricblockcipher/BcAsymmetricBlockCipherTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

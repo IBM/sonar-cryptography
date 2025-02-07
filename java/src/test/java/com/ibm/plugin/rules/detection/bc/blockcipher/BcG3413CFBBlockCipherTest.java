@@ -51,7 +51,7 @@ class BcG3413CFBBlockCipherTest extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/bc/blockcipher/BcG3413CFBBlockCipherTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

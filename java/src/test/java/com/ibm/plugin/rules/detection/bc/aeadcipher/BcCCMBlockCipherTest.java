@@ -51,7 +51,7 @@ class BcCCMBlockCipherTest extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/bc/aeadcipher/BcCCMBlockCipherTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

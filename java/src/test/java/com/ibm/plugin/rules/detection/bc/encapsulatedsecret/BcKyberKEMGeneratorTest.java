@@ -46,7 +46,9 @@ class BcKyberKEMGeneratorTest extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/bc/encapsulatedsecret/BcKyberKEMGeneratorTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(
+                        BouncyCastleJars.bcprov178Jar) // this API was removed with version 1.79
+                // https://www.bouncycastle.org/download/bouncy-castle-java/?filter=java%3Drelease-1-79
                 .verifyIssues();
     }
 

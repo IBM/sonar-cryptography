@@ -58,7 +58,7 @@ class BcISO9796d2PSSSignerTest extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/bc/signer/BcISO9796d2PSSSignerTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

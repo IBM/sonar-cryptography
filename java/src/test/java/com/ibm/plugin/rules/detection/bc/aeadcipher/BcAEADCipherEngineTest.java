@@ -49,7 +49,7 @@ class BcAEADCipherEngineTest extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/bc/aeadcipher/BcAEADCipherEngineTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

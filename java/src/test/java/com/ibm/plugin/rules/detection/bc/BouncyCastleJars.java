@@ -25,7 +25,12 @@ import java.util.Collections;
 
 public class BouncyCastleJars {
     // From https://www.bouncycastle.org/latest_releases.html
-    public static Collection<File> JARS =
+    public static Collection<File> bcprov178Jar =
             Collections.singletonList(
                     new File("src/test/resources/test-jars/bcprov-jdk18on-1.78.1.jar"));
+    public static Collection<File> bcprov180Jar =
+            Collections.singletonList(
+                    new File("src/test/resources/test-jars/bcprov-jdk18on-1.80.jar"));
+
+    public static Collection<File> latestJar = bcprov180Jar;
 }

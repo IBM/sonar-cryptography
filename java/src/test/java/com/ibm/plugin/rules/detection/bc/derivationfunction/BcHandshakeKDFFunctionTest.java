@@ -49,7 +49,7 @@ class BcHandshakeKDFFunctionTest extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/bc/derivationfunction/BcHandshakeKDFFunctionTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

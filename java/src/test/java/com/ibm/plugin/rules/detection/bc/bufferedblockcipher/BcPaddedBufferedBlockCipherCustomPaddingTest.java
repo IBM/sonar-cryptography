@@ -51,7 +51,7 @@ class BcPaddedBufferedBlockCipherCustomPaddingTest extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/bc/bufferedblockcipher/BcPaddedBufferedBlockCipherCustomPaddingTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

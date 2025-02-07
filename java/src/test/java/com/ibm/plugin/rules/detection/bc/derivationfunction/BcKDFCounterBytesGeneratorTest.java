@@ -54,7 +54,7 @@ class BcKDFCounterBytesGeneratorTest extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/bc/derivationfunction/BcKDFCounterBytesGeneratorTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

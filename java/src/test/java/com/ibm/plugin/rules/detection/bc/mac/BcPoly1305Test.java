@@ -48,7 +48,7 @@ class BcPoly1305Test extends TestBase {
         CheckVerifier.newVerifier()
                 .onFile("src/test/files/rules/detection/bc/mac/BcPoly1305TestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

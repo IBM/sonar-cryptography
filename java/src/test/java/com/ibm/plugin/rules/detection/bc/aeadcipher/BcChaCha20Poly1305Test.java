@@ -53,7 +53,7 @@ class BcChaCha20Poly1305Test extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/bc/aeadcipher/BcChaCha20Poly1305TestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

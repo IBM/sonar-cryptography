@@ -49,7 +49,7 @@ class Issue16Test extends TestBase {
         CheckVerifier.newVerifier()
                 .onFile("src/test/files/rules/issues/Issue16TestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

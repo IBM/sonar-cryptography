@@ -49,7 +49,7 @@ class BcPKCS1EncodingTest extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/bc/asymmetricblockcipher/BcPKCS1EncodingTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

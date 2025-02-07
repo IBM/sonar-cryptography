@@ -40,16 +40,17 @@ public final class BcEncapsulatedSecretGenerator {
         // nothing
     }
 
-    /* TODO: capture `generateEncapsulated` to obtain information from `AsymmetricKeyParameter` */
-
-    private static BouncyCastleInfoMap infoMap = new BouncyCastleInfoMap();
+    private static final BouncyCastleInfoMap infoMap = new BouncyCastleInfoMap();
 
     static {
         infoMap.putKey("BIKEKEMGenerator").putType("org.bouncycastle.pqc.crypto.bike.");
         infoMap.putKey("CMCEKEMGenerator").putType("org.bouncycastle.pqc.crypto.cmce.");
         infoMap.putKey("FrodoKEMGenerator").putType("org.bouncycastle.pqc.crypto.frodo.");
         infoMap.putKey("HQCKEMGenerator").putType("org.bouncycastle.pqc.crypto.hqc.");
-        infoMap.putKey("KyberKEMGenerator").putType("org.bouncycastle.pqc.crypto.crystals.kyber.");
+        infoMap.putKey("KyberKEMGenerator")
+                .putType("org.bouncycastle.pqc.crypto.crystals.kyber."); // deprecated since bc 1.79
+        infoMap.putKey("MLKEMGenerator")
+                .putType("org.bouncycastle.pqc.crypto.mlkem."); // new since bc 1.79
         infoMap.putKey("NTRUKEMGenerator").putType("org.bouncycastle.pqc.crypto.ntru.");
         infoMap.putKey("NTRULPRimeKEMGenerator").putType("org.bouncycastle.pqc.crypto.ntruprime.");
         infoMap.putKey("SABERKEMGenerator").putType("org.bouncycastle.pqc.crypto.saber.");
@@ -71,9 +72,8 @@ public final class BcEncapsulatedSecretGenerator {
                             .withMethodParameter("java.security.SecureRandom")
                             .buildForContext(new KeyContext(Map.of("kind", "KEM")))
                             .inBundle(() -> "Bc")
-                            .withoutDependingDetectionRules());
+                            .withDependingDetectionRules(BcGenerateEncapsulatedSecret.rules()));
         }
-
         return constructorsList;
     }
 

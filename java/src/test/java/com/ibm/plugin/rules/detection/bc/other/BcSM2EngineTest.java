@@ -48,7 +48,7 @@ class BcSM2EngineTest extends TestBase {
         CheckVerifier.newVerifier()
                 .onFile("src/test/files/rules/detection/bc/other/BcSM2EngineTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

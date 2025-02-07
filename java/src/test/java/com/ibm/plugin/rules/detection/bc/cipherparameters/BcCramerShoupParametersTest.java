@@ -49,7 +49,7 @@ class BcCramerShoupParametersTest extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/bc/cipherparameters/BcCramerShoupParametersTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

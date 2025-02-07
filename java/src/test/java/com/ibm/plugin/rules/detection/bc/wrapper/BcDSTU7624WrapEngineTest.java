@@ -48,7 +48,7 @@ class BcDSTU7624WrapEngineTest extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/bc/wrapper/BcDSTU7624WrapEngineTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

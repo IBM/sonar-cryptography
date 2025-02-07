@@ -47,7 +47,7 @@ class BcChaChaEngineTest extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/bc/streamcipher/BcChaChaEngineTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

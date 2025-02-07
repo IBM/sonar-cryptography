@@ -47,7 +47,7 @@ class BcMGF1BytesGeneratorTest extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/bc/derivationfunction/BcMGF1BytesGeneratorTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

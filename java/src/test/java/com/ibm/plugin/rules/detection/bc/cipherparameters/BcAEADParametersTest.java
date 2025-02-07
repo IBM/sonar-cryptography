@@ -52,7 +52,7 @@ class BcAEADParametersTest extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/bc/cipherparameters/BcAEADParametersTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

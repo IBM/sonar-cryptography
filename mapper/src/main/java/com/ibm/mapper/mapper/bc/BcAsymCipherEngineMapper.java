@@ -64,9 +64,8 @@ public class BcAsymCipherEngineMapper implements IMapper {
                     Optional.of(new NaccacheStern(asKind, new NaccacheStern(detectionLocation)));
             case "NTRUEngine" ->
                     Optional.of(new NTRUEncrypt(asKind, new NTRUEncrypt(detectionLocation)));
-            case "RSABlindedEngine" -> Optional.of(new RSA(asKind, new RSA(detectionLocation)));
-            case "RSABlindingEngine" -> Optional.of(new RSA(asKind, new RSA(detectionLocation)));
-            case "RSAEngine" -> Optional.of(new RSA(asKind, new RSA(detectionLocation)));
+            case "RSABlindedEngine", "RSAEngine", "RSABlindingEngine" ->
+                    Optional.of(new RSA(asKind, new RSA(detectionLocation)));
             /* From other.BcIESEngine */
             case "IESEngine" -> Optional.of(new IES(asKind, new IES(detectionLocation)));
             /* From other.BcSM2Engine */

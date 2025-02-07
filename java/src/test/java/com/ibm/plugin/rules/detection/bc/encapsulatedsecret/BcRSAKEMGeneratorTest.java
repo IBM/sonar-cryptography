@@ -51,7 +51,7 @@ class BcRSAKEMGeneratorTest extends TestBase {
                 .onFile(
                         "src/test/files/rules/detection/bc/encapsulatedsecret/BcRSAKEMGeneratorTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 

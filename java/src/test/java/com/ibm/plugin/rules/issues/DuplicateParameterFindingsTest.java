@@ -59,7 +59,7 @@ class DuplicateParameterFindingsTest extends TestBase {
         CheckVerifier.newVerifier()
                 .onFile("src/test/files/rules/issues/DuplicateParameterFindingsTestFile.java")
                 .withChecks(this)
-                .withClassPath(BouncyCastleJars.JARS)
+                .withClassPath(BouncyCastleJars.latestJar)
                 .verifyIssues();
     }
 
