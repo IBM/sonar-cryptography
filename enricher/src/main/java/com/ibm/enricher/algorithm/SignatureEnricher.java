@@ -36,9 +36,8 @@ import com.ibm.mapper.model.algorithms.SHA;
 import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.model.algorithms.SHA3;
 import com.ibm.mapper.utils.DetectionLocation;
-
-import javax.annotation.Nonnull;
 import java.util.Optional;
+import javax.annotation.Nonnull;
 
 public class SignatureEnricher implements IEnricher {
 
@@ -67,28 +66,64 @@ public class SignatureEnricher implements IEnricher {
                 mldsa.hasChildOfType(ParameterSetIdentifier.class);
         if (parameterSetIdentifierOptional.isPresent()
                 && parameterSetIdentifierOptional.get()
-                instanceof ParameterSetIdentifier parameterSetIdentifier) {
+                        instanceof ParameterSetIdentifier parameterSetIdentifier) {
             final Optional<MessageDigest> optionalPreHash = mldsa.getDigest();
 
             final DetectionLocation detectionLocation =
                     parameterSetIdentifier.getDetectionContext();
             switch (parameterSetIdentifier.asString()) {
-                case "44" -> optionalPreHash.ifPresentOrElse(hash -> {
-                    if (hash instanceof SHA2 sha2 && sha2.getDigestSize().isPresent() && sha2.getDigestSize().get().getValue().equals(512)) {
-                        mldsa.put(new Oid("2.16.840.1.101.3.4.3.32", detectionLocation));
-                    }
-                }, () -> mldsa.put(new Oid("2.16.840.1.101.3.4.3.17", detectionLocation)));
+                case "44" ->
+                        optionalPreHash.ifPresentOrElse(
+                                hash -> {
+                                    if (hash instanceof SHA2 sha2
+                                            && sha2.getDigestSize().isPresent()
+                                            && sha2.getDigestSize().get().getValue().equals(512)) {
+                                        mldsa.put(
+                                                new Oid(
+                                                        "2.16.840.1.101.3.4.3.32",
+                                                        detectionLocation));
+                                    }
+                                },
+                                () ->
+                                        mldsa.put(
+                                                new Oid(
+                                                        "2.16.840.1.101.3.4.3.17",
+                                                        detectionLocation)));
 
-                case "65" -> optionalPreHash.ifPresentOrElse(hash -> {
-                    if (hash instanceof SHA2 sha2 && sha2.getDigestSize().isPresent() && sha2.getDigestSize().get().getValue().equals(512)) {
-                        mldsa.put(new Oid("2.16.840.1.101.3.4.3.33", detectionLocation));
-                    }
-                }, () -> mldsa.put(new Oid("2.16.840.1.101.3.4.3.18", detectionLocation)));
-                case "87" -> optionalPreHash.ifPresentOrElse(hash -> {
-                    if (hash instanceof SHA2 sha2 && sha2.getDigestSize().isPresent() && sha2.getDigestSize().get().getValue().equals(512)) {
-                        mldsa.put(new Oid("2.16.840.1.101.3.4.3.34", detectionLocation));
-                    }
-                }, () -> mldsa.put(new Oid("2.16.840.1.101.3.4.3.19", detectionLocation)));
+                case "65" ->
+                        optionalPreHash.ifPresentOrElse(
+                                hash -> {
+                                    if (hash instanceof SHA2 sha2
+                                            && sha2.getDigestSize().isPresent()
+                                            && sha2.getDigestSize().get().getValue().equals(512)) {
+                                        mldsa.put(
+                                                new Oid(
+                                                        "2.16.840.1.101.3.4.3.33",
+                                                        detectionLocation));
+                                    }
+                                },
+                                () ->
+                                        mldsa.put(
+                                                new Oid(
+                                                        "2.16.840.1.101.3.4.3.18",
+                                                        detectionLocation)));
+                case "87" ->
+                        optionalPreHash.ifPresentOrElse(
+                                hash -> {
+                                    if (hash instanceof SHA2 sha2
+                                            && sha2.getDigestSize().isPresent()
+                                            && sha2.getDigestSize().get().getValue().equals(512)) {
+                                        mldsa.put(
+                                                new Oid(
+                                                        "2.16.840.1.101.3.4.3.34",
+                                                        detectionLocation));
+                                    }
+                                },
+                                () ->
+                                        mldsa.put(
+                                                new Oid(
+                                                        "2.16.840.1.101.3.4.3.19",
+                                                        detectionLocation)));
                 default -> // the base OID for NIST Signature
                         mldsa.put(new Oid("2.16.840.1.101.3.4.3", detectionLocation));
             }

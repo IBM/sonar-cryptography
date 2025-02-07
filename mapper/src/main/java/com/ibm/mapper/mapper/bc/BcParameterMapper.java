@@ -22,12 +22,14 @@ package com.ibm.mapper.mapper.bc;
 import com.ibm.mapper.mapper.IMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.ParameterSetIdentifier;
+import com.ibm.mapper.model.algorithms.MLDSA;
+import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public final class BcAsymmetricKeyParameterMapper implements IMapper {
+public final class BcParameterMapper implements IMapper {
     @Nonnull
     @Override
     public Optional<? extends INode> parse(
@@ -46,6 +48,15 @@ public final class BcAsymmetricKeyParameterMapper implements IMapper {
                     Optional.of(new ParameterSetIdentifier("1024", detectionLocation));
             case "ml_kem_768" -> Optional.of(new ParameterSetIdentifier("768", detectionLocation));
             case "ml_kem_512" -> Optional.of(new ParameterSetIdentifier("512", detectionLocation));
+            case "ml_dsa_44" -> Optional.of(new ParameterSetIdentifier("44", detectionLocation));
+            case "ml_dsa_65" -> Optional.of(new ParameterSetIdentifier("65", detectionLocation));
+            case "ml_dsa_87" -> Optional.of(new ParameterSetIdentifier("87", detectionLocation));
+            case "ml_dsa_44_with_sha512" ->
+                    Optional.of(new MLDSA(44, new SHA2(512, detectionLocation)));
+            case "ml_dsa_65_with_sha512" ->
+                    Optional.of(new MLDSA(65, new SHA2(512, detectionLocation)));
+            case "ml_dsa_87_with_sha512" ->
+                    Optional.of(new MLDSA(87, new SHA2(512, detectionLocation)));
             default ->
                     Optional.of(new ParameterSetIdentifier(algorithmParameter, detectionLocation));
         };

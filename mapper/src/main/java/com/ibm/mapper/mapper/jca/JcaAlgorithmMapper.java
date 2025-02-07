@@ -27,11 +27,10 @@ import com.ibm.mapper.model.Unknown;
 import com.ibm.mapper.model.algorithms.DH;
 import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.utils.DetectionLocation;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class JcaAlgorithmMapper implements IMapper {
 

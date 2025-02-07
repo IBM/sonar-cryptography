@@ -1,6 +1,6 @@
 /*
  * SonarQube Cryptography Plugin
- * Copyright (C) 2024 IBM
+ * Copyright (C) 2025 IBM
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -19,32 +19,33 @@
  */
 package com.ibm.plugin.rules.detection.bc.signer;
 
+import com.ibm.engine.model.context.SignatureContext;
+import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.IDetectionRule;
+import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.List;
-import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import org.sonar.plugins.java.api.tree.Tree;
 
-public final class BcSigner {
-    private BcSigner() {
+public final class BcMLDSASigner {
+
+    private BcMLDSASigner() {
         // nothing
     }
 
+    private static final IDetectionRule<Tree> CONSTRUCTOR_1 =
+            new DetectionRuleBuilder<Tree>()
+                    .createDetectionRule()
+                    .forObjectTypes("org.bouncycastle.pqc.crypto.mldsa.MLDSASigner")
+                    .forConstructor()
+                    .shouldBeDetectedAs(new ValueActionFactory<>("MLDSASigner"))
+                    .withoutParameters()
+                    .buildForContext(new SignatureContext())
+                    .inBundle(() -> "Bc")
+                    .withDependingDetectionRules(BcSignerInit.rules());
+
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
-        return Stream.of(
-                        BcDSADigestSigner.rules().stream(),
-                        BcGenericSigner.rules().stream(),
-                        BcISO9796d2Signer.rules().stream(),
-                        BcISO9796d2PSSSigner.rules().stream(),
-                        BcPQCSigner.rules().stream(),
-                        BcPSSSigner.rules().stream(),
-                        BcRSADigestSigner.rules().stream(),
-                        BcSimpleSigner.rules().stream(),
-                        BcSM2Signer.rules().stream(),
-                        BcX931Signer.rules().stream(),
-                        BcMLDSASigner.rules().stream())
-                .flatMap(i -> i)
-                .toList();
+        return List.of(CONSTRUCTOR_1);
     }
 }

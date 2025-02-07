@@ -70,7 +70,7 @@ public final class UsualPerformActions {
      * @return A reorganization action (a {@code Function3})
      */
     @Nonnull
-    public static final IFunctionPerformReorganization performMergeParentAndChildOfSameKind(
+    public static IFunctionPerformReorganization performMergeParentAndChildOfSameKind(
             Class<? extends IPrimitive> kind) {
         return (node, parent, roots) -> {
             Algorithm newKindNode = (Algorithm) node.getChildren().get(kind);

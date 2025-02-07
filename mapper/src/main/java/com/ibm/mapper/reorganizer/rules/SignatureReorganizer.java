@@ -61,6 +61,18 @@ public final class SignatureReorganizer {
                                     Signature.class));
 
     @Nonnull
+    public static final IReorganizerRule MERGE_SIGNATURE_PARENT_AND_CHILD =
+            new ReorganizerRuleBuilder()
+                    .createReorganizerRule("MERGE_SIGNATURE_PARENT_AND_CHILD")
+                    .forNodeKind(Signature.class)
+                    .withDetectionCondition(
+                            (node, parent, roots) ->
+                                    node.hasChildOfType(Signature.class).isPresent())
+                    .perform(
+                            UsualPerformActions.performMergeParentAndChildOfSameKind(
+                                    Signature.class));
+
+    @Nonnull
     public static final IReorganizerRule MERGE_SIGNATURE_WITH_PKE_UNDER_PRIVATE_KEY =
             new ReorganizerRuleBuilder()
                     .createReorganizerRule("MERGE_SIGNATURE_WITH_PKE_UNDER_PRIVATE_KEY")
@@ -166,7 +178,7 @@ public final class SignatureReorganizer {
             @Nonnull Class<? extends Functionality> functionalityClazz,
             @Nonnull Class<? extends INode> underNodeClazz) {
         return new ReorganizerRuleBuilder()
-                .createReorganizerRule()
+                .createReorganizerRule("MOVE_NODES_FROM_UNDER_FUNCTIONALITY_UNDER_NODE")
                 .forNodeKind(functionalityClazz)
                 .withDetectionCondition(
                         (node, parent, roots) -> {
@@ -185,6 +197,36 @@ public final class SignatureReorganizer {
                                                         childKeyValue :
                                                                 node.getChildren().entrySet()) {
                                                     n.put(childKeyValue.getValue());
+                                                    node.removeChildOfType(childKeyValue.getKey());
+                                                }
+                                            });
+                            return null;
+                        });
+    }
+
+    @Nonnull
+    public static IReorganizerRule moveNodesFromUnderFunctionalityUnderParent(
+            @Nonnull Class<? extends Functionality> functionalityClazz,
+            @Nonnull Class<? extends INode> parentNodeClazz) {
+        return new ReorganizerRuleBuilder()
+                .createReorganizerRule("MOVE_NODES_FROM_UNDER_FUNCTIONALITY_UNDER_PARENT")
+                .forNodeKind(functionalityClazz)
+                .withDetectionCondition(
+                        (node, parent, roots) -> {
+                            if (parent != null) {
+                                return parent.is(parentNodeClazz);
+                            }
+                            return false;
+                        })
+                .perform(
+                        (node, parent, roots) -> {
+                            Optional.ofNullable(parent)
+                                    .ifPresent(
+                                            p -> {
+                                                for (Map.Entry<Class<? extends INode>, INode>
+                                                        childKeyValue :
+                                                                node.getChildren().entrySet()) {
+                                                    p.put(childKeyValue.getValue());
                                                     node.removeChildOfType(childKeyValue.getKey());
                                                 }
                                             });

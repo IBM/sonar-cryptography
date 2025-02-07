@@ -32,10 +32,10 @@ import com.ibm.engine.model.context.PrivateKeyContext;
 import com.ibm.engine.model.context.PublicKeyContext;
 import com.ibm.engine.model.context.SecretKeyContext;
 import com.ibm.mapper.mapper.bc.BcAgreementMapper;
-import com.ibm.mapper.mapper.bc.BcAsymmetricKeyParameterMapper;
 import com.ibm.mapper.mapper.bc.BcDerivationFunctionMapper;
 import com.ibm.mapper.mapper.bc.BcKemMapper;
 import com.ibm.mapper.mapper.bc.BcOperationModeKDFMapper;
+import com.ibm.mapper.mapper.bc.BcParameterMapper;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.mapper.jca.JcaCurveMapper;
 import com.ibm.mapper.model.IAlgorithm;
@@ -130,9 +130,8 @@ public final class JavaKeyContextTranslator extends JavaAbstractLibraryTranslato
                     .parse(operationMode.asString(), detectionLocation)
                     .map(f -> f);
         } else if (value instanceof AlgorithmParameter<Tree> algorithmParameter) {
-            final BcAsymmetricKeyParameterMapper bcAsymmetricKeyParameterMapper =
-                    new BcAsymmetricKeyParameterMapper();
-            return bcAsymmetricKeyParameterMapper
+            final BcParameterMapper bcParameterMapper = new BcParameterMapper();
+            return bcParameterMapper
                     .parse(algorithmParameter.asString(), detectionLocation)
                     .map(f -> f);
         }

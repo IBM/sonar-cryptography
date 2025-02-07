@@ -25,9 +25,8 @@ import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.ParameterSetIdentifier;
 import com.ibm.mapper.model.algorithms.MLKEM;
 import com.ibm.mapper.utils.DetectionLocation;
-
-import javax.annotation.Nonnull;
 import java.util.Optional;
+import javax.annotation.Nonnull;
 
 public class KEMEnricher implements IEnricher {
 

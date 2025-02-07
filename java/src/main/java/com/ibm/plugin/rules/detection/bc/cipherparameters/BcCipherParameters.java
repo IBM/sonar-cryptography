@@ -46,7 +46,8 @@ public final class BcCipherParameters {
                         BcSABERParameters.rules().stream(),
                         BcMLKEMKeyParameters.rules().stream(),
                         BcMLKEMPrivateKeyParameters.rules().stream(),
-                        BcMLKEMPublicKeyParameters.rules().stream())
+                        BcMLKEMPublicKeyParameters.rules().stream(),
+                        BcMLDSAKeyParameters.rules().stream())
                 .flatMap(i -> i)
                 .toList();
     }

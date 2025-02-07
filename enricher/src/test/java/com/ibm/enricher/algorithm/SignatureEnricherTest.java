@@ -19,6 +19,8 @@
  */
 package com.ibm.enricher.algorithm;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.ibm.enricher.TestBase;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Oid;
@@ -30,11 +32,8 @@ import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.algorithms.SHA2;
 import com.ibm.mapper.model.algorithms.SHA3;
 import com.ibm.mapper.utils.DetectionLocation;
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 class SignatureEnricherTest extends TestBase {
 
