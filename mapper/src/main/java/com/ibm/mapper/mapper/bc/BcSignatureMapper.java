@@ -35,10 +35,9 @@ import com.ibm.mapper.model.algorithms.RSA;
 import com.ibm.mapper.model.algorithms.RSAssaPSS;
 import com.ibm.mapper.model.algorithms.SM2;
 import com.ibm.mapper.utils.DetectionLocation;
-
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Optional;
 
 public class BcSignatureMapper implements IMapper {
 
@@ -72,7 +71,7 @@ public class BcSignatureMapper implements IMapper {
             case "RSADigestSigner" -> Optional.of(new RSA(Signature.class, detectionLocation));
             case "SM2Signer" -> Optional.of(new SM2(detectionLocation));
             case "X931Signer" -> Optional.of(new ANSIX931(detectionLocation));
-            case "MLDSASigner" -> Optional.of(new MLDSA(detectionLocation));
+            case "MLDSASigner", "HashMLDSASigner" -> Optional.of(new MLDSA(detectionLocation));
             default -> {
                 final Algorithm algorithm =
                         new Algorithm(signerString, Signature.class, detectionLocation);

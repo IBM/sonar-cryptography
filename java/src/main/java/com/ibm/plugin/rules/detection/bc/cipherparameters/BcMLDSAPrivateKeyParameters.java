@@ -30,18 +30,18 @@ import javax.annotation.Nonnull;
 import org.sonar.plugins.java.api.tree.Tree;
 
 @SuppressWarnings("java:S1192")
-public final class BcMLKEMPrivateKeyParameters {
+public final class BcMLDSAPrivateKeyParameters {
 
-    private BcMLKEMPrivateKeyParameters() {
+    private BcMLDSAPrivateKeyParameters() {
         // nothing
     }
 
-    private static final IDetectionRule<Tree> MLKEM_PRIVATE_KEY_PARAMETERS_1 =
+    private static final IDetectionRule<Tree> MLDSA_PRIVATE_KEY_PARAMETERS_1 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.pqc.crypto.mlkem.MLKEMPrivateKeyParameters")
+                    .forObjectTypes("org.bouncycastle.pqc.crypto.mldsa.MLDSAPrivateKeyParameters")
                     .forConstructor()
-                    .withMethodParameter("org.bouncycastle.pqc.crypto.mlkem.MLKEMParameters")
+                    .withMethodParameter("org.bouncycastle.pqc.crypto.mldsa.MLDSAParameters")
                     .shouldBeDetectedAs(
                             new AlgorithmParameterFactory<>(AlgorithmParameter.Kind.ANY))
                     .withMethodParameter("byte[]")
@@ -49,14 +49,16 @@ public final class BcMLKEMPrivateKeyParameters {
                     .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
-    private static final IDetectionRule<Tree> MLKEM_PRIVATE_KEY_PARAMETERS_2 =
+    private static final IDetectionRule<Tree> MLDSA_PRIVATE_KEY_PARAMETERS_2 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.pqc.crypto.mlkem.MLKEMPrivateKeyParameters")
+                    .forObjectTypes("org.bouncycastle.pqc.crypto.mldsa.MLDSAPrivateKeyParameters")
                     .forConstructor()
-                    .withMethodParameter("org.bouncycastle.pqc.crypto.mlkem.MLKEMParameters")
+                    .withMethodParameter("org.bouncycastle.pqc.crypto.mldsa.MLDSAParameters")
                     .shouldBeDetectedAs(
                             new AlgorithmParameterFactory<>(AlgorithmParameter.Kind.ANY))
+                    .withMethodParameter("byte[]")
+                    .withMethodParameter("byte[]")
                     .withMethodParameter("byte[]")
                     .withMethodParameter("byte[]")
                     .withMethodParameter("byte[]")
@@ -66,12 +68,12 @@ public final class BcMLKEMPrivateKeyParameters {
                     .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
 
-    private static final IDetectionRule<Tree> MLKEM_PRIVATE_KEY_PARAMETERS_3 =
+    private static final IDetectionRule<Tree> MLDSA_PRIVATE_KEY_PARAMETERS_3 =
             new DetectionRuleBuilder<Tree>()
                     .createDetectionRule()
-                    .forObjectTypes("org.bouncycastle.pqc.crypto.mlkem.MLKEMPrivateKeyParameters")
+                    .forObjectTypes("org.bouncycastle.pqc.crypto.mldsa.MLDSAPrivateKeyParameters")
                     .forConstructor()
-                    .withMethodParameter("org.bouncycastle.pqc.crypto.mlkem.MLKEMParameters")
+                    .withMethodParameter("org.bouncycastle.pqc.crypto.mldsa.MLDSAParameters")
                     .shouldBeDetectedAs(
                             new AlgorithmParameterFactory<>(AlgorithmParameter.Kind.ANY))
                     .withMethodParameter("byte[]")
@@ -80,6 +82,24 @@ public final class BcMLKEMPrivateKeyParameters {
                     .withMethodParameter("byte[]")
                     .withMethodParameter("byte[]")
                     .withMethodParameter("byte[]")
+                    .withMethodParameter("byte[]")
+                    .withMethodParameter("byte[]")
+                    .buildForContext(new PrivateKeyContext(Map.of("kind", "MLDSA")))
+                    .inBundle(() -> "Bc")
+                    .withoutDependingDetectionRules();
+
+    private static final IDetectionRule<Tree> MLDSA_PRIVATE_KEY_PARAMETERS_4 =
+            new DetectionRuleBuilder<Tree>()
+                    .createDetectionRule()
+                    .forObjectTypes("org.bouncycastle.pqc.crypto.mldsa.MLDSAPrivateKeyParameters")
+                    .forConstructor()
+                    .withMethodParameter("org.bouncycastle.pqc.crypto.mldsa.MLDSAParameters")
+                    .shouldBeDetectedAs(
+                            new AlgorithmParameterFactory<>(AlgorithmParameter.Kind.ANY))
+                    .withMethodParameter("byte[]")
+                    .withMethodParameter(
+                            "org.bouncycastle.pqc.crypto.mldsa.MLDSAPublicKeyParameters")
+                    .addDependingDetectionRules(BcMLDSAPublicKeyParameters.rules())
                     .buildForContext(new PrivateKeyContext(Map.of("kind", "MLDSA")))
                     .inBundle(() -> "Bc")
                     .withoutDependingDetectionRules();
@@ -87,8 +107,9 @@ public final class BcMLKEMPrivateKeyParameters {
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
         return List.of(
-                MLKEM_PRIVATE_KEY_PARAMETERS_1,
-                MLKEM_PRIVATE_KEY_PARAMETERS_2,
-                MLKEM_PRIVATE_KEY_PARAMETERS_3);
+                MLDSA_PRIVATE_KEY_PARAMETERS_1,
+                MLDSA_PRIVATE_KEY_PARAMETERS_2,
+                MLDSA_PRIVATE_KEY_PARAMETERS_3,
+                MLDSA_PRIVATE_KEY_PARAMETERS_4);
     }
 }
