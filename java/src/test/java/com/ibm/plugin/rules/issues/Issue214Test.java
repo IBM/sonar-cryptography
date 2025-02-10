@@ -89,7 +89,7 @@ class Issue214Test extends TestBase {
         // MessageDigest under Signature
         INode messageDigestNode = signatureNode.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode).isNotNull();
-        assertThat(messageDigestNode.getChildren()).hasSize(3);
+        assertThat(messageDigestNode.getChildren()).hasSize(4);
         assertThat(messageDigestNode.asString()).isEqualTo("SHA1");
 
         // DigestSize under MessageDigest under Signature
@@ -109,6 +109,12 @@ class Issue214Test extends TestBase {
         assertThat(blockSizeNode).isNotNull();
         assertThat(blockSizeNode.getChildren()).isEmpty();
         assertThat(blockSizeNode.asString()).isEqualTo("512");
+
+        // Oid under MessageDigest under Signature
+        oidNode = messageDigestNode.getChildren().get(Oid.class);
+        assertThat(oidNode).isNotNull();
+        assertThat(oidNode.getChildren()).isEmpty();
+        assertThat(oidNode.asString()).isEqualTo("1.3.14.3.2.26");
 
         // KeyLength under Signature
         INode keyLengthNode = signatureNode.getChildren().get(KeyLength.class);

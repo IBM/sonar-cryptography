@@ -19,8 +19,6 @@
  */
 package com.ibm.plugin.rules.detection.jca.signature;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
@@ -36,14 +34,17 @@ import com.ibm.mapper.model.ProbabilisticSignatureScheme;
 import com.ibm.mapper.model.SaltLength;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.plugin.TestBase;
-import java.util.List;
-import javax.annotation.Nonnull;
 import org.junit.jupiter.api.Test;
 import org.sonar.java.checks.verifier.CheckVerifier;
 import org.sonar.plugins.java.api.JavaCheck;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class JcaSignatureSetParameter3Test extends TestBase {
 
@@ -153,7 +154,7 @@ class JcaSignatureSetParameter3Test extends TestBase {
         INode messageDigestNode1 =
                 maskGenerationFunctionNode.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode1).isNotNull();
-        assertThat(messageDigestNode1.getChildren()).hasSize(3);
+        assertThat(messageDigestNode1.getChildren()).hasSize(4);
         assertThat(messageDigestNode1.asString()).isEqualTo("SHA1");
 
         // DigestSize under MessageDigest under MaskGenerationFunction under
@@ -176,6 +177,13 @@ class JcaSignatureSetParameter3Test extends TestBase {
         assertThat(digestNode1).isNotNull();
         assertThat(digestNode1.getChildren()).isEmpty();
         assertThat(digestNode1.asString()).isEqualTo("DIGEST");
+
+        // Oid under MessageDigest under MaskGenerationFunction under
+        // ProbabilisticSignatureScheme
+        INode oidNode = messageDigestNode1.getChildren().get(Oid.class);
+        assertThat(oidNode).isNotNull();
+        assertThat(oidNode.getChildren()).isEmpty();
+        assertThat(oidNode.asString()).isEqualTo("1.3.14.3.2.26");
 
         // Oid under MaskGenerationFunction under ProbabilisticSignatureScheme
         INode oidNode2 = maskGenerationFunctionNode.getChildren().get(Oid.class);

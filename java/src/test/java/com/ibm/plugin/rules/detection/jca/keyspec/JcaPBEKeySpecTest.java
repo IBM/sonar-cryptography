@@ -19,8 +19,6 @@
  */
 package com.ibm.plugin.rules.detection.jca.keyspec;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
@@ -35,6 +33,7 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
 import com.ibm.mapper.model.PasswordLength;
 import com.ibm.mapper.model.SaltLength;
@@ -43,14 +42,17 @@ import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.model.functionality.Tag;
 import com.ibm.plugin.TestBase;
-import java.util.List;
-import javax.annotation.Nonnull;
 import org.junit.jupiter.api.Test;
 import org.sonar.java.checks.verifier.CheckVerifier;
 import org.sonar.plugins.java.api.JavaCheck;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class JcaPBEKeySpecTest extends TestBase {
 
@@ -131,7 +133,7 @@ class JcaPBEKeySpecTest extends TestBase {
         // MessageDigest under Mac under PasswordBasedKeyDerivationFunction under SecretKey
         INode messageDigestNode = macNode.getChildren().get(MessageDigest.class);
         assertThat(messageDigestNode).isNotNull();
-        assertThat(messageDigestNode.getChildren()).hasSize(3);
+        assertThat(messageDigestNode.getChildren()).hasSize(4);
         assertThat(messageDigestNode.asString()).isEqualTo("SHA1");
 
         // BlockSize under MessageDigest under Mac under PasswordBasedKeyDerivationFunction under
@@ -154,6 +156,13 @@ class JcaPBEKeySpecTest extends TestBase {
         assertThat(digestNode).isNotNull();
         assertThat(digestNode.getChildren()).isEmpty();
         assertThat(digestNode.asString()).isEqualTo("DIGEST");
+
+        // Oid under MessageDigest under Mac under PasswordBasedKeyDerivationFunction under
+        // SecretKey
+        INode oidNode = messageDigestNode.getChildren().get(Oid.class);
+        assertThat(oidNode).isNotNull();
+        assertThat(oidNode.getChildren()).isEmpty();
+        assertThat(oidNode.asString()).isEqualTo("1.3.14.3.2.26");
 
         // Tag under Mac under PasswordBasedKeyDerivationFunction under SecretKey
         INode tagNode = macNode.getChildren().get(Tag.class);

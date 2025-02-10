@@ -24,6 +24,7 @@ import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.utils.DetectionLocation;
 import javax.annotation.Nonnull;
 
@@ -39,6 +40,7 @@ public final class SHA extends Algorithm implements MessageDigest {
         super("SHA1", asKind, detectionLocation);
         this.put(new BlockSize(512, detectionLocation));
         this.put(new DigestSize(160, detectionLocation));
+        this.put(new Oid("1.3.14.3.2.26", detectionLocation));
     }
 
     public SHA(@Nonnull final Class<? extends IPrimitive> asKind, @Nonnull SHA sha) {
