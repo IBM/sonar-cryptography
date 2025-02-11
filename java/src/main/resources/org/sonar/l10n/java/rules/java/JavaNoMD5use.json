@@ -1,6 +1,12 @@
 {
   "title": "Do not use MD5 for cryptographic purposes like hashing",
-  "type": "Bug",
+  "type": "VULNERABILITY",
+  "code": {
+    "impacts": {
+      "SECURITY": "HIGH"
+    },
+    "attribute": "TRUSTWORTHY"
+  },
   "status": "ready",
   "tags": [
     "cryptography",
@@ -8,5 +14,6 @@
     "cwe"
   ],
   "defaultSeverity": "Critical",
-  "scope": "Main"
+  "scope": "Main",
+  "sqKey": "JavaNoMD5use"
 }

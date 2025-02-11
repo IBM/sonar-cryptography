@@ -1,6 +1,6 @@
 services:
   sonarqube:
-    image: sonarqube:latest
+    image: sonarqube:25.2.0.102705-community
     user: "${UID}"
     volumes:
       - sonar-data:/opt/sonarqube/data
@@ -19,16 +19,16 @@ services:
     command:
       - "-Dsonar.es.bootstrap.checks.disable=true"
   db:
-    image: postgres:15-alpine
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    image: postgres:17-alpine
     environment:
       POSTGRES_USER: sonar
       POSTGRES_PASSWORD: sonar
       POSTGRES_DB: sonar
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - sonar-postgresql:/var/lib/postgresql
       - sonar-postgresql_data:/var/lib/postgresql/data
