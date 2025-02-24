@@ -23,11 +23,12 @@ import com.ibm.mapper.model.Algorithm;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.IPrimitive;
 import com.ibm.mapper.utils.Function3;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * This class contains public static {@code Function3} implementing usual reorganization actions,
@@ -50,12 +51,15 @@ public final class UsualPerformActions {
                     // Do nothing
                     return roots;
                 }
-                for (Map.Entry<Class<? extends INode>, INode> entry :
-                        node.getChildren().entrySet()) {
+                final List<Class<? extends INode>> toRemove = new ArrayList<>();
+                for (Map.Entry<Class<? extends INode>, INode> entry : node.getChildren().entrySet()) {
                     Class<? extends INode> kind = entry.getKey();
                     INode child = entry.getValue();
                     // Append the child to `parent` and remove it from `node`
                     parent.put(child);
+                    toRemove.add(kind);
+                }
+                for (Class<? extends INode> kind : toRemove) {
                     node.removeChildOfType(kind);
                 }
                 return roots;
