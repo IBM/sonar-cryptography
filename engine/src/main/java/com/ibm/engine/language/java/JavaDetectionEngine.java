@@ -182,9 +182,10 @@ public final class JavaDetectionEngine implements IDetectionEngine<Tree, Symbol>
             @Nonnull ExpressionTree tree,
             @Nullable IValueFactory<Tree> valueFactory,
             @Nonnull LinkedList<Tree> selections) {
-        if (tree.is(Tree.Kind.IDENTIFIER)) {
+        if (selections.size() > 15) {
+            return Collections.emptyList();
+        } else if (tree.is(Tree.Kind.IDENTIFIER)) {
             IdentifierTree identifierTree = (IdentifierTree) tree;
-
             if (identifierTree.symbol().isVariableSymbol()) {
                 // variable
                 VariableTree variableTree = (VariableTree) identifierTree.symbol().declaration();
@@ -301,7 +302,6 @@ public final class JavaDetectionEngine implements IDetectionEngine<Tree, Symbol>
             return value.map(t -> List.of(new ResolvedValue<>(t, (Tree) tree)))
                     .orElse(Collections.emptyList());
         }
-
         return Collections.emptyList();
     }
 
@@ -902,7 +902,6 @@ public final class JavaDetectionEngine implements IDetectionEngine<Tree, Symbol>
                 return traceVariable(identifierTree1);
             }
         }
-
         return identifierTree;
     }
 
