@@ -21,12 +21,14 @@ package com.ibm.plugin.translation.translator.contexts;
 
 import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
+import com.ibm.engine.model.InitializationVectorSize;
 import com.ibm.engine.model.KeySize;
 import com.ibm.engine.model.MacSize;
 import com.ibm.engine.model.TagSize;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.InitializationVectorLength;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.utils.DetectionLocation;
@@ -69,6 +71,11 @@ public final class JavaAlgorithmParameterContextTranslator extends JavaAbstractL
         } else if (value instanceof TagSize<Tree> tagSize) {
             TagLength tagLength = new TagLength(tagSize.getValue(), detectionLocation);
             return Optional.of(tagLength);
+        } else if (value instanceof InitializationVectorSize<Tree> initializationVectorSize) {
+            InitializationVectorLength initializationVectorLength =
+                    new InitializationVectorLength(
+                            initializationVectorSize.getValue(), detectionLocation);
+            return Optional.of(initializationVectorLength);
         }
         return Optional.empty();
     }
