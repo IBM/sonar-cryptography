@@ -40,7 +40,8 @@ public final class JcaAlgorithmParameterSpec {
                         JcaMGF1ParameterSpec.rules().stream(),
                         JcaDHGenParameterSpec.rules().stream(),
                         JcaDHParameterSpec.rules().stream(),
-                        JcaGCMParameterSpec.rules().stream())
+                        JcaGCMParameterSpec.rules().stream(),
+                        JcaIvParameterSpec.rules().stream())
                 .flatMap(i -> i)
                 .toList();
     }

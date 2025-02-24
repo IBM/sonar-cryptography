@@ -22,13 +22,16 @@ package com.ibm.output.cyclonedx;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.mapper.model.AuthenticatedEncryption;
+import com.ibm.mapper.model.InitializationVectorLength;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.SecretKey;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.model.algorithms.AES;
 import com.ibm.mapper.model.functionality.Decrypt;
 import com.ibm.mapper.model.functionality.KeyGeneration;
+import com.ibm.mapper.model.mode.CBC;
 import com.ibm.mapper.model.mode.GCM;
+import com.ibm.mapper.model.padding.PKCS5;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.component.crypto.CryptoProperties;
 import org.cyclonedx.model.component.crypto.RelatedCryptoMaterialProperties;
@@ -77,6 +80,42 @@ class RelatedCryptoMaterialsTest extends TestBase {
                                 assertThat(relatedCryptoMaterialProperties.getType())
                                         .isEqualTo(RelatedCryptoMaterialType.SECRET_KEY);
                             }
+                        }
+                    }
+                });
+    }
+
+    @Test
+    void iv() {
+        this.assertsNode(
+                () -> {
+                    final AES aes =
+                            new AES(
+                                    128,
+                                    new CBC(detectionLocation),
+                                    new PKCS5(detectionLocation),
+                                    detectionLocation);
+                    aes.put(new InitializationVectorLength(128, detectionLocation));
+                    return aes;
+                },
+                bom -> {
+                    assertThat(bom.getComponents()).hasSize(2);
+
+                    for (Component component : bom.getComponents()) {
+                        asserts(component.getEvidence());
+                        assertThat(component.getCryptoProperties()).isNotNull();
+                        final CryptoProperties cryptoProperties = component.getCryptoProperties();
+
+                        if (cryptoProperties
+                                .getAssetType()
+                                .equals(AssetType.RELATED_CRYPTO_MATERIAL)) {
+                            assertThat(cryptoProperties.getRelatedCryptoMaterialProperties())
+                                    .isNotNull();
+                            final RelatedCryptoMaterialProperties relatedCryptoMaterialProperties =
+                                    cryptoProperties.getRelatedCryptoMaterialProperties();
+                            assertThat(relatedCryptoMaterialProperties.getType())
+                                    .isEqualTo(RelatedCryptoMaterialType.INITIALIZATION_VECTOR);
+                            assertThat(relatedCryptoMaterialProperties.getSize()).isEqualTo(128);
                         }
                     }
                 });
