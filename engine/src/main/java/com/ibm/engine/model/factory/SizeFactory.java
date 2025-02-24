@@ -23,10 +23,9 @@ import com.ibm.engine.detection.ResolvedValue;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.Size;
 import com.ibm.engine.utils.Utils;
-
-import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import javax.annotation.Nonnull;
 
 public abstract class SizeFactory<T> {
     @Nonnull private final Size.UnitType interpretAsUnitType;
