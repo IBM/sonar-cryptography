@@ -54,8 +54,4 @@ public abstract class SizeFactory<T> {
                             .map(value -> createSize.apply(value, objectTResolvedValue.tree()));
         };
     }
-
-    //     private Size<T> createSize(int value, T tree) {
-    //         return new Size<>(value, Size.UnitType.BIT, tree);
-    //     }
 }

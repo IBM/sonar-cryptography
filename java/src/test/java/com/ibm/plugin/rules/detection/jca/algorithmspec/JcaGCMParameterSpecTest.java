@@ -1,6 +1,6 @@
 /*
  * SonarQube Cryptography Plugin
- * Copyright (C) 2024 IBM
+ * Copyright (C) 2025 IBM
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -19,29 +19,32 @@
  */
 package com.ibm.plugin.rules.detection.jca.algorithmspec;
 
-import com.ibm.engine.rule.IDetectionRule;
+import com.ibm.engine.detection.DetectionStore;
+import com.ibm.mapper.model.INode;
+import com.ibm.plugin.TestBase;
 import java.util.List;
-import java.util.stream.Stream;
 import javax.annotation.Nonnull;
+import org.junit.jupiter.api.Test;
+import org.sonar.java.checks.verifier.CheckVerifier;
+import org.sonar.plugins.java.api.JavaCheck;
+import org.sonar.plugins.java.api.JavaFileScannerContext;
+import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.Tree;
 
-public final class JcaAlgorithmParameterSpec {
+class JcaGCMParameterSpecTest extends TestBase {
 
-    private JcaAlgorithmParameterSpec() {
-        // nothing
+    @Test
+    void test() {
+        CheckVerifier.newVerifier()
+                .onFile(
+                        "src/test/files/rules/detection/jca/algorithmspec/JcaGCMParameterSpecTestFile.java")
+                .withChecks(this)
+                .verifyIssues();
     }
 
-    @Nonnull
-    public static List<IDetectionRule<Tree>> rules() {
-        return Stream.of(
-                        JcaECParameterSpec.rules().stream(),
-                        JcaECGenParameterSpec.rules().stream(),
-                        JcaPSSParameterSpec.rules().stream(),
-                        JcaMGF1ParameterSpec.rules().stream(),
-                        JcaDHGenParameterSpec.rules().stream(),
-                        JcaDHParameterSpec.rules().stream(),
-                        JcaGCMParameterSpec.rules().stream())
-                .flatMap(i -> i)
-                .toList();
-    }
+    @Override
+    public void asserts(
+            int findingId,
+            @Nonnull DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> detectionStore,
+            @Nonnull List<INode> nodes) {}
 }

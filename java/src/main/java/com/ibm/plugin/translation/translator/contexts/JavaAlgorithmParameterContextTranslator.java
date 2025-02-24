@@ -23,6 +23,7 @@ import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.KeySize;
 import com.ibm.engine.model.MacSize;
+import com.ibm.engine.model.TagSize;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
 import com.ibm.mapper.model.INode;
@@ -64,6 +65,9 @@ public final class JavaAlgorithmParameterContextTranslator extends JavaAbstractL
             return Optional.of(keyLength);
         } else if (value instanceof MacSize<Tree> macSize) {
             TagLength tagLength = new TagLength(macSize.getValue(), detectionLocation);
+            return Optional.of(tagLength);
+        } else if (value instanceof TagSize<Tree> tagSize) {
+            TagLength tagLength = new TagLength(tagSize.getValue(), detectionLocation);
             return Optional.of(tagLength);
         }
         return Optional.empty();

@@ -32,6 +32,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import org.sonar.plugins.java.api.tree.Tree;
 
+@SuppressWarnings("java:S1192")
 public final class JcaECParameterSpec {
 
     private static final IDetectionRule<Tree> EC_FIELD_P =
