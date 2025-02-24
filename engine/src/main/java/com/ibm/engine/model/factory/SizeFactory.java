@@ -23,9 +23,10 @@ import com.ibm.engine.detection.ResolvedValue;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.Size;
 import com.ibm.engine.utils.Utils;
+
+import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.function.BiFunction;
-import javax.annotation.Nonnull;
 
 public abstract class SizeFactory<T> {
     @Nonnull private final Size.UnitType interpretAsUnitType;
@@ -54,8 +55,4 @@ public abstract class SizeFactory<T> {
                             .map(value -> createSize.apply(value, objectTResolvedValue.tree()));
         };
     }
-
-    //     private Size<T> createSize(int value, T tree) {
-    //         return new Size<>(value, Size.UnitType.BIT, tree);
-    //     }
 }
