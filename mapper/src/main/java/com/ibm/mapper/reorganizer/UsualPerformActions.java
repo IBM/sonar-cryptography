@@ -52,7 +52,8 @@ public final class UsualPerformActions {
                     return roots;
                 }
                 final List<Class<? extends INode>> toRemove = new ArrayList<>();
-                for (Map.Entry<Class<? extends INode>, INode> entry : node.getChildren().entrySet()) {
+                for (Map.Entry<Class<? extends INode>, INode> entry :
+                        node.getChildren().entrySet()) {
                     Class<? extends INode> kind = entry.getKey();
                     INode child = entry.getValue();
                     // Append the child to `parent` and remove it from `node`
