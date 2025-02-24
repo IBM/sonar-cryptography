@@ -23,10 +23,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.InitializationVectorLength;
+import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Oid;
+import com.ibm.mapper.model.PasswordLength;
+import com.ibm.mapper.model.SaltLength;
 import com.ibm.mapper.model.SecretKey;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.model.algorithms.AES;
+import com.ibm.mapper.model.algorithms.HMAC;
+import com.ibm.mapper.model.algorithms.PBKDF2;
+import com.ibm.mapper.model.algorithms.SHA;
 import com.ibm.mapper.model.functionality.Decrypt;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.model.mode.CBC;
@@ -116,6 +122,51 @@ class RelatedCryptoMaterialsTest extends TestBase {
                             assertThat(relatedCryptoMaterialProperties.getType())
                                     .isEqualTo(RelatedCryptoMaterialType.INITIALIZATION_VECTOR);
                             assertThat(relatedCryptoMaterialProperties.getSize()).isEqualTo(128);
+                        }
+                    }
+                });
+    }
+
+    @Test
+    void pbe() {
+        this.assertsNode(
+                () -> {
+                    final PBKDF2 pbkdf2 = new PBKDF2(new HMAC(new SHA(detectionLocation)));
+                    final SecretKey secretKey = new SecretKey(pbkdf2);
+                    secretKey.put(new PasswordLength(32, detectionLocation));
+                    secretKey.put(new KeyLength(1024, detectionLocation));
+                    secretKey.put(new SaltLength(192, detectionLocation));
+                    return secretKey;
+                },
+                bom -> {
+                    assertThat(bom.getComponents()).hasSize(6);
+
+                    for (Component component : bom.getComponents()) {
+                        asserts(component.getEvidence());
+                        assertThat(component.getCryptoProperties()).isNotNull();
+                        final CryptoProperties cryptoProperties = component.getCryptoProperties();
+
+                        if (cryptoProperties
+                                .getAssetType()
+                                .equals(AssetType.RELATED_CRYPTO_MATERIAL)) {
+                            assertThat(cryptoProperties.getRelatedCryptoMaterialProperties())
+                                    .isNotNull();
+                            final RelatedCryptoMaterialProperties relatedCryptoMaterialProperties =
+                                    cryptoProperties.getRelatedCryptoMaterialProperties();
+
+                            if (relatedCryptoMaterialProperties
+                                    .getType()
+                                    .equals(RelatedCryptoMaterialType.PASSWORD)) {
+                                assertThat(relatedCryptoMaterialProperties.getSize()).isEqualTo(32);
+                            } else if (relatedCryptoMaterialProperties
+                                    .getType()
+                                    .equals(RelatedCryptoMaterialType.SALT)) {
+                                assertThat(relatedCryptoMaterialProperties.getSize())
+                                        .isEqualTo(192);
+                            } else {
+                                assertThat(relatedCryptoMaterialProperties.getType())
+                                        .isEqualTo(RelatedCryptoMaterialType.SECRET_KEY);
+                            }
                         }
                     }
                 });
