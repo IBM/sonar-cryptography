@@ -39,6 +39,7 @@ import com.ibm.mapper.model.ParameterSetIdentifier;
 import com.ibm.mapper.model.PasswordLength;
 import com.ibm.mapper.model.Protocol;
 import com.ibm.mapper.model.SaltLength;
+import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.model.collections.CipherSuiteCollection;
 import com.ibm.mapper.model.functionality.Decapsulate;
 import com.ibm.mapper.model.functionality.Decrypt;
@@ -124,7 +125,8 @@ public class CBOMOutputFile implements IOutputFile {
                     } else if (node instanceof SaltLength
                             || node instanceof PasswordLength
                             || node instanceof InitializationVectorLength
-                            || node instanceof NonceLength) {
+                            || node instanceof NonceLength
+                            || node instanceof TagLength) {
                         final IProperty property = (IProperty) node;
                         createRelatedCryptoMaterialComponent(parentBomRef, property);
                     } else if (node.hasChildren()) {

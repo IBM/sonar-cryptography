@@ -29,6 +29,7 @@ import com.ibm.mapper.model.PrivateKey;
 import com.ibm.mapper.model.PublicKey;
 import com.ibm.mapper.model.SaltLength;
 import com.ibm.mapper.model.SecretKey;
+import com.ibm.mapper.model.TagLength;
 import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nonnull;
@@ -97,6 +98,8 @@ public class RelatedCryptoMaterialComponentBuilder
             stringBuilder.append("nonce");
         } else if (name instanceof InitializationVectorLength) {
             stringBuilder.append("iv");
+        } else if (name instanceof TagLength) {
+            stringBuilder.append("tag");
         }
         stringBuilder.append("@").append(this.uuid);
         this.component.setName(stringBuilder.toString());
@@ -128,6 +131,8 @@ public class RelatedCryptoMaterialComponentBuilder
             types = RelatedCryptoMaterialType.NONCE;
         } else if (type instanceof InitializationVectorLength) {
             types = RelatedCryptoMaterialType.INITIALIZATION_VECTOR;
+        } else if (type instanceof TagLength) {
+            types = RelatedCryptoMaterialType.TAG;
         }
 
         if (types != null) {
@@ -156,6 +161,8 @@ public class RelatedCryptoMaterialComponentBuilder
             this.relatedCryptoMaterialProperties.setSize(nonceLength.getValue());
         } else if (size instanceof InitializationVectorLength initializationVectorLength) {
             this.relatedCryptoMaterialProperties.setSize(initializationVectorLength.getValue());
+        } else if (size instanceof TagLength tagLength) {
+            this.relatedCryptoMaterialProperties.setSize(tagLength.getValue());
         }
 
         return new RelatedCryptoMaterialComponentBuilder(
