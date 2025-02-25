@@ -33,6 +33,7 @@ import com.ibm.engine.model.TagSize;
 import com.ibm.engine.model.context.AlgorithmParameterContext;
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.context.SecretKeyContext;
+import com.ibm.mapper.model.AuthenticatedEncryption;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.DigestSize;
@@ -40,6 +41,7 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.Mode;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.PasswordBasedKeyDerivationFunction;
 import com.ibm.mapper.model.PasswordLength;
@@ -290,13 +292,17 @@ class JcaGCMParameterSpecTest extends TestBase {
             assertThat(value0_1_1.asString()).isEqualTo("AES");
 
             DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1_2 =
-                    getStoreOfValueType(TagSize.class, store_1.getChildren());
-            assertThat(store_1_2.getDetectionValues()).hasSize(1);
+                    getStoreOfValueType(com.ibm.engine.model.Mode.class, store_1.getChildren());
+            assertThat(store_1_2.getDetectionValues()).hasSize(2);
             assertThat(store_1_2.getDetectionValueContext())
                     .isInstanceOf(AlgorithmParameterContext.class);
             IValue<Tree> value0_1_2 = store_1_2.getDetectionValues().get(0);
-            assertThat(value0_1_2).isInstanceOf(TagSize.class);
-            assertThat(value0_1_2.asString()).isEqualTo("128");
+            assertThat(value0_1_2).isInstanceOf(com.ibm.engine.model.Mode.class);
+            assertThat(value0_1_2.asString()).isEqualTo("GCM");
+
+            IValue<Tree> value1_1_2 = store_1_2.getDetectionValues().get(1);
+            assertThat(value1_1_2).isInstanceOf(TagSize.class);
+            assertThat(value1_1_2.asString()).isEqualTo("128");
 
             /*
              * Translation
@@ -304,77 +310,84 @@ class JcaGCMParameterSpecTest extends TestBase {
 
             assertThat(nodes).hasSize(1);
 
-            // BlockCipher
-            INode blockCipherNode1 = nodes.get(0);
-            assertThat(blockCipherNode1.getKind()).isEqualTo(BlockCipher.class);
-            assertThat(blockCipherNode1.getChildren()).hasSize(6);
-            assertThat(blockCipherNode1.asString()).isEqualTo("AES128");
+            // AuthenticatedEncryption
+            INode authenticatedEncryptionNode = nodes.get(0);
+            assertThat(authenticatedEncryptionNode.getKind())
+                    .isEqualTo(AuthenticatedEncryption.class);
+            assertThat(authenticatedEncryptionNode.getChildren()).hasSize(7);
+            assertThat(authenticatedEncryptionNode.asString()).isEqualTo("AES128-GCM");
 
-            // TagLength under BlockCipher
-            INode tagLengthNode = blockCipherNode1.getChildren().get(TagLength.class);
+            // KeyLength under AuthenticatedEncryption
+            INode keyLengthNode = authenticatedEncryptionNode.getChildren().get(KeyLength.class);
+            assertThat(keyLengthNode).isNotNull();
+            assertThat(keyLengthNode.getChildren()).isEmpty();
+            assertThat(keyLengthNode.asString()).isEqualTo("128");
+
+            // TagLength under AuthenticatedEncryption
+            INode tagLengthNode = authenticatedEncryptionNode.getChildren().get(TagLength.class);
             assertThat(tagLengthNode).isNotNull();
             assertThat(tagLengthNode.getChildren()).isEmpty();
             assertThat(tagLengthNode.asString()).isEqualTo("128");
 
-            // Oid under BlockCipher
-            INode oidNode2 = blockCipherNode1.getChildren().get(Oid.class);
-            assertThat(oidNode2).isNotNull();
-            assertThat(oidNode2.getChildren()).isEmpty();
-            assertThat(oidNode2.asString()).isEqualTo("2.16.840.1.101.3.4.1");
+            // Oid under AuthenticatedEncryption
+            INode oidNode = authenticatedEncryptionNode.getChildren().get(Oid.class);
+            assertThat(oidNode).isNotNull();
+            assertThat(oidNode.getChildren()).isEmpty();
+            assertThat(oidNode.asString()).isEqualTo("2.16.840.1.101.3.4.1");
 
-            // Decrypt under BlockCipher
-            INode decryptNode = blockCipherNode1.getChildren().get(Decrypt.class);
+            // Decrypt under AuthenticatedEncryption
+            INode decryptNode = authenticatedEncryptionNode.getChildren().get(Decrypt.class);
             assertThat(decryptNode).isNotNull();
             assertThat(decryptNode.getChildren()).isEmpty();
             assertThat(decryptNode.asString()).isEqualTo("DECRYPT");
 
-            // SecretKey under BlockCipher
-            INode secretKeyNode2 = blockCipherNode1.getChildren().get(SecretKey.class);
-            assertThat(secretKeyNode2).isNotNull();
-            assertThat(secretKeyNode2.getChildren()).hasSize(1);
-            assertThat(secretKeyNode2.asString()).isEqualTo("AES");
+            // Mode under AuthenticatedEncryption
+            INode modeNode = authenticatedEncryptionNode.getChildren().get(Mode.class);
+            assertThat(modeNode).isNotNull();
+            assertThat(modeNode.getChildren()).isEmpty();
+            assertThat(modeNode.asString()).isEqualTo("GCM");
 
-            // BlockCipher under SecretKey under BlockCipher
-            INode blockCipherNode2 = secretKeyNode2.getChildren().get(BlockCipher.class);
-            assertThat(blockCipherNode2).isNotNull();
-            assertThat(blockCipherNode2.getChildren()).hasSize(4);
-            assertThat(blockCipherNode2.asString()).isEqualTo("AES128");
+            // SecretKey under AuthenticatedEncryption
+            INode secretKeyNode = authenticatedEncryptionNode.getChildren().get(SecretKey.class);
+            assertThat(secretKeyNode).isNotNull();
+            assertThat(secretKeyNode.getChildren()).hasSize(1);
+            assertThat(secretKeyNode.asString()).isEqualTo("AES");
 
-            // Oid under BlockCipher under SecretKey under BlockCipher
-            INode oidNode3 = blockCipherNode2.getChildren().get(Oid.class);
-            assertThat(oidNode3).isNotNull();
-            assertThat(oidNode3.getChildren()).isEmpty();
-            assertThat(oidNode3.asString()).isEqualTo("2.16.840.1.101.3.4.1");
+            // BlockCipher under SecretKey under AuthenticatedEncryption
+            INode blockCipherNode = secretKeyNode.getChildren().get(BlockCipher.class);
+            assertThat(blockCipherNode).isNotNull();
+            assertThat(blockCipherNode.getChildren()).hasSize(4);
+            assertThat(blockCipherNode.asString()).isEqualTo("AES128");
 
-            // KeyGeneration under BlockCipher under SecretKey under BlockCipher
-            INode keyGenerationNode2 = blockCipherNode2.getChildren().get(KeyGeneration.class);
-            assertThat(keyGenerationNode2).isNotNull();
-            assertThat(keyGenerationNode2.getChildren()).isEmpty();
-            assertThat(keyGenerationNode2.asString()).isEqualTo("KEYGENERATION");
+            // KeyLength under BlockCipher under SecretKey under AuthenticatedEncryption
+            INode keyLengthNode1 = blockCipherNode.getChildren().get(KeyLength.class);
+            assertThat(keyLengthNode1).isNotNull();
+            assertThat(keyLengthNode1.getChildren()).isEmpty();
+            assertThat(keyLengthNode1.asString()).isEqualTo("128");
 
-            // KeyLength under BlockCipher under SecretKey under BlockCipher
-            INode keyLengthNode2 = blockCipherNode2.getChildren().get(KeyLength.class);
-            assertThat(keyLengthNode2).isNotNull();
-            assertThat(keyLengthNode2.getChildren()).isEmpty();
-            assertThat(keyLengthNode2.asString()).isEqualTo("128");
+            // Oid under BlockCipher under SecretKey under AuthenticatedEncryption
+            INode oidNode1 = blockCipherNode.getChildren().get(Oid.class);
+            assertThat(oidNode1).isNotNull();
+            assertThat(oidNode1.getChildren()).isEmpty();
+            assertThat(oidNode1.asString()).isEqualTo("2.16.840.1.101.3.4.1");
 
-            // BlockSize under BlockCipher under SecretKey under BlockCipher
-            INode blockSizeNode2 = blockCipherNode2.getChildren().get(BlockSize.class);
-            assertThat(blockSizeNode2).isNotNull();
-            assertThat(blockSizeNode2.getChildren()).isEmpty();
-            assertThat(blockSizeNode2.asString()).isEqualTo("128");
+            // KeyGeneration under BlockCipher under SecretKey under AuthenticatedEncryption
+            INode keyGenerationNode = blockCipherNode.getChildren().get(KeyGeneration.class);
+            assertThat(keyGenerationNode).isNotNull();
+            assertThat(keyGenerationNode.getChildren()).isEmpty();
+            assertThat(keyGenerationNode.asString()).isEqualTo("KEYGENERATION");
 
-            // KeyLength under BlockCipher
-            INode keyLengthNode3 = blockCipherNode1.getChildren().get(KeyLength.class);
-            assertThat(keyLengthNode3).isNotNull();
-            assertThat(keyLengthNode3.getChildren()).isEmpty();
-            assertThat(keyLengthNode3.asString()).isEqualTo("128");
+            // BlockSize under BlockCipher under SecretKey under AuthenticatedEncryption
+            INode blockSizeNode = blockCipherNode.getChildren().get(BlockSize.class);
+            assertThat(blockSizeNode).isNotNull();
+            assertThat(blockSizeNode.getChildren()).isEmpty();
+            assertThat(blockSizeNode.asString()).isEqualTo("128");
 
-            // BlockSize under BlockCipher
-            INode blockSizeNode3 = blockCipherNode1.getChildren().get(BlockSize.class);
-            assertThat(blockSizeNode3).isNotNull();
-            assertThat(blockSizeNode3.getChildren()).isEmpty();
-            assertThat(blockSizeNode3.asString()).isEqualTo("128");
+            // BlockSize under AuthenticatedEncryption
+            INode blockSizeNode1 = authenticatedEncryptionNode.getChildren().get(BlockSize.class);
+            assertThat(blockSizeNode1).isNotNull();
+            assertThat(blockSizeNode1.getChildren()).isEmpty();
+            assertThat(blockSizeNode1.asString()).isEqualTo("128");
         }
     }
 }

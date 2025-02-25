@@ -19,6 +19,7 @@
  */
 package com.ibm.plugin.rules.detection.jca.algorithmspec;
 
+import com.ibm.engine.model.Mode;
 import com.ibm.engine.model.Size;
 import com.ibm.engine.model.context.AlgorithmParameterContext;
 import com.ibm.engine.model.factory.InitializationVectorSizeFactory;
@@ -26,6 +27,7 @@ import com.ibm.engine.model.factory.TagSizeFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
 import java.util.List;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import org.sonar.plugins.java.api.tree.Tree;
 
@@ -36,6 +38,7 @@ public final class JcaGCMParameterSpec {
                     .createDetectionRule()
                     .forObjectTypes("javax.crypto.spec.GCMParameterSpec")
                     .forConstructor()
+                    .shouldBeDetectedAs(tree -> Optional.of(new Mode<>("GCM", tree)))
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new TagSizeFactory<>(Size.UnitType.BIT))
                     .withMethodParameter("byte[]")
@@ -49,6 +52,7 @@ public final class JcaGCMParameterSpec {
                     .createDetectionRule()
                     .forObjectTypes("javax.crypto.spec.GCMParameterSpec")
                     .forConstructor()
+                    .shouldBeDetectedAs(tree -> Optional.of(new Mode<>("GCM", tree)))
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new TagSizeFactory<>(Size.UnitType.BIT))
                     .withMethodParameter("byte[]")

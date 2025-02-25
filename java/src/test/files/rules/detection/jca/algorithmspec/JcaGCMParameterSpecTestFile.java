@@ -29,7 +29,7 @@ public class JcaGCMParameterSpecTestFile {
         String nonce = "nonce";
 
         GCMParameterSpec gcmSpec = new GCMParameterSpec(128, Base64.getDecoder().decode(nonce));
-        Cipher cipher = Cipher.getInstance("AES"); // Noncompliant {{(BlockCipher) AES128}}
+        Cipher cipher = Cipher.getInstance("AES"); // Noncompliant {{(AuthenticatedEncryption) AES128-GCM}}
         cipher.init(Cipher.DECRYPT_MODE, secret, gcmSpec);
     }
 }

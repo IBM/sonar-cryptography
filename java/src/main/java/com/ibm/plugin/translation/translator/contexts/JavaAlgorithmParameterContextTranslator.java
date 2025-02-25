@@ -24,9 +24,11 @@ import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.InitializationVectorSize;
 import com.ibm.engine.model.KeySize;
 import com.ibm.engine.model.MacSize;
+import com.ibm.engine.model.Mode;
 import com.ibm.engine.model.TagSize;
 import com.ibm.engine.model.context.IDetectionContext;
 import com.ibm.mapper.mapper.jca.JcaAlgorithmMapper;
+import com.ibm.mapper.mapper.jca.JcaModeMapper;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.InitializationVectorLength;
 import com.ibm.mapper.model.KeyLength;
@@ -76,6 +78,9 @@ public final class JavaAlgorithmParameterContextTranslator extends JavaAbstractL
                     new InitializationVectorLength(
                             initializationVectorSize.getValue(), detectionLocation);
             return Optional.of(initializationVectorLength);
+        } else if (value instanceof Mode<Tree> mode) {
+            final JcaModeMapper modeMapper = new JcaModeMapper();
+            return modeMapper.parse(mode.asString(), detectionLocation).map(a -> a);
         }
         return Optional.empty();
     }
