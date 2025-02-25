@@ -22,6 +22,7 @@ package com.ibm.plugin.rules.detection.jca.keyspec;
 import static com.ibm.plugin.rules.detection.TypeShortcuts.BYTE_ARRAY_TYPE;
 import static com.ibm.plugin.rules.detection.TypeShortcuts.CHAR_ARRAY_TYPE;
 
+import com.ibm.engine.model.Size;
 import com.ibm.engine.model.context.KeyContext;
 import com.ibm.engine.model.context.SecretKeyContext;
 import com.ibm.engine.model.factory.KeySizeFactory;
@@ -72,7 +73,7 @@ public final class JcaPBEKeySpec {
                     .shouldBeDetectedAs(new SaltSizeFactory<>())
                     .withMethodParameter("int")
                     .withMethodParameter("int")
-                    .shouldBeDetectedAs(new KeySizeFactory<>())
+                    .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
                     .buildForContext(new SecretKeyContext(KeyContext.Kind.PBE))
                     .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();

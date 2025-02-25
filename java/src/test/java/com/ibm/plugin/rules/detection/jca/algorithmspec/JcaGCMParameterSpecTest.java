@@ -110,7 +110,7 @@ class JcaGCMParameterSpecTest extends TestBase {
 
             IValue<Tree> value2_1_1 = store_1_1.getDetectionValues().get(2);
             assertThat(value2_1_1).isInstanceOf(KeySize.class);
-            assertThat(value2_1_1.asString()).isEqualTo("2048");
+            assertThat(value2_1_1.asString()).isEqualTo("256");
 
             /*
              * Translation
@@ -200,7 +200,7 @@ class JcaGCMParameterSpecTest extends TestBase {
             INode keyLengthNode = secretKeyNode.getChildren().get(KeyLength.class);
             assertThat(keyLengthNode).isNotNull();
             assertThat(keyLengthNode.getChildren()).isEmpty();
-            assertThat(keyLengthNode.asString()).isEqualTo("2048");
+            assertThat(keyLengthNode.asString()).isEqualTo("256");
         } else if (findingId == 1) {
             /*
              * Detection Store

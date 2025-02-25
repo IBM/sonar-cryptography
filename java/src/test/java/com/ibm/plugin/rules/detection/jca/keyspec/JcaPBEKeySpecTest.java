@@ -90,7 +90,7 @@ class JcaPBEKeySpecTest extends TestBase {
                 .anyMatch(
                         v -> {
                             if (v instanceof KeySize<Tree>) {
-                                return v.asString().equals("1024");
+                                return v.asString().equals("128");
                             } else if (v instanceof SaltSize<Tree>) {
                                 return v.asString().equals("192");
                             } else if (v instanceof PasswordSize<Tree>) {
@@ -114,7 +114,7 @@ class JcaPBEKeySpecTest extends TestBase {
         INode keyLengthNode = secretKeyNode.getChildren().get(KeyLength.class);
         assertThat(keyLengthNode).isNotNull();
         assertThat(keyLengthNode.getChildren()).isEmpty();
-        assertThat(keyLengthNode.asString()).isEqualTo("1024");
+        assertThat(keyLengthNode.asString()).isEqualTo("128");
 
         // PasswordBasedKeyDerivationFunction under SecretKey
         INode passwordBasedKeyDerivationFunctionNode =
