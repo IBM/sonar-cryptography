@@ -150,7 +150,7 @@ class PycaMultiFernetTest extends TestBase {
         // Mac under AuthenticatedEncryption under SecretKey
         INode macNode = authenticatedEncryptionNode.getChildren().get(Mac.class);
         assertThat(macNode).isNotNull();
-        assertThat(macNode.getChildren()).hasSize(2);
+        assertThat(macNode.getChildren()).hasSize(3);
         assertThat(macNode.asString()).isEqualTo("HMAC-SHA256");
 
         // Tag under Mac under AuthenticatedEncryption under SecretKey
@@ -158,6 +158,12 @@ class PycaMultiFernetTest extends TestBase {
         assertThat(tagNode).isNotNull();
         assertThat(tagNode.getChildren()).isEmpty();
         assertThat(tagNode.asString()).isEqualTo("TAG");
+
+        // Oid under Mac under AuthenticatedEncryption under SecretKey
+        oidNode = macNode.getChildren().get(Oid.class);
+        assertThat(oidNode).isNotNull();
+        assertThat(oidNode.getChildren()).isEmpty();
+        assertThat(oidNode.asString()).isEqualTo("1.2.840.113549.2.9");
 
         // MessageDigest under Mac under AuthenticatedEncryption under SecretKey
         INode messageDigestNode = macNode.getChildren().get(MessageDigest.class);

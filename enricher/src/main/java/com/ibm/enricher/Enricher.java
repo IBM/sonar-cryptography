@@ -23,6 +23,7 @@ import com.ibm.enricher.algorithm.AESEnricher;
 import com.ibm.enricher.algorithm.DESEnricher;
 import com.ibm.enricher.algorithm.DHEnricher;
 import com.ibm.enricher.algorithm.DSAEnricher;
+import com.ibm.enricher.algorithm.HMACEnricher;
 import com.ibm.enricher.algorithm.KEMEnricher;
 import com.ibm.enricher.algorithm.PBKDF2Enricher;
 import com.ibm.enricher.algorithm.RSAEnricher;
@@ -85,6 +86,7 @@ public class Enricher implements IEnricher {
                     new DSAEnricher(),
                     new SHA2Enricher(),
                     new SHA3Enricher(),
+                    new HMACEnricher(),
                     new PBKDF2Enricher(),
                     new RSAssaPSSEnricher(),
                     new RSAoaepEnricher(),

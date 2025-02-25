@@ -135,7 +135,7 @@ class BcIESEngineTest extends TestBase {
         // Mac under PublicKeyEncryption
         INode macNode1 = publicKeyEncryptionNode.getChildren().get(Mac.class);
         assertThat(macNode1).isNotNull();
-        assertThat(macNode1.getChildren()).hasSize(3);
+        assertThat(macNode1.getChildren()).hasSize(4);
         assertThat(macNode1.asString()).isEqualTo("HMAC-SHA512");
 
         // Tag under Mac under PublicKeyEncryption
@@ -179,6 +179,12 @@ class BcIESEngineTest extends TestBase {
         assertThat(tagLengthNode).isNotNull();
         assertThat(tagLengthNode.getChildren()).isEmpty();
         assertThat(tagLengthNode.asString()).isEqualTo("128");
+
+        // Oid under Mac under PublicKeyEncryption
+        INode oidNode = macNode1.getChildren().get(Oid.class);
+        assertThat(oidNode).isNotNull();
+        assertThat(oidNode.getChildren()).isEmpty();
+        assertThat(oidNode.asString()).isEqualTo("1.2.840.113549.2.11");
 
         // KeyDerivationFunction under PublicKeyEncryption
         INode keyDerivationFunctionNode1 =

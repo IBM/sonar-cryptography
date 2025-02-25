@@ -88,8 +88,14 @@ class BcHMACTest extends TestBase {
         // Mac
         INode macNode = nodes.get(0);
         assertThat(macNode.getKind()).isEqualTo(Mac.class);
-        assertThat(macNode.getChildren()).hasSize(2);
+        assertThat(macNode.getChildren()).hasSize(3);
         assertThat(macNode.asString()).isEqualTo("HMAC-SHA256");
+
+        // Oid under Mac
+        INode oidNode = macNode.getChildren().get(Oid.class);
+        assertThat(oidNode).isNotNull();
+        assertThat(oidNode.getChildren()).isEmpty();
+        assertThat(oidNode.asString()).isEqualTo("1.2.840.113549.2.9");
 
         // MessageDigest under Mac
         INode messageDigestNode = macNode.getChildren().get(MessageDigest.class);
@@ -97,17 +103,11 @@ class BcHMACTest extends TestBase {
         assertThat(messageDigestNode.getChildren()).hasSize(4);
         assertThat(messageDigestNode.asString()).isEqualTo("SHA256");
 
-        // BlockSize under MessageDigest under Mac
-        INode blockSizeNode = messageDigestNode.getChildren().get(BlockSize.class);
-        assertThat(blockSizeNode).isNotNull();
-        assertThat(blockSizeNode.getChildren()).isEmpty();
-        assertThat(blockSizeNode.asString()).isEqualTo("512");
-
         // Oid under MessageDigest under Mac
-        INode oidNode = messageDigestNode.getChildren().get(Oid.class);
-        assertThat(oidNode).isNotNull();
-        assertThat(oidNode.getChildren()).isEmpty();
-        assertThat(oidNode.asString()).isEqualTo("2.16.840.1.101.3.4.2.1");
+        INode oidNode1 = messageDigestNode.getChildren().get(Oid.class);
+        assertThat(oidNode1).isNotNull();
+        assertThat(oidNode1.getChildren()).isEmpty();
+        assertThat(oidNode1.asString()).isEqualTo("2.16.840.1.101.3.4.2.1");
 
         // Digest under MessageDigest under Mac
         INode digestNode = messageDigestNode.getChildren().get(Digest.class);
@@ -120,6 +120,12 @@ class BcHMACTest extends TestBase {
         assertThat(digestSizeNode).isNotNull();
         assertThat(digestSizeNode.getChildren()).isEmpty();
         assertThat(digestSizeNode.asString()).isEqualTo("256");
+
+        // BlockSize under MessageDigest under Mac
+        INode blockSizeNode = messageDigestNode.getChildren().get(BlockSize.class);
+        assertThat(blockSizeNode).isNotNull();
+        assertThat(blockSizeNode.getChildren()).isEmpty();
+        assertThat(blockSizeNode.asString()).isEqualTo("512");
 
         // Tag under Mac
         INode tagNode = macNode.getChildren().get(Tag.class);

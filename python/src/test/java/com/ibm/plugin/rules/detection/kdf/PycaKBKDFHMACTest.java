@@ -60,6 +60,7 @@ class PycaKBKDFHMACTest extends TestBase {
             int findingId,
             @Nonnull DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> detectionStore,
             @Nonnull List<INode> nodes) {
+
         /*
          * Detection Store
          */
@@ -96,8 +97,32 @@ class PycaKBKDFHMACTest extends TestBase {
         // Mac
         INode macNode = nodes.get(0);
         assertThat(macNode.getKind()).isEqualTo(Mac.class);
-        assertThat(macNode.getChildren()).hasSize(4);
+        assertThat(macNode.getChildren()).hasSize(5);
         assertThat(macNode.asString()).isEqualTo("HMAC-SHA256");
+
+        // Tag under Mac
+        INode tagNode = macNode.getChildren().get(Tag.class);
+        assertThat(tagNode).isNotNull();
+        assertThat(tagNode.getChildren()).isEmpty();
+        assertThat(tagNode.asString()).isEqualTo("TAG");
+
+        // Oid under Mac
+        INode oidNode = macNode.getChildren().get(Oid.class);
+        assertThat(oidNode).isNotNull();
+        assertThat(oidNode.getChildren()).isEmpty();
+        assertThat(oidNode.asString()).isEqualTo("1.2.840.113549.2.9");
+
+        // KeyLength under Mac
+        INode keyLengthNode = macNode.getChildren().get(KeyLength.class);
+        assertThat(keyLengthNode).isNotNull();
+        assertThat(keyLengthNode.getChildren()).isEmpty();
+        assertThat(keyLengthNode.asString()).isEqualTo("256");
+
+        // KeyDerivation under Mac
+        INode keyDerivationNode = macNode.getChildren().get(KeyDerivation.class);
+        assertThat(keyDerivationNode).isNotNull();
+        assertThat(keyDerivationNode.getChildren()).isEmpty();
+        assertThat(keyDerivationNode.asString()).isEqualTo("KEYDERIVATION");
 
         // MessageDigest under Mac
         INode messageDigestNode = macNode.getChildren().get(MessageDigest.class);
@@ -105,11 +130,23 @@ class PycaKBKDFHMACTest extends TestBase {
         assertThat(messageDigestNode.getChildren()).hasSize(5);
         assertThat(messageDigestNode.asString()).isEqualTo("SHA256");
 
+        // Mode under MessageDigest under Mac
+        INode modeNode = messageDigestNode.getChildren().get(Mode.class);
+        assertThat(modeNode).isNotNull();
+        assertThat(modeNode.getChildren()).isEmpty();
+        assertThat(modeNode.asString()).isEqualTo("CTR");
+
         // DigestSize under MessageDigest under Mac
         INode digestSizeNode = messageDigestNode.getChildren().get(DigestSize.class);
         assertThat(digestSizeNode).isNotNull();
         assertThat(digestSizeNode.getChildren()).isEmpty();
         assertThat(digestSizeNode.asString()).isEqualTo("256");
+
+        // Oid under MessageDigest under Mac
+        INode oidNode1 = messageDigestNode.getChildren().get(Oid.class);
+        assertThat(oidNode1).isNotNull();
+        assertThat(oidNode1.getChildren()).isEmpty();
+        assertThat(oidNode1.asString()).isEqualTo("2.16.840.1.101.3.4.2.1");
 
         // Digest under MessageDigest under Mac
         INode digestNode = messageDigestNode.getChildren().get(Digest.class);
@@ -122,35 +159,5 @@ class PycaKBKDFHMACTest extends TestBase {
         assertThat(blockSizeNode).isNotNull();
         assertThat(blockSizeNode.getChildren()).isEmpty();
         assertThat(blockSizeNode.asString()).isEqualTo("512");
-
-        // Oid under MessageDigest under Mac
-        INode oidNode = messageDigestNode.getChildren().get(Oid.class);
-        assertThat(oidNode).isNotNull();
-        assertThat(oidNode.getChildren()).isEmpty();
-        assertThat(oidNode.asString()).isEqualTo("2.16.840.1.101.3.4.2.1");
-
-        // Mode under MessageDigest under Mac
-        INode modeNode = messageDigestNode.getChildren().get(Mode.class);
-        assertThat(modeNode).isNotNull();
-        assertThat(modeNode.getChildren()).isEmpty();
-        assertThat(modeNode.asString()).isEqualTo("CTR");
-
-        // KeyDerivation under Mac
-        INode keyDerivationNode = macNode.getChildren().get(KeyDerivation.class);
-        assertThat(keyDerivationNode).isNotNull();
-        assertThat(keyDerivationNode.getChildren()).isEmpty();
-        assertThat(keyDerivationNode.asString()).isEqualTo("KEYDERIVATION");
-
-        // Tag under Mac
-        INode tagNode = macNode.getChildren().get(Tag.class);
-        assertThat(tagNode).isNotNull();
-        assertThat(tagNode.getChildren()).isEmpty();
-        assertThat(tagNode.asString()).isEqualTo("TAG");
-
-        // KeyLength under Mac
-        INode keyLengthNode = macNode.getChildren().get(KeyLength.class);
-        assertThat(keyLengthNode).isNotNull();
-        assertThat(keyLengthNode.getChildren()).isEmpty();
-        assertThat(keyLengthNode.asString()).isEqualTo("256");
     }
 }
