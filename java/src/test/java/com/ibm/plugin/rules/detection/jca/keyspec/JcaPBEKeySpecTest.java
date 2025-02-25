@@ -126,7 +126,7 @@ class JcaPBEKeySpecTest extends TestBase {
         // Mac under PasswordBasedKeyDerivationFunction under SecretKey
         INode macNode = passwordBasedKeyDerivationFunctionNode.getChildren().get(Mac.class);
         assertThat(macNode).isNotNull();
-        assertThat(macNode.getChildren()).hasSize(2);
+        assertThat(macNode.getChildren()).hasSize(3);
         assertThat(macNode.asString()).isEqualTo("HMAC-SHA1");
 
         // MessageDigest under Mac under PasswordBasedKeyDerivationFunction under SecretKey
@@ -168,6 +168,12 @@ class JcaPBEKeySpecTest extends TestBase {
         assertThat(tagNode).isNotNull();
         assertThat(tagNode.getChildren()).isEmpty();
         assertThat(tagNode.asString()).isEqualTo("TAG");
+
+        // Oid under Mac under PasswordBasedKeyDerivationFunction under SecretKey
+        oidNode = macNode.getChildren().get(Oid.class);
+        assertThat(oidNode).isNotNull();
+        assertThat(oidNode.getChildren()).isEmpty();
+        assertThat(oidNode.asString()).isEqualTo("1.2.840.113549.2.7");
 
         // KeyGeneration under PasswordBasedKeyDerivationFunction under SecretKey
         INode keyGenerationNode =

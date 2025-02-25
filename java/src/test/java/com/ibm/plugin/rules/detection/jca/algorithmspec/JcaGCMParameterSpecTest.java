@@ -115,6 +115,7 @@ class JcaGCMParameterSpecTest extends TestBase {
             /*
              * Translation
              */
+
             assertThat(nodes).hasSize(1);
 
             // SecretKey
@@ -123,11 +124,17 @@ class JcaGCMParameterSpecTest extends TestBase {
             assertThat(secretKeyNode.getChildren()).hasSize(4);
             assertThat(secretKeyNode.asString()).isEqualTo("PBKDF2");
 
-            // PasswordLength under SecretKey
-            INode passwordLengthNode = secretKeyNode.getChildren().get(PasswordLength.class);
-            assertThat(passwordLengthNode).isNotNull();
-            assertThat(passwordLengthNode.getChildren()).isEmpty();
-            assertThat(passwordLengthNode.asString()).isEqualTo("64");
+            // KeyLength under SecretKey
+            INode keyLengthNode = secretKeyNode.getChildren().get(KeyLength.class);
+            assertThat(keyLengthNode).isNotNull();
+            assertThat(keyLengthNode.getChildren()).isEmpty();
+            assertThat(keyLengthNode.asString()).isEqualTo("256");
+
+            // SaltLength under SecretKey
+            INode saltLengthNode = secretKeyNode.getChildren().get(SaltLength.class);
+            assertThat(saltLengthNode).isNotNull();
+            assertThat(saltLengthNode.getChildren()).isEmpty();
+            assertThat(saltLengthNode.asString()).isEqualTo("32");
 
             // PasswordBasedKeyDerivationFunction under SecretKey
             INode passwordBasedKeyDerivationFunctionNode =
@@ -140,20 +147,27 @@ class JcaGCMParameterSpecTest extends TestBase {
             // Mac under PasswordBasedKeyDerivationFunction under SecretKey
             INode macNode = passwordBasedKeyDerivationFunctionNode.getChildren().get(Mac.class);
             assertThat(macNode).isNotNull();
-            assertThat(macNode.getChildren()).hasSize(2);
+            assertThat(macNode.getChildren()).hasSize(3);
             assertThat(macNode.asString()).isEqualTo("HMAC-SHA256");
 
-            // Tag under Mac under PasswordBasedKeyDerivationFunction under SecretKey
-            INode tagNode = macNode.getChildren().get(Tag.class);
-            assertThat(tagNode).isNotNull();
-            assertThat(tagNode.getChildren()).isEmpty();
-            assertThat(tagNode.asString()).isEqualTo("TAG");
+            // Oid under Mac under PasswordBasedKeyDerivationFunction under SecretKey
+            INode oidNode = macNode.getChildren().get(Oid.class);
+            assertThat(oidNode).isNotNull();
+            assertThat(oidNode.getChildren()).isEmpty();
+            assertThat(oidNode.asString()).isEqualTo("1.2.840.113549.2.9");
 
             // MessageDigest under Mac under PasswordBasedKeyDerivationFunction under SecretKey
             INode messageDigestNode = macNode.getChildren().get(MessageDigest.class);
             assertThat(messageDigestNode).isNotNull();
             assertThat(messageDigestNode.getChildren()).hasSize(4);
             assertThat(messageDigestNode.asString()).isEqualTo("SHA256");
+
+            // Oid under MessageDigest under Mac under PasswordBasedKeyDerivationFunction under
+            // SecretKey
+            INode oidNode1 = messageDigestNode.getChildren().get(Oid.class);
+            assertThat(oidNode1).isNotNull();
+            assertThat(oidNode1.getChildren()).isEmpty();
+            assertThat(oidNode1.asString()).isEqualTo("2.16.840.1.101.3.4.2.1");
 
             // BlockSize under MessageDigest under Mac under PasswordBasedKeyDerivationFunction
             // under SecretKey
@@ -162,12 +176,12 @@ class JcaGCMParameterSpecTest extends TestBase {
             assertThat(blockSizeNode.getChildren()).isEmpty();
             assertThat(blockSizeNode.asString()).isEqualTo("512");
 
-            // Oid under MessageDigest under Mac under PasswordBasedKeyDerivationFunction under
-            // SecretKey
-            INode oidNode = messageDigestNode.getChildren().get(Oid.class);
-            assertThat(oidNode).isNotNull();
-            assertThat(oidNode.getChildren()).isEmpty();
-            assertThat(oidNode.asString()).isEqualTo("2.16.840.1.101.3.4.2.1");
+            // DigestSize under MessageDigest under Mac under PasswordBasedKeyDerivationFunction
+            // under SecretKey
+            INode digestSizeNode = messageDigestNode.getChildren().get(DigestSize.class);
+            assertThat(digestSizeNode).isNotNull();
+            assertThat(digestSizeNode.getChildren()).isEmpty();
+            assertThat(digestSizeNode.asString()).isEqualTo("256");
 
             // Digest under MessageDigest under Mac under PasswordBasedKeyDerivationFunction under
             // SecretKey
@@ -176,12 +190,11 @@ class JcaGCMParameterSpecTest extends TestBase {
             assertThat(digestNode.getChildren()).isEmpty();
             assertThat(digestNode.asString()).isEqualTo("DIGEST");
 
-            // DigestSize under MessageDigest under Mac under PasswordBasedKeyDerivationFunction
-            // under SecretKey
-            INode digestSizeNode = messageDigestNode.getChildren().get(DigestSize.class);
-            assertThat(digestSizeNode).isNotNull();
-            assertThat(digestSizeNode.getChildren()).isEmpty();
-            assertThat(digestSizeNode.asString()).isEqualTo("256");
+            // Tag under Mac under PasswordBasedKeyDerivationFunction under SecretKey
+            INode tagNode = macNode.getChildren().get(Tag.class);
+            assertThat(tagNode).isNotNull();
+            assertThat(tagNode.getChildren()).isEmpty();
+            assertThat(tagNode.asString()).isEqualTo("TAG");
 
             // KeyGeneration under PasswordBasedKeyDerivationFunction under SecretKey
             INode keyGenerationNode =
@@ -190,17 +203,12 @@ class JcaGCMParameterSpecTest extends TestBase {
             assertThat(keyGenerationNode.getChildren()).isEmpty();
             assertThat(keyGenerationNode.asString()).isEqualTo("KEYGENERATION");
 
-            // SaltLength under SecretKey
-            INode saltLengthNode = secretKeyNode.getChildren().get(SaltLength.class);
-            assertThat(saltLengthNode).isNotNull();
-            assertThat(saltLengthNode.getChildren()).isEmpty();
-            assertThat(saltLengthNode.asString()).isEqualTo("32");
+            // PasswordLength under SecretKey
+            INode passwordLengthNode = secretKeyNode.getChildren().get(PasswordLength.class);
+            assertThat(passwordLengthNode).isNotNull();
+            assertThat(passwordLengthNode.getChildren()).isEmpty();
+            assertThat(passwordLengthNode.asString()).isEqualTo("64");
 
-            // KeyLength under SecretKey
-            INode keyLengthNode = secretKeyNode.getChildren().get(KeyLength.class);
-            assertThat(keyLengthNode).isNotNull();
-            assertThat(keyLengthNode.getChildren()).isEmpty();
-            assertThat(keyLengthNode.asString()).isEqualTo("256");
         } else if (findingId == 1) {
             /*
              * Detection Store
