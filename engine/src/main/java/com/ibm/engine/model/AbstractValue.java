@@ -19,7 +19,7 @@
  */
 package com.ibm.engine.model;
 
-public abstract class AbstractValue<T> implements IValue<T> {
+public abstract class AbstractValue<T> implements IAction<T> {
     public abstract boolean equals(Object other);
 
     public abstract int hashCode();
