@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
-import com.ibm.engine.model.context.SecretKeyContext;
+import com.ibm.engine.model.context.KeyContext;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
@@ -50,10 +50,6 @@ class JcaKeyGeneratorGetInstanceTest extends TestBase {
                 .verifyIssues();
     }
 
-    /**
-     * DEBUG [detectionStore] (SecretKeyContext, Algorithm) AES DEBUG [translation] (SecretKey) AES
-     * DEBUG [translation] └─ (BlockCipher) AES DEBUG [translation] └─ (KeyLength) 128
-     */
     @Override
     public void asserts(
             int findingId,
@@ -64,7 +60,7 @@ class JcaKeyGeneratorGetInstanceTest extends TestBase {
          */
         assertThat(detectionStore.getDetectionValues()).hasSize(1);
         IValue<Tree> value = detectionStore.getDetectionValues().get(0);
-        assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(SecretKeyContext.class);
+        assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(KeyContext.class);
         assertThat(value).isInstanceOf(Algorithm.class);
         assertThat(value.asString()).isEqualTo("AES");
         /*

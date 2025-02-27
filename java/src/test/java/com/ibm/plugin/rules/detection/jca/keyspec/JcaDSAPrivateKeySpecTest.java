@@ -73,7 +73,7 @@ class JcaDSAPrivateKeySpecTest extends TestBase {
         assertThat(store_1.getDetectionValueContext()).isInstanceOf(SecretKeyContext.class);
         IValue<Tree> value0_1 = store_1.getDetectionValues().get(0);
         assertThat(value0_1).isInstanceOf(KeyAction.class);
-        assertThat(value0_1.asString()).isEqualTo("GENERATION");
+        assertThat(value0_1.asString()).isEqualTo("SECRET_KEY_GENERATION");
 
         /*
          * Translation

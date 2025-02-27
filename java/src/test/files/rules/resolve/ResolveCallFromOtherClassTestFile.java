@@ -22,7 +22,7 @@ public class ResolveCallFromOtherClassTestFile {
 public class OtherClass {
     public void callCryptoFunction() {
         int keySize = 4096;
-        Key test = ResolveCallFromOtherClassTestFile.generate("RSA", keySize);  // Noncompliant {{(SecretKey) RSA}}
+        Key test = ResolveCallFromOtherClassTestFile.generate("RSA", keySize);  // Noncompliant {{(Key) RSA}}
     }
 
     public void callCryptoFunction2() {

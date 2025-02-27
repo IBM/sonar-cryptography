@@ -25,7 +25,7 @@ import com.ibm.engine.detection.DetectionStore;
 import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.KeySize;
-import com.ibm.engine.model.context.SecretKeyContext;
+import com.ibm.engine.model.context.KeyContext;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyLength;
@@ -51,12 +51,6 @@ class JcaKeyGeneratorInitTest extends TestBase {
                 .verifyIssues();
     }
 
-    /**
-     * DEBUG [detectionStore] (SecretKeyContext, Algorithm) AES DEBUG [detectionStore] └─
-     * (SecretKeyContext, KeySize) 128 DEBUG [translation] (SecretKey) AES DEBUG [translation] └─
-     * (KeyLength) 128 DEBUG [translation] └─ (BlockCipher) AES DEBUG [translation] └─ (KeyLength)
-     * 128
-     */
     @Override
     public void asserts(
             int findingId,
@@ -67,14 +61,14 @@ class JcaKeyGeneratorInitTest extends TestBase {
          */
         assertThat(detectionStore.getDetectionValues()).hasSize(1);
         IValue<Tree> value = detectionStore.getDetectionValues().get(0);
-        assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(SecretKeyContext.class);
+        assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(KeyContext.class);
         assertThat(value).isInstanceOf(Algorithm.class);
         assertThat(value.asString()).isEqualTo("AES");
 
         DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store =
                 getStoreOfValueType(KeySize.class, detectionStore.getChildren());
         assertThat(store).isNotNull();
-        assertThat(store.getDetectionValueContext()).isInstanceOf(SecretKeyContext.class);
+        assertThat(store.getDetectionValueContext()).isInstanceOf(KeyContext.class);
         assertThat(store.getDetectionValues()).hasSize(1);
         value = store.getDetectionValues().get(0);
         assertThat(value).isInstanceOf(KeySize.class);

@@ -39,7 +39,8 @@ public final class JcaSecretKeyFactoryGenerateSecret {
                     .createDetectionRule()
                     .forObjectTypes("javax.crypto.SecretKeyFactory")
                     .forMethods("generateSecret")
-                    .shouldBeDetectedAs(new KeyActionFactory<>(KeyAction.Action.GENERATION))
+                    .shouldBeDetectedAs(
+                            new KeyActionFactory<>(KeyAction.Action.SECRET_KEY_GENERATION))
                     .withMethodParameter(KEY_SPEC_TYPE)
                     .addDependingDetectionRules(JcaKeySpec.rules())
                     .buildForContext(new SecretKeyContext(KeyContext.Kind.NONE))

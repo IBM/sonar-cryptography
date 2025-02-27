@@ -40,7 +40,8 @@ public final class JcaKeyFactoryGenerate {
                     .createDetectionRule()
                     .forObjectTypes("java.security.KeyFactory")
                     .forMethods("generatePrivate")
-                    .shouldBeDetectedAs(new KeyActionFactory<>(KeyAction.Action.GENERATION))
+                    .shouldBeDetectedAs(
+                            new KeyActionFactory<>(KeyAction.Action.PRIVATE_KEY_GENERATION))
                     .withMethodParameter(KEY_SPEC_TYPE)
                     .addDependingDetectionRules(JcaKeySpec.rules())
                     .buildForContext(new PrivateKeyContext(KeyContext.Kind.NONE))
@@ -52,7 +53,8 @@ public final class JcaKeyFactoryGenerate {
                     .createDetectionRule()
                     .forObjectTypes("java.security.KeyFactory")
                     .forMethods("generatePublic")
-                    .shouldBeDetectedAs(new KeyActionFactory<>(KeyAction.Action.GENERATION))
+                    .shouldBeDetectedAs(
+                            new KeyActionFactory<>(KeyAction.Action.PUBLIC_KEY_GENERATION))
                     .withMethodParameter(KEY_SPEC_TYPE)
                     .addDependingDetectionRules(JcaKeySpec.rules())
                     .buildForContext(new PublicKeyContext(KeyContext.Kind.NONE))
