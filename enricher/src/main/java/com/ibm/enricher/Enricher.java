@@ -33,6 +33,7 @@ import com.ibm.enricher.algorithm.SHA2Enricher;
 import com.ibm.enricher.algorithm.SHA3Enricher;
 import com.ibm.enricher.algorithm.SignatureEnricher;
 import com.ibm.enricher.algorithm.TagOrDigestEnricher;
+import com.ibm.enricher.key.SecretKeyEnricher;
 import com.ibm.mapper.model.INode;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -92,7 +93,8 @@ public class Enricher implements IEnricher {
                     new RSAoaepEnricher(),
                     new SignatureEnricher(),
                     new TagOrDigestEnricher(),
-                    new KEMEnricher());
+                    new KEMEnricher(),
+                    new SecretKeyEnricher());
 
     /**
      * Enriches the given node with additional information.
