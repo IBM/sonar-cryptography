@@ -29,7 +29,7 @@ import com.ibm.engine.model.KeySize;
 import com.ibm.engine.model.OperationMode;
 import com.ibm.engine.model.context.AlgorithmParameterContext;
 import com.ibm.engine.model.context.CipherContext;
-import com.ibm.engine.model.context.SecretKeyContext;
+import com.ibm.engine.model.context.KeyContext;
 import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.BlockSize;
 import com.ibm.mapper.model.INode;
@@ -73,8 +73,7 @@ class JcaIvParameterSpecTest extends TestBase {
              */
 
             assertThat(detectionStore.getDetectionValues()).hasSize(1);
-            assertThat(detectionStore.getDetectionValueContext())
-                    .isInstanceOf(SecretKeyContext.class);
+            assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(KeyContext.class);
             IValue<Tree> value0 = detectionStore.getDetectionValues().get(0);
             assertThat(value0).isInstanceOf(Algorithm.class);
             assertThat(value0.asString()).isEqualTo("AES");
@@ -82,7 +81,7 @@ class JcaIvParameterSpecTest extends TestBase {
             DetectionStore<JavaCheck, Tree, Symbol, JavaFileScannerContext> store_1 =
                     getStoreOfValueType(KeySize.class, detectionStore.getChildren());
             assertThat(store_1.getDetectionValues()).hasSize(1);
-            assertThat(store_1.getDetectionValueContext()).isInstanceOf(SecretKeyContext.class);
+            assertThat(store_1.getDetectionValueContext()).isInstanceOf(KeyContext.class);
             IValue<Tree> value0_1 = store_1.getDetectionValues().get(0);
             assertThat(value0_1).isInstanceOf(KeySize.class);
             assertThat(value0_1.asString()).isEqualTo("256");

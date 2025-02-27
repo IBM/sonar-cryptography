@@ -27,6 +27,7 @@ import com.ibm.mapper.reorganizer.rules.AsymmetricBlockCipherReorganizer;
 import com.ibm.mapper.reorganizer.rules.BlockCipherReorganizer;
 import com.ibm.mapper.reorganizer.rules.CipherParameterReorganizer;
 import com.ibm.mapper.reorganizer.rules.CipherSuiteReorganizer;
+import com.ibm.mapper.reorganizer.rules.KeyReorgenizer;
 import com.ibm.mapper.reorganizer.rules.MacReorganizer;
 import com.ibm.mapper.reorganizer.rules.SignatureReorganizer;
 import java.util.List;
@@ -55,6 +56,7 @@ public final class JavaReorganizerRules {
                 SignatureReorganizer.MERGE_UNKNOWN_SIGNATURE_PARENT_AND_CHILD,
                 SignatureReorganizer.moveNodesFromUnderFunctionalityUnderParent(
                         Sign.class, Signature.class),
-                SignatureReorganizer.MERGE_SIGNATURE_PARENT_AND_CHILD);
+                SignatureReorganizer.MERGE_SIGNATURE_PARENT_AND_CHILD,
+                KeyReorgenizer.SPECIFY_KEY_TYPE_BY_LOOKING_AT_KEY_GENERATION);
     }
 }

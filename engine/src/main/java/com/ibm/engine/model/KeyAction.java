@@ -24,6 +24,9 @@ import javax.annotation.Nonnull;
 public class KeyAction<T> extends AbstractValue<T> implements IAction<T> {
 
     public enum Action {
+        PRIVATE_KEY_GENERATION,
+        PUBLIC_KEY_GENERATION,
+        SECRET_KEY_GENERATION,
         GENERATION,
         KDF
     }

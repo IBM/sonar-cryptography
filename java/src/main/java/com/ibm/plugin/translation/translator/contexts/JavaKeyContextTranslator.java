@@ -23,6 +23,7 @@ import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.AlgorithmParameter;
 import com.ibm.engine.model.Curve;
 import com.ibm.engine.model.IValue;
+import com.ibm.engine.model.KeyAction;
 import com.ibm.engine.model.KeySize;
 import com.ibm.engine.model.OperationMode;
 import com.ibm.engine.model.ValueAction;
@@ -90,6 +91,23 @@ public final class JavaKeyContextTranslator extends JavaAbstractLibraryTranslato
                                 algo.put(new KeyGeneration(detectionLocation));
                                 return algo;
                             });
+        } else if (value instanceof KeyAction<Tree> keyAction) {
+            return switch (keyAction.getAction()) {
+                case PRIVATE_KEY_GENERATION ->
+                        Optional.of(
+                                new KeyGeneration(
+                                        KeyGeneration.Specification.PRIVATE_KEY,
+                                        detectionLocation));
+                case PUBLIC_KEY_GENERATION ->
+                        Optional.of(
+                                new KeyGeneration(
+                                        KeyGeneration.Specification.PUBLIC_KEY, detectionLocation));
+                case SECRET_KEY_GENERATION ->
+                        Optional.of(
+                                new KeyGeneration(
+                                        KeyGeneration.Specification.SECRET_KEY, detectionLocation));
+                default -> Optional.empty();
+            };
         }
         return Optional.empty();
     }

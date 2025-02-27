@@ -51,12 +51,6 @@ class JcaKeyFactoryGenerateTest extends TestBase {
                 .verifyIssues();
     }
 
-    /**
-     * DEBUG [detectionStore] (KeyContext<>, Algorithm) RSA DEBUG [detectionStore] └─
-     * (PrivateKeyContext, KeyAction) GENERATION DEBUG [detectionStore] └─ (KeyContext<DH>,
-     * KeySize<bit>) 128 DEBUG [translation] (Key) RSA DEBUG [translation] └─ (KeyLength) 128 DEBUG
-     * [translation] └─ (Algorithm) RSA DEBUG [translation] └─ (KeyLength) 2048
-     */
     @Override
     public void asserts(
             int findingId,
@@ -78,7 +72,7 @@ class JcaKeyFactoryGenerateTest extends TestBase {
         assertThat(store.getDetectionValues()).hasSize(1);
         value = store.getDetectionValues().get(0);
         assertThat(value).isInstanceOf(KeyAction.class);
-        assertThat(value.asString()).isEqualTo("GENERATION");
+        assertThat(value.asString()).isEqualTo("PRIVATE_KEY_GENERATION");
 
         store = getStoreOfValueType(KeySize.class, store.getChildren());
         assertThat(store).isNotNull();

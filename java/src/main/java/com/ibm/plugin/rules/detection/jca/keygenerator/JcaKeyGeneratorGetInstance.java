@@ -22,7 +22,6 @@ package com.ibm.plugin.rules.detection.jca.keygenerator;
 import static com.ibm.plugin.rules.detection.TypeShortcuts.STRING_TYPE;
 
 import com.ibm.engine.model.context.KeyContext;
-import com.ibm.engine.model.context.SecretKeyContext;
 import com.ibm.engine.model.factory.AlgorithmFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
@@ -39,7 +38,7 @@ public final class JcaKeyGeneratorGetInstance {
                     .forMethods("getInstance")
                     .withMethodParameter(STRING_TYPE)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
-                    .buildForContext(new SecretKeyContext(KeyContext.Kind.NONE))
+                    .buildForContext(new KeyContext(KeyContext.Kind.NONE))
                     .inBundle(() -> "Jca")
                     .withDependingDetectionRules(JcaKeyGeneratorInit.rules());
 
@@ -51,7 +50,7 @@ public final class JcaKeyGeneratorGetInstance {
                     .withMethodParameter(STRING_TYPE)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .withMethodParameter(STRING_TYPE)
-                    .buildForContext(new SecretKeyContext(KeyContext.Kind.NONE))
+                    .buildForContext(new KeyContext(KeyContext.Kind.NONE))
                     .inBundle(() -> "Jca")
                     .withDependingDetectionRules(JcaKeyGeneratorInit.rules());
 
@@ -63,7 +62,7 @@ public final class JcaKeyGeneratorGetInstance {
                     .withMethodParameter(STRING_TYPE)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
                     .withMethodParameter("java.security.Provider")
-                    .buildForContext(new SecretKeyContext(KeyContext.Kind.NONE))
+                    .buildForContext(new KeyContext(KeyContext.Kind.NONE))
                     .inBundle(() -> "Jca")
                     .withDependingDetectionRules(JcaKeyGeneratorInit.rules());
 

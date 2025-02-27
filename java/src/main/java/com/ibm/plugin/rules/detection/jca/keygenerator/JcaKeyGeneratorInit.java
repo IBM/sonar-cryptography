@@ -21,7 +21,6 @@ package com.ibm.plugin.rules.detection.jca.keygenerator;
 
 import com.ibm.engine.model.Size;
 import com.ibm.engine.model.context.KeyContext;
-import com.ibm.engine.model.context.SecretKeyContext;
 import com.ibm.engine.model.factory.KeySizeFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
@@ -39,7 +38,7 @@ public final class JcaKeyGeneratorInit {
                     .forMethods("init")
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
-                    .buildForContext(new SecretKeyContext(KeyContext.Kind.NONE))
+                    .buildForContext(new KeyContext(KeyContext.Kind.NONE))
                     .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
@@ -51,7 +50,7 @@ public final class JcaKeyGeneratorInit {
                     .withMethodParameter("int")
                     .shouldBeDetectedAs(new KeySizeFactory<>(Size.UnitType.BIT))
                     .withMethodParameter("java.security.SecureRandom")
-                    .buildForContext(new SecretKeyContext(KeyContext.Kind.NONE))
+                    .buildForContext(new KeyContext(KeyContext.Kind.NONE))
                     .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
@@ -62,7 +61,7 @@ public final class JcaKeyGeneratorInit {
                     .forMethods("init")
                     .withMethodParameter("java.security.spec.AlgorithmParameterSpec")
                     .addDependingDetectionRules(JcaParameterSpec.rules())
-                    .buildForContext(new SecretKeyContext(KeyContext.Kind.NONE))
+                    .buildForContext(new KeyContext(KeyContext.Kind.NONE))
                     .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
@@ -74,7 +73,7 @@ public final class JcaKeyGeneratorInit {
                     .withMethodParameter("java.security.spec.AlgorithmParameterSpec")
                     .addDependingDetectionRules(JcaParameterSpec.rules())
                     .withMethodParameter("java.security.SecureRandom")
-                    .buildForContext(new SecretKeyContext(KeyContext.Kind.NONE))
+                    .buildForContext(new KeyContext(KeyContext.Kind.NONE))
                     .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 

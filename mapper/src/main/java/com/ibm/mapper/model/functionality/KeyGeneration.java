@@ -21,15 +21,43 @@ package com.ibm.mapper.model.functionality;
 
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.utils.DetectionLocation;
+import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class KeyGeneration extends Functionality {
+
+    public enum Specification {
+        PRIVATE_KEY,
+        PUBLIC_KEY,
+        SECRET_KEY,
+    }
+
+    @Nullable private final Specification specification;
+
     public KeyGeneration(@Nonnull DetectionLocation detectionLocation) {
         super(KeyGeneration.class, detectionLocation);
+        this.specification = null;
+    }
+
+    public KeyGeneration(
+            @Nonnull Specification specification, @Nonnull DetectionLocation detectionLocation) {
+        super(KeyGeneration.class, detectionLocation);
+        this.specification = specification;
     }
 
     private KeyGeneration(@Nonnull Functionality functionality) {
         super(functionality);
+        if (functionality instanceof KeyGeneration keyGeneration) {
+            this.specification = keyGeneration.specification;
+        } else {
+            this.specification = null;
+        }
+    }
+
+    @Nonnull
+    public Optional<Specification> getSpecification() {
+        return Optional.ofNullable(specification);
     }
 
     @Nonnull
