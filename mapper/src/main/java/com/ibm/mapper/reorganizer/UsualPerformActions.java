@@ -133,7 +133,6 @@ public final class UsualPerformActions {
                 originalNode.getChildren().entrySet()) {
             newNode.put(childKeyValue.getValue());
         }
-
         if (parent == null) {
             // `node` is a root node
             // Create a copy of the root nodes
