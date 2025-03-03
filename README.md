@@ -26,7 +26,7 @@ It is part of **the [CBOMKit](https://github.com/IBM/cbomkit) toolset**.
 | Python   | [pyca/cryptography](https://cryptography.io/en/latest/)                                       | 100%     |
 
 
-[^1]: We only cover the BouncyCastle *light-weight API* according to [this specification](https://javadoc.io/static/org.bouncycastle/bctls-jdk14/1.75/specifications.html)
+[^1]: We only cover the BouncyCastle *light-weight API* according to [this specification](https://javadoc.io/static/org.bouncycastle/bctls-jdk14/1.80/specifications.html)
 
 > [!NOTE]
 > The plugin is designed in a modular way so that it can be extended to support additional languages and recognition rules to support more libraries.
