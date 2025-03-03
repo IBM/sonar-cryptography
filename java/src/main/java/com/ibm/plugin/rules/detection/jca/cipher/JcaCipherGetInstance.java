@@ -19,18 +19,17 @@
  */
 package com.ibm.plugin.rules.detection.jca.cipher;
 
+import static com.ibm.plugin.rules.detection.TypeShortcuts.CIPHER_TYPE;
+import static com.ibm.plugin.rules.detection.TypeShortcuts.STRING_TYPE;
+
 import com.ibm.engine.model.context.CipherContext;
 import com.ibm.engine.model.factory.AlgorithmFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
-import org.sonar.plugins.java.api.tree.Tree;
-
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.stream.Stream;
-
-import static com.ibm.plugin.rules.detection.TypeShortcuts.CIPHER_TYPE;
-import static com.ibm.plugin.rules.detection.TypeShortcuts.STRING_TYPE;
+import javax.annotation.Nonnull;
+import org.sonar.plugins.java.api.tree.Tree;
 
 @SuppressWarnings("java:S1192")
 public final class JcaCipherGetInstance {

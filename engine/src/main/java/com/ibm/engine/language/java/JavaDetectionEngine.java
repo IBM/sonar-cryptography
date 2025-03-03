@@ -38,6 +38,15 @@ import com.ibm.engine.rule.DetectableParameter;
 import com.ibm.engine.rule.DetectionRule;
 import com.ibm.engine.rule.MethodDetectionRule;
 import com.ibm.engine.rule.Parameter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,16 +72,6 @@ import org.sonar.plugins.java.api.tree.ReturnStatementTree;
 import org.sonar.plugins.java.api.tree.Tree;
 import org.sonar.plugins.java.api.tree.TypeTree;
 import org.sonar.plugins.java.api.tree.VariableTree;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public final class JavaDetectionEngine implements IDetectionEngine<Tree, Symbol> {
     private static final Logger LOGGER = LoggerFactory.getLogger(JavaDetectionEngine.class);
