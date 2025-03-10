@@ -19,16 +19,15 @@
  */
 package com.ibm.plugin.rules.detection.jca.digest;
 
+import static com.ibm.plugin.rules.detection.TypeShortcuts.STRING_TYPE;
+
 import com.ibm.engine.model.context.DigestContext;
 import com.ibm.engine.model.factory.AlgorithmFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
-import org.sonar.plugins.java.api.tree.Tree;
-
-import javax.annotation.Nonnull;
 import java.util.List;
-
-import static com.ibm.plugin.rules.detection.TypeShortcuts.STRING_TYPE;
+import javax.annotation.Nonnull;
+import org.sonar.plugins.java.api.tree.Tree;
 
 public final class JcaMessageDigestGetInstance {
 
