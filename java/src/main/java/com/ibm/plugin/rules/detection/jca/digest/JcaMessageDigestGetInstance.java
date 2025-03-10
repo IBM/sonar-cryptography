@@ -19,15 +19,16 @@
  */
 package com.ibm.plugin.rules.detection.jca.digest;
 
-import static com.ibm.plugin.rules.detection.TypeShortcuts.STRING_TYPE;
-
 import com.ibm.engine.model.context.DigestContext;
 import com.ibm.engine.model.factory.AlgorithmFactory;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
-import java.util.List;
-import javax.annotation.Nonnull;
 import org.sonar.plugins.java.api.tree.Tree;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+
+import static com.ibm.plugin.rules.detection.TypeShortcuts.STRING_TYPE;
 
 public final class JcaMessageDigestGetInstance {
 
@@ -42,12 +43,36 @@ public final class JcaMessageDigestGetInstance {
                     .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
+    private static final IDetectionRule<Tree> DIGEST_GET_INSTANCE_2 =
+            new DetectionRuleBuilder<Tree>()
+                    .createDetectionRule()
+                    .forObjectTypes("java.security.MessageDigest")
+                    .forMethods("getInstance")
+                    .withMethodParameter(STRING_TYPE)
+                    .shouldBeDetectedAs(new AlgorithmFactory<>())
+                    .withMethodParameter(STRING_TYPE)
+                    .buildForContext(new DigestContext())
+                    .inBundle(() -> "Jca")
+                    .withoutDependingDetectionRules();
+
+    private static final IDetectionRule<Tree> DIGEST_GET_INSTANCE_3 =
+            new DetectionRuleBuilder<Tree>()
+                    .createDetectionRule()
+                    .forObjectTypes("java.security.MessageDigest")
+                    .forMethods("getInstance")
+                    .withMethodParameter(STRING_TYPE)
+                    .shouldBeDetectedAs(new AlgorithmFactory<>())
+                    .withMethodParameter("java.security.Provider")
+                    .buildForContext(new DigestContext())
+                    .inBundle(() -> "Jca")
+                    .withoutDependingDetectionRules();
+
     private JcaMessageDigestGetInstance() {
         // nothing
     }
 
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
-        return List.of(DIGEST_GET_INSTANCE_1);
+        return List.of(DIGEST_GET_INSTANCE_1, DIGEST_GET_INSTANCE_2, DIGEST_GET_INSTANCE_3);
     }
 }
