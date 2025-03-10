@@ -72,7 +72,6 @@ public final class JcaCipherGetInstance {
                     .forMethods("getInstance")
                     .withMethodParameter(STRING_TYPE)
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
-                    .withMethodParameter(STRING_TYPE)
                     .withMethodParameter("java.security.Provider")
                     .buildForContext(new CipherContext())
                     .inBundle(() -> "Jca")

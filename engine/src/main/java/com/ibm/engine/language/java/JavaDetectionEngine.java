@@ -25,6 +25,7 @@ import com.ibm.engine.detection.Handler;
 import com.ibm.engine.detection.IDetectionEngine;
 import com.ibm.engine.detection.MatchContext;
 import com.ibm.engine.detection.MethodDetection;
+import com.ibm.engine.detection.MethodMatcher;
 import com.ibm.engine.detection.ResolvedValue;
 import com.ibm.engine.detection.TraceSymbol;
 import com.ibm.engine.detection.ValueDetection;
@@ -260,8 +261,14 @@ public final class JavaDetectionEngine implements IDetectionEngine<Tree, Symbol>
         } else if (tree.is(Tree.Kind.METHOD_INVOCATION)) {
             MethodInvocationTree methodInvocationTree = (MethodInvocationTree) tree;
             selections.addFirst(methodInvocationTree);
-            return resolveValues(
-                    clazz, methodInvocationTree.methodSelect(), valueFactory, selections);
+            final List<ResolvedValue<O, Tree>> resolvedValues =
+                    resolveJavaProperties(clazz, methodInvocationTree, valueFactory, selections);
+            if (resolvedValues.isEmpty()) {
+                return resolveValues(
+                        clazz, methodInvocationTree.methodSelect(), valueFactory, selections);
+            } else {
+                return resolvedValues;
+            }
         } else if (tree.is(Tree.Kind.NEW_ARRAY)) {
             NewArrayTree newArrayTree = (NewArrayTree) tree;
             selections.addFirst(newArrayTree);
@@ -301,6 +308,29 @@ public final class JavaDetectionEngine implements IDetectionEngine<Tree, Symbol>
             Optional<O> value = resolveConstant(clazz, tree);
             return value.map(t -> List.of(new ResolvedValue<>(t, (Tree) tree)))
                     .orElse(Collections.emptyList());
+        }
+        return Collections.emptyList();
+    }
+
+    private <O> List<ResolvedValue<O, Tree>> resolveJavaProperties(
+            @Nonnull Class<O> clazz,
+            @Nonnull MethodInvocationTree methodInvocationTree,
+            @Nullable IValueFactory<Tree> valueFactory,
+            @Nonnull LinkedList<Tree> selections) {
+        final MatchContext matchContext = new MatchContext(false, false, List.of());
+        final MethodMatcher<Tree> javaPropertyWithDefaultValueMatcher =
+                new MethodMatcher<>(
+                        "java.util.Properties",
+                        "getProperty",
+                        List.of("java.lang.String", "java.lang.String"));
+
+        if (javaPropertyWithDefaultValueMatcher.match(
+                methodInvocationTree, handler.getLanguageSupport().translation(), matchContext)) {
+            if (methodInvocationTree.arguments().size() != 2) {
+                return Collections.emptyList();
+            }
+            return resolveValues(
+                    clazz, methodInvocationTree.arguments().get(1), valueFactory, selections);
         }
         return Collections.emptyList();
     }

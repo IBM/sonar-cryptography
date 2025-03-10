@@ -42,12 +42,36 @@ public final class JcaMessageDigestGetInstance {
                     .inBundle(() -> "Jca")
                     .withoutDependingDetectionRules();
 
+    private static final IDetectionRule<Tree> DIGEST_GET_INSTANCE_2 =
+            new DetectionRuleBuilder<Tree>()
+                    .createDetectionRule()
+                    .forObjectTypes("java.security.MessageDigest")
+                    .forMethods("getInstance")
+                    .withMethodParameter(STRING_TYPE)
+                    .shouldBeDetectedAs(new AlgorithmFactory<>())
+                    .withMethodParameter(STRING_TYPE)
+                    .buildForContext(new DigestContext())
+                    .inBundle(() -> "Jca")
+                    .withoutDependingDetectionRules();
+
+    private static final IDetectionRule<Tree> DIGEST_GET_INSTANCE_3 =
+            new DetectionRuleBuilder<Tree>()
+                    .createDetectionRule()
+                    .forObjectTypes("java.security.MessageDigest")
+                    .forMethods("getInstance")
+                    .withMethodParameter(STRING_TYPE)
+                    .shouldBeDetectedAs(new AlgorithmFactory<>())
+                    .withMethodParameter("java.security.Provider")
+                    .buildForContext(new DigestContext())
+                    .inBundle(() -> "Jca")
+                    .withoutDependingDetectionRules();
+
     private JcaMessageDigestGetInstance() {
         // nothing
     }
 
     @Nonnull
     public static List<IDetectionRule<Tree>> rules() {
-        return List.of(DIGEST_GET_INSTANCE_1);
+        return List.of(DIGEST_GET_INSTANCE_1, DIGEST_GET_INSTANCE_2, DIGEST_GET_INSTANCE_3);
     }
 }
