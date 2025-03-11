@@ -27,7 +27,12 @@ import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import org.sonar.plugins.python.api.symbols.Symbol;
-import org.sonar.plugins.python.api.tree.*;
+import org.sonar.plugins.python.api.tree.Argument;
+import org.sonar.plugins.python.api.tree.CallExpression;
+import org.sonar.plugins.python.api.tree.Name;
+import org.sonar.plugins.python.api.tree.QualifiedExpression;
+import org.sonar.plugins.python.api.tree.RegularArgument;
+import org.sonar.plugins.python.api.tree.Tree;
 
 public class PythonLanguageTranslation implements ILanguageTranslation<Tree> {
 
@@ -87,12 +92,13 @@ public class PythonLanguageTranslation implements ILanguageTranslation<Tree> {
             if (!arguments.isEmpty()) {
                 return arguments.stream()
                         .filter(RegularArgument.class::isInstance)
-                        // TODO: Should I handle non regular argument types?
+                        // Should non-regular argument types be handled?
                         .map(
                                 argument ->
                                         PythonSemantic.resolveTreeType(
-                                                        ((RegularArgument) argument).expression())
-                                                .get())
+                                                ((RegularArgument) argument).expression()))
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
                         .toList();
             }
         }

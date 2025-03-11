@@ -37,7 +37,30 @@ import org.slf4j.LoggerFactory;
 import org.sonar.plugins.python.api.symbols.ClassSymbol;
 import org.sonar.plugins.python.api.symbols.Symbol;
 import org.sonar.plugins.python.api.symbols.Usage;
-import org.sonar.plugins.python.api.tree.*;
+import org.sonar.plugins.python.api.tree.Argument;
+import org.sonar.plugins.python.api.tree.AssignmentStatement;
+import org.sonar.plugins.python.api.tree.BinaryExpression;
+import org.sonar.plugins.python.api.tree.CallExpression;
+import org.sonar.plugins.python.api.tree.DictionaryLiteral;
+import org.sonar.plugins.python.api.tree.DictionaryLiteralElement;
+import org.sonar.plugins.python.api.tree.Expression;
+import org.sonar.plugins.python.api.tree.ExpressionList;
+import org.sonar.plugins.python.api.tree.FunctionDef;
+import org.sonar.plugins.python.api.tree.KeyValuePair;
+import org.sonar.plugins.python.api.tree.ListLiteral;
+import org.sonar.plugins.python.api.tree.Name;
+import org.sonar.plugins.python.api.tree.NoneExpression;
+import org.sonar.plugins.python.api.tree.NumericLiteral;
+import org.sonar.plugins.python.api.tree.ParameterList;
+import org.sonar.plugins.python.api.tree.QualifiedExpression;
+import org.sonar.plugins.python.api.tree.RegularArgument;
+import org.sonar.plugins.python.api.tree.ReturnStatement;
+import org.sonar.plugins.python.api.tree.SetLiteral;
+import org.sonar.plugins.python.api.tree.Statement;
+import org.sonar.plugins.python.api.tree.StringLiteral;
+import org.sonar.plugins.python.api.tree.SubscriptionExpression;
+import org.sonar.plugins.python.api.tree.Tree;
+import org.sonar.plugins.python.api.tree.Tuple;
 
 public final class PythonSemantic {
     private static final Logger LOGGER = LoggerFactory.getLogger(PythonSemantic.class);
@@ -79,8 +102,8 @@ public final class PythonSemantic {
      * @return An optional IType representing the type
      */
     @Nonnull
-    public static <O> Optional<IType> resolveTreeType(@Nonnull Tree tree) {
-        List<ResolvedValue<Object, Tree>> values =
+    public static Optional<IType> resolveTreeType(@Nonnull Tree tree) {
+        final List<ResolvedValue<Object, Tree>> values =
                 resolveValues(
                         Object.class,
                         tree,
@@ -89,12 +112,11 @@ public final class PythonSemantic {
                         false,
                         true,
                         null,
-                        new LinkedList<>()); // TODO: adding a `detectionEngine` to this function
+                        new LinkedList<>());
         // call would enhance the results
-        List<Tree> results = new LinkedList<>();
+        final List<Tree> results = new LinkedList<>();
         for (ResolvedValue<Object, Tree> value : values) {
-            Tree t = value.tree();
-            results.add(t);
+            results.add(value.tree());
         }
 
         if (results.isEmpty()) {
@@ -118,8 +140,8 @@ public final class PythonSemantic {
         for (Tree resultTree : results) {
             switch (resultTree.getKind()) {
                 case NAME:
-                    Name nameTree = (Name) resultTree;
-                    Optional<String> fullyQualifiedNameTempOptional =
+                    final Name nameTree = (Name) resultTree;
+                    final Optional<String> fullyQualifiedNameTempOptional =
                             Optional.of(nameTree).map(Name::symbol).map(Symbol::fullyQualifiedName);
                     String fullyQualifiedNameTemp = fullyQualifiedNameTempOptional.orElse(null);
                     if (fullyQualifiedNameTemp != null) {
@@ -143,8 +165,7 @@ public final class PythonSemantic {
                                         resolveFullyQualifiedNameStringType(
                                                 fullyQualifiedName, string));
                     } else {
-                        // TODO: When does this case happen? Is returning type ANY the right thing
-                        // to do?
+                        // returning type any
                         typesList.add((String string) -> true);
                     }
                     break;
@@ -176,7 +197,7 @@ public final class PythonSemantic {
                     break;
                 default:
                     // This case should never be reached
-                    LOGGER.info(
+                    LOGGER.debug(
                             "Detected some type of tree used in `resolveTreeType` that is not currently supported.");
                     break;
             }
@@ -256,8 +277,6 @@ public final class PythonSemantic {
      * can also be used for type resolution of the given {@code tree}. Various parameters described
      * below allow to change the exact behavior of the function.
      *
-     * @param <O>
-     * @param clazz
      * @param tree - any kind of Tree
      * @param argsMappingList - list storing mappings between function definition parameter names
      *     and their value in function calls in the chain of recursive calls (it should be an empty
@@ -283,7 +302,9 @@ public final class PythonSemantic {
     private static <O> List<ResolvedValue<O, Tree>> resolveValues(
             @Nonnull Class<O> clazz,
             @Nonnull Tree tree,
-            LinkedList<Map<org.sonar.plugins.python.api.tree.Parameter, Argument>> argsMappingList,
+            @Nonnull
+                    LinkedList<Map<org.sonar.plugins.python.api.tree.Parameter, Argument>>
+                            argsMappingList,
             Object subscriptionIndex,
             boolean returnEnclosingParam,
             boolean isResolvingType,
@@ -292,9 +313,7 @@ public final class PythonSemantic {
                     alreadyResolvedTrees) {
         // Checks is the tree to resolve has been previously resolved (and with the same set of
         // arguments)
-        // If so, it will lead to an infinite loop, so we return an empty list of results
-        // TODO: Shouldnt this structure also contain the last `subscriptionIndex`, to check if they
-        // differ?
+        // If so, it will lead to an infinite loop, so we return an empty list of results.
         Map<org.sonar.plugins.python.api.tree.Parameter, Argument> map = null;
         if (!argsMappingList.isEmpty()) {
             map = argsMappingList.getLast();
@@ -321,9 +340,10 @@ public final class PythonSemantic {
                     new LinkedList<>(Objects.requireNonNull(nameTree.symbol()).usages());
 
             // We remove all the usages that are declared *after* the current tree, and we remove
-            // the usage of the current tree we are resolving
+            // the usage of the current tree that we are resolving
             // In Python, both when calling a variables or a function, it has to be defined before
-            // TODO: This filtering using `line()` will not be enough when handling multiple Python
+            //
+            // This filtering using `line()` will not be enough when handling multiple Python
             // files, and should be only applied to the current file
             if (nameTree.firstToken() != null) {
                 int currentLine = nameTree.firstToken().line();
@@ -608,7 +628,7 @@ public final class PythonSemantic {
                         isResolvingType,
                         detectionEngine,
                         alreadyResolvedTrees);
-                // TODO: In this case, we cannot do much as we do not have access to the function
+                // In this case, we cannot do much as we do not have access to the function
                 // definition. Maybe a better thing than resolving its name could be to resolve its
                 // argument? But then, we still want to resolve class names like `ec.SECP384R1()`
             }
@@ -824,7 +844,7 @@ public final class PythonSemantic {
             DictionaryLiteral dictionaryLiteralTree = (DictionaryLiteral) tree;
             List<DictionaryLiteralElement> listElements = dictionaryLiteralTree.elements();
             boolean keyResolved = false;
-            if (subscriptionIndex instanceof String stringSubscriptionIndex) {
+            if (subscriptionIndex instanceof String) {
                 for (DictionaryLiteralElement dictionaryLiteralElement : listElements) {
                     if (dictionaryLiteralElement instanceof KeyValuePair keyValuePairTree
                             && keyValuePairTree.key() instanceof StringLiteral keyLiteral
@@ -844,7 +864,7 @@ public final class PythonSemantic {
                                         detectionEngine,
                                         alreadyResolvedTrees));
                     }
-                    // TODO: A DictionaryLiteralElement can be either a KeyValuePair or a
+                    // A DictionaryLiteralElement can be either a KeyValuePair or a
                     // UnpackingExpression -> handle the second case
                 }
             }
@@ -919,8 +939,6 @@ public final class PythonSemantic {
     /**
      * Resolve certain trees to a value they contain.
      *
-     * @param <O>
-     * @param clazz
      * @param tree - a Tree, that is expected to be a Name, a Literal or a None (if it is another
      *     type of tree, the function will return an empty result)
      * @return An optional value of class {@code clazz}, but in general a {@code String}, containing
@@ -942,9 +960,8 @@ public final class PythonSemantic {
                     result = Double.parseDouble(resultString);
                 } catch (NumberFormatException e2) {
                     LOGGER.info(
-                            "The detected NumericLiteral with value '"
-                                    + resultString
-                                    + "' could not be converted to an Integer or a Double");
+                            "The detected NumericLiteral with value '{}' could not be converted to an Integer or a Double",
+                            resultString);
                 }
             }
         } else if (tree instanceof StringLiteral stringLiteralTree) {

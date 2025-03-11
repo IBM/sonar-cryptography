@@ -27,6 +27,7 @@ import com.ibm.engine.hooks.IHookDetectionObserver;
 import com.ibm.engine.language.ILanguageSupport;
 import com.ibm.engine.language.IScanContext;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -41,7 +42,7 @@ public class CallStackAgent<R, T, S, P>
     private final ConcurrentMap<Integer, List<CallContext<R, T>>> invokedCallStack =
             new ConcurrentHashMap<>();
 
-    @Nonnull private final Set<Integer> visitedTreeObjects = ConcurrentHashMap.newKeySet();
+    @Nonnull private final Set<T> visitedTreeObjects = ConcurrentHashMap.newKeySet();
     @Nonnull private final List<IObserver<CallContext<R, T>>> listeners = new ArrayList<>();
     @Nonnull private final ILanguageSupport<R, T, S, P> languageSupport;
 
@@ -90,26 +91,29 @@ public class CallStackAgent<R, T, S, P>
     public void onNewHookSubscription(
             @Nonnull IHook<R, T, S, P> hook,
             @Nonnull IHookDetectionObserver<R, T, S, P> hookDetectionObserver) {
-        MethodMatcher<T> methodMatcher =
+        final MethodMatcher<T> methodMatcher =
                 languageSupport.createMethodMatcherBasedOn(hook.hookValue());
         if (methodMatcher == null) {
             return;
         }
 
         final List<CallContext<R, T>> stackCalls = new ArrayList<>();
-        for (List<CallContext<R, T>> callContexts : invokedCallStack.values()) {
-            callContexts.forEach(
-                    callContext -> {
-                        if (methodMatcher.match(
-                                callContext.tree(),
-                                languageSupport.translation(),
-                                hook.matchContext())) {
-                            stackCalls.add(callContext);
-                        }
-                    });
+        final Iterator<List<CallContext<R, T>>> iterator = invokedCallStack.values().iterator();
+        while (iterator.hasNext()) {
+            final List<CallContext<R, T>> callContexts = iterator.next();
+            final Iterator<CallContext<R, T>> callContextIterator = callContexts.iterator();
+            while (callContextIterator.hasNext()) {
+                final CallContext<R, T> callContext = callContextIterator.next();
+                if (methodMatcher.match(
+                        callContext.tree(), languageSupport.translation(), hook.matchContext())) {
+                    stackCalls.add(callContext);
+                }
+            }
         }
 
-        for (CallContext<R, T> callContext : stackCalls) {
+        final Iterator<CallContext<R, T>> callContextIterator = stackCalls.iterator();
+        while (callContextIterator.hasNext()) {
+            final CallContext<R, T> callContext = callContextIterator.next();
             for (int i = 0; i < listeners.size(); i++) {
                 listeners.get(i).update(callContext);
             }
@@ -117,15 +121,17 @@ public class CallStackAgent<R, T, S, P>
     }
 
     private boolean addedToCallContext(int key, @Nonnull CallContext<R, T> callContext) {
-        if (visitedTreeObjects.contains(callContext.tree().hashCode())) {
+        if (visitedTreeObjects.contains(callContext.tree())) {
             return false;
         }
-        visitedTreeObjects.add(callContext.tree().hashCode());
+        visitedTreeObjects.add(callContext.tree());
         invokedCallStack.compute(
                 key,
                 (k, v) -> {
                     if (v == null) {
-                        return new ArrayList<>(List.of(callContext));
+                        final ArrayList<CallContext<R, T>> callContexts = new ArrayList<>();
+                        callContexts.add(callContext);
+                        return callContexts;
                     } else {
                         v.add(callContext);
                         return v;
@@ -136,7 +142,7 @@ public class CallStackAgent<R, T, S, P>
 
     @Nonnull
     private Optional<Integer> getKeyFormT(@Nonnull T tree) {
-        String identifierString =
+        final String identifierString =
                 languageSupport
                         .translation()
                         .getMethodName(MatchContext.createForHookContext(), tree)
