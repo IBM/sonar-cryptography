@@ -198,7 +198,8 @@ public final class PythonSemantic {
                 default:
                     // This case should never be reached
                     LOGGER.debug(
-                            "Detected some type of tree used in `resolveTreeType` that is not currently supported.");
+                            "Detected tree type {} used in `resolveTreeType` that is not currently supported",
+                            resultTree.getKind());
                     break;
             }
         }
@@ -759,7 +760,7 @@ public final class PythonSemantic {
                             // `subscriptionExpressionTree.object()`, it means that the above
                             // `resolveValues` operation was not successful.
                             // Therefore, we resolve the value ["key"] because it carries more
-                            // information than the name of the dictionnary
+                            // information than the name of the dictionary
                             // The condition `!isResolvingType` prevents this rule from happening
                             // during type resolution, otherwise it would return the unrelated
                             // String type of the `indexLiteralTree`
@@ -959,7 +960,7 @@ public final class PythonSemantic {
                 try {
                     result = Double.parseDouble(resultString);
                 } catch (NumberFormatException e2) {
-                    LOGGER.info(
+                    LOGGER.debug(
                             "The detected NumericLiteral with value '{}' could not be converted to an Integer or a Double",
                             resultString);
                 }
@@ -972,8 +973,9 @@ public final class PythonSemantic {
             result = nameTree.name();
         } else {
             // This case should never be reached
-            LOGGER.info(
-                    "Detected some type of tree used in `resolveConstant` that is not currently supported.");
+            LOGGER.debug(
+                    "Detected tree type {} used in `resolveConstant` that is not currently supported",
+                    tree.getKind());
         }
 
         try {
