@@ -30,7 +30,9 @@ import com.ibm.engine.language.csharp.tree.CSharpObjectCreationTree;
 import com.ibm.engine.language.csharp.tree.CSharpTree;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.antlr.v4.runtime.Token;
@@ -95,7 +97,8 @@ public final class CSharpTreeConverter extends CSharpParserBaseVisitor<Void> {
                 new CSharpBlockTree(
                         ctx.getStart().getLine(),
                         ctx.getStart().getCharPositionInLine(),
-                        collector.getStatements()));
+                        collector.getStatements(),
+                        collector.getAliases()));
         // Recurse to discover nested blocks (lambdas, local functions, etc.)
         visitChildren(ctx);
         return null;
@@ -112,18 +115,8 @@ public final class CSharpTreeConverter extends CSharpParserBaseVisitor<Void> {
     private static final class StatementCollector extends CSharpParserBaseVisitor<Void> {
 
         private final List<CSharpTree> statements = new ArrayList<>();
-
-        /**
-         * Set to the LHS identifier before descending into a {@code local_variable_declarator}'s
-         * initializer. Consumed (set back to null) by {@link #visitPrimary_expression} so it is
-         * applied to exactly the first (outermost) primary_expression in the initializer.
-         */
+        private final Map<String, String> aliases = new HashMap<>();
         @Nullable private String pendingAssignedIdentifier = null;
-
-        @Nonnull
-        List<CSharpTree> getStatements() {
-            return Collections.unmodifiableList(statements);
-        }
 
         /** Stop at nested blocks — they become separate {@link CSharpBlockTree} entries. */
         @Override
@@ -133,19 +126,54 @@ public final class CSharpTreeConverter extends CSharpParserBaseVisitor<Void> {
 
         /**
          * Captures the variable name from {@code var x = Expr()} so that the emitted tree node gets
-         * its {@code assignedIdentifier} populated for later symbol tracking.
+         * its {@code assignedIdentifier} populated for later symbol tracking. Also tracks alias
+         * assignments ({@code var alias = original;}) for variable resolution.
          */
         @Override
         public Void visitLocal_variable_declarator(
                 CSharpParser.Local_variable_declaratorContext ctx) {
             if (ctx.identifier() != null && ctx.local_variable_initializer() != null) {
                 pendingAssignedIdentifier = ctx.identifier().getText();
+                // Track alias: var alias = originalVar; where originalVar is a simple identifier
+                // Only track when the entire initializer is exactly one simple-name expression
+                CSharpParser.ExpressionContext initExpr =
+                        ctx.local_variable_initializer().expression();
+                if (initExpr != null) {
+                    CSharpParser.Primary_expressionContext primaryExpr =
+                            findPrimaryExpression(initExpr);
+                    // Only track when the entire initializer is exactly one simple-name expression
+                    if (primaryExpr != null
+                            && primaryExpr.children != null
+                            && primaryExpr.children.size() == 1
+                            && primaryExpr.primary_expression_start()
+                                    instanceof CSharpParser.SimpleNameExpressionContext) {
+                        String aliasName = ctx.identifier().getText();
+                        String originalName =
+                                ((CSharpParser.SimpleNameExpressionContext)
+                                                primaryExpr.primary_expression_start())
+                                        .identifier()
+                                        .getText();
+                        if (!aliasName.equals(originalName)) {
+                            aliases.put(aliasName, originalName);
+                        }
+                    }
+                }
             }
             try {
                 return visitChildren(ctx);
             } finally {
                 pendingAssignedIdentifier = null;
             }
+        }
+
+        @Nonnull
+        List<CSharpTree> getStatements() {
+            return Collections.unmodifiableList(statements);
+        }
+
+        @Nonnull
+        Map<String, String> getAliases() {
+            return Collections.unmodifiableMap(aliases);
         }
 
         /**
