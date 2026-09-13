@@ -19,36 +19,35 @@
  */
 package com.ibm.output.cyclondx.builder;
 
-import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.Protocol;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import org.cyclonedx.model.Component;
+import org.cyclonedx.model.component.crypto.ProtocolProperties;
 import org.cyclonedx.model.component.crypto.RelatedCryptoMaterialProperties;
-import org.cyclonedx.model.component.evidence.Occurrence;
 
-public interface IProtocolComponentBuilder {
+public class ProtocolProperties17 extends ProtocolProperties {
 
-    @Nonnull
-    IProtocolComponentBuilder name(@Nullable Protocol name);
+    private List<RelatedCryptoMaterialProperties> relatedCryptographicAssets;
 
-    @Nonnull
-    IProtocolComponentBuilder type(@Nullable Protocol type);
+    @JsonIgnore
+    @Override
+    public List<String> getCryptoRefArray() {
+        return null;
+    }
 
-    @Nonnull
-    IProtocolComponentBuilder version(@Nullable INode version);
+    @JsonIgnore
+    @Override
+    public void setCryptoRefArray(List<String> cryptoRefArray) {
+        // deprecated in CycloneDX 1.7
+    }
 
-    @Nonnull
-    IProtocolComponentBuilder cipherSuites(@Nullable INode cipherSuiteCollection);
+    @JsonProperty("relatedCryptographicAssets")
+    public List<RelatedCryptoMaterialProperties> getRelatedCryptographicAssets() {
+        return relatedCryptographicAssets;
+    }
 
-    @Nonnull
-    IProtocolComponentBuilder relatedCryptographicAssets(
-            @Nullable List<RelatedCryptoMaterialProperties> assets);
-
-    @Nonnull
-    IProtocolComponentBuilder occurrences(@Nullable Occurrence... occurrences);
-
-    @Nonnull
-    Component build();
+    public void setRelatedCryptographicAssets(
+            List<RelatedCryptoMaterialProperties> relatedCryptographicAssets) {
+        this.relatedCryptographicAssets = relatedCryptographicAssets;
+    }
 }

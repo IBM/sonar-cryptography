@@ -59,10 +59,12 @@ import com.ibm.output.Constants;
 import com.ibm.output.IOutputFile;
 import com.ibm.output.cyclondx.builder.AlgorithmComponentBuilder;
 import com.ibm.output.cyclondx.builder.ProtocolComponentBuilder;
+import com.ibm.output.cyclondx.builder.ProtocolProperties17;
 import com.ibm.output.cyclondx.builder.RelatedCryptoMaterialComponentBuilder;
 import com.ibm.output.util.Utils;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
@@ -87,6 +89,8 @@ import org.cyclonedx.model.Dependency;
 import org.cyclonedx.model.Metadata;
 import org.cyclonedx.model.OrganizationalEntity;
 import org.cyclonedx.model.Service;
+import org.cyclonedx.model.component.crypto.RelatedCryptoMaterialProperties;
+import org.cyclonedx.model.component.crypto.enums.RelatedCryptoMaterialType;
 import org.cyclonedx.model.component.evidence.Occurrence;
 import org.cyclonedx.model.metadata.ToolInformation;
 import org.slf4j.Logger;
@@ -112,7 +116,6 @@ public class CBOMOutputFile implements IOutputFile {
     private void add(@Nullable final String parentBomRef, @Nonnull List<INode> nodes) {
         nodes.forEach(
                 node -> {
-                    // switch for asset
                     if (node instanceof Algorithm algorithm) {
                         createAlgorithmComponent(parentBomRef, algorithm);
                     } else if (node instanceof Key key) {
@@ -174,15 +177,9 @@ public class CBOMOutputFile implements IOutputFile {
     }
 
     private void createKeyComponent(@Nullable String parentBomRef, @Nonnull Key node) {
-        // if functionality nodes are placed under the key node,
-        // they will be moved under the corresponding primitive node.
         Utils.pushNodesDownToFirstMatch(node, IPrimitive.getKinds(), Functionality.getKinds());
-        // if a key length is defined under the key node, this function makes sure that the
-        // underlying primitive
-        // will get the same key length associated.
         Utils.pushNodesDownToFirstMatch(
                 node, IPrimitive.getKinds(), List.of(KeyLength.class), false);
-
         createRelatedCryptoMaterialComponent(parentBomRef, node);
     }
 
@@ -206,7 +203,19 @@ public class CBOMOutputFile implements IOutputFile {
         if (protocolDependency != null) {
             List<String> cryptoRefs =
                     protocolDependency.getDependencies().stream().map(Dependency::getRef).toList();
-            protocol.getCryptoProperties().getProtocolProperties().setCryptoRefArray(cryptoRefs);
+            if (!cryptoRefs.isEmpty()
+                    && protocol.getCryptoProperties() != null
+                    && protocol.getCryptoProperties().getProtocolProperties()
+                            instanceof ProtocolProperties17 protoProps17) {
+                List<RelatedCryptoMaterialProperties> relatedAssets = new ArrayList<>();
+                for (String ref : cryptoRefs) {
+                    RelatedCryptoMaterialProperties rcm = new RelatedCryptoMaterialProperties();
+                    rcm.setId(ref);
+                    rcm.setType(RelatedCryptoMaterialType.OTHER);
+                    relatedAssets.add(rcm);
+                }
+                protoProps17.setRelatedCryptographicAssets(relatedAssets);
+            }
         }
     }
 
@@ -311,10 +320,8 @@ public class CBOMOutputFile implements IOutputFile {
     public Bom getBom() {
         final Bom bom = new Bom();
         bom.setSerialNumber("urn:uuid:" + UUID.randomUUID());
-        // add metadata
         final Metadata metadata = new Metadata();
         metadata.setTimestamp(new Date());
-        // add scanner to metadata
         final ToolInformation scannerInfo = new ToolInformation();
         final Service scannerService = new Service();
         scannerService.setName(Constants.SCANNER_NAME);
@@ -342,12 +349,17 @@ public class CBOMOutputFile implements IOutputFile {
         final Bom bom = getBom();
         final BomJsonGenerator bomGenerator = BomGeneratorFactory.createJson(schema, bom);
         try {
+            Field specVersionField = Bom.class.getDeclaredField("specVersion");
+            specVersionField.setAccessible(true);
+            specVersionField.set(bom, "1.7");
             final String bomString = bomGenerator.toJsonString();
             FileUtils.write(file, bomString, StandardCharsets.UTF_8, false);
         } catch (IOException e) {
             LOGGER.error("Could not write CBOM file: {}", e.getMessage());
         } catch (GeneratorException e) {
             LOGGER.error("Could not generate CBOM: {}", e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("Could not set specVersion: {}", e.getMessage());
         }
     }
 

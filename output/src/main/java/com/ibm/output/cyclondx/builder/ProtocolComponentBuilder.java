@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Evidence;
 import org.cyclonedx.model.component.crypto.CryptoProperties;
-import org.cyclonedx.model.component.crypto.ProtocolProperties;
+import org.cyclonedx.model.component.crypto.RelatedCryptoMaterialProperties;
 import org.cyclonedx.model.component.crypto.enums.AssetType;
 import org.cyclonedx.model.component.crypto.enums.ProtocolType;
 import org.cyclonedx.model.component.evidence.Occurrence;
@@ -45,7 +45,7 @@ import org.cyclonedx.model.component.evidence.Occurrence;
 public class ProtocolComponentBuilder implements IProtocolComponentBuilder {
     @Nonnull private final Component component;
     @Nonnull private final CryptoProperties cryptoProperties;
-    @Nonnull private final ProtocolProperties protocolProperties;
+    @Nonnull private final ProtocolProperties17 protocolProperties;
     @Nonnull private final BiFunction<String, Algorithm, String> algorithmComponentBuilder;
 
     protected ProtocolComponentBuilder(
@@ -53,14 +53,14 @@ public class ProtocolComponentBuilder implements IProtocolComponentBuilder {
         this.component = new Component();
         this.component.setBomRef(UUID.randomUUID().toString());
         this.cryptoProperties = new CryptoProperties();
-        this.protocolProperties = new ProtocolProperties();
+        this.protocolProperties = new ProtocolProperties17();
         this.algorithmComponentBuilder = algorithmComponentBuilder;
     }
 
     private ProtocolComponentBuilder(
             @Nonnull Component component,
             @Nonnull CryptoProperties cryptoProperties,
-            @Nonnull ProtocolProperties protocolProperties,
+            @Nonnull ProtocolProperties17 protocolProperties,
             @Nonnull BiFunction<String, Algorithm, String> algorithmComponentBuilder) {
         this.component = component;
         this.cryptoProperties = cryptoProperties;
@@ -170,6 +170,19 @@ public class ProtocolComponentBuilder implements IProtocolComponentBuilder {
             protocolProperties.setCipherSuites(suites);
         }
 
+        return new ProtocolComponentBuilder(
+                component, cryptoProperties, protocolProperties, algorithmComponentBuilder);
+    }
+
+    @Nonnull
+    @Override
+    public IProtocolComponentBuilder relatedCryptographicAssets(
+            @Nullable List<RelatedCryptoMaterialProperties> assets) {
+        if (assets == null) {
+            return new ProtocolComponentBuilder(
+                    component, cryptoProperties, protocolProperties, algorithmComponentBuilder);
+        }
+        this.protocolProperties.setRelatedCryptographicAssets(assets);
         return new ProtocolComponentBuilder(
                 component, cryptoProperties, protocolProperties, algorithmComponentBuilder);
     }

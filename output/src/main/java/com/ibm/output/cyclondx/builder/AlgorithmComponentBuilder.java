@@ -27,6 +27,7 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.KeyAgreement;
 import com.ibm.mapper.model.KeyDerivationFunction;
 import com.ibm.mapper.model.KeyEncapsulationMechanism;
+import com.ibm.mapper.model.KeyWrap;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.Oid;
@@ -61,7 +62,9 @@ import com.ibm.mapper.model.padding.PKCS1;
 import com.ibm.mapper.model.padding.PKCS5;
 import com.ibm.mapper.model.padding.PKCS7;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -69,7 +72,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.Evidence;
-import org.cyclonedx.model.component.crypto.AlgorithmProperties;
 import org.cyclonedx.model.component.crypto.CryptoProperties;
 import org.cyclonedx.model.component.crypto.enums.AssetType;
 import org.cyclonedx.model.component.crypto.enums.CryptoFunction;
@@ -81,7 +83,7 @@ import org.cyclonedx.model.component.evidence.Occurrence;
 public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
     @Nonnull private final Component component;
     @Nonnull private final CryptoProperties cryptoProperties;
-    @Nonnull private final AlgorithmProperties algorithmProperties;
+    @Nonnull private final AlgorithmProperties17 algorithmProperties;
 
     @Nullable private INode algorithm;
     @Nullable private INode parameterSetIdentifier;
@@ -89,17 +91,58 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
     @Nullable private INode padding;
     @Nullable private INode curve;
 
+    private static final Map<String, String> CURVE_TO_NAMESPACED = new HashMap<>();
+    private static final Map<String, String> ALGORITHM_TO_FAMILY = new HashMap<>();
+
+    static {
+        CURVE_TO_NAMESPACED.put("secp256r1", "nist/P-256");
+        CURVE_TO_NAMESPACED.put("secp384r1", "nist/P-384");
+        CURVE_TO_NAMESPACED.put("secp521r1", "nist/P-521");
+        CURVE_TO_NAMESPACED.put("secp256k1", "secg/secp256k1");
+        CURVE_TO_NAMESPACED.put("secp224r1", "nist/P-224");
+        CURVE_TO_NAMESPACED.put("secp192r1", "nist/P-192");
+        CURVE_TO_NAMESPACED.put("Brainpoolp256r1", "brainpool/P256R1");
+        CURVE_TO_NAMESPACED.put("Brainpoolp512r1", "brainpool/P512R1");
+        CURVE_TO_NAMESPACED.put("Edwards25519", "x25519");
+        CURVE_TO_NAMESPACED.put("Edwards448", "x448");
+        CURVE_TO_NAMESPACED.put("Curve25519", "x25519");
+        CURVE_TO_NAMESPACED.put("Curve448", "x448");
+
+        ALGORITHM_TO_FAMILY.put("AES", "AES");
+        ALGORITHM_TO_FAMILY.put("RSA", "RSA");
+        ALGORITHM_TO_FAMILY.put("DSA", "DSA");
+        ALGORITHM_TO_FAMILY.put("ECDSA", "ECDSA");
+        ALGORITHM_TO_FAMILY.put("EDDSA", "EdDSA");
+        ALGORITHM_TO_FAMILY.put("HMAC", "HMAC");
+        ALGORITHM_TO_FAMILY.put("SHA", "SHA");
+        ALGORITHM_TO_FAMILY.put("SHA2", "SHA2");
+        ALGORITHM_TO_FAMILY.put("SHA3", "SHA3");
+        ALGORITHM_TO_FAMILY.put("MLKEM", "ML-KEM");
+        ALGORITHM_TO_FAMILY.put("MLDSA", "ML-DSA");
+        ALGORITHM_TO_FAMILY.put("SLH-DSA", "SLH-DSA");
+        ALGORITHM_TO_FAMILY.put("HKDF", "HKDF");
+        ALGORITHM_TO_FAMILY.put("PBKDF2", "PBKDF2");
+        ALGORITHM_TO_FAMILY.put("Argon2", "Argon2");
+        ALGORITHM_TO_FAMILY.put("SCrypt", "scrypt");
+        ALGORITHM_TO_FAMILY.put("Blowfish", "Blowfish");
+        ALGORITHM_TO_FAMILY.put("DES", "DES");
+        ALGORITHM_TO_FAMILY.put("3DES", "3DES");
+        ALGORITHM_TO_FAMILY.put("RC4", "RC4");
+        ALGORITHM_TO_FAMILY.put("ChaCha20", "ChaCha20");
+        ALGORITHM_TO_FAMILY.put("Poly1305", "Poly1305");
+    }
+
     protected AlgorithmComponentBuilder() {
         this.component = new Component();
         this.cryptoProperties = new CryptoProperties();
-        this.algorithmProperties = new AlgorithmProperties();
+        this.algorithmProperties = new AlgorithmProperties17();
     }
 
     @SuppressWarnings("java:S107")
     public AlgorithmComponentBuilder(
             @Nonnull Component component,
             @Nonnull CryptoProperties cryptoProperties,
-            @Nonnull AlgorithmProperties algorithmProperties,
+            @Nonnull AlgorithmProperties17 algorithmProperties,
             @Nullable INode algorithm,
             @Nullable INode parameterSetIdentifier,
             @Nullable INode mode,
@@ -231,6 +274,8 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
             primitives = Primitive.KEY_AGREE;
         } else if (primitive.is(KeyEncapsulationMechanism.class)) {
             primitives = Primitive.KEM;
+        } else if (primitive.is(KeyWrap.class)) {
+            primitives = Primitive.OTHER;
         } else if (primitive.is(ExtendableOutputFunction.class)) {
             primitives = Primitive.XOF;
         } else {
@@ -291,7 +336,26 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
     public @Nonnull IAlgorithmComponentBuilder curve(@Nullable INode curve) {
         this.curve = curve;
         if (curve instanceof EllipticCurve ellipticCurve) {
-            this.algorithmProperties.setCurve(ellipticCurve.asString());
+            String namespaced =
+                    CURVE_TO_NAMESPACED.getOrDefault(
+                            ellipticCurve.asString(), ellipticCurve.asString());
+            this.algorithmProperties.setEllipticCurve(namespaced);
+        }
+        return new AlgorithmComponentBuilder(
+                component,
+                cryptoProperties,
+                algorithmProperties,
+                algorithm,
+                parameterSetIdentifier,
+                mode,
+                padding,
+                curve);
+    }
+
+    @Override
+    public @Nonnull IAlgorithmComponentBuilder algorithmFamily(@Nullable String family) {
+        if (family != null) {
+            this.algorithmProperties.setAlgorithmFamily(family);
         }
         return new AlgorithmComponentBuilder(
                 component,
@@ -417,6 +481,13 @@ public class AlgorithmComponentBuilder implements IAlgorithmComponentBuilder {
         }
         this.cryptoProperties.setAssetType(AssetType.ALGORITHM);
         this.cryptoProperties.setAlgorithmProperties(this.algorithmProperties);
+
+        if (algorithm != null) {
+            String family = ALGORITHM_TO_FAMILY.get(algorithm.asString());
+            if (family != null) {
+                this.algorithmProperties.setAlgorithmFamily(family);
+            }
+        }
 
         this.component.setCryptoProperties(this.cryptoProperties);
         this.component.setType(Component.Type.CRYPTOGRAPHIC_ASSET);
