@@ -225,8 +225,17 @@ class ProtocolTest extends TestBase {
                             assertThat(protocolProperties.getVersion()).isEqualTo("1.3");
                             assertThat(protocolProperties.getCipherSuites()).isNotNull();
                             assertThat(protocolProperties.getCipherSuites()).hasSize(1);
-                            assertThat(protocolProperties.getCryptoRefArray()).isNotNull();
-                            assertThat(protocolProperties.getCryptoRefArray()).hasSize(3);
+                            assertThat(protocolProperties.getCryptoRefArray()).isNull();
+                            if (protocolProperties
+                                    instanceof
+                                    com.ibm.output.cyclondx.builder.ProtocolProperties17 p17) {
+                                assertThat(p17.getRelatedCryptographicAssets()).hasSize(3);
+                                assertThat(
+                                                p17.getRelatedCryptographicAssets().stream()
+                                                        .map(a -> a.getType().name())
+                                                        .toList())
+                                        .containsExactlyInAnyOrder("OTHER", "OTHER", "OTHER");
+                            }
 
                             final org.cyclonedx.model.component.crypto.CipherSuite cipherSuite =
                                     protocolProperties.getCipherSuites().get(0);
@@ -266,8 +275,17 @@ class ProtocolTest extends TestBase {
                             assertThat(protocolProperties.getType()).isEqualTo(ProtocolType.IPSEC);
                             assertThat(protocolProperties.getVersion()).isNull();
                             assertThat(protocolProperties.getCipherSuites()).isNull();
-                            assertThat(protocolProperties.getCryptoRefArray()).isNotNull();
-                            assertThat(protocolProperties.getCryptoRefArray()).hasSize(2);
+                            assertThat(protocolProperties.getCryptoRefArray()).isNull();
+                            if (protocolProperties
+                                    instanceof
+                                    com.ibm.output.cyclondx.builder.ProtocolProperties17 p17) {
+                                assertThat(p17.getRelatedCryptographicAssets()).hasSize(2);
+                                assertThat(
+                                                p17.getRelatedCryptographicAssets().stream()
+                                                        .map(a -> a.getType().name())
+                                                        .toList())
+                                        .containsExactlyInAnyOrder("OTHER", "OTHER");
+                            }
                         }
                     }
                 });

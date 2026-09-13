@@ -45,6 +45,7 @@ import com.ibm.mapper.model.functionality.Encrypt;
 import com.ibm.mapper.model.functionality.KeyGeneration;
 import com.ibm.mapper.model.functionality.Sign;
 import com.ibm.mapper.model.padding.OAEP;
+import com.ibm.output.cyclondx.builder.AlgorithmProperties17;
 import org.cyclonedx.model.Component;
 import org.cyclonedx.model.component.crypto.AlgorithmProperties;
 import org.cyclonedx.model.component.crypto.CryptoProperties;
@@ -384,8 +385,8 @@ class AlgorithmTest extends TestBase {
 
                     final AlgorithmProperties algorithmProperties =
                             component.getCryptoProperties().getAlgorithmProperties();
-                    assertThat(algorithmProperties.getPrimitive()).isEqualTo(Primitive.PKE);
-                    assertThat(algorithmProperties.getCurve()).isEqualTo("secp256r1");
+                    AlgorithmProperties17 algoProps17 = (AlgorithmProperties17) algorithmProperties;
+                    assertThat(algoProps17.getEllipticCurve()).isEqualTo("nist/P-256");
                 });
     }
 
@@ -405,8 +406,8 @@ class AlgorithmTest extends TestBase {
 
                     final AlgorithmProperties algorithmProperties =
                             component.getCryptoProperties().getAlgorithmProperties();
-                    assertThat(algorithmProperties.getPrimitive()).isEqualTo(Primitive.KEY_AGREE);
-                    assertThat(algorithmProperties.getCurve()).isEqualTo("secp384r1");
+                    AlgorithmProperties17 algoProps17 = (AlgorithmProperties17) algorithmProperties;
+                    assertThat(algoProps17.getEllipticCurve()).isEqualTo("nist/P-384");
                     assertThat(cryptoProperties.getOid()).isEqualTo("1.3.132.1.12");
                 });
     }
