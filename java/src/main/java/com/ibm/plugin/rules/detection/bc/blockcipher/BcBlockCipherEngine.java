@@ -21,25 +21,21 @@ package com.ibm.plugin.rules.detection.bc.blockcipher;
 
 import com.ibm.engine.model.Size;
 import com.ibm.engine.model.context.CipherContext;
-import com.ibm.engine.model.context.IDetectionContext;
+import com.ibm.engine.model.context.DetectionContext;
 import com.ibm.engine.model.factory.BlockSizeFactory;
 import com.ibm.engine.model.factory.ValueActionFactory;
+import com.ibm.engine.rule.ContextualDetectionRuleSet;
 import com.ibm.engine.rule.IDetectionRule;
+import com.ibm.engine.rule.RuleSets;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
-import com.ibm.plugin.rules.detection.Memoize;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.sonar.plugins.java.api.tree.Tree;
 
-public final class BcBlockCipherEngine {
-
-    private BcBlockCipherEngine() {
-        // nothing
-    }
+public final class BcBlockCipherEngine extends ContextualDetectionRuleSet<Tree, DetectionContext> {
 
     public static final List<String> enginesEmptyConstructors =
             List.of(
@@ -79,9 +75,9 @@ public final class BcBlockCipherEngine {
             List.of("DSTU7624Engine", "NullEngine", "RijndaelEngine", "ThreefishEngine");
 
     private static final List<IDetectionRule<Tree>> simpleConstructors(
-            @Nullable IDetectionContext detectionValueContext) {
+            @Nullable DetectionContext detectionValueContext) {
         List<IDetectionRule<Tree>> constructorsList = new LinkedList<>();
-        IDetectionContext context =
+        DetectionContext context =
                 detectionValueContext != null
                         ? detectionValueContext
                         : new CipherContext(Map.of("kind", "BLOCK_CIPHER_ENGINE"));
@@ -97,7 +93,8 @@ public final class BcBlockCipherEngine {
                             .withoutParameters()
                             .buildForContext(context)
                             .inBundle(() -> "Bc")
-                            .withDependingDetectionRules(BcBlockCipherInit.rules()));
+                            .withDependingDetectionRules(
+                                    RuleSets.rulesOf(BcBlockCipherInit.class)));
         }
 
         // Constructors with the block size
@@ -113,7 +110,8 @@ public final class BcBlockCipherEngine {
                             .asChildOfParameterWithId(-1)
                             .buildForContext(context)
                             .inBundle(() -> "Bc")
-                            .withDependingDetectionRules(BcBlockCipherInit.rules()));
+                            .withDependingDetectionRules(
+                                    RuleSets.rulesOf(BcBlockCipherInit.class)));
         }
 
         // `newInstance` for AESEngine
@@ -127,24 +125,14 @@ public final class BcBlockCipherEngine {
                         .withoutParameters()
                         .buildForContext(context)
                         .inBundle(() -> "Bc")
-                        .withDependingDetectionRules(BcBlockCipherInit.rules()));
+                        .withDependingDetectionRules(RuleSets.rulesOf(BcBlockCipherInit.class)));
 
         return constructorsList;
     }
 
-    private static final Supplier<List<IDetectionRule<Tree>>> RULES =
-            Memoize.of(() -> simpleConstructors(null));
-
     @Nonnull
-    public static List<IDetectionRule<Tree>> rules() {
-        return RULES.get();
-    }
-
-    @Nonnull
-    public static List<IDetectionRule<Tree>> rules(
-            @Nullable IDetectionContext detectionValueContext) {
-        return detectionValueContext == null
-                ? RULES.get()
-                : simpleConstructors(detectionValueContext);
+    @Override
+    protected List<IDetectionRule<Tree>> buildRules(@Nullable DetectionContext context) {
+        return simpleConstructors(context);
     }
 }

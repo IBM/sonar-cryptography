@@ -19,13 +19,22 @@
  */
 package com.ibm.engine.model.context;
 
+import java.util.Map;
 import javax.annotation.Nonnull;
 
-public class PRNGContext implements IDetectionContext {
+public class PRNGContext extends DetectionContext {
+
+    public PRNGContext() {
+        super(Map.of());
+    }
+
+    public PRNGContext(@Nonnull Map<String, String> properties) {
+        super(properties);
+    }
 
     @Nonnull
     @Override
-    public Class<? extends IDetectionContext> type() {
+    public Class<? extends DetectionContext> type() {
         return PRNGContext.class;
     }
 }

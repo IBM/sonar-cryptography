@@ -26,6 +26,7 @@ import com.ibm.engine.detection.MethodDetection;
 import com.ibm.engine.detection.ResolvedValue;
 import com.ibm.engine.detection.TraceSymbol;
 import com.ibm.engine.detection.ValueDetection;
+import com.ibm.engine.language.csharp.tree.CSharpArgument;
 import com.ibm.engine.language.csharp.tree.CSharpBlockTree;
 import com.ibm.engine.language.csharp.tree.CSharpIdentifierTree;
 import com.ibm.engine.language.csharp.tree.CSharpLiteralTree;
@@ -41,6 +42,7 @@ import com.ibm.engine.rule.Parameter;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -162,57 +164,58 @@ public final class CSharpDetectionEngine implements IDetectionEngine<CSharpTree,
     // -------------------------------------------------------------------------
 
     private void analyseMethodInvocation(@Nonnull CSharpMethodInvocationTree invocation) {
-        DetectionRule<CSharpTree> rule = emitDetectionAndGetRule(invocation);
-        if (rule == null) {
-            return;
-        }
-        List<CSharpTree> arguments = invocation.getArguments();
-        processParameters(rule.parameters(), arguments, invocation);
+        analyse(invocation, invocation.getArguments());
     }
 
     private void analyseObjectCreation(@Nonnull CSharpObjectCreationTree creation) {
-        DetectionRule<CSharpTree> rule = emitDetectionAndGetRule(creation);
-        if (rule == null) {
-            return;
-        }
-        List<CSharpTree> arguments = creation.getArguments();
-        processParameters(rule.parameters(), arguments, creation);
+        analyse(creation, creation.getArguments());
     }
 
     /**
-     * Emits the initial method detection and returns the detection rule for parameter processing.
-     * Returns {@code null} for {@link MethodDetectionRule} (already fully handled).
+     * Emits the initial method detection (when applicable) and processes the call's parameters.
+     *
+     * <p>When the rule declares any named parameter, the arguments are bound first through {@link
+     * DetectionStore#bindNamedArguments} — rejecting the call (no detection emitted at all) if a
+     * required named argument is absent — before the root {@link MethodDetection} is emitted. This
+     * mirrors {@code PythonDetectionEngine#analyseExpression}.
      */
-    @SuppressWarnings("unchecked")
-    @Nullable private DetectionRule<CSharpTree> emitDetectionAndGetRule(@Nonnull CSharpTree tree) {
+    private void analyse(@Nonnull CSharpTree tree, @Nonnull List<CSharpArgument> arguments) {
         if (detectionStore.getDetectionRule().is(MethodDetectionRule.class)) {
             detectionStore.onReceivingNewDetection(new MethodDetection<>(tree, null));
-            return null;
+            return;
         }
         DetectionRule<CSharpTree> detectionRule =
                 (DetectionRule<CSharpTree>) detectionStore.getDetectionRule();
+
+        final Optional<Map<Integer, CSharpTree>> bindings;
+        if (detectionRule.hasNamedMethodParameters()) {
+            bindings = detectionStore.bindNamedArguments(tree);
+            if (bindings.isEmpty()) {
+                return;
+            }
+        } else {
+            bindings = Optional.empty();
+        }
+
         if (detectionRule.actionFactory() != null) {
             detectionStore.onReceivingNewDetection(new MethodDetection<>(tree, null));
         }
-        return detectionRule;
-    }
 
-    /** Processes positional parameters against the provided argument list. */
-    private void processParameters(
-            @Nonnull List<Parameter<CSharpTree>> parameters,
-            @Nonnull List<CSharpTree> arguments,
-            @Nonnull CSharpTree parentTree) {
-        int index = 0;
-        for (Parameter<CSharpTree> parameter : parameters) {
-            if (index >= arguments.size()) {
-                break;
+        for (Parameter<CSharpTree> parameter : detectionRule.parameters()) {
+            final CSharpTree expression;
+            if (bindings.isPresent()) {
+                expression = bindings.get().get(parameter.getIndex());
+            } else if (parameter.getIndex() < arguments.size()) {
+                expression = arguments.get(parameter.getIndex()).value();
+            } else {
+                expression = null;
             }
-            processParameter(parameter, arguments.get(index), parentTree);
-            index++;
+            if (expression != null) {
+                processParameter(parameter, expression, tree);
+            }
         }
     }
 
-    @SuppressWarnings("unchecked")
     private void processParameter(
             @Nonnull Parameter<CSharpTree> parameter,
             @Nonnull CSharpTree expression,
@@ -263,7 +266,6 @@ public final class CSharpDetectionEngine implements IDetectionEngine<CSharpTree,
     }
 
     @Nonnull
-    @SuppressWarnings({"unchecked"})
     private <O> List<ResolvedValue<O, CSharpTree>> resolveValues(
             @Nonnull Class<O> clazz,
             @Nonnull CSharpTree tree,
@@ -285,10 +287,8 @@ public final class CSharpDetectionEngine implements IDetectionEngine<CSharpTree,
             selections.addFirst(memberAccess);
             String memberName = memberAccess.getMemberName();
             Optional<O> resolved = resolveConstant(clazz, memberName);
-            if (resolved.isPresent()) {
-                return List.of(new ResolvedValue<>(resolved.get(), tree));
-            }
-            return Collections.emptyList();
+            return resolved.map(o -> List.of(new ResolvedValue<>(o, tree)))
+                    .orElse(Collections.emptyList());
         }
 
         // Identifier: resolve to its name as a string
@@ -380,7 +380,7 @@ public final class CSharpDetectionEngine implements IDetectionEngine<CSharpTree,
     public Optional<TraceSymbol<CSharpSymbol>> getMethodInvocationParameterSymbol(
             @Nonnull CSharpTree methodInvocation, @Nonnull Parameter<CSharpTree> parameter) {
         if (methodInvocation instanceof CSharpMethodInvocationTree invocation) {
-            List<CSharpTree> args = invocation.getArguments();
+            List<CSharpArgument> args = invocation.getArguments();
             int idx = parameter.getIndex();
             if (idx >= 0 && idx < args.size()) {
                 return Optional.of(TraceSymbol.createWithStateNoSymbol());
@@ -395,7 +395,7 @@ public final class CSharpDetectionEngine implements IDetectionEngine<CSharpTree,
     public Optional<TraceSymbol<CSharpSymbol>> getNewClassParameterSymbol(
             @Nonnull CSharpTree newClass, @Nonnull Parameter<CSharpTree> parameter) {
         if (newClass instanceof CSharpObjectCreationTree creation) {
-            List<CSharpTree> args = creation.getArguments();
+            List<CSharpArgument> args = creation.getArguments();
             int idx = parameter.getIndex();
             if (idx >= 0 && idx < args.size()) {
                 return Optional.of(TraceSymbol.createWithStateNoSymbol());

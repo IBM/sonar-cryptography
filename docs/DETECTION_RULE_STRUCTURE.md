@@ -94,7 +94,50 @@ In the tree of detected values, the values detected by these dependent detection
 
 At this point, you should have repeated all the steps starting from the `withMethodParameter` to here as many times as there are parameters in the function that you want to capture.
 
-Then, `buildForContext(IDetectionContext detectionValueContext)` defines the detection context ([`IDetectionContext`](../engine/src/main/java/com/ibm/engine/model/context/IDetectionContext.java)) for all the detected values of your rule (but detections from dependent rules have their own context).
+### Named method parameters
+
+For Python and C# rules, `withNamedMethodParameter(String name, String type)` declares a required
+parameter, and `withOptionalNamedMethodParameter(String name, String type)` declares one that
+may be omitted. Both methods are part of the shared rule builder, but **only Python and C# currently
+support matching them**. Using either declaration with an unsupported language fails when
+the detection store is created; it does not silently fall back to positional-only matching.
+
+Declare any `withMethodParameter` calls first, then required named parameters, then optional
+named parameters. A `withMethodParameter` declaration in a mixed rule requires an actual
+positional argument, not a keyword argument at the same index. To support both `a=` and
+positional `a`, declare `a` with `withNamedMethodParameter("a", "str")` instead. For example,
+to detect `Foo.f(a, b, c=None)` when callers may reorder `a`, `b`, and `c`:
+
+```java
+new DetectionRuleBuilder<Tree>()
+    .createDetectionRule()
+    .forObjectTypes("test.module.Foo")
+    .forMethods("f")
+    .shouldBeDetectedAs(new ValueActionFactory<>("f"))
+    .withNamedMethodParameter("a", "str")
+    .withNamedMethodParameter("b", "int")
+    .withOptionalNamedMethodParameter("c", "str")
+    .buildForContext(new DigestContext())
+    .inBundle(() -> "Test")
+    .withoutDependingDetectionRules();
+```
+
+The Python binder resolves each named parameter by its keyword argument first, or by the
+positional argument at its declared index if that argument has no keyword marker. A missing
+or wrong-type required parameter prevents the *entire* rule from firing; an absent or
+wrong-type optional parameter is skipped while the rest of the rule can still fire. Unpacking
+(`*args` or `**kwargs`) cannot be resolved statically and is rejected for named-parameter
+rules. Extra unknown keyword arguments are ignored. Positional-only rules continue using
+their existing matcher.
+
+The C# binder (`CSharpNamedArgumentBinder`) follows the same keyword-first, positional-fallback
+resolution, using C# named arguments (`Foo.F(a: x, b: y)`). It rejects the call if it has fewer
+arguments than mandatory parameters or if a required named parameter cannot be resolved. Unlike
+the Python binder, it does not check parameter types, since C# detection has no semantic type
+resolution, and a `withMethodParameter` declaration in a mixed rule is matched by index whether
+or not the argument at that index is named.
+
+Then, `buildForContext(DetectionContext detectionValueContext)` defines the detection context ([`DetectionContext`](../engine/src/main/java/com/ibm/engine/model/context/DetectionContext.java)) for all the detected values of your rule (but detections from dependent rules have their own context).
 A detection context is therefore linked to each detected value, and is designed to categorize your findings and to help you carry additional information that is not present in the detected value.
 For example, suppose you have two function calls `Cipher.getInstance("AES")` and `SecretKeyFactory.getInstance("AES")`. When writing detection rules to capture their cryptography information, you will in both cases capture the algorithm value "AES".
 But using the detection context, you can distinguish these two values. In the first case, using `buildForContext(new CipherContext())`, you can capture "AES" knowing that it is a cipher.
@@ -137,14 +180,16 @@ new DetectionRuleBuilder<Tree>()
     .forConstructor()
     .shouldBeDetectedAs(new ValueActionFactory<>("CFBBlockCipher"))
     .withMethodParameter("org.bouncycastle.crypto.BlockCipher")
-        .addDependingDetectionRules(BcBlockCipherEngine.rules())
+        .addDependingDetectionRules(RuleSets.rulesOf(BcBlockCipherEngine.class))
     .withMethodParameter("int")
         .shouldBeDetectedAs(new BlockSizeFactory<>(Size.UnitType.BIT))
         .asChildOfParameterWithId(-1)
-    .buildForContext(new CipherContext(Map.of("kind", "BLOCK_CIPHER")))
+    .buildForContext(context)
     .inBundle(() -> "Bc")
-    .withDependingDetectionRules(BcBlockCipherInit.rules());
+    .withDependingDetectionRules(RuleSets.rulesOf(BcBlockCipherInit.class));
 ```
+
+Here `context` is `new CipherContext(Map.of("kind", "BLOCK_CIPHER"))` by default, but `BcBlockCipher` extends [`ContextualDetectionRuleSet<Tree, DetectionContext>`](../engine/src/main/java/com/ibm/engine/rule/ContextualDetectionRuleSet.java), so a caller can override it with `RuleSet.of(BcBlockCipher.class).withOverrides(someContext)`. See the section on `ContextualDetectionRuleSet` and `RuleSets` in [*Extending the Sonar Cryptography Plugin for another language*](./LANGUAGE_SUPPORT.md#registering-your-rule) for how this works.
 
 We first specify the exact function call that we want to capture, which is here the constructor of the `org.bouncycastle.crypto.modes.CFBBlockCipher` object, with two parameters (of type `org.bouncycastle.crypto.BlockCipher` and `int`).
 
@@ -152,9 +197,9 @@ The value "CFBBlockCipher" (from which the translation later extracts the CFB mo
 We also capture directly the second parameter of the function rule; the block size "256" (it will be attributed the same context, but we can distinguish it from the top level detection as it will be captured as a `BlockSize` object).
 This parameter detection is placed below the top level detection using `asChildOfParameterWithId(-1)`.
 
-To capture the first parameter, we rely instead on a list of dependent detection rules `BcBlockCipherEngine.rules()`, that should capture all the possible `BlockCipher` classes existing in the library. In our case, a dependent rule targeting `AESEngine.newInstance()` should capture the value "AES", with a context that should specify that it is the base cipher.
+To capture the first parameter, we rely instead on a list of dependent detection rules `RuleSets.rulesOf(BcBlockCipherEngine.class)`, that should capture all the possible `BlockCipher` classes existing in the library. In our case, a dependent rule targeting `AESEngine.newInstance()` should capture the value "AES", with a context that should specify that it is the base cipher.
 
-Finally, a list of top level dependent detection rules `BcBlockCipherInit.rules()` should capture some information contained in the `cfb.init(...)` function call.
+Finally, a list of top level dependent detection rules `RuleSets.rulesOf(BcBlockCipherInit.class)` should capture some information contained in the `cfb.init(...)` function call.
 This top level dependent detection should be placed only below the `BlockCipher` detection (and not below the `int` detection because it uses `asChildOfParameterWithId`).
 
 

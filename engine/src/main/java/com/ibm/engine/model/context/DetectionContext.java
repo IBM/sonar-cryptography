@@ -19,16 +19,30 @@
  */
 package com.ibm.engine.model.context;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
-public abstract class DetectionContext implements IDetectionContext {
+/**
+ * Contexts are used as cache keys by {@link com.ibm.engine.rule.RuleSets}. Subclasses must
+ * represent all of their state in the immutable property map.
+ */
+public abstract class DetectionContext {
     @Nonnull private final Map<String, String> properties;
 
     protected DetectionContext(@Nonnull Map<String, String> properties) {
-        this.properties = properties;
+        this.properties = Collections.unmodifiableMap(new HashMap<>(properties));
+    }
+
+    @Nonnull
+    public abstract Class<? extends DetectionContext> type();
+
+    public boolean is(@Nonnull Class<? extends DetectionContext> kind) {
+        return kind.equals(type());
     }
 
     public boolean contains(@Nonnull String key) {
@@ -45,5 +59,21 @@ public abstract class DetectionContext implements IDetectionContext {
         return properties.keySet().stream()
                 .map(key -> key + "=" + properties.get(key))
                 .collect(Collectors.joining(", ", "{", "}"));
+    }
+
+    @Override
+    public final boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+        return properties.equals(((DetectionContext) other).properties);
+    }
+
+    @Override
+    public final int hashCode() {
+        return Objects.hash(getClass(), properties);
     }
 }

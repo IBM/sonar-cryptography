@@ -1,6 +1,6 @@
 /*
  * Sonar Cryptography Plugin
- * Copyright (C) 2024 PQCA
+ * Copyright (C) 2026 PQCA
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -17,11 +17,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ibm.engine.model.context;
+package com.ibm.plugin.rules.detection.bc.asymmetricblockcipher;
 
-import javax.annotation.Nonnull;
+import com.ibm.engine.model.context.DetectionContext;
+import javax.annotation.Nullable;
 
-public interface ISupportKind<K> {
-    @Nonnull
-    K kind();
-}
+/**
+ * Context overrides shared by asymmetric cipher encodings and their engines. A {@code null} field
+ * uses that rule's default context for the corresponding role.
+ */
+public record AsymmetricCipherOverrides(
+        @Nullable DetectionContext encoding, @Nullable DetectionContext engine) {}

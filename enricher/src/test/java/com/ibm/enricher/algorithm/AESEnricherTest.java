@@ -27,6 +27,7 @@ import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Oid;
 import com.ibm.mapper.model.algorithms.AES;
+import com.ibm.mapper.model.mode.CBC;
 import com.ibm.mapper.model.mode.ECB;
 import com.ibm.mapper.model.mode.GCM;
 import com.ibm.mapper.model.padding.PKCS1;
@@ -35,6 +36,27 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class AESEnricherTest extends TestBase {
+
+    @Test
+    void copiedModeBranchesAreEnrichedIndependently() {
+        DetectionLocation location =
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
+        AES cbc = new AES(128, new CBC(location), location);
+        INode ecb = cbc.deepCopy();
+        assertThat(ecb).isExactlyInstanceOf(AES.class);
+        ecb.put(new ECB(location));
+
+        AESEnricher enricher = new AESEnricher();
+        INode enrichedCbc = enricher.enrich(cbc);
+        INode enrichedEcb = enricher.enrich(ecb);
+
+        assertThat(enrichedCbc.asString()).isEqualTo("AES-128-CBC");
+        assertThat(enrichedEcb.asString()).isEqualTo("AES-128-ECB");
+        assertThat(enrichedCbc.hasChildOfType(Oid.class).orElseThrow().asString())
+                .isEqualTo("2.16.840.1.101.3.4.1.2");
+        assertThat(enrichedEcb.hasChildOfType(Oid.class).orElseThrow().asString())
+                .isEqualTo("2.16.840.1.101.3.4.1.1");
+    }
 
     @Test
     void oid() {
@@ -76,6 +98,25 @@ class AESEnricherTest extends TestBase {
         final AES enrichedAES = (AES) enriched;
         assertThat(enrichedAES.hasChildOfType(Oid.class)).isPresent();
         assertThat(enrichedAES.hasChildOfType(Oid.class).get().asString())
+                .isEqualTo("2.16.840.1.101.3.4.1.6");
+    }
+
+    @Test
+    void recastAesDoesNotShareChildrenWithOriginal() {
+        DetectionLocation testDetectionLocation =
+                new DetectionLocation("testfile", 1, 1, List.of("test"), () -> "SSL");
+        final AES aes = new AES(128, new GCM(testDetectionLocation), testDetectionLocation);
+
+        final AESEnricher aesEnricher = new AESEnricher();
+        final INode enriched = aesEnricher.enrich(aes);
+
+        assertThat(enriched).isInstanceOf(AES.class);
+        final AES enrichedAES = (AES) enriched;
+        enrichedAES.removeChildOfType(Oid.class);
+
+        assertThat(enrichedAES.hasChildOfType(Oid.class)).isEmpty();
+        assertThat(aes.hasChildOfType(Oid.class)).isPresent();
+        assertThat(aes.hasChildOfType(Oid.class).get().asString())
                 .isEqualTo("2.16.840.1.101.3.4.1.6");
     }
 
