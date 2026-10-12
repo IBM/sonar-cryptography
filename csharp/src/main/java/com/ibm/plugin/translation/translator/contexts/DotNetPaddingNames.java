@@ -23,6 +23,7 @@ import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Padding;
 import com.ibm.mapper.model.padding.OAEP;
 import com.ibm.mapper.model.padding.PKCS1;
+import com.ibm.mapper.model.padding.PKCS7;
 import com.ibm.mapper.utils.DetectionLocation;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -72,6 +73,17 @@ public final class DotNetPaddingNames {
             case "OAEP" -> Optional.of(new OAEP(detectionLocation));
             case "PKCS1" -> Optional.of(new PKCS1(detectionLocation));
             case "PSS" -> Optional.of(new Padding("PSS", detectionLocation));
+            // The PaddingMode members of the symmetric algorithms. These have to be named here
+            // rather than left to JcaPaddingMapper, which only knows the JCA spellings
+            // ("PKCS5Padding", "ISO10126Padding") and falls back to an uninterpreted padding node
+            // for every .NET name. That fallback reaches the CBOM as padding "other", so
+            // PaddingMode.PKCS7 — the default for every symmetric algorithm in .NET — was
+            // reported as an unspecified padding rather than as PKCS#7.
+            case "PKCS7" -> Optional.of(new PKCS7(detectionLocation));
+            // The remaining PaddingMode members (None, Zeros, ANSIX923, ISO10126) are left to the
+            // JCA mapper on purpose. CycloneDX has no enum value for any of them, so naming them
+            // here would change only the reported name — from the .NET spelling to the mapper's
+            // canonical one — without making the CBOM any more accurate.
             default -> Optional.empty();
         };
     }

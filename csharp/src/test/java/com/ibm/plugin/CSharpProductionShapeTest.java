@@ -32,6 +32,7 @@ import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.NonceLength;
 import com.ibm.mapper.model.NumberOfIterations;
 import com.ibm.mapper.model.Padding;
+import com.ibm.mapper.model.PublicKeyEncryption;
 import com.ibm.mapper.model.SaltLength;
 import com.ibm.mapper.model.TagLength;
 import com.ibm.mapper.model.functionality.Decrypt;
@@ -98,7 +99,8 @@ class CSharpProductionShapeTest extends TestBase {
                 INode sign = node.getChildren().get(Sign.class);
                 assertThat(sign).isNotNull();
                 assertChild(sign, MessageDigest.class, "SHA-256");
-                assertChild(sign, Padding.class, "PKCS1");
+                // lifted onto the algorithm by the reorganizer
+                assertChild(node, Padding.class, "PKCS1");
             }
             // certificate.GetRSAPublicKey() then VerifyData with SHA-256/PKCS1
             case 3 -> {
@@ -106,7 +108,12 @@ class CSharpProductionShapeTest extends TestBase {
                 INode verify = node.getChildren().get(Verify.class);
                 assertThat(verify).isNotNull();
                 assertChild(verify, MessageDigest.class, "SHA-256");
-                assertChild(verify, Padding.class, "PKCS1");
+                // A certificate key wraps its algorithm, so the finding is the PublicKey and the
+                // RSA node is its child. The reorganizer lifts the padding onto that algorithm,
+                // which is where the CBOM reads it from; the signature digest stays on the
+                // operation, where it describes the signature rather than the padding.
+                assertChild(
+                        node.getChildren().get(PublicKeyEncryption.class), Padding.class, "PKCS1");
             }
             // RandomNumberGenerator.Fill(stackalloc byte[32])
             case 4 -> {
@@ -122,7 +129,8 @@ class CSharpProductionShapeTest extends TestBase {
                 INode sign = node.getChildren().get(Sign.class);
                 assertThat(sign).isNotNull();
                 assertChild(sign, MessageDigest.class, "SHA-512");
-                assertChild(sign, Padding.class, "PSS");
+                // lifted onto the algorithm by the reorganizer
+                assertChild(node, Padding.class, "PSS");
             }
             default -> throw new IllegalStateException("Unexpected findingId: " + findingId);
         }

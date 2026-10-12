@@ -99,7 +99,14 @@ class DotNetRSATest extends TestBase {
 
         INode oid = node.getChildren().get(Oid.class);
         assertThat(oid).isNotNull();
-        assertThat(oid.asString()).isEqualTo("1.2.840.113549.1.1.1");
+        // RSAES-OAEP has an OID of its own. Once the padding sits on the algorithm rather than
+        // under the operation, the enricher recognises the combination and the component carries
+        // 1.2.840.113549.1.1.7 instead of the generic RSA OID.
+        assertThat(oid.asString())
+                .isEqualTo(
+                        node.asString().contains("OAEP")
+                                ? "1.2.840.113549.1.1.7"
+                                : "1.2.840.113549.1.1.1");
 
         switch (findingId) {
             // RSA.Create() and the three parameterless constructors
@@ -123,7 +130,11 @@ class DotNetRSATest extends TestBase {
             case 16 -> assertOperation(node, Verify.class, "PKCS1", "SHA-256");
             // new RSACng(3072) followed by Encrypt with OaepSHA256
             case 17 -> {
-                assertKeySize(node, 3072);
+                // With an OAEP padding on the algorithm the model names the node after the
+                // padding, so the key size no longer appears in the name — it stays a child and
+                // still reaches the CBOM as the parameter set identifier.
+                assertThat(node.asString()).isEqualTo("RSA-OAEP");
+                assertChild(node, KeyLength.class, 3072);
                 assertOperation(node, Encrypt.class, "OAEP", "SHA-256");
             }
             case 18 -> assertOperation(node, Sign.class, "PKCS1", "SHA-256");
@@ -175,12 +186,14 @@ class DotNetRSATest extends TestBase {
         assertThat(operationNode)
                 .as("expected an %s operation", operation.getSimpleName())
                 .isNotNull();
-        assertChild(operationNode, Padding.class, expectedPadding);
+        // .NET names the padding on the operation, but it describes the algorithm, so a
+        // reorganizer rule lifts it onto the algorithm node — that is where the CBOM reads it
+        // from. The digest stays where it belongs: inside the OAEP padding for encryption, and
+        // under the operation for a signature, where it is the signature digest rather than a
+        // padding parameter.
+        assertChild(node, Padding.class, expectedPadding);
         if ("OAEP".equals(expectedPadding)) {
-            assertChild(
-                    operationNode.getChildren().get(Padding.class),
-                    MessageDigest.class,
-                    expectedDigest);
+            assertChild(node.getChildren().get(Padding.class), MessageDigest.class, expectedDigest);
         } else {
             assertChild(operationNode, MessageDigest.class, expectedDigest);
         }
