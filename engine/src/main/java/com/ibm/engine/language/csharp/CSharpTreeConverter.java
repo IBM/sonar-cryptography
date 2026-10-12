@@ -227,12 +227,14 @@ public final class CSharpTreeConverter {
         }
         if (node instanceof CSharpParser.Constructor_declarationContext ctorCtx) {
             CSharpParser.BodyContext body = ctorCtx.body();
+            CSharpScope bodyScope = new CSharpScope(scope);
+            // A constructor's parameters are not resolved from call sites: `new T(...)`
+            // is not recorded as a local call (it has a receiver type, not a bare name).
+            defineParameters(ctorCtx.formal_parameter_list(), bodyScope, null);
             if (body != null && body.block() != null) {
-                CSharpScope bodyScope = new CSharpScope(scope);
-                // A constructor's parameters are not resolved from call sites: `new T(...)`
-                // is not recorded as a local call (it has a receiver type, not a bare name).
-                defineParameters(ctorCtx.formal_parameter_list(), bodyScope, null);
-                processTopLevelBody(body.block(), bodyScope);
+                processTopLevelBody(body.block(), bodyScope, ctorCtx.constructor_initializer());
+            } else {
+                processConstructorInitializer(ctorCtx.constructor_initializer(), bodyScope);
             }
             return;
         }
@@ -265,11 +267,56 @@ public final class CSharpTreeConverter {
      */
     private void processTopLevelBody(
             @Nonnull CSharpParser.BlockContext block, @Nonnull CSharpScope bodyScope) {
+        processTopLevelBody(block, bodyScope, null);
+    }
+
+    /**
+     * Emits the creations in a constructor initializer when the constructor has no block body of
+     * its own, which is what {@code public Foo() : base(new Aes...()) ;} looks like.
+     */
+    private void processConstructorInitializer(
+            @Nullable CSharpParser.Constructor_initializerContext initializer,
+            @Nonnull CSharpScope bodyScope) {
+        if (initializer == null || initializer.argument_list() == null) {
+            return;
+        }
+        List<CSharpTree> statements = new ArrayList<>();
+        List<CSharpTree> previousSink = chainCallSink;
+        chainCallSink = statements;
+        try {
+            convertArgumentList(initializer.argument_list(), bodyScope);
+        } finally {
+            chainCallSink = previousSink;
+        }
+        if (!statements.isEmpty()) {
+            bodies.add(
+                    new CSharpBlockTree(
+                            initializer.getStart().getLine(),
+                            initializer.getStart().getCharPositionInLine(),
+                            Collections.unmodifiableList(statements),
+                            bodyScope));
+        }
+    }
+
+    /**
+     * @param initializer a constructor's {@code : base(...)} / {@code : this(...)} clause, whose
+     *     arguments run before the body and belong to the same scope. Without it a creation written
+     *     there is never offered to the engine: {@code NetAESEncryption(NetPeer peer) : base(peer,
+     *     new AesCryptoServiceProvider())} is a common shape in older code, and the only
+     *     cryptography some classes have.
+     */
+    private void processTopLevelBody(
+            @Nonnull CSharpParser.BlockContext block,
+            @Nonnull CSharpScope bodyScope,
+            @Nullable CSharpParser.Constructor_initializerContext initializer) {
         StatementCollector collector = new StatementCollector(bodyScope);
         CSharpParser.Statement_listContext statementList = block.statement_list();
         List<CSharpTree> previousSink = chainCallSink;
         chainCallSink = collector.mutableStatements();
         try {
+            if (initializer != null) {
+                convertArgumentList(initializer.argument_list(), bodyScope);
+            }
             if (statementList != null) {
                 for (CSharpParser.StatementContext statement : statementList.statement()) {
                     collector.visit(statement);
@@ -291,6 +338,31 @@ public final class CSharpTreeConverter {
      * so that its calls are detected exactly like a block body's and its call sites are recorded
      * for {@link #resolveParametersFromCallSites()}.
      */
+    /**
+     * The value an assignment assigns, for the two operators this converter models.
+     *
+     * <p>For {@code =} the right-hand side is an expression. For {@code ??=} the grammar wraps it
+     * in a {@code throwable_expression} so that {@code x ??= throw ...} is expressible, and only
+     * its expression branch carries a value -- a throw produces none. Compound operators ({@code
+     * +=} and friends) are not modelled and yield nothing.
+     */
+    @Nullable private static CSharpParser.ExpressionContext assignedValue(
+            @Nonnull CSharpParser.AssignmentContext assignment) {
+        final boolean modelled =
+                (assignment.assignment_operator() != null
+                                && assignment.assignment_operator().ASSIGNMENT() != null)
+                        || assignment.OP_COALESCING_ASSIGNMENT() != null;
+        if (!modelled) {
+            return null;
+        }
+        if (assignment.expression() != null) {
+            return assignment.expression();
+        }
+        return assignment.throwable_expression() == null
+                ? null
+                : assignment.throwable_expression().expression();
+    }
+
     private void processExpressionBody(
             @Nullable CSharpParser.Throwable_expressionContext arrowBody,
             @Nonnull CSharpScope bodyScope) {
@@ -301,7 +373,17 @@ public final class CSharpTreeConverter {
         List<CSharpTree> previousSink = chainCallSink;
         chainCallSink = statements;
         try {
-            CSharpTree value = convertExpression(arrowBody.expression(), bodyScope);
+            // An expression-bodied member whose body is an assignment: the lazy-initialisation
+            // idiom written as a property, `public static X Key => _key ??= new X(...);`. The
+            // body is then an assignment rather than a value, so the value has to be taken from
+            // its right-hand side.
+            CSharpParser.ExpressionContext body = arrowBody.expression();
+            CSharpTree value;
+            if (unwrapSingleChildChain(body) instanceof CSharpParser.AssignmentContext assignment) {
+                value = convertExpression(assignedValue(assignment), bodyScope);
+            } else {
+                value = convertExpression(body, bodyScope);
+            }
             if (isStatementWorthy(value)) {
                 statements.add(value);
             }
@@ -905,8 +987,14 @@ public final class CSharpTreeConverter {
 
         @Override
         public Void visitAssignment(CSharpParser.AssignmentContext ctx) {
-            if (ctx.assignment_operator() == null
-                    || ctx.assignment_operator().ASSIGNMENT() == null) {
+            // `??=` carries no assignment_operator of its own -- the grammar puts
+            // OP_COALESCING_ASSIGNMENT directly on the assignment rule -- so it has to be
+            // recognised separately. It is the lazy-initialisation idiom (`_key ??= RSA.Create()`),
+            // and for the question this converter answers, which value a name ends up holding, it
+            // assigns exactly like `=`.
+            if ((ctx.assignment_operator() == null
+                            || ctx.assignment_operator().ASSIGNMENT() == null)
+                    && ctx.OP_COALESCING_ASSIGNMENT() == null) {
                 return null; // compound operators (+=, etc.) not modeled
             }
             CSharpParser.Primary_expressionContext lhsPrimary =
@@ -922,7 +1010,7 @@ public final class CSharpTreeConverter {
                     instanceof CSharpParser.SimpleNameExpressionContext simpleCtx)) {
                 return null;
             }
-            CSharpParser.ExpressionContext rhs = ctx.expression();
+            CSharpParser.ExpressionContext rhs = assignedValue(ctx);
             if (rhs == null) {
                 return null;
             }
@@ -1138,6 +1226,13 @@ public final class CSharpTreeConverter {
         if (unwrapped instanceof CSharpParser.Unary_expressionContext unary) {
             return convertUnaryExpression(unary, scope);
         }
+        if (unwrapped instanceof CSharpParser.Relational_expressionContext relational
+                && isAsConversion(relational)) {
+            // `cert.GetRSAPrivateKey() as RSACng` — like a cast, the conversion does not change
+            // which value is meant, so the operand is the value. Idiomatic in .NET wherever an
+            // API returns a base type and the caller wants the platform-specific one.
+            return convertArithmeticOrPrimary(relational.shift_expression(0), scope);
+        }
         // Any other shape — a ternary, a `??`, a switch expression, a comparison, a lambda, a LINQ
         // query — has no single syntactically certain value. Earlier versions fell back to "find
         // the first primary_expression anywhere inside", which silently picked an unrelated
@@ -1146,6 +1241,25 @@ public final class CSharpTreeConverter {
         // source (a resolvable condition variable became a key length), so these shapes now
         // deliberately resolve to nothing.
         return null;
+    }
+
+    /**
+     * Whether a relational expression is nothing but an {@code as} conversion.
+     *
+     * <p>The grammar folds comparisons, {@code is} patterns, {@code switch} expressions, {@code
+     * with} expressions and {@code as} conversions into one rule, and only {@code as} leaves a
+     * single operand whose value is still meant. A comparison brings a second {@code
+     * shift_expression} and yields a boolean; {@code x is T} yields a boolean too, so it must not
+     * resolve to {@code x}; and a {@code switch} or {@code with} expression chooses between several
+     * values. All of those stay unresolved.
+     */
+    private static boolean isAsConversion(
+            @Nonnull CSharpParser.Relational_expressionContext relational) {
+        return !relational.AS().isEmpty()
+                && relational.shift_expression().size() == 1
+                && relational.IS().isEmpty()
+                && relational.SWITCH().isEmpty()
+                && relational.WITH().isEmpty();
     }
 
     /**
