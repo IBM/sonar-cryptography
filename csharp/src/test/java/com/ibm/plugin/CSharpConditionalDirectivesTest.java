@@ -52,6 +52,28 @@ class CSharpConditionalDirectivesTest {
     }
 
     @Test
+    void handlesAByteOrderMarkBeforeTheOpeningDirective() {
+        // Visual Studio writes a BOM by default, so a file whose first line is a directive begins
+        // with U+FEFF and only then "#if". Only spaces and tabs used to count as directive
+        // indentation, so that opening "#if" went unrecognised and was left in place while its
+        // "#endif" was blanked. The grammar evaluates conditional directives in the lexer, so the
+        // surviving "#if" suppressed the rest of the file: no parse error, just an empty token
+        // stream. SonarQube strips the mark before a sensor run ever sees it, so this guards the
+        // callers that do not -- the test harness among them.
+        final String source = "\uFEFF#if __ANDROID__\n" + "int kept = 1;\n" + "#endif\n";
+
+        final String neutralized = CSharpConditionalDirectives.neutralize(source);
+        assertThat(neutralized).contains("int kept = 1;");
+        assertThat(neutralized).doesNotContain("#if", "#endif");
+        assertThat(neutralized).hasSameSizeAs(source);
+
+        final String firstBranch = CSharpConditionalDirectives.selectFirstBranch(source);
+        assertThat(firstBranch).contains("int kept = 1;");
+        assertThat(firstBranch).doesNotContain("#if", "#endif");
+        assertThat(firstBranch).hasSameSizeAs(source);
+    }
+
+    @Test
     void firstBranchModeKeepsOneBranchAndBlanksTheAlternatives() {
         String source =
                 "#if NET462\n"

@@ -150,10 +150,36 @@ public final class CSharpConditionalDirectives {
         NONE
     }
 
+    /** U+FEFF, written as a code point because the style rules forbid unicode escapes. */
+    private static final char BYTE_ORDER_MARK = 0xFEFF;
+
+    /**
+     * What may precede the {@code #} of a conditional directive.
+     *
+     * <p>The byte order mark belongs in that set because Visual Studio writes one by default, so a
+     * file whose first line is a directive begins with U+FEFF and only then {@code #if}. Without
+     * this the opening directive is not recognised and so is not blanked, while its {@code #endif}
+     * is -- and because the grammar evaluates conditional directives in the lexer itself, the
+     * surviving {@code #if} then suppresses everything up to the end of the file. The parse stays
+     * free of errors; the token stream is simply empty, and the file is lost without a trace.
+     *
+     * <p>This is hardening rather than a fix to a live defect. Measured over a corpus of 11 485
+     * files, five open with a marked directive, four of them containing cryptography, and the
+     * findings are the same with and without this: SonarQube's own file reading strips the mark,
+     * so a sensor run never hands one to this class. But that is a property of the caller, not of
+     * this class, and the test harness reads its fixtures with {@code Files.readString} and so is
+     * a second caller that does pass one through. Treating the mark as indentation is what makes
+     * the two agree. The mark is blanked along with the rest of the line, so offsets are
+     * unaffected.
+     */
+    private static boolean isDirectiveIndent(char c) {
+        return c == ' ' || c == '\t' || c == BYTE_ORDER_MARK;
+    }
+
     @Nonnull
     private static Directive classifyLine(@Nonnull char[] chars, int start, int end) {
         int i = start;
-        while (i < end && (chars[i] == ' ' || chars[i] == '\t')) {
+        while (i < end && isDirectiveIndent(chars[i])) {
             i++;
         }
         if (i >= end || chars[i] != '#') {
@@ -219,7 +245,7 @@ public final class CSharpConditionalDirectives {
 
     private static void blankIfConditionalDirective(@Nonnull char[] chars, int start, int end) {
         int i = start;
-        while (i < end && (chars[i] == ' ' || chars[i] == '\t')) {
+        while (i < end && isDirectiveIndent(chars[i])) {
             i++;
         }
         if (i >= end || chars[i] != '#') {

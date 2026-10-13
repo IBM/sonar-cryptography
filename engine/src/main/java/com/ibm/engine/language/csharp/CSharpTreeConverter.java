@@ -217,11 +217,15 @@ public final class CSharpTreeConverter {
             } else {
                 // Expression-bodied method: `int Foo() => Bar(2048);`
                 CSharpParser.Throwable_expressionContext arrow = methodCtx.throwable_expression();
+                // The body is converted once and the result reused. Converting it a second time
+                // for the return registration would re-run the conversion's side effects, and for
+                // a lambda body that means a second CSharpBlockTree over the same statements --
+                // which is how `Func<RSA> F() => () => { return RSA.Create(2048); }` came to be
+                // reported twice.
+                CSharpTree returned = processExpressionBody(arrow, bodyScope);
                 if (methodName != null && arrow != null && arrow.expression() != null) {
-                    registerMethodReturn(
-                            methodName, convertExpression(arrow.expression(), bodyScope));
+                    registerMethodReturn(methodName, returned);
                 }
-                processExpressionBody(arrow, bodyScope);
             }
             return;
         }
@@ -363,22 +367,29 @@ public final class CSharpTreeConverter {
                 : assignment.throwable_expression().expression();
     }
 
-    private void processExpressionBody(
+    /**
+     * Processes an expression-bodied member, returning the value its body resolves to (or {@code
+     * null} when the body has no single value, as for a lambda or a ternary). Callers that need
+     * that value must take it from here rather than converting the body again: conversion has side
+     * effects -- a lambda body becomes its own {@link CSharpBlockTree} -- so a second conversion
+     * duplicates them.
+     */
+    @Nullable private CSharpTree processExpressionBody(
             @Nullable CSharpParser.Throwable_expressionContext arrowBody,
             @Nonnull CSharpScope bodyScope) {
         if (arrowBody == null || arrowBody.expression() == null) {
-            return;
+            return null;
         }
         List<CSharpTree> statements = new ArrayList<>();
         List<CSharpTree> previousSink = chainCallSink;
         chainCallSink = statements;
+        CSharpTree value;
         try {
             // An expression-bodied member whose body is an assignment: the lazy-initialisation
             // idiom written as a property, `public static X Key => _key ??= new X(...);`. The
             // body is then an assignment rather than a value, so the value has to be taken from
             // its right-hand side.
             CSharpParser.ExpressionContext body = arrowBody.expression();
-            CSharpTree value;
             if (unwrapSingleChildChain(body) instanceof CSharpParser.AssignmentContext assignment) {
                 value = convertExpression(assignedValue(assignment), bodyScope);
             } else {
@@ -390,15 +401,15 @@ public final class CSharpTreeConverter {
         } finally {
             chainCallSink = previousSink;
         }
-        if (statements.isEmpty()) {
-            return;
+        if (!statements.isEmpty()) {
+            bodies.add(
+                    new CSharpBlockTree(
+                            arrowBody.getStart().getLine(),
+                            arrowBody.getStart().getCharPositionInLine(),
+                            Collections.unmodifiableList(statements),
+                            bodyScope));
         }
-        bodies.add(
-                new CSharpBlockTree(
-                        arrowBody.getStart().getLine(),
-                        arrowBody.getStart().getCharPositionInLine(),
-                        Collections.unmodifiableList(statements),
-                        bodyScope));
+        return value;
     }
 
     /** Registers a method/constructor/local-function's formal parameters in {@code scope}. */
@@ -1069,6 +1080,12 @@ public final class CSharpTreeConverter {
 
         @Override
         public Void visitPrimary_expression(CSharpParser.Primary_expressionContext ctx) {
+            if (isCollectionExpression(ctx)) {
+                // A collection expression in statement position, as in `yield return [a, b];`.
+                // It has no value, so its elements are walked for their call sites instead.
+                emitCallSitesWithoutValue(ctx, currentScope);
+                return null;
+            }
             CSharpTree node = convertPrimaryExpression(ctx, null, currentScope);
             if (isStatementWorthy(node)) {
                 statements.add(node);
@@ -1148,17 +1165,20 @@ public final class CSharpTreeConverter {
         ParseTree unwrapped = unwrapSingleChildChain(expr);
 
         if (unwrapped instanceof CSharpParser.Lambda_expressionContext lambdaCtx) {
-            CSharpParser.Anonymous_function_bodyContext body = lambdaCtx.anonymous_function_body();
-            if (body != null && body.block() != null) {
-                processTopLevelBody(body.block(), new CSharpScope(scope));
-            }
+            processLambdaBody(lambdaCtx, scope);
             return null; // the lambda itself never contributes a value (see class javadoc)
         }
 
         if (unwrapped instanceof CSharpParser.Primary_expressionContext primary) {
-            CSharpTree converted = convertPrimaryExpression(primary, assignedIdentifier, scope);
-            if (converted != null) {
-                return converted;
+            if (isCollectionExpression(primary)) {
+                // The grammar makes a collection expression a primary expression, so it never
+                // reaches the no-value handling below; route it there explicitly.
+                emitCallSitesWithoutValue(primary, scope);
+            } else {
+                CSharpTree converted = convertPrimaryExpression(primary, assignedIdentifier, scope);
+                if (converted != null) {
+                    return converted;
+                }
             }
         } else {
             // Any other shape (arithmetic, comparison, logical, ternary, ...) can never itself be
@@ -1217,6 +1237,10 @@ public final class CSharpTreeConverter {
             return combineBinary(mul, left, operator, right, scope);
         }
         if (unwrapped instanceof CSharpParser.Primary_expressionContext primary) {
+            if (isCollectionExpression(primary)) {
+                emitCallSitesWithoutValue(primary, scope);
+                return null; // returning here keeps the terminal walk from emitting it again
+            }
             return convertPrimaryExpression(primary, null, scope);
         }
         if (unwrapped instanceof CSharpParser.Cast_expressionContext cast) {
@@ -1233,14 +1257,106 @@ public final class CSharpTreeConverter {
             // API returns a base type and the caller wants the platform-specific one.
             return convertArithmeticOrPrimary(relational.shift_expression(0), scope);
         }
-        // Any other shape — a ternary, a `??`, a switch expression, a comparison, a lambda, a LINQ
-        // query — has no single syntactically certain value. Earlier versions fell back to "find
-        // the first primary_expression anywhere inside", which silently picked an unrelated
-        // sub-expression: the *condition* of `strong ? 4096 : 2048`, or the *subject* of a switch
-        // expression. Combined with a size factory that turned out to be a real false-positive
-        // source (a resolvable condition variable became a key length), so these shapes now
-        // deliberately resolve to nothing.
+        // Any other shape — a ternary, a `??`, a switch expression, a comparison, a collection
+        // expression, a LINQ query — has no single syntactically certain value. Earlier versions
+        // fell back to "find the first primary_expression anywhere inside", which silently picked
+        // an unrelated sub-expression: the *condition* of `strong ? 4096 : 2048`, or the *subject*
+        // of a switch expression. Combined with a size factory that turned out to be a real
+        // false-positive source (a resolvable condition variable became a key length), so these
+        // shapes still resolve to nothing.
+        //
+        // Having no value is not the same as having nothing in it, though. Whichever branch a
+        // ternary or a switch expression takes, the creations written in its arms are creations
+        // the code performs, and an inventory wants them. So the value stays unresolved while the
+        // call sites inside are emitted in their own right.
+        emitCallSitesWithoutValue(unwrapped, scope);
         return null;
+    }
+
+    /**
+     * Processes a lambda's body: a block body becomes its own top-level body, an expression body
+     * contributes its call sites to the body currently being collected.
+     *
+     * <p>A lambda never has a value of its own — it is a delegate, not the thing it creates — so
+     * neither form resolves to anything. But {@code symmetricAlgorithmFactory: () => Aes.Create()}
+     * does construct an AES, and the factory-delegate idiom it belongs to is how a good deal of
+     * real .NET code names its algorithms: in ASP.NET Core's data protection tests it is the only
+     * spelling, which is why thirteen call sites there were invisible while this was unhandled.
+     *
+     * <p>The call sites land in the enclosing body rather than a body of their own, so that an
+     * enclosing local stays resolvable: in {@code () => RSA.Create(keySize)} the key size is
+     * declared outside the lambda.
+     */
+    private void processLambdaBody(
+            @Nonnull CSharpParser.Lambda_expressionContext lambdaCtx, @Nonnull CSharpScope scope) {
+        CSharpParser.Anonymous_function_bodyContext body = lambdaCtx.anonymous_function_body();
+        if (body == null) {
+            return;
+        }
+        CSharpScope bodyScope = new CSharpScope(scope);
+        if (body.block() != null) {
+            processTopLevelBody(body.block(), bodyScope);
+            return;
+        }
+        if (body.throwable_expression() != null) {
+            emitCallSitesWithoutValue(body.throwable_expression(), bodyScope);
+        } else {
+            emitCallSitesWithoutValue(body.non_assignment_expression(), bodyScope);
+        }
+    }
+
+    /**
+     * Whether a primary expression is a collection expression ({@code [a, b]}, {@code [.. a, ..
+     * b]}), which the grammar models as a primary expression although it has no single value.
+     */
+    private static boolean isCollectionExpression(
+            @Nonnull CSharpParser.Primary_expressionContext primary) {
+        return primary.primary_expression_start()
+                instanceof CSharpParser.CollectionExpressionContext;
+    }
+
+    /**
+     * Emits every call site inside an expression that has no single value, without resolving one.
+     *
+     * <p>Used for the shapes that choose between values or hold several — a ternary, a {@code ??},
+     * a switch expression, a collection expression, a lambda's expression body. Each is a place
+     * where a creation can hide completely rather than merely lose its parameters, and where
+     * picking one of the alternatives as "the" value would be a guess.
+     *
+     * <p>The walk stops at every {@link CSharpParser.Primary_expressionContext} and hands it to
+     * {@link #convertPrimaryExpression}, which already covers that expression's own arguments and
+     * its whole call chain; descending further would convert the same subtree twice and report it
+     * twice. The two exceptions are a collection expression, whose elements the grammar hangs
+     * directly under the primary expression's start, and a nested lambda, which has its own body
+     * handling — {@code "a" => () => new HMACSHA256()} is both at once.
+     */
+    private void emitCallSitesWithoutValue(
+            @Nullable ParseTree node, @Nonnull CSharpScope scope) {
+        if (node == null) {
+            return;
+        }
+        if (node instanceof CSharpParser.Lambda_expressionContext lambdaCtx) {
+            processLambdaBody(lambdaCtx, scope);
+            return;
+        }
+        if (node instanceof CSharpParser.Primary_expressionContext primary) {
+            if (primary.primary_expression_start()
+                    instanceof CSharpParser.CollectionExpressionContext collection) {
+                // `[.. authData, .. SHA256.HashData(clientDataJson)]` — a C# 12 collection
+                // expression. It has no value this converter can produce, but each element is an
+                // ordinary expression and the spread operator does not change that.
+                for (CSharpParser.Collection_elementContext element :
+                        collection.collection_element()) {
+                    emitCallSitesWithoutValue(element.expression(), scope);
+                }
+                return;
+            }
+            emitIfStatementWorthy(convertPrimaryExpression(primary, null, scope));
+            return;
+        }
+        for (int i = 0; i < node.getChildCount(); i++) {
+            emitCallSitesWithoutValue(node.getChild(i), scope);
+        }
     }
 
     /**
@@ -1563,6 +1679,26 @@ public final class CSharpTreeConverter {
     }
 
     /** Handles the {@code new Type(...)} and {@code new Type[...]} patterns. */
+    /**
+     * Walks the initializer of a creation whose type this converter cannot name, emitting the call
+     * sites inside it. See the {@code type_() == null} branch of {@link
+     * #convertObjectCreationFromStart}.
+     */
+    private void walkInitializerOfUntypedCreation(
+            @Nonnull CSharpParser.ObjectCreationExpressionContext objCreationCtx,
+            @Nonnull CSharpScope scope) {
+        CSharpParser.Object_creation_expressionContext objExpr =
+                objCreationCtx.object_creation_expression();
+        CSharpParser.Object_or_collection_initializerContext initializer =
+                objCreationCtx.object_or_collection_initializer() != null
+                        ? objCreationCtx.object_or_collection_initializer()
+                        : (objExpr != null ? objExpr.object_or_collection_initializer() : null);
+        if (initializer != null) {
+            // No receiver name exists, so only the values are walked -- no setter is claimed.
+            emitObjectInitializerSetters(null, initializer, scope);
+        }
+    }
+
     @Nullable private CSharpTree convertObjectCreationFromStart(
             @Nonnull CSharpParser.ObjectCreationExpressionContext objCreationCtx,
             @Nullable String assignedIdentifier,
@@ -1578,7 +1714,16 @@ public final class CSharpTreeConverter {
         }
 
         if (typeCtx == null) {
-            return null; // anonymous object `new { ... }` — not modeled
+            // An anonymous object (`new { ... }`) or a target-typed creation (`new() { ... }`,
+            // C# 9): neither names a type here, so no creation can be reported without guessing
+            // one. What the initializer holds is not a guess, though, and in a target-typed
+            // creation it is where the cryptography sits -- `new() { First =
+            // RandomNumberGenerator.GetBytes(length) }` and the `TheoryData` tables written as
+            // `new() { { alg, validation, () => new HMACSHA256() }, ... }`, which is how ASP.NET
+            // Core's data protection tests name their MACs. So the initializer is walked for its
+            // call sites while the creation itself stays unreported.
+            walkInitializerOfUntypedCreation(objCreationCtx, scope);
+            return null;
         }
         String typeName = typeCtx.getText();
         int ltIdx = typeName.indexOf('<');
