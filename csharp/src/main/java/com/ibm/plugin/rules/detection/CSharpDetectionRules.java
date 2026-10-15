@@ -39,6 +39,7 @@ import com.ibm.plugin.rules.detection.dotnet.DotNetKeyDerivation;
 import com.ibm.plugin.rules.detection.dotnet.DotNetLegacyFormatters;
 import com.ibm.plugin.rules.detection.dotnet.DotNetMLDsa;
 import com.ibm.plugin.rules.detection.dotnet.DotNetMLKem;
+import com.ibm.plugin.rules.detection.dotnet.DotNetPbeParameters;
 import com.ibm.plugin.rules.detection.dotnet.DotNetProtectedData;
 import com.ibm.plugin.rules.detection.dotnet.DotNetRC2;
 import com.ibm.plugin.rules.detection.dotnet.DotNetRSA;
@@ -79,6 +80,7 @@ public final class CSharpDetectionRules extends DetectionRuleSet<CSharpTree> {
                         RuleSets.rulesOf(DotNetHMAC.class).stream(),
                         RuleSets.rulesOf(DotNetKMAC.class).stream(),
                         RuleSets.rulesOf(DotNetRfc2898DeriveBytes.class).stream(),
+                        RuleSets.rulesOf(DotNetPbeParameters.class).stream(),
                         RuleSets.rulesOf(DotNetKeyDerivation.class).stream(),
                         RuleSets.rulesOf(DotNetRandomNumberGenerator.class).stream(),
                         RuleSets.rulesOf(DotNetProtectedData.class).stream(),

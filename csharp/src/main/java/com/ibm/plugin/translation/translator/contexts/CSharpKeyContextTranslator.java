@@ -307,6 +307,16 @@ public final class CSharpKeyContextTranslator implements IContextTranslation<CSh
             // DotNetRfc2898DeriveBytes and DotNetKeyDerivation.
             return Optional.of(new SaltLength(saltSize.getValue(), detectionLocation));
         } else if (value instanceof Algorithm<?>
+                && "PBE".equals(detectionContext.get("kind").orElse(""))) {
+            // PbeParameters (DotNetPbeParameters.java): the PbeEncryptionAlgorithm argument is the
+            // root and selects the scheme (PBES2 or PKCS#12); the HashAlgorithmName argument is its
+            // child. The two are told apart by their spelling, which never overlaps.
+            return DotNetPbeEncryptionNames.parse(value.asString(), detectionLocation)
+                    .or(
+                            () ->
+                                    DotNetHashAlgorithmNames.parseAsNode(
+                                            value.asString(), detectionLocation));
+        } else if (value instanceof Algorithm<?>
                 && isKeyDerivationKind(detectionContext.get("kind").orElse(""))) {
             // The HashAlgorithmName parameter of a key derivation function: the pseudo-random
             // function of PBKDF2, the extract/expand hash of HKDF, or the PRF of
