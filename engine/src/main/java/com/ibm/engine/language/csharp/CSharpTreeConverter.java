@@ -1330,8 +1330,7 @@ public final class CSharpTreeConverter {
      * directly under the primary expression's start, and a nested lambda, which has its own body
      * handling — {@code "a" => () => new HMACSHA256()} is both at once.
      */
-    private void emitCallSitesWithoutValue(
-            @Nullable ParseTree node, @Nonnull CSharpScope scope) {
+    private void emitCallSitesWithoutValue(@Nullable ParseTree node, @Nonnull CSharpScope scope) {
         if (node == null) {
             return;
         }
