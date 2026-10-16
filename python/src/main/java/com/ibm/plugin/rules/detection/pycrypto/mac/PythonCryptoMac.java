@@ -21,15 +21,12 @@ package com.ibm.plugin.rules.detection.pycrypto.mac;
 
 import static com.ibm.engine.detection.MethodMatcher.ANY;
 
-import com.ibm.engine.model.Size.UnitType;
 import com.ibm.engine.model.context.MacContext;
 import com.ibm.engine.model.factory.AlgorithmFactory;
-import com.ibm.engine.model.factory.DigestSizeFactory;
 import com.ibm.engine.model.factory.ValueActionFactory;
 import com.ibm.engine.rule.DetectionRuleSet;
 import com.ibm.engine.rule.IDetectionRule;
 import com.ibm.engine.rule.builder.DetectionRuleBuilder;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
@@ -50,12 +47,11 @@ public final class PythonCryptoMac extends DetectionRuleSet<Tree> {
                     .withNamedMethodParameter("key", ANY)
                     .withOptionalNamedMethodParameter("msg", ANY)
                     .withOptionalNamedMethodParameter(
-                            "ciphermod", ANY) // Crypto.Hash.* or Cryptodome.Hash.*
+                            "ciphermod", ANY) // Crypto.Cipher.* or Cryptodome.Cipher.*
                     .shouldBeDetectedAs(new AlgorithmFactory<>())
+                    .asChildOfParameterWithId(-1)
                     .withOptionalNamedMethodParameter("cipher_params", ANY)
                     .withOptionalNamedMethodParameter("mac_len", "int")
-                    .shouldBeDetectedAs(new DigestSizeFactory<>(UnitType.BYTE))
-                    .asChildOfParameterWithId(-1)
                     .withOptionalNamedMethodParameter("update_after_digest", ANY)
                     .buildForContext(new MacContext(Map.of("kind", "cmac")))
                     .inBundle(() -> "PyCrypto")
@@ -76,26 +72,47 @@ public final class PythonCryptoMac extends DetectionRuleSet<Tree> {
                     .inBundle(() -> "PyCrypto")
                     .withoutDependingDetectionRules();
 
+    // The output length (mac_len) is not captured, as it cannot be exported to the CBOM.
+    private static final IDetectionRule<Tree> KMAC128 = kmac("KMAC128");
+
+    private static final IDetectionRule<Tree> KMAC256 = kmac("KMAC256");
+
+    private static final IDetectionRule<Tree> POLY1305 =
+            new DetectionRuleBuilder<Tree>()
+                    .createDetectionRule()
+                    .forObjectTypes("Crypto.Hash.Poly1305", "Cryptodome.Hash.Poly1305")
+                    .forMethods("new")
+                    .shouldBeDetectedAs(new ValueActionFactory<>("Poly1305"))
+                    .withNamedMethodParameter("key", ANY)
+                    .withOptionalNamedMethodParameter(
+                            "cipher", ANY) // Crypto.Cipher.AES or Crypto.Cipher.ChaCha20
+                    .shouldBeDetectedAs(new AlgorithmFactory<>())
+                    .asChildOfParameterWithId(-1)
+                    .withOptionalNamedMethodParameter("nonce", ANY)
+                    .withOptionalNamedMethodParameter("data", ANY)
+                    .buildForContext(new MacContext(Map.of("kind", "poly1305")))
+                    .inBundle(() -> "PyCrypto")
+                    .withoutDependingDetectionRules();
+
+    @Nonnull
+    private static IDetectionRule<Tree> kmac(@Nonnull String name) {
+        return new DetectionRuleBuilder<Tree>()
+                .createDetectionRule()
+                .forObjectTypes("Crypto.Hash." + name, "Cryptodome.Hash." + name)
+                .forMethods("new")
+                .shouldBeDetectedAs(new ValueActionFactory<>(name))
+                .withNamedMethodParameter("key", ANY)
+                .withOptionalNamedMethodParameter("data", ANY)
+                .withOptionalNamedMethodParameter("mac_len", "int")
+                .withOptionalNamedMethodParameter("custom", ANY)
+                .buildForContext(new MacContext())
+                .inBundle(() -> "PyCrypto")
+                .withoutDependingDetectionRules();
+    }
+
     @Nonnull
     @Override
     protected List<IDetectionRule<Tree>> buildRules() {
-        List<IDetectionRule<Tree>> rules = new ArrayList<>();
-        // add CMAC + HMAC
-        rules.addAll(List.of(CMAC, HMAC));
-
-        // add "simple" MACs
-        for (final String mac : List.of("KMAC128", "KMAC256", "Poly1305")) {
-            rules.add(
-                    new DetectionRuleBuilder<Tree>()
-                            .createDetectionRule()
-                            .forObjectTypes("Crypto.Hash." + mac, "Cryptodome.Hash." + mac)
-                            .forMethods("new")
-                            .shouldBeDetectedAs(new ValueActionFactory<>(mac))
-                            .withAnyParameters()
-                            .buildForContext(new MacContext())
-                            .inBundle(() -> "PyCrypto")
-                            .withoutDependingDetectionRules());
-        }
-        return rules;
+        return List.of(CMAC, HMAC, KMAC128, KMAC256, POLY1305);
     }
 }

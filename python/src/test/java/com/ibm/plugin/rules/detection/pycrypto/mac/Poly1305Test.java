@@ -22,9 +22,11 @@ package com.ibm.plugin.rules.detection.pycrypto.mac;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.engine.detection.DetectionStore;
+import com.ibm.engine.model.Algorithm;
 import com.ibm.engine.model.IValue;
 import com.ibm.engine.model.ValueAction;
 import com.ibm.engine.model.context.MacContext;
+import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.Mac;
 import com.ibm.mapper.model.functionality.Tag;
@@ -58,10 +60,18 @@ public class Poly1305Test extends TestBase {
          */
         assertThat(detectionStore.getDetectionValues()).hasSize(1);
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(MacContext.class);
-        assertThat(detectionStore.getChildren()).isEmpty();
         IValue<Tree> value = detectionStore.getDetectionValues().get(0);
         assertThat(value).isInstanceOf(ValueAction.class);
         assertThat(value.asString()).isEqualTo("Poly1305");
+
+        // the cipher is detected as a child of the Poly1305 detection
+        assertThat(detectionStore.getChildren()).hasSize(1);
+        DetectionStore<PythonCheck, Tree, Symbol, PythonVisitorContext> cipherStore =
+                detectionStore.getChildren().get(0);
+        assertThat(cipherStore.getDetectionValues()).hasSize(1);
+        IValue<Tree> cipherValue = cipherStore.getDetectionValues().get(0);
+        assertThat(cipherValue).isInstanceOf(Algorithm.class);
+        assertThat(cipherValue.asString()).isEqualTo("AES");
 
         /*
          * Translation
@@ -71,10 +81,14 @@ public class Poly1305Test extends TestBase {
         INode mac = nodes.get(0);
         assertThat(mac.getKind()).isEqualTo(Mac.class);
         assertThat(mac.asString()).isEqualTo("Poly1305");
-        assertThat(mac.getChildren()).hasSize(1);
+        assertThat(mac.getChildren()).hasSize(2);
 
         INode tag = mac.getChildren().get(Tag.class);
         assertThat(tag).isNotNull();
         assertThat(tag.asString()).isEqualTo("TAG");
+
+        INode cipher = mac.getChildren().get(BlockCipher.class);
+        assertThat(cipher).isNotNull();
+        assertThat(cipher.asString()).isEqualTo("AES");
     }
 }

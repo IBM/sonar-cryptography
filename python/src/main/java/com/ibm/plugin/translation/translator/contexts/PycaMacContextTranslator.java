@@ -71,6 +71,14 @@ public final class PycaMacContextTranslator implements IContextTranslation<Tree>
                                 .parse(algorithm.asString(), detectionLocation)
                                 .map(HMAC::new);
                     }
+                    // the cipher used to derive the Poly1305 key pair; it is attached as a child
+                    // of the Poly1305 node
+                    case "poly1305" -> {
+                        final PycaCipherMapper cipherMapper = new PycaCipherMapper();
+                        yield cipherMapper
+                                .parse(algorithm.asString(), detectionLocation)
+                                .map(c -> c);
+                    }
                     default -> Optional.empty();
                 };
             }
