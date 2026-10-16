@@ -28,6 +28,7 @@ import com.ibm.engine.model.context.DigestContext;
 import com.ibm.mapper.model.DigestSize;
 import com.ibm.mapper.model.INode;
 import com.ibm.mapper.model.MessageDigest;
+import com.ibm.mapper.model.ParameterSetIdentifier;
 import com.ibm.mapper.model.functionality.Digest;
 import com.ibm.plugin.TestBase;
 import java.util.List;
@@ -65,12 +66,14 @@ public class TupleHash128Test extends TestBase {
         INode md = nodes.get(0);
         assertThat(md).isInstanceOf(MessageDigest.class);
         assertThat(md.getChildren()).hasSize(2);
-        assertThat(md.asString()).isEqualTo("TupleHash");
+        assertThat(md.asString()).isEqualTo("TupleHash128");
 
-        INode digestSize = md.getChildren().get(DigestSize.class);
-        assertThat(digestSize).isNotNull();
-        assertThat(digestSize.getChildren()).isEmpty();
-        assertThat(digestSize.asString()).isEqualTo("128");
+        // the parameter set identifier is the security strength, not a digest length
+        assertThat(md.getChildren().get(DigestSize.class)).isNull();
+        INode parameterSetIdentifier = md.getChildren().get(ParameterSetIdentifier.class);
+        assertThat(parameterSetIdentifier).isNotNull();
+        assertThat(parameterSetIdentifier.getChildren()).isEmpty();
+        assertThat(parameterSetIdentifier.asString()).isEqualTo("128");
 
         INode digest = md.getChildren().get(Digest.class);
         assertThat(digest).isNotNull();
