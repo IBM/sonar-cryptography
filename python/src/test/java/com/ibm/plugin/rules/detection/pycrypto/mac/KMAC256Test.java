@@ -77,15 +77,14 @@ public class KMAC256Test extends TestBase {
         assertThat(mac).isInstanceOf(KMAC.class);
         assertThat(mac.getKind()).isEqualTo(Mac.class);
         assertThat(mac.asString()).isEqualTo("KMAC256");
-        assertThat(mac.getChildren()).hasSize(4);
+        assertThat(mac.getChildren()).hasSize(3);
 
         INode parameterSetIdentifier = mac.getChildren().get(ParameterSetIdentifier.class);
         assertThat(parameterSetIdentifier).isNotNull();
         assertThat(parameterSetIdentifier.asString()).isEqualTo("256");
 
-        INode digestSize = mac.getChildren().get(DigestSize.class);
-        assertThat(digestSize).isNotNull();
-        assertThat(digestSize.asString()).isEqualTo("512");
+        // the parameter set identifier is the security strength, not an output length
+        assertThat(mac.getChildren().get(DigestSize.class)).isNull();
 
         INode cshake = mac.getChildren().get(ExtendableOutputFunction.class);
         assertThat(cshake).isNotNull();
