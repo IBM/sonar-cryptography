@@ -31,7 +31,9 @@ import com.ibm.engine.language.csharp.tree.CSharpObjectCreationTree;
 import com.ibm.engine.language.csharp.tree.CSharpTree;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.antlr.v4.runtime.Token;
@@ -113,18 +115,8 @@ public final class CSharpTreeConverter extends CSharpParserBaseVisitor<Void> {
     private static final class StatementCollector extends CSharpParserBaseVisitor<Void> {
 
         private final List<CSharpTree> statements = new ArrayList<>();
-
-        /**
-         * Set to the LHS identifier before descending into a {@code local_variable_declarator}'s
-         * initializer. Consumed (set back to null) by {@link #visitPrimary_expression} so it is
-         * applied to exactly the first (outermost) primary_expression in the initializer.
-         */
+        private final Map<String, String> aliases = new HashMap<>();
         @Nullable private String pendingAssignedIdentifier = null;
-
-        @Nonnull
-        List<CSharpTree> getStatements() {
-            return Collections.unmodifiableList(statements);
-        }
 
         /** Stop at nested blocks — they become separate {@link CSharpBlockTree} entries. */
         @Override
@@ -134,19 +126,59 @@ public final class CSharpTreeConverter extends CSharpParserBaseVisitor<Void> {
 
         /**
          * Captures the variable name from {@code var x = Expr()} so that the emitted tree node gets
-         * its {@code assignedIdentifier} populated for later symbol tracking.
+         * its {@code assignedIdentifier} populated for later symbol tracking. Also tracks alias
+         * assignments ({@code var alias = original;}) for variable resolution.
          */
         @Override
         public Void visitLocal_variable_declarator(
                 CSharpParser.Local_variable_declaratorContext ctx) {
             if (ctx.identifier() != null && ctx.local_variable_initializer() != null) {
                 pendingAssignedIdentifier = ctx.identifier().getText();
+                trackAlias(
+                        ctx.identifier().getText(), ctx.local_variable_initializer().expression());
             }
             try {
                 return visitChildren(ctx);
             } finally {
                 pendingAssignedIdentifier = null;
             }
+        }
+
+        /**
+         * Records that {@code name} now refers to the variable named by {@code initializer} when
+         * that is exactly one simple name (e.g. {@code var alias = aes;}). Any other value drops
+         * the mapping, so a stale alias never survives a reassignment. Because the map is updated
+         * in source order and receivers are resolved when their statement is visited, each
+         * statement sees the alias state at that point.
+         */
+        private void trackAlias(
+                @Nonnull String name, @Nullable CSharpParser.ExpressionContext initializer) {
+            aliases.remove(name);
+            if (initializer == null) {
+                return;
+            }
+            CSharpParser.Primary_expressionContext primary = findPrimaryExpression(initializer);
+            if (primary != null
+                    && primary.children != null
+                    && primary.children.size() == 1
+                    && primary.primary_expression_start()
+                            instanceof CSharpParser.SimpleNameExpressionContext start) {
+                String target = resolveAlias(start.identifier().getText());
+                if (!target.equals(name)) {
+                    aliases.put(name, target);
+                }
+            }
+        }
+
+        /** Maps a variable name to the original variable it currently aliases. */
+        @Nonnull
+        private String resolveAlias(@Nonnull String name) {
+            return aliases.getOrDefault(name, name);
+        }
+
+        @Nonnull
+        List<CSharpTree> getStatements() {
+            return Collections.unmodifiableList(statements);
         }
 
         /**
@@ -177,6 +209,17 @@ public final class CSharpTreeConverter extends CSharpParserBaseVisitor<Void> {
             }
 
             List<ParseTree> children = lhsPrimary.children;
+
+            // Plain variable assignment: alias = rhs; keeps the alias map in step with the code so
+            // later setters resolve to whatever the variable points to at that statement.
+            if (children != null
+                    && children.size() < 2
+                    && lhsPrimary.primary_expression_start()
+                            instanceof CSharpParser.SimpleNameExpressionContext lhsStart) {
+                trackAlias(lhsStart.identifier().getText(), ctx.expression());
+                return null;
+            }
+
             if (children == null || children.size() < 2) {
                 return null;
             }
@@ -204,7 +247,7 @@ public final class CSharpTreeConverter extends CSharpParserBaseVisitor<Void> {
                 return null;
             }
 
-            String variableName = simpleCtx.identifier().getText();
+            String variableName = resolveAlias(simpleCtx.identifier().getText());
             String setterName = "set_" + propertyName;
 
             // Convert RHS expression to the setter argument
@@ -312,7 +355,8 @@ public final class CSharpTreeConverter extends CSharpParserBaseVisitor<Void> {
                     (CSharpParser.Method_invocationContext) children.get(methodInvIdx);
 
             String methodName = memberAccess.identifier().getText();
-            String objectTypeName = resolveObjectTypeName(start, children, memberAccessIdx);
+            String objectTypeName =
+                    resolveAlias(resolveObjectTypeName(start, children, memberAccessIdx));
             List<CSharpArgument> args = convertArgumentList(methodInv.argument_list());
 
             return new CSharpMethodInvocationTree(
