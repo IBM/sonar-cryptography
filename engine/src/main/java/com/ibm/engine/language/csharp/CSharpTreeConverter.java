@@ -98,8 +98,7 @@ public final class CSharpTreeConverter extends CSharpParserBaseVisitor<Void> {
                 new CSharpBlockTree(
                         ctx.getStart().getLine(),
                         ctx.getStart().getCharPositionInLine(),
-                        collector.getStatements(),
-                        collector.getAliases()));
+                        collector.getStatements()));
         // Recurse to discover nested blocks (lambdas, local functions, etc.)
         visitChildren(ctx);
         return null;
@@ -135,30 +134,8 @@ public final class CSharpTreeConverter extends CSharpParserBaseVisitor<Void> {
                 CSharpParser.Local_variable_declaratorContext ctx) {
             if (ctx.identifier() != null && ctx.local_variable_initializer() != null) {
                 pendingAssignedIdentifier = ctx.identifier().getText();
-                // Track alias: var alias = originalVar; where originalVar is a simple identifier
-                // Only track when the entire initializer is exactly one simple-name expression
-                CSharpParser.ExpressionContext initExpr =
-                        ctx.local_variable_initializer().expression();
-                if (initExpr != null) {
-                    CSharpParser.Primary_expressionContext primaryExpr =
-                            findPrimaryExpression(initExpr);
-                    // Only track when the entire initializer is exactly one simple-name expression
-                    if (primaryExpr != null
-                            && primaryExpr.children != null
-                            && primaryExpr.children.size() == 1
-                            && primaryExpr.primary_expression_start()
-                                    instanceof CSharpParser.SimpleNameExpressionContext) {
-                        String aliasName = ctx.identifier().getText();
-                        String originalName =
-                                ((CSharpParser.SimpleNameExpressionContext)
-                                                primaryExpr.primary_expression_start())
-                                        .identifier()
-                                        .getText();
-                        if (!aliasName.equals(originalName)) {
-                            aliases.put(aliasName, originalName);
-                        }
-                    }
-                }
+                trackAlias(
+                        ctx.identifier().getText(), ctx.local_variable_initializer().expression());
             }
             try {
                 return visitChildren(ctx);
@@ -167,14 +144,41 @@ public final class CSharpTreeConverter extends CSharpParserBaseVisitor<Void> {
             }
         }
 
+        /**
+         * Records that {@code name} now refers to the variable named by {@code initializer} when
+         * that is exactly one simple name (e.g. {@code var alias = aes;}). Any other value drops
+         * the mapping, so a stale alias never survives a reassignment. Because the map is updated
+         * in source order and receivers are resolved when their statement is visited, each
+         * statement sees the alias state at that point.
+         */
+        private void trackAlias(
+                @Nonnull String name, @Nullable CSharpParser.ExpressionContext initializer) {
+            aliases.remove(name);
+            if (initializer == null) {
+                return;
+            }
+            CSharpParser.Primary_expressionContext primary = findPrimaryExpression(initializer);
+            if (primary != null
+                    && primary.children != null
+                    && primary.children.size() == 1
+                    && primary.primary_expression_start()
+                            instanceof CSharpParser.SimpleNameExpressionContext start) {
+                String target = resolveAlias(start.identifier().getText());
+                if (!target.equals(name)) {
+                    aliases.put(name, target);
+                }
+            }
+        }
+
+        /** Maps a variable name to the original variable it currently aliases. */
         @Nonnull
-        List<CSharpTree> getStatements() {
-            return Collections.unmodifiableList(statements);
+        private String resolveAlias(@Nonnull String name) {
+            return aliases.getOrDefault(name, name);
         }
 
         @Nonnull
-        Map<String, String> getAliases() {
-            return Collections.unmodifiableMap(aliases);
+        List<CSharpTree> getStatements() {
+            return Collections.unmodifiableList(statements);
         }
 
         /**
@@ -206,43 +210,13 @@ public final class CSharpTreeConverter extends CSharpParserBaseVisitor<Void> {
 
             List<ParseTree> children = lhsPrimary.children;
 
-            // Plain variable assignment: alias = rhs; (no member access, no method call)
-            // Handle alias map updates so stale mappings are invalidated on reassignment.
+            // Plain variable assignment: alias = rhs; keeps the alias map in step with the code so
+            // later setters resolve to whatever the variable points to at that statement.
             if (children != null
                     && children.size() < 2
                     && lhsPrimary.primary_expression_start()
-                            instanceof CSharpParser.SimpleNameExpressionContext) {
-                String lhsName =
-                        ((CSharpParser.SimpleNameExpressionContext)
-                                        lhsPrimary.primary_expression_start())
-                                .identifier()
-                                .getText();
-                // Check if RHS is also a simple identifier
-                CSharpParser.ExpressionContext rhsExpr = ctx.expression();
-                if (rhsExpr != null) {
-                    CSharpParser.Primary_expressionContext rhsPrimary =
-                            findPrimaryExpression(rhsExpr);
-                    if (rhsPrimary != null
-                            && rhsPrimary.children != null
-                            && rhsPrimary.children.size() == 1
-                            && rhsPrimary.primary_expression_start()
-                                    instanceof CSharpParser.SimpleNameExpressionContext) {
-                        String rhsName =
-                                ((CSharpParser.SimpleNameExpressionContext)
-                                                rhsPrimary.primary_expression_start())
-                                        .identifier()
-                                        .getText();
-                        // Update the alias map: lhs points to rhs (or through the chain)
-                        aliases.put(lhsName, rhsName);
-                        // Add a CSharpIdentifierTree so processStatement can
-                        // update the traceSymbol to reflect the reassignment
-                        statements.add(
-                                new CSharpIdentifierTree(
-                                        ctx.getStart().getLine(),
-                                        ctx.getStart().getCharPositionInLine(),
-                                        lhsName));
-                    }
-                }
+                            instanceof CSharpParser.SimpleNameExpressionContext lhsStart) {
+                trackAlias(lhsStart.identifier().getText(), ctx.expression());
                 return null;
             }
 
@@ -273,7 +247,7 @@ public final class CSharpTreeConverter extends CSharpParserBaseVisitor<Void> {
                 return null;
             }
 
-            String variableName = simpleCtx.identifier().getText();
+            String variableName = resolveAlias(simpleCtx.identifier().getText());
             String setterName = "set_" + propertyName;
 
             // Convert RHS expression to the setter argument
@@ -381,7 +355,8 @@ public final class CSharpTreeConverter extends CSharpParserBaseVisitor<Void> {
                     (CSharpParser.Method_invocationContext) children.get(methodInvIdx);
 
             String methodName = memberAccess.identifier().getText();
-            String objectTypeName = resolveObjectTypeName(start, children, memberAccessIdx);
+            String objectTypeName =
+                    resolveAlias(resolveObjectTypeName(start, children, memberAccessIdx));
             List<CSharpArgument> args = convertArgumentList(methodInv.argument_list());
 
             return new CSharpMethodInvocationTree(

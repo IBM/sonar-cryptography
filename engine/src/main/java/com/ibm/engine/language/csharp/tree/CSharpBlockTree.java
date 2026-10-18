@@ -19,10 +19,7 @@
  */
 package com.ibm.engine.language.csharp.tree;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.Nonnull;
 
 /**
@@ -36,21 +33,11 @@ public final class CSharpBlockTree implements CSharpTree {
     private final int line;
     private final int column;
     @Nonnull private final List<CSharpTree> statements;
-    @Nonnull private final Map<String, String> aliases;
 
     public CSharpBlockTree(int line, int column, @Nonnull List<CSharpTree> statements) {
-        this(line, column, statements, Collections.emptyMap());
-    }
-
-    public CSharpBlockTree(
-            int line,
-            int column,
-            @Nonnull List<CSharpTree> statements,
-            @Nonnull Map<String, String> aliases) {
         this.line = line;
         this.column = column;
         this.statements = statements;
-        this.aliases = Collections.unmodifiableMap(new HashMap<>(aliases));
         // Back-patch each statement so getEnclosingMethod() can navigate back to this block
         for (CSharpTree statement : statements) {
             if (statement instanceof CSharpMethodInvocationTree inv) {
@@ -59,11 +46,6 @@ public final class CSharpBlockTree implements CSharpTree {
                 creation.setEnclosingBlock(this);
             }
         }
-    }
-
-    @Nonnull
-    public Map<String, String> getAliases() {
-        return aliases;
     }
 
     @Override

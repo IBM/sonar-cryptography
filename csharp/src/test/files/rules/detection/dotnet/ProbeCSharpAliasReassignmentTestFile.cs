@@ -5,9 +5,9 @@ public class ProbeCSharpAliasReassignmentTestFile
     public void TestAliasReassignment()
     {
         var first = Aes.Create();
-        var second = first;
-        var alias = second;
+        var second = TripleDES.Create();
+        var alias = first;
+        alias = second;
         alias.Mode = CipherMode.CBC;
-        alias.KeySize = 256;
     }
 }

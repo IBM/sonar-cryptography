@@ -26,14 +26,8 @@ import com.ibm.engine.language.csharp.CSharpCheck;
 import com.ibm.engine.language.csharp.CSharpScanContext;
 import com.ibm.engine.language.csharp.CSharpSymbol;
 import com.ibm.engine.language.csharp.tree.CSharpTree;
-import com.ibm.engine.model.IValue;
-import com.ibm.engine.model.KeySize;
 import com.ibm.engine.model.Mode;
-import com.ibm.engine.model.ValueAction;
-import com.ibm.engine.model.context.CipherContext;
-import com.ibm.mapper.model.BlockCipher;
 import com.ibm.mapper.model.INode;
-import com.ibm.mapper.model.KeyLength;
 import com.ibm.plugin.CSharpVerifier;
 import com.ibm.plugin.TestBase;
 import java.util.List;
@@ -41,22 +35,18 @@ import javax.annotation.Nonnull;
 import org.junit.jupiter.api.Test;
 
 /**
- * Verifies that alias reassignment correctly invalidates stale alias mappings.
- *
- * <p>Test scenario (from ProbeCSharpAliasReassignmentTestFile.cs):
+ * Verifies that reassigning an alias redirects later property setters to the new target.
  *
  * <pre>{@code
  * var first = Aes.Create();
- * var second = new AesManaged();
+ * var second = TripleDES.Create();
  * var alias = first;
  * alias = second;
  * alias.Mode = CipherMode.CBC;
- * alias.KeySize = 256;
  * }</pre>
  *
- * <p>After {@code alias = second;}, the alias must point to {@code second} (AesManaged), not {@code
- * first} (Aes.Create). Property setters on {@code alias} must be attached to the second detection,
- * not the first.
+ * <p>Only {@code second} (TripleDES) may receive {@code Mode=CBC}; {@code first} (AES) must stay
+ * without a mode.
  */
 class DotNetAESAliasReassignmentTest extends TestBase {
 
@@ -73,50 +63,19 @@ class DotNetAESAliasReassignmentTest extends TestBase {
                     DetectionStore<CSharpCheck, CSharpTree, CSharpSymbol, CSharpScanContext>
                             detectionStore,
             @Nonnull List<INode> nodes) {
-
-        switch (findingId) {
-            case 0 -> {
-                /*
-                 * TestAliasReassignment: var first = Aes.Create(); var second = new AesManaged();
-                 * alias = first; alias = second; alias.Mode/KeySize setters
-                 * Expected: AES-256-CBC (Mode=CBC, KeySize=256)
-                 * The alias must resolve to second (AesManaged), not first (Aes.Create)
-                 */
-
-                // Primary detection: AES (both Aes.Create and AesManaged produce AES)
-                assertThat(detectionStore.getDetectionValues()).hasSize(1);
-                assertThat(detectionStore.getDetectionValueContext())
-                        .isInstanceOf(CipherContext.class);
-                IValue<CSharpTree> primaryValue = detectionStore.getDetectionValues().get(0);
-                assertThat(primaryValue).isInstanceOf(ValueAction.class);
-                assertThat(primaryValue.asString()).isEqualTo("AES");
-
-                // Depending rule: set_Mode detected Mode("CBC")
-                DetectionStore<CSharpCheck, CSharpTree, CSharpSymbol, CSharpScanContext> modeStore =
-                        getStoreOfValueType(Mode.class, detectionStore.getChildren());
-                assertThat(modeStore).isNotNull();
-                assertThat(modeStore.getDetectionValues()).hasSize(1);
-                assertThat(modeStore.getDetectionValues().get(0).asString()).isEqualTo("CBC");
-
-                // Depending rule: set_KeySize detected KeySize(256)
-                DetectionStore<CSharpCheck, CSharpTree, CSharpSymbol, CSharpScanContext>
-                        keySizeStore =
-                                getStoreOfValueType(KeySize.class, detectionStore.getChildren());
-                assertThat(keySizeStore).isNotNull();
-                assertThat(keySizeStore.getDetectionValues()).hasSize(1);
-                assertThat(keySizeStore.getDetectionValues().get(0).asString()).isEqualTo("256");
-
-                // Translation: BlockCipher node
-                assertThat(nodes).hasSize(1);
-                INode node = nodes.get(0);
-                assertThat(node.getKind()).isEqualTo(BlockCipher.class);
-                assertThat(node.asString()).isEqualTo("AES-256-CBC");
-                INode keyLength = node.getChildren().get(KeyLength.class);
-                assertThat(keyLength).isNotNull();
-                assertThat(keyLength.asString()).isEqualTo("256");
-            }
-
-            default -> throw new IllegalStateException("Unexpected findingId: " + findingId);
+        assertThat(detectionStore.getDetectionValues()).hasSize(1);
+        assertThat(nodes).hasSize(1);
+        String algorithm = detectionStore.getDetectionValues().get(0).asString();
+        DetectionStore<CSharpCheck, CSharpTree, CSharpSymbol, CSharpScanContext> modeStore =
+                getStoreOfValueType(Mode.class, detectionStore.getChildren());
+        if (algorithm.equals("AES")) {
+            // the stale alias must not leak Mode onto the first object
+            assertThat(modeStore).isNull();
+            assertThat(nodes.get(0).asString()).doesNotContain("CBC");
+        } else {
+            assertThat(algorithm).isEqualTo("TRIPLEDES");
+            assertThat(modeStore).isNotNull();
+            assertThat(modeStore.getDetectionValues().get(0).asString()).isEqualTo("CBC");
         }
     }
 }
