@@ -79,9 +79,7 @@ class DotNetCertificateRequestTest extends TestBase {
             // the hash is a method parameter: absent, the padding still reported
             case 6 -> assertSigning(node, "PKCS1", null);
             // RSA.Create(3072) written inside the call is its own finding, reported first
-            case 7 -> {
-                assertThat(node.asString()).isEqualTo("RSA-3072");
-            }
+            case 7 -> assertThat(node.asString()).isEqualTo("RSA-3072");
             // ... followed by the request that it feeds
             case 8 -> assertSigning(node, "PKCS1", "SHA-256");
             // X509SignatureGenerator.CreateForRSA(rsa, Pss): padding only, the hash comes later
