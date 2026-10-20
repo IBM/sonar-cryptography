@@ -1039,16 +1039,28 @@ public final class CSharpTreeConverter {
                 return null;
             }
 
-            // Property-setter form: `obj.Property = value;` — exactly one member_access, no method
+            // Property-setter form: `obj.Property = value;` — member accesses only, no method
             // invocation — synthesized as `set_<Property>(value)`, mirroring CLR accessor
             // semantics.
+            //
+            // A chained target such as `signedXml.SignedInfo.SignatureMethod = value;` is a
+            // property of a property. It is synthesized the same way, as `set_SignatureMethod`, but
+            // its receiver is the whole chain, `signedXml.SignedInfo`, not the root variable. That
+            // text never equals a variable name, so a setter rule that attaches to a tracked
+            // variable (`isInvocationOnVariable`) does not fire for it: `rsa.Options.KeySize =
+            // 4096` must not change the key size of `rsa`, because `Options` is another object.
+            // Rules that match any receiver still see the call, which is what a rule on a property
+            // of a nested object needs.
             String propertyName = null;
+            int memberAccesses = 0;
+            StringBuilder receiverPath = new StringBuilder(simpleCtx.identifier().getText());
             for (int i = 1; i < children.size(); i++) {
                 if (children.get(i) instanceof CSharpParser.Member_accessContext memberCtx) {
                     if (propertyName != null) {
-                        return null; // chained access like a.b.c — skip
+                        receiverPath.append('.').append(propertyName);
                     }
                     propertyName = memberCtx.identifier().getText();
+                    memberAccesses++;
                 } else if (children.get(i) instanceof CSharpParser.Method_invocationContext) {
                     return null; // method call, not a property assignment
                 }
@@ -1056,7 +1068,17 @@ public final class CSharpTreeConverter {
             if (propertyName == null) {
                 return null;
             }
-            String variableName = simpleCtx.identifier().getText();
+            if (memberAccesses > 1) {
+                // Anything other than member accesses inside a chain (an index, a null-conditional
+                // access, ...) means the target is not a plain `a.b.c` path, so no setter is
+                // synthesized for it.
+                for (int i = 1; i < children.size(); i++) {
+                    if (!(children.get(i) instanceof CSharpParser.Member_accessContext)) {
+                        return null;
+                    }
+                }
+            }
+            String receiver = receiverPath.toString();
             String setterName = "set_" + propertyName;
             CSharpTree rhsTree = convertExpression(rhs, currentScope);
             List<CSharpArgument> args =
@@ -1067,7 +1089,7 @@ public final class CSharpTreeConverter {
                     new CSharpMethodInvocationTree(
                             ctx.getStart().getLine(),
                             ctx.getStart().getCharPositionInLine(),
-                            variableName,
+                            receiver,
                             setterName,
                             args,
                             null,
@@ -1330,8 +1352,7 @@ public final class CSharpTreeConverter {
      * directly under the primary expression's start, and a nested lambda, which has its own body
      * handling — {@code "a" => () => new HMACSHA256()} is both at once.
      */
-    private void emitCallSitesWithoutValue(
-            @Nullable ParseTree node, @Nonnull CSharpScope scope) {
+    private void emitCallSitesWithoutValue(@Nullable ParseTree node, @Nonnull CSharpScope scope) {
         if (node == null) {
             return;
         }
