@@ -119,9 +119,8 @@ public final class CSharpCipherContextTranslator
                 return Optional.of(new TagLength(tagSize.getValue(), detectionLocation));
             } else if (value instanceof InitializationVectorSize<?> ivSize) {
                 // The nonce length of an AEAD call. AES-GCM's 12-byte nonce is the conventional one
-                // and
-                // anything else is worth recording, which is why this is captured rather than
-                // assumed.
+                // and anything else is worth recording, which is why this is captured
+                // rather than assumed.
                 return Optional.of(new NonceLength(ivSize.getValue(), detectionLocation));
             } else if (value instanceof OperationMode<?> operationMode) {
                 JcaCipherOperationModeMapper operationModeMapper =
@@ -138,8 +137,7 @@ public final class CSharpCipherContextTranslator
                 // are .NET spellings that the shared JCA mapper does not recognize, so they are
                 // resolved first by DotNetPaddingNames, which also keeps the OAEP digest.
                 // PaddingMode.PKCS7 and the other symmetric padding modes fall through to the JCA
-                // mapper,
-                // whose names they share.
+                // mapper, whose names they share.
                 return DotNetPaddingNames.parse(padding.asString(), detectionLocation)
                         .or(
                                 () -> {
@@ -148,13 +146,13 @@ public final class CSharpCipherContextTranslator
                                             padding.asString(), detectionLocation);
                                 });
             } else if (value instanceof Algorithm<?>) {
-                // SymmetricAlgorithm.Create(string) — unlike its four sibling Create(string)
-                // overloads
-                // (HashAlgorithm/KeyedHashAlgorithm/HMAC/AsymmetricAlgorithm), the official API
-                // reference for this one does not publish an explicit value table (see
-                // DotNetAlgorithmFactory javadoc), so this reuses the same well-known names already
-                // accepted in the ValueAction branch above for this codebase's .NET support.
-                // Also reads the URI of EncryptionMethod (DotNetXml).
+                // SymmetricAlgorithm.Create(string) — unlike its four sibling
+                // Create(string) overloads (HashAlgorithm/KeyedHashAlgorithm/HMAC/
+                // AsymmetricAlgorithm), the official API reference for this one does not publish
+                // an explicit value table (see DotNetAlgorithmFactory javadoc), so this reuses
+                // the same well-known names already accepted in the ValueAction branch above
+                // for this codebase's .NET support. Also reads the URI of
+                // EncryptionMethod (DotNetXml).
                 final Optional<INode> xmlEncryption =
                         DotNetXmlAlgorithmUris.encryption(value.asString(), detectionLocation);
                 if (xmlEncryption.isPresent()) {
