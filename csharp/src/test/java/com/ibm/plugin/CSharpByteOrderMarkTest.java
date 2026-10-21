@@ -34,8 +34,8 @@ import org.junit.jupiter.api.Test;
 /**
  * Pins that a byte order mark in front of an opening conditional directive does not cost the file.
  *
- * <p>{@link CSharpConditionalDirectivesTest} covers the preprocessing in isolation; this covers
- * it through the detection path, where the consequence is visible. A file written by Visual Studio
+ * <p>{@link CSharpConditionalDirectivesTest} covers the preprocessing in isolation; this covers it
+ * through the detection path, where the consequence is visible. A file written by Visual Studio
  * begins with U+FEFF, so one whose first line is {@code #if} has the mark in front of the {@code
  * #}. While only spaces and tabs counted as directive indentation, that opening directive went
  * unrecognised and stayed in place while its {@code #endif} was blanked. The grammar evaluates
@@ -44,9 +44,9 @@ import org.junit.jupiter.api.Test;
  *
  * <p>A sensor run is not affected, because SonarQube's file reading strips the mark before this
  * code sees it. This harness does not, which is exactly why the case is worth pinning here: it is
- * the caller that would otherwise disagree with production, and the fixture below is the shape --
- * a marked directive opening the file, cryptography inside it -- that four of
- * lidgren-network-gen3's platform files have.
+ * the caller that would otherwise disagree with production, and the fixture below is the shape -- a
+ * marked directive opening the file, cryptography inside it -- that four of lidgren-network-gen3's
+ * platform files have.
  */
 class CSharpByteOrderMarkTest extends TestBase {
 

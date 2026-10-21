@@ -37,12 +37,12 @@ import org.junit.jupiter.api.Test;
  * expression twice.
  *
  * <p>An expression-bodied member's arrow body was converted once to register what the member
- * returns and once more to collect the body's statements. Conversion is not free of side effects:
- * a lambda body becomes a body of its own, so the second conversion produced a second body over
- * the same statements and the call site inside it was reported twice. Duplicate findings are worse
- * than they look -- the same key or algorithm appears twice in the inventory with no way to tell
- * that it is one call -- so this asserts the exact set of findings rather than merely that each
- * expected one occurs.
+ * returns and once more to collect the body's statements. Conversion is not free of side effects: a
+ * lambda body becomes a body of its own, so the second conversion produced a second body over the
+ * same statements and the call site inside it was reported twice. Duplicate findings are worse than
+ * they look -- the same key or algorithm appears twice in the inventory with no way to tell that it
+ * is one call -- so this asserts the exact set of findings rather than merely that each expected
+ * one occurs.
  */
 class CSharpSingleReportPerCallSiteTest extends TestBase {
 

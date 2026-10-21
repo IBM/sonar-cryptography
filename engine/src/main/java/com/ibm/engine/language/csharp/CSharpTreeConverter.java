@@ -364,9 +364,12 @@ public final class CSharpTreeConverter {
 
     /**
      * Processes an expression-bodied member, returning the value its body resolves to (or {@code
-     * null} when the body has no single value, as for a lambda or a ternary). Callers that need
-     * that value must take it from here rather than converting the body again: conversion has side
-     * effects -- a lambda body becomes its own {@link CSharpBlockTree} -- so a second conversion
+     * null} when the body has no single value, as for a lambda or a ternary). The body becomes a
+     * {@link CSharpBlockTree} of its own, so its calls are detected exactly like a block body's and
+     * its call sites are recorded for {@link #resolveParametersFromCallSites()}.
+     *
+     * <p>Callers that need the value must take it from here rather than converting the body again:
+     * conversion has side effects -- a lambda body becomes its own body -- so a second conversion
      * duplicates them.
      */
     @Nullable private CSharpTree processExpressionBody(
@@ -752,6 +755,11 @@ public final class CSharpTreeConverter {
                         property.getStart().getLine()));
     }
 
+    /**
+     * Registers the declarators of a class-level field declaration that have an initializer. A
+     * field listed in {@code reassigned} is registered with an assignment count of two, which makes
+     * the engine's G4 guard treat it as having no single certain value.
+     */
     private void defineInitializedFields(
             @Nonnull CSharpParser.Typed_member_declarationContext typedMember,
             @Nonnull Set<String> reassigned,
@@ -1699,6 +1707,7 @@ public final class CSharpTreeConverter {
         }
     }
 
+    /** Handles the {@code new Type(...)} and {@code new Type[...]} patterns. */
     @Nullable private CSharpTree convertObjectCreationFromStart(
             @Nonnull CSharpParser.ObjectCreationExpressionContext objCreationCtx,
             @Nullable String assignedIdentifier,

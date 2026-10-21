@@ -165,12 +165,11 @@ public final class CSharpConditionalDirectives {
      *
      * <p>This is hardening rather than a fix to a live defect. Measured over a corpus of 11 485
      * files, five open with a marked directive, four of them containing cryptography, and the
-     * findings are the same with and without this: SonarQube's own file reading strips the mark,
-     * so a sensor run never hands one to this class. But that is a property of the caller, not of
-     * this class, and the test harness reads its fixtures with {@code Files.readString} and so is
-     * a second caller that does pass one through. Treating the mark as indentation is what makes
-     * the two agree. The mark is blanked along with the rest of the line, so offsets are
-     * unaffected.
+     * findings are the same with and without this: SonarQube's own file reading strips the mark, so
+     * a sensor run never hands one to this class. But that is a property of the caller, not of this
+     * class, and the test harness reads its fixtures with {@code Files.readString} and so is a
+     * second caller that does pass one through. Treating the mark as indentation is what makes the
+     * two agree. The mark is blanked along with the rest of the line, so offsets are unaffected.
      */
     private static boolean isDirectiveIndent(char c) {
         return c == ' ' || c == '\t' || c == BYTE_ORDER_MARK;

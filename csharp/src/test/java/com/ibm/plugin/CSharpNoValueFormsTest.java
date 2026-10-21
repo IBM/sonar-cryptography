@@ -37,10 +37,10 @@ import org.junit.jupiter.api.Test;
  *
  * <p>A ternary, a {@code ??}, a switch expression, a collection expression, a lambda's expression
  * body and a target-typed {@code new()} all either choose between values, hold several, or name no
- * type at all, so none of them resolves to one — and while that was the whole answer, the
- * creations written inside them were not reported at all. Resolving a value or a type from them
- * would be a guess and still is not done; emitting the call sites is not, because whichever branch
- * runs, the code constructs what the arm says it does.
+ * type at all, so none of them resolves to one — and while that was the whole answer, the creations
+ * written inside them were not reported at all. Resolving a value or a type from them would be a
+ * guess and still is not done; emitting the call sites is not, because whichever branch runs, the
+ * code constructs what the arm says it does.
  *
  * <p>The three counter-checks at the end are the reason this is safe: {@code is} and a comparison
  * yield a boolean and so must not resolve to their operand, and a key size arriving as a method
