@@ -30,6 +30,7 @@ import com.ibm.plugin.rules.detection.dotnet.DotNetCertificateKeys;
 import com.ibm.plugin.rules.detection.dotnet.DotNetCertificateRequest;
 import com.ibm.plugin.rules.detection.dotnet.DotNetChaCha20Poly1305;
 import com.ibm.plugin.rules.detection.dotnet.DotNetCngKey;
+import com.ibm.plugin.rules.detection.dotnet.DotNetCose;
 import com.ibm.plugin.rules.detection.dotnet.DotNetDES;
 import com.ibm.plugin.rules.detection.dotnet.DotNetDSA;
 import com.ibm.plugin.rules.detection.dotnet.DotNetECDiffieHellman;
@@ -89,6 +90,7 @@ public final class CSharpDetectionRules extends DetectionRuleSet<CSharpTree> {
                         RuleSets.rulesOf(DotNetCertificateHash.class).stream(),
                         RuleSets.rulesOf(DotNetPkcs.class).stream(),
                         RuleSets.rulesOf(DotNetXml.class).stream(),
+                        RuleSets.rulesOf(DotNetCose.class).stream(),
                         RuleSets.rulesOf(DotNetKeyDerivation.class).stream(),
                         RuleSets.rulesOf(DotNetRandomNumberGenerator.class).stream(),
                         RuleSets.rulesOf(DotNetProtectedData.class).stream(),

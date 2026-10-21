@@ -111,6 +111,46 @@ final class CSharpTypeInference {
                     "ECDsa",
                     "ECDiffieHellman");
 
+    /**
+     * The members of {@link #KNOWN_NAMED_TYPES} that are enums, structs or sealed value types and
+     * so cannot be a subtype of one another. Two <em>different</em> names from this set can never
+     * both describe the same argument, which is what lets {@link #isDefinitelyIncompatible} tell
+     * {@code RSASignaturePadding.Pss} from {@code HashAlgorithmName.SHA256} when an overload puts
+     * them in a different order.
+     *
+     * <p>The class hierarchy members of {@link #KNOWN_NAMED_TYPES} ({@code AsymmetricAlgorithm} and
+     * {@code RSA}, {@code HashAlgorithm}, and so on) are deliberately left out: {@code RSA} is an
+     * {@code AsymmetricAlgorithm}, so two different names there can still be compatible.
+     */
+    @Nonnull
+    private static final Set<String> DISJOINT_VALUE_TYPES =
+            Set.of(
+                    "HashAlgorithmName",
+                    "ECCurve",
+                    "ECParameters",
+                    "RSAParameters",
+                    "DSAParameters",
+                    "RSASignaturePadding",
+                    "RSAEncryptionPadding",
+                    "RSASignaturePaddingMode",
+                    "RSAEncryptionPaddingMode",
+                    "PaddingMode",
+                    "CipherMode",
+                    "DataProtectionScope",
+                    "MemoryProtectionScope",
+                    "CngAlgorithm",
+                    "CngKeyBlobFormat",
+                    "CngKeyCreationParameters",
+                    "CspParameters",
+                    "DSASignatureFormat",
+                    "CngKey",
+                    "MLKemAlgorithm",
+                    "MLDsaAlgorithm",
+                    "SlhDsaAlgorithm",
+                    "CompositeMLDsaAlgorithm",
+                    "KeyDerivationPrf",
+                    "ECDiffieHellmanPublicKey");
+
     private CSharpTypeInference() {
         // utility
     }
@@ -128,8 +168,9 @@ final class CSharpTypeInference {
      * rule set is built to avoid — so this side may be stricter.
      *
      * <p>Strictness is nonetheless confined to pairs where both sides are recognized: a primitive
-     * category against a different primitive category, or a primitive category against a name in
-     * {@link #KNOWN_NAMED_TYPES}. Everything else is reported as possibly compatible.
+     * category against a different primitive category, a primitive category against a name in
+     * {@link #KNOWN_NAMED_TYPES}, or two different names in {@link #DISJOINT_VALUE_TYPES}.
+     * Everything else is reported as possibly compatible.
      */
     static boolean isDefinitelyIncompatible(@Nonnull String actual, @Nonnull String expected) {
         String a = normalize(actual);
@@ -138,6 +179,9 @@ final class CSharpTypeInference {
             return false;
         }
         if (!isAssignable(a, e)) {
+            return true;
+        }
+        if (DISJOINT_VALUE_TYPES.contains(a) && DISJOINT_VALUE_TYPES.contains(e)) {
             return true;
         }
         boolean aPrimitive = isPrimitiveCategory(a);
@@ -211,7 +255,7 @@ final class CSharpTypeInference {
             return memberAccess.getRootType();
         }
         if (tree instanceof CSharpBinaryExpressionTree) {
-            return "int"; // only integer arithmetic is folded today
+            return "int";
         }
         if (tree instanceof CSharpIdentifierTree identifier) {
             return inferFromScope(identifier);
@@ -233,9 +277,9 @@ final class CSharpTypeInference {
             return null;
         }
         if (variable.declaredType() != null) {
-            return variable.declaredType(); // explicit `Type x = ...` (or a parameter/const)
+            return variable.declaredType();
         }
-        return infer(variable.initializer()); // `var x = ...` — infer from the initializer
+        return infer(variable.initializer());
     }
 
     /**
