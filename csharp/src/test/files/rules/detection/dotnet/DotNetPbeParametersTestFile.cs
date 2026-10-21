@@ -37,10 +37,10 @@ public class DotNetPbeParametersTest {
     // --- keyword arguments in a different order than declared --------------------------------
 
     public void TestNamedReordered() {
-        var pbe = new PbeParameters(
+        var pbe = new PbeParameters( // Noncompliant
             iterationCount: 50000,
             hashAlgorithm: HashAlgorithmName.SHA256,
-            encryptionAlgorithm: PbeEncryptionAlgorithm.Aes256Cbc); // Noncompliant
+            encryptionAlgorithm: PbeEncryptionAlgorithm.Aes256Cbc);
     }
 
     // --- the iteration count is only known to the caller -------------------------------------
@@ -61,6 +61,6 @@ public class DotNetPbeParametersTest {
 
     // Default depends on the .NET version, so no scheme may be reported for it
     public byte[] TestExportPkcs12Default(X509Certificate2 cert) {
-        return cert.ExportPkcs12(Pkcs12ExportPbeParameters.Default, "password"); // Noncompliant
+        return cert.ExportPkcs12(Pkcs12ExportPbeParameters.Default, "password");
     }
 }

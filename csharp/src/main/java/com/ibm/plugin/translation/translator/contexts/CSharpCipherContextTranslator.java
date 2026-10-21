@@ -149,8 +149,7 @@ public final class CSharpCipherContextTranslator
                 // reference for this one does not publish an explicit value table (see
                 // DotNetAlgorithmFactory javadoc), so this reuses the same well-known names already
                 // accepted in the ValueAction branch above for this codebase's .NET support.
-                // The same branch also reads the algorithm identifier of EncryptionMethod
-                // (DotNetXml.java), a W3C URI or the XML constant that holds it.
+                // Also reads the URI of EncryptionMethod (DotNetXml).
                 final Optional<INode> xmlEncryption =
                         DotNetXmlAlgorithmUris.encryption(value.asString(), detectionLocation);
                 if (xmlEncryption.isPresent()) {

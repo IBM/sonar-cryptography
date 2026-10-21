@@ -37,15 +37,11 @@ import javax.annotation.Nullable;
 import org.junit.jupiter.api.Test;
 
 /**
- * Covers {@code new CoseSigner(...)}: both overloads, with and without header maps, a weak hash,
- * keyword arguments out of declared order, and a hash that only the caller knows.
+ * Covers {@code new CoseSigner(...)}: both overloads, header maps, a weak hash, keyword arguments
+ * and an unknown hash.
  *
- * <p>The two overloads put the hash in different positions, after the padding in the RSA one and
- * directly after the key in the other, and one rule covers both. The RSA cases are the ones that
- * matter most: they only come out right if the argument binder can tell an {@code
- * RSASignaturePadding} from a {@code HashAlgorithmName} that sits where the rule declares the
- * other. Two cases assert absence: an ECDSA signer must not acquire a padding, and an unresolvable
- * hash must leave the digest off while the padding is still reported.
+ * <p>The RSA overload puts the padding before the hash, so it only works if the binder can tell the
+ * two apart. An ECDSA signer must not get a padding, and an unknown hash leaves the digest off.
  */
 class DotNetCoseTest extends TestBase {
 

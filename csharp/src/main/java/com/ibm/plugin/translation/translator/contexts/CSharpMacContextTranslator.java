@@ -85,9 +85,8 @@ public final class CSharpMacContextTranslator implements IContextTranslation<CSh
             // length the engine can read (see DotNetHMAC and DotNetKMAC).
             return Optional.of(new KeyLength(keySize.getValue(), detectionLocation));
         } else if (value instanceof IterationCount<?> iterationCount) {
-            // The iteration count of Pkcs12Builder.SealWithMac (DotNetPkcs.java). Strictly it
-            // belongs to the PKCS#12 key derivation that keys the HMAC, but the model has no
-            // separate node for that derivation, so it is recorded on the MAC it parameterizes.
+            // Pkcs12Builder.SealWithMac: the count belongs to the PKCS#12 key derivation, which the
+            // model has no node for, so it is recorded on the MAC.
             return Optional.of(
                     new NumberOfIterations(iterationCount.getValue(), detectionLocation));
         } else if (value instanceof Algorithm<?>) {

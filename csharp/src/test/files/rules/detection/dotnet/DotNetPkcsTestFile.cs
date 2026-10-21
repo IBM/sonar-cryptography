@@ -22,8 +22,8 @@ public class DotNetPkcsTest {
     }
 
     public void TestSealWithMacNamed(Pkcs12Builder builder) {
-        builder.SealWithMac(
-            iterationCount: 50000, hashAlgorithm: HashAlgorithmName.SHA384, password: "password"); // Noncompliant
+        builder.SealWithMac( // Noncompliant
+            iterationCount: 50000, hashAlgorithm: HashAlgorithmName.SHA384, password: "password");
     }
 
     // --- Rfc3161TimestampRequest: the digest of a timestamp request -----------------------------
@@ -47,6 +47,6 @@ public class DotNetPkcsTest {
     }
 
     public Rfc3161TimestampRequest TestHashNotKnown(byte[] data, HashAlgorithmName algorithm) {
-        return Rfc3161TimestampRequest.CreateFromData(data, algorithm); // Noncompliant
+        return Rfc3161TimestampRequest.CreateFromData(data, algorithm);
     }
 }

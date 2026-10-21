@@ -112,15 +112,10 @@ final class CSharpTypeInference {
                     "ECDiffieHellman");
 
     /**
-     * The members of {@link #KNOWN_NAMED_TYPES} that are enums, structs or sealed value types and
-     * so cannot be a subtype of one another. Two <em>different</em> names from this set can never
-     * both describe the same argument, which is what lets {@link #isDefinitelyIncompatible} tell
-     * {@code RSASignaturePadding.Pss} from {@code HashAlgorithmName.SHA256} when an overload puts
-     * them in a different order.
-     *
-     * <p>The class hierarchy members of {@link #KNOWN_NAMED_TYPES} ({@code AsymmetricAlgorithm} and
-     * {@code RSA}, {@code HashAlgorithm}, and so on) are deliberately left out: {@code RSA} is an
-     * {@code AsymmetricAlgorithm}, so two different names there can still be compatible.
+     * The enums and structs of {@link #KNOWN_NAMED_TYPES}, which cannot be subtypes of each other.
+     * Two different names from this set are never compatible, for example {@code
+     * RSASignaturePadding} and {@code HashAlgorithmName}. The class types ({@code RSA}, {@code
+     * AsymmetricAlgorithm}, ...) are left out because one can be a subtype of another.
      */
     @Nonnull
     private static final Set<String> DISJOINT_VALUE_TYPES =
@@ -310,13 +305,10 @@ final class CSharpTypeInference {
                 isIntLike(a) || isStringLike(a) || isByteSpanLike(a) || isBoolLike(a);
         boolean eKnownCategory =
                 isIntLike(e) || isStringLike(e) || isByteSpanLike(e) || isBoolLike(e);
-        if (aKnownCategory && eKnownCategory) {
-            return false;
-        }
         // At least one side is an unrecognized (likely enum/struct/class) type name — different
         // spellings could still be the same type via `using` aliases or nesting we cannot see, so
         // stay permissive rather than risk a false negative.
-        return true;
+        return !aKnownCategory || !eKnownCategory;
     }
 
     @Nonnull

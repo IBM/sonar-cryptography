@@ -34,35 +34,18 @@ import javax.annotation.Nonnull;
 /**
  * Detection rules for {@code System.Security.Cryptography.Pkcs}.
  *
- * <p>Covers the members of this namespace that state a hash, and optionally an iteration count, as
- * a plain argument:
- *
  * <ul>
- *   <li>{@code Pkcs12Builder.SealWithMac(password, hashAlgorithm, iterationCount)} — the integrity
- *       MAC of a PKCS#12 (PFX) file. It is an HMAC over the named hash, keyed through a PKCS#12
- *       derivation that runs for the given number of iterations. A SHA-1 MAC with a low count is
- *       the old default of many tools, which is why the pair is worth recording.
- *   <li>{@code Rfc3161TimestampRequest.CreateFromData(data, hashAlgorithm, …)}, {@code
- *       CreateFromHash(hash, hashAlgorithm, …)} and {@code CreateFromSignerInfo(signerInfo,
- *       hashAlgorithm, …)} — the digest a timestamp request is made over.
+ *   <li>{@code Pkcs12Builder.SealWithMac(password, hashAlgorithm, iterationCount)}: the integrity
+ *       HMAC of a PFX file, with its iteration count
+ *   <li>{@code Rfc3161TimestampRequest.CreateFromData/CreateFromHash/CreateFromSignerInfo}: the
+ *       digest of a timestamp request
  * </ul>
  *
- * <h2>The hash is the root of the finding</h2>
+ * <p>The hash is the root of each finding; an unresolved hash gives no finding.
  *
- * <p>In each rule the {@code hashAlgorithm} argument is the root detection, so a call whose hash is
- * not a resolvable {@code HashAlgorithmName} produces no finding rather than a guessed one. For
- * {@code SealWithMac} the root is read as an HMAC, because the context is a MAC, and the iteration
- * count is attached to it. {@code CreateFromHash} has a second overload taking an {@code Oid}
- * instead of a {@code HashAlgorithmName}; that form is not matched.
- *
- * <h2>Not covered</h2>
- *
- * <p>The password-based encryption of a PFX or a PKCS#8 key is stated by a {@code PbeParameters}
- * object, which {@link DotNetPbeParameters} already detects where it is created, so {@code
- * Pkcs12Builder.AddSafeContentsEncrypted}, {@code Pkcs12SafeContents.AddShroudedKey} and {@code
- * Pkcs8PrivateKeyInfo.Encrypt} need no rule of their own. {@code CmsRecipient} is left out because
- * its overloads move the padding argument between positions, which the argument binder cannot tell
- * apart without type information.
+ * <p>Not covered: the password-based encryption of a PFX or PKCS#8 key, which {@link
+ * DotNetPbeParameters} detects where the {@code PbeParameters} is created, and {@code
+ * CmsRecipient}, whose overloads move the padding argument between positions.
  */
 @SuppressWarnings("java:S1192")
 public final class DotNetPkcs extends DetectionRuleSet<CSharpTree> {
@@ -83,10 +66,7 @@ public final class DotNetPkcs extends DetectionRuleSet<CSharpTree> {
                     .inBundle(() -> "DotNet")
                     .withoutDependingDetectionRules();
 
-    /**
-     * One rule per timestamp factory. The three differ only in the name of their first parameter,
-     * which carries the data, the hash or the signer to be timestamped and is not captured.
-     */
+    // One rule per timestamp factory; they differ only in the name of the first parameter.
     @Nonnull
     private static IDetectionRule<CSharpTree> timestampRequest(
             @Nonnull String method, @Nonnull String firstParameter) {

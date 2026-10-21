@@ -32,42 +32,18 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 /**
- * Detection rules for {@code PbeParameters} in System.Security.Cryptography.
+ * Detection rules for {@code PbeParameters} and {@code ExportPkcs12}.
  *
- * <p>{@code PbeParameters} is the one object that states how an exported key or certificate is
- * password-protected. It is handed to {@code AsymmetricAlgorithm.ExportEncryptedPkcs8PrivateKey},
- * {@code X509Certificate2.ExportPkcs12}, {@code Pkcs12Builder} and {@code
- * Pkcs8PrivateKeyInfo.Encrypt}, and its constructor takes the three facts a bill of materials needs
- * about that protection:
+ * <p>{@code PbeParameters} states how an exported key or certificate is password-protected: the
+ * cipher, the hash and the iteration count. It is passed to {@code ExportEncryptedPkcs8PrivateKey},
+ * {@code ExportPkcs12}, {@code Pkcs12Builder} and {@code Pkcs8PrivateKeyInfo.Encrypt}.
  *
- * <ul>
- *   <li>{@code PbeEncryptionAlgorithm encryptionAlgorithm} — the cipher: {@code Aes128Cbc}, {@code
- *       Aes192Cbc}, {@code Aes256Cbc} or {@code TripleDes3KeyPkcs12}
- *   <li>{@code HashAlgorithmName hashAlgorithm} — the hash behind the key derivation
- *   <li>{@code int iterationCount} — the PBKDF2 or PKCS#12 iteration count
- * </ul>
+ * <p>The cipher argument is the root of the finding, because it decides the scheme: the AES values
+ * are PBES2, {@code TripleDes3KeyPkcs12} is PKCS#12. The hash and the iteration count are its
+ * children. If the cipher cannot be resolved, nothing is reported.
  *
- * <p>{@code X509Certificate2.ExportPkcs12} also accepts a {@code Pkcs12ExportPbeParameters} enum
- * member in place of a {@code PbeParameters} object. That member names the cipher and the hash
- * together, so it is detected at the export call itself ({@code PKCS12_EXPORT} below).
- *
- * <h2>Why the cipher is the root of the finding</h2>
- *
- * <p>The cipher decides which password-based scheme this is. The three AES values are PKCS#5 PBES2
- * (PBKDF2 with the named hash as its pseudo-random function), while {@code TripleDes3KeyPkcs12} is
- * the older PKCS#12 scheme of RFC 7292. A rule that fixed the root to one of them would mislabel
- * the other, so the {@code encryptionAlgorithm} argument is detected as the root and {@code
- * CSharpKeyContextTranslator} picks the matching scheme from its value, in the same way {@code
- * PycaKDF} lets its first parameter decide. The hash and the iteration count are children of that
- * root.
- *
- * <h2>Uncertain values</h2>
- *
- * <p>When the cipher argument is not a value this engine can resolve, for example a parameter of
- * the enclosing method, nothing is reported at all, because there is no root to attach the hash and
- * the iteration count to. That is deliberate: a password-based scheme guessed from nothing would be
- * worse than none. A resolved cipher with an unresolvable hash or iteration count is reported
- * without the missing child.
+ * <p>{@code ExportPkcs12} also accepts a {@code Pkcs12ExportPbeParameters} member that names cipher
+ * and hash together; that one is detected at the export call.
  */
 @SuppressWarnings("java:S1192")
 public final class DotNetPbeParameters extends DetectionRuleSet<CSharpTree> {
@@ -90,8 +66,7 @@ public final class DotNetPbeParameters extends DetectionRuleSet<CSharpTree> {
                     .inBundle(() -> "DotNet")
                     .withoutDependingDetectionRules();
 
-    // cert.ExportPkcs12(Pkcs12ExportPbeParameters.X, password). The overloads that take a
-    // PbeParameters object are covered by PBE_PARAMETERS where that object is created.
+    // cert.ExportPkcs12(Pkcs12ExportPbeParameters.X, password)
     private static final IDetectionRule<CSharpTree> PKCS12_EXPORT =
             new DetectionRuleBuilder<CSharpTree>()
                     .createDetectionRule()

@@ -308,9 +308,8 @@ public final class CSharpKeyContextTranslator implements IContextTranslation<CSh
             return Optional.of(new SaltLength(saltSize.getValue(), detectionLocation));
         } else if (value instanceof Algorithm<?>
                 && "PBE".equals(detectionContext.get("kind").orElse(""))) {
-            // PbeParameters (DotNetPbeParameters.java): the PbeEncryptionAlgorithm argument is the
-            // root and selects the scheme (PBES2 or PKCS#12); the HashAlgorithmName argument is its
-            // child. The two are told apart by their spelling, which never overlaps.
+            // PbeParameters (DotNetPbeParameters): the cipher is the root and picks the scheme, the
+            // hash is its child. The two spellings never overlap.
             return DotNetPbeEncryptionNames.parse(value.asString(), detectionLocation)
                     .or(
                             () ->

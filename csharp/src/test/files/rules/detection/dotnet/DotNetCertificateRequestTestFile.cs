@@ -11,8 +11,8 @@ public class DotNetCertificateRequestTest {
     }
 
     public void TestRsaPssWithDistinguishedName(RSA rsa) {
-        var req = new CertificateRequest(
-            new X500DistinguishedName("CN=test"), rsa, HashAlgorithmName.SHA384, RSASignaturePadding.Pss); // Noncompliant
+        var req = new CertificateRequest( // Noncompliant
+            new X500DistinguishedName("CN=test"), rsa, HashAlgorithmName.SHA384, RSASignaturePadding.Pss);
     }
 
     // --- ECDsa and PublicKey overloads: no padding --------------------------------------------
@@ -34,11 +34,11 @@ public class DotNetCertificateRequestTest {
     // --- keyword arguments out of declared order ----------------------------------------------
 
     public void TestNamedReordered(RSA rsa) {
-        var req = new CertificateRequest(
+        var req = new CertificateRequest( // Noncompliant
             subjectName: "CN=test",
             padding: RSASignaturePadding.Pss,
             hashAlgorithm: HashAlgorithmName.SHA256,
-            key: rsa); // Noncompliant
+            key: rsa);
     }
 
     // --- the hash is only known to the caller -------------------------------------------------
@@ -50,7 +50,7 @@ public class DotNetCertificateRequestTest {
     // --- the key is created inside the call ---------------------------------------------------
 
     public void TestInlineKey() {
-        var req = new CertificateRequest(
+        var req = new CertificateRequest( // Noncompliant
             "CN=test", RSA.Create(3072), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1); // Noncompliant
     }
 

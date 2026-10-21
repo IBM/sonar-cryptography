@@ -35,37 +35,13 @@ import javax.annotation.Nonnull;
 /**
  * Detection rules for {@code System.Security.Cryptography.Cose}.
  *
- * <p>COSE (CBOR Object Signing and Encryption, RFC 9052) is the binary counterpart of JOSE. In .NET
- * a {@code CoseSigner} holds everything a COSE signature needs, and states it as constructor
- * arguments:
+ * <p>A {@code CoseSigner} states its hash and, for RSA, its padding as constructor arguments, so it
+ * is reported as a {@code Sign} with those as children, like {@link DotNetCertificateRequest}.
+ * {@code SignEmbedded} and {@code SignDetached} add nothing and are not matched.
  *
- * <ul>
- *   <li>{@code CoseSigner(key, signaturePadding, hashAlgorithm[, protectedHeaders[,
- *       unprotectedHeaders]])} — the RSA overload, which names a padding as well as a hash
- *   <li>{@code CoseSigner(key, hashAlgorithm[, protectedHeaders[, unprotectedHeaders]])} — the
- *       overload for ECDSA and other keys, which names a hash only
- * </ul>
- *
- * <p>A signer exists to sign, and the hash and padding it is given are the ones used, so the
- * constructor is reported as a {@code Sign} operation with the hash and, for RSA, the padding as
- * children. That is the shape {@link DotNetCertificateRequest} produces for a certificate request.
- * The {@code CoseSign1Message.SignEmbedded} and {@code SignDetached} calls that use the signer
- * carry no further cryptographic data, so they are not matched: doing so would report the same
- * signature twice.
- *
- * <h2>One rule for two overloads</h2>
- *
- * <p>The two overloads put the hash in different positions, after the padding in the RSA one and
- * directly after the key in the other, and a rule per overload would overlap on the shared argument
- * counts and report one call twice. A single rule covers both, so the hash and padding are placed
- * by their declared types, which is how the argument binder tells them apart.
- *
- * <h2>What is not captured</h2>
- *
- * <p>The key is an argument and is not linked to the finding that created it, and the {@code
- * CoseHeaderMap} arguments can name an algorithm by a COSE identifier, which this engine cannot
- * read. When the hash or the padding cannot be resolved, the corresponding child is left off rather
- * than guessed.
+ * <p>The RSA overload is {@code (key, signaturePadding, hashAlgorithm)}, the other {@code (key,
+ * hashAlgorithm)}. One rule covers both, because two rules would overlap; the arguments are placed
+ * by type.
  */
 @SuppressWarnings("java:S1192")
 public final class DotNetCose extends DetectionRuleSet<CSharpTree> {

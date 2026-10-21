@@ -53,13 +53,13 @@ public class DotNetXmlTest {
     // --- an identifier that is not an algorithm of that role: a node is not invented --------
 
     public void TestUnknownUri(Reference reference) {
-        reference.DigestMethod = "urn:example:not-an-algorithm"; // Noncompliant
+        reference.DigestMethod = "urn:example:not-an-algorithm";
     }
 
     // --- only the caller knows the value: no finding at all ------------------------------------
 
     public void TestValueNotKnown(Reference reference, string uri) {
-        reference.DigestMethod = uri; // Noncompliant
+        reference.DigestMethod = uri;
     }
 
     // --- the usual form: a property of a property --------------------------------------------

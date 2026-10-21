@@ -59,9 +59,7 @@ public final class CSharpSignatureContextTranslator implements IContextTranslati
                 case VERIFY -> Optional.of(new Verify(detectionLocation));
             };
         } else if (value instanceof Algorithm<?>) {
-            // The HashAlgorithmName argument of SignData/VerifyData/SignHash/VerifyHash, or the
-            // signature identifier of SignedInfo.SignatureMethod (DotNetXml.java). The two cannot
-            // be confused: a hash name is never a URI or an XML constant name.
+            // A SignatureMethod URI (DotNetXml), or the HashAlgorithmName of SignData and similar.
             return DotNetXmlAlgorithmUris.signature(value.asString(), detectionLocation)
                     .or(
                             () ->

@@ -34,33 +34,18 @@ import javax.annotation.Nonnull;
 /**
  * Detection rules for {@code System.Security.Cryptography.Xml}.
  *
- * <p>XML Signature and XML Encryption name each algorithm by a W3C URI, which code writes either as
- * a literal or as a constant of {@code SignedXml} or {@code EncryptedXml}. Three places state one,
- * and each is a rule here:
+ * <p>XML Signature and XML Encryption name algorithms by W3C URI, written as a literal or as a
+ * {@code SignedXml} or {@code EncryptedXml} constant:
  *
  * <ul>
- *   <li>{@code reference.DigestMethod = …} — the digest of a signed reference
- *   <li>{@code signedInfo.SignatureMethod = …} — the signature algorithm: RSA, DSA, ECDSA or an
- *       HMAC, with its digest
- *   <li>{@code new EncryptionMethod(algorithm)} and {@code encryptionMethod.KeyAlgorithm = …} — the
- *       cipher of encrypted data, or the key-transport algorithm of an encrypted key
+ *   <li>{@code reference.DigestMethod = …}: a digest
+ *   <li>{@code signedInfo.SignatureMethod = …}: a signature algorithm or an HMAC. The chained form
+ *       {@code signedXml.SignedInfo.SignatureMethod = …} is detected too.
+ *   <li>{@code new EncryptionMethod(algorithm)} and {@code method.KeyAlgorithm = …}: a cipher or a
+ *       key-transport algorithm
  * </ul>
  *
- * <p>The URI is read by {@code DotNetXmlAlgorithmUris}, so a URI that is not in its table, a
- * canonicalization or transform URI, or a value that only the caller knows produces no node.
- *
- * <h2>The chained form</h2>
- *
- * <p>The most common way to set the signature method is {@code signedXml.SignedInfo.SignatureMethod
- * = …}, a property of a property. The converter turns such an assignment into the same synthetic
- * setter as a single-level one, with the whole chain, here {@code signedXml.SignedInfo}, as its
- * receiver. These rules match any receiver, so they see it. A setter rule that attaches to a
- * tracked variable does not, because the chain never equals a variable name.
- *
- * <p>The receiver of each setter is a variable, not a type name, so it is matched as {@link
- * MethodMatcher#ANY}. The property names are specific enough to the XML classes, and an unrelated
- * class with a {@code DigestMethod} or {@code SignatureMethod} property only produces a finding if
- * its value is one of the known URIs.
+ * <p>The URIs are read by {@code DotNetXmlAlgorithmUris}. An unknown URI gives no node.
  */
 @SuppressWarnings("java:S1192")
 public final class DotNetXml extends DetectionRuleSet<CSharpTree> {

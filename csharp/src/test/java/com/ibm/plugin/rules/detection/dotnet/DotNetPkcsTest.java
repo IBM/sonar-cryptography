@@ -38,14 +38,11 @@ import javax.annotation.Nullable;
 import org.junit.jupiter.api.Test;
 
 /**
- * Covers {@code System.Security.Cryptography.Pkcs}: the integrity MAC of {@code
- * Pkcs12Builder.SealWithMac} with its hash and iteration count, and the digest of each {@code
- * Rfc3161TimestampRequest} factory.
+ * Covers {@code Pkcs12Builder.SealWithMac} (HMAC, hash, iteration count) and the three {@code
+ * Rfc3161TimestampRequest} factories (digest).
  *
- * <p>The last two calls in the fixture are not expected to produce a finding at all, because their
- * hash is a method parameter and a guessed digest would be worse than none. A finding with id 8
- * would fail the test. The iteration-count case asserts absence instead: the MAC is still reported,
- * without a count.
+ * <p>An unknown iteration count leaves that child off while the MAC is still reported. An unknown
+ * hash gives no finding, so a finding with id 8 fails the test.
  */
 class DotNetPkcsTest extends TestBase {
 

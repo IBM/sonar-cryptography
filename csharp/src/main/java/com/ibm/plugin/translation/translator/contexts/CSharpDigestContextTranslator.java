@@ -67,8 +67,7 @@ public final class CSharpDigestContextTranslator implements IContextTranslation<
             // reference (learn.microsoft.com), see DotNetAlgorithmFactory javadoc. Unlike the
             // ValueAction branch above (fixed per-class identity), the concrete digest here is
             // resolved purely from the captured runtime string.
-            // The same branch also reads the digest identifier of Reference.DigestMethod
-            // (DotNetXml.java), a W3C URI or the XML constant that holds it.
+            // Also reads the URI of Reference.DigestMethod (DotNetXml).
             final Optional<INode> xmlDigest =
                     DotNetXmlAlgorithmUris.digest(value.asString(), detectionLocation);
             if (xmlDigest.isPresent()) {

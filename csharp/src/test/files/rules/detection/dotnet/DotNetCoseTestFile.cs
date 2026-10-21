@@ -39,8 +39,8 @@ public class DotNetCoseTest {
     // --- keyword arguments out of declared order -----------------------------------------------
 
     public CoseSigner TestNamedReordered(RSA rsa) {
-        return new CoseSigner(
-            hashAlgorithm: HashAlgorithmName.SHA256, signaturePadding: RSASignaturePadding.Pss, key: rsa); // Noncompliant
+        return new CoseSigner( // Noncompliant
+            hashAlgorithm: HashAlgorithmName.SHA256, signaturePadding: RSASignaturePadding.Pss, key: rsa);
     }
 
     // --- the hash is only known to the caller: the padding is reported, the hash is absent ----

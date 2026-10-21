@@ -338,11 +338,6 @@ public final class CSharpTreeConverter {
     }
 
     /**
-     * Converts an expression-bodied member ({@code => expression}) into a {@link CSharpBlockTree},
-     * so that its calls are detected exactly like a block body's and its call sites are recorded
-     * for {@link #resolveParametersFromCallSites()}.
-     */
-    /**
      * The value an assignment assigns, for the two operators this converter models.
      *
      * <p>For {@code =} the right-hand side is an expression. For {@code ??=} the grammar wraps it
@@ -719,11 +714,6 @@ public final class CSharpTreeConverter {
     }
 
     /**
-     * Registers the declarators of a class-level field declaration that have an initializer. A
-     * field listed in {@code reassigned} is registered with an assignment count of two, which makes
-     * the engine's G4 guard treat it as having no single certain value.
-     */
-    /**
      * The same as {@link #defineInitializedFields} for an auto-property with an initializer, {@code
      * private RSA Key { get; } = RSA.Create(3072);}. The grammar gives this its own declaration
      * shape, but for this engine it behaves exactly like an initialized field: one declared type,
@@ -1039,18 +1029,10 @@ public final class CSharpTreeConverter {
                 return null;
             }
 
-            // Property-setter form: `obj.Property = value;` — member accesses only, no method
-            // invocation — synthesized as `set_<Property>(value)`, mirroring CLR accessor
-            // semantics.
-            //
-            // A chained target such as `signedXml.SignedInfo.SignatureMethod = value;` is a
-            // property of a property. It is synthesized the same way, as `set_SignatureMethod`, but
-            // its receiver is the whole chain, `signedXml.SignedInfo`, not the root variable. That
-            // text never equals a variable name, so a setter rule that attaches to a tracked
-            // variable (`isInvocationOnVariable`) does not fire for it: `rsa.Options.KeySize =
-            // 4096` must not change the key size of `rsa`, because `Options` is another object.
-            // Rules that match any receiver still see the call, which is what a rule on a property
-            // of a nested object needs.
+            // Property-setter form: `obj.Property = value;` becomes `set_<Property>(value)`.
+            // A chain such as `a.b.Property = value;` is converted too, with the receiver `a.b`
+            // instead of `a`. That text never equals a variable name, so setters attached to a
+            // tracked variable ignore it: `rsa.Options.KeySize = 1` must not change `rsa`.
             String propertyName = null;
             int memberAccesses = 0;
             StringBuilder receiverPath = new StringBuilder(simpleCtx.identifier().getText());
@@ -1069,9 +1051,7 @@ public final class CSharpTreeConverter {
                 return null;
             }
             if (memberAccesses > 1) {
-                // Anything other than member accesses inside a chain (an index, a null-conditional
-                // access, ...) means the target is not a plain `a.b.c` path, so no setter is
-                // synthesized for it.
+                // A chain may only contain member accesses (no index, no null-conditional).
                 for (int i = 1; i < children.size(); i++) {
                     if (!(children.get(i) instanceof CSharpParser.Member_accessContext)) {
                         return null;
@@ -1699,7 +1679,6 @@ public final class CSharpTreeConverter {
         return null;
     }
 
-    /** Handles the {@code new Type(...)} and {@code new Type[...]} patterns. */
     /**
      * Walks the initializer of a creation whose type this converter cannot name, emitting the call
      * sites inside it. See the {@code type_() == null} branch of {@link

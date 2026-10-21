@@ -34,15 +34,12 @@ import javax.annotation.Nonnull;
 import org.junit.jupiter.api.Test;
 
 /**
- * Covers the conversion of a chained property assignment, {@code a.b.c = value}, to a synthetic
- * setter.
+ * Covers the conversion of a chained property assignment, {@code a.b.c = value}, to a setter whose
+ * receiver is the whole chain.
  *
- * <p>The setter carries the whole chain as its receiver, not the root variable. That is what the
- * first case guards: {@code rsa.Options.KeySize = 4096} sets a property of another object, so it
- * must not give {@code rsa} a key length, and a rule that attaches to a tracked variable must not
- * fire for it. The second case pins that the single-level setter still attaches. The third shows
- * that a rule matching any receiver sees a deeper chain, and the last that an index inside the
- * chain is still not converted, which is why no finding with id 3 may appear.
+ * <p>The chain must not be attributed to the root variable: {@code rsa.Options.KeySize = 4096}
+ * gives {@code rsa} no key length. A single-level setter still attaches, a deeper chain is
+ * converted, and a chain with an index is not, so no finding with id 3 appears.
  */
 class CSharpChainedSetterTest extends TestBase {
 

@@ -41,14 +41,12 @@ import javax.annotation.Nullable;
 import org.junit.jupiter.api.Test;
 
 /**
- * Covers {@code System.Security.Cryptography.Xml}: the digest of a reference, the signature method
- * as an RSA, ECDSA or HMAC identifier, and the cipher or key-transport algorithm of an encryption
- * method, each written as an XML constant or as the W3C URI literal.
+ * Covers {@code System.Security.Cryptography.Xml}: the digest, signature and encryption
+ * identifiers, as constants and as URI literals, including the chained {@code
+ * signedXml.SignedInfo.SignatureMethod = …}.
  *
- * <p>Two cases assert what is not produced. An unknown URI is reported with no node, and a value
- * only the caller knows produces no finding at all, so a finding with id 12 would fail the test.
- * The last reported case is the usual way to set the signature method, {@code
- * signedXml.SignedInfo.SignatureMethod = …}, a property of a property.
+ * <p>An unknown URI gives a finding with no node. An unknown value gives no finding, so a finding
+ * with id 12 fails the test.
  */
 class DotNetXmlTest extends TestBase {
 
@@ -65,7 +63,7 @@ class DotNetXmlTest extends TestBase {
                             detectionStore,
             @Nonnull List<INode> nodes) {
         if (findingId == 10) {
-            // a URI that is not an algorithm of the role it was given in: no node is invented
+            // a URI of another kind: no node
             assertThat(nodes).isEmpty();
             return;
         }
@@ -73,7 +71,7 @@ class DotNetXmlTest extends TestBase {
         final INode node = nodes.get(0);
 
         switch (findingId) {
-            // reference.DigestMethod, as a constant, a literal, a weak digest, an initializer value
+            // reference.DigestMethod: constant, literal, weak digest, initializer
             case 0 -> assertDigest(node, "SHA-256");
             case 1 -> assertDigest(node, "SHA-512");
             case 2 -> assertDigest(node, "SHA-1");

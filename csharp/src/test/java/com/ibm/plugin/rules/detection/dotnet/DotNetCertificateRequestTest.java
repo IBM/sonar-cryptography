@@ -37,14 +37,12 @@ import javax.annotation.Nullable;
 import org.junit.jupiter.api.Test;
 
 /**
- * Covers {@code new CertificateRequest(...)} and {@code X509SignatureGenerator}: both RSA and ECDsa
- * overloads, a {@code PublicKey} overload, an {@code X500DistinguishedName} subject, a weak hash,
- * keyword arguments out of declared order, a hash that only the caller knows, and a key created
- * inside the call.
+ * Covers {@code CertificateRequest} and {@code X509SignatureGenerator}: the RSA, ECDsa and
+ * PublicKey overloads, a weak hash, keyword arguments, an unknown hash and a key created inside the
+ * call.
  *
- * <p>A request is modelled as a {@code Sign} operation whose children are the hash and, for RSA,
- * the padding. The two cases that matter most assert absence: an ECDsa request must not acquire a
- * padding, and an unresolvable hash must leave the digest off rather than be guessed.
+ * <p>A request is a {@code Sign} with the hash and, for RSA, the padding as children. An ECDsa
+ * request must not get a padding, and an unknown hash must leave the digest off.
  */
 class DotNetCertificateRequestTest extends TestBase {
 

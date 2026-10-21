@@ -36,46 +36,21 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 /**
- * Detection rules for how a certificate is signed, in {@code
- * System.Security.Cryptography.X509Certificates}.
- *
- * <p>A certificate signing request or a self-signed certificate states its signature algorithm at
- * creation time, not at the later {@code Create} or {@code CreateSelfSigned} call, so that is where
- * the rules look:
+ * Detection rules for how a certificate is signed ({@code X509Certificates}).
  *
  * <ul>
- *   <li>{@code new CertificateRequest(subjectName, key, hashAlgorithm[, padding])} — the hash the
- *       certificate is signed over and, for an RSA key, the {@code RSASignaturePadding}
- *   <li>{@code X509SignatureGenerator.CreateForRSA(key, signaturePadding)} — the padding of a
- *       signature produced by an RSA generator
- *   <li>{@code X509SignatureGenerator.CreateForECDsa(key)} — an ECDSA signature generator
+ *   <li>{@code new CertificateRequest(subjectName, key, hashAlgorithm[, padding])}
+ *   <li>{@code X509SignatureGenerator.CreateForRSA(key, signaturePadding)}
+ *   <li>{@code X509SignatureGenerator.CreateForECDsa(key)}
  * </ul>
  *
- * <h2>How the request is modelled</h2>
+ * <p>A request is reported as a {@code Sign} with the hash and, for RSA, the padding as children,
+ * like {@code SignData}. {@code Create} and {@code CreateSelfSigned} add no information and are not
+ * matched. One rule covers all constructor overloads; the {@code PublicKey} overload names its
+ * second parameter {@code publicKey}, so only a keyword call to it is missed.
  *
- * <p>A {@code CertificateRequest} exists to be signed, and the hash and padding passed to its
- * constructor are exactly the ones used for that signature, so the constructor is reported as a
- * {@code Sign} operation with the hash and padding as its children. This is the same shape the
- * {@code SignData} and {@code SignHash} rules of {@link DotNetRSA} and {@link DotNetECDsa} produce.
- * The later {@code Create}/{@code CreateSelfSigned} calls carry no further cryptographic
- * information, so they are deliberately not matched: doing so would report the same signature
- * twice.
- *
- * <h2>Overloads</h2>
- *
- * <p>One rule covers every overload of the constructor. The subject is either a {@code string} or
- * an {@code X500DistinguishedName}, and the key is an {@code RSA}, an {@code ECDsa} or a {@code
- * PublicKey}; none of those is captured. The {@code RSASignaturePadding} only exists on the RSA
- * overloads, so it is optional. In the {@code PublicKey} overload the second parameter is named
- * {@code publicKey} rather than {@code key}, which only matters for a call that passes it by
- * keyword; written positionally, as it almost always is, it binds correctly.
- *
- * <h2>What is not captured</h2>
- *
- * <p>Which key signs the request is not linked here. The key is an argument, and the engine does
- * not connect an argument variable to the finding that created it, so an {@code RSA.Create(2048)}
- * that feeds the request is reported separately. When a hash or padding argument cannot be resolved
- * the corresponding child is left off rather than guessed.
+ * <p>The key is not linked to the finding that created it. An unresolved hash or padding is left
+ * off.
  */
 @SuppressWarnings("java:S1192")
 public final class DotNetCertificateRequest extends DetectionRuleSet<CSharpTree> {

@@ -36,14 +36,11 @@ import javax.annotation.Nonnull;
 import org.junit.jupiter.api.Test;
 
 /**
- * Covers the certificate thumbprint methods: the digest named in the argument of {@code
- * GetCertHash}, {@code GetCertHashString} and {@code TryGetCertHash}, a keyword argument, an
- * explicit SHA-1, the two parameterless forms that are SHA-1 by definition, and a digest only the
- * caller knows.
+ * Covers {@code GetCertHash}, {@code GetCertHashString} and {@code TryGetCertHash}: a named hash, a
+ * keyword argument, SHA-1, the parameterless forms (SHA-1 by definition) and an unknown hash.
  *
- * <p>Each call must produce exactly one finding, which is what keeps the two rules from
- * overlapping. The last case is not expected to produce a finding at all: an unresolvable digest
- * must not be guessed, so a finding with id 8 would fail the test.
+ * <p>Each call must give exactly one finding. An unknown hash gives none, so a finding with id 7
+ * fails the test.
  */
 class DotNetCertificateHashTest extends TestBase {
 

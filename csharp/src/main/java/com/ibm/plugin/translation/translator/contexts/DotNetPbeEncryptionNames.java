@@ -32,22 +32,12 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 
 /**
- * Maps a {@code System.Security.Cryptography.PbeEncryptionAlgorithm} member to the password-based
- * encryption scheme it selects.
+ * Maps a {@code PbeEncryptionAlgorithm} or {@code Pkcs12ExportPbeParameters} member name to the
+ * scheme it selects.
  *
- * <p>The member names are those of the {@code PbeEncryptionAlgorithm} enum as the detection engine
- * resolves them, for example {@code PbeEncryptionAlgorithm.Aes256Cbc} becomes {@code "Aes256Cbc"}.
- * The three AES members select PKCS#5 PBES2 (RFC 8018) with the cipher in CBC mode; the PBKDF2
- * pseudo-random function is the {@code HashAlgorithmName} given next to it, attached separately.
- * {@code TripleDes3KeyPkcs12} selects the PKCS#12 scheme of RFC 7292
- * (pbeWithSHAAnd3-KeyTripleDES-CBC) with three-key Triple DES, whose effective key length is 168
- * bits.
- *
- * <p>The same table also resolves the members of {@code Pkcs12ExportPbeParameters}, the enum that
- * {@code X509Certificate2.ExportPkcs12} accepts in place of a {@code PbeParameters} object.
- *
- * <p>{@code Unknown}, the zero value of the enum, {@code Default}, and any other spelling yield an
- * empty result rather than a guessed scheme.
+ * <p>The AES members give PBES2 with AES in CBC mode. {@code TripleDes3KeyPkcs12} gives the PKCS#12
+ * scheme with three-key Triple DES (168 bits). The {@code Pkcs12ExportPbeParameters} members also
+ * name the hash. {@code Unknown}, {@code Default} and any other name give nothing.
  */
 public final class DotNetPbeEncryptionNames {
 
@@ -55,10 +45,7 @@ public final class DotNetPbeEncryptionNames {
         // utility
     }
 
-    /**
-     * Returns the scheme node, with its cipher attached, that a {@code PbeEncryptionAlgorithm}
-     * member name denotes, if it is a known one.
-     */
+    /** Returns the scheme, with its cipher attached, that a member name selects. */
     @Nonnull
     public static Optional<INode> parse(
             @Nonnull String encryptionAlgorithmName, @Nonnull DetectionLocation detectionLocation) {
@@ -71,9 +58,8 @@ public final class DotNetPbeEncryptionNames {
                 scheme.put(new DESede(168, new CBC(detectionLocation), detectionLocation));
                 yield Optional.of(scheme);
             }
-            // Pkcs12ExportPbeParameters (X509Certificate2.ExportPkcs12): unlike PbeParameters, the
-            // member names both the cipher and the hash, so the digest is attached here. Default is
-            // left unresolved on purpose, because what it selects depends on the .NET version.
+            // Pkcs12ExportPbeParameters names the hash too. Default is left out: it depends on the
+            // .NET version.
             case "Pbes2Aes256Sha256" -> {
                 final INode scheme = pbes2WithAes(256, detectionLocation);
                 scheme.put(new SHA2(256, detectionLocation));

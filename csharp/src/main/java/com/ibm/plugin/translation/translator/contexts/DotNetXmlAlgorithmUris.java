@@ -38,23 +38,13 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 
 /**
- * Maps the algorithm identifiers of {@code System.Security.Cryptography.Xml} to mapper nodes.
+ * Maps the algorithm URIs of {@code System.Security.Cryptography.Xml} to mapper nodes.
  *
- * <p>XML Signature and XML Encryption name every algorithm by a URI defined in the W3C
- * recommendations, for example {@code http://www.w3.org/2001/04/xmldsig-more#rsa-sha256}. Code
- * writes it either as that literal or as one of the {@code SignedXml} and {@code EncryptedXml}
- * constants that hold it, for example {@code SignedXml.XmlDsigRSASHA256Url}. The detection engine
- * resolves the constant to its bare member name, so both spellings are accepted here and mean the
- * same thing.
+ * <p>Both the W3C URI and the {@code SignedXml} or {@code EncryptedXml} constant name are accepted.
+ * The three methods read an identifier as a digest, a signature or an encryption algorithm; an
+ * identifier of another kind gives nothing.
  *
- * <p>The three methods read the identifier in the role a rule has given it: as a digest, as a
- * signature algorithm, or as an encryption algorithm. An identifier that is not a member of that
- * role yields an empty result rather than a guess, so a signature URI offered as a digest, or an
- * unknown URI, produces nothing.
- *
- * <p>Not mapped: the AES key-wrap identifiers ({@code kw-aes128} and so on), the RSA-PSS
- * identifiers, and the GCM identifiers. They have no node that carries them without inventing a
- * model, and they are left out rather than approximated.
+ * <p>Not mapped: AES key wrap, RSA-PSS and GCM, which the model cannot carry.
  */
 public final class DotNetXmlAlgorithmUris {
 
@@ -84,10 +74,8 @@ public final class DotNetXmlAlgorithmUris {
     }
 
     /**
-     * A signature identifier, as in {@code SignedInfo.SignatureMethod}. A public-key signature is
-     * returned as a {@code Sign} operation with its digest, and for RSA its padding, as children,
-     * the same shape the {@code CertificateRequest} and {@code SignData} rules produce. An HMAC
-     * identifier is a MAC, not a signature, and is returned as one.
+     * A signature identifier, as in {@code SignedInfo.SignatureMethod}. RSA, DSA and ECDSA give a
+     * {@code Sign} with the digest (and PKCS#1 padding for RSA); an HMAC gives a MAC.
      */
     @Nonnull
     public static Optional<INode> signature(
@@ -125,8 +113,7 @@ public final class DotNetXmlAlgorithmUris {
                     Optional.of(new AES(192, new CBC(location), location));
             case XMLENC + "aes256-cbc", "XmlEncAES256Url" ->
                     Optional.of(new AES(256, new CBC(location), location));
-            // The model has no mode-only DESede constructor, and the identifier states no key
-            // length, so none is claimed: the mode is attached to a plain DESede.
+            // No key length is stated, so none is claimed.
             case XMLENC + "tripledes-cbc", "XmlEncTripleDESUrl" -> {
                 final DESede node = new DESede(location);
                 node.put(new CBC(location));
@@ -139,7 +126,7 @@ public final class DotNetXmlAlgorithmUris {
                 node.put(new PKCS1(location));
                 yield Optional.of(node);
             }
-            // rsa-oaep-mgf1p is OAEP with SHA-1 and MGF1 with SHA-1, fixed by the identifier
+            // rsa-oaep-mgf1p is OAEP with SHA-1, fixed by the identifier
             case XMLENC + "rsa-oaep-mgf1p", "XmlEncRSAOAEPUrl" -> {
                 final RSA node = new RSA(location);
                 node.put(new OAEP(new SHA(location), location));

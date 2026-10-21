@@ -40,14 +40,12 @@ import javax.annotation.Nullable;
 import org.junit.jupiter.api.Test;
 
 /**
- * Covers {@code new PbeParameters(...)}: each of the four {@code PbeEncryptionAlgorithm} members
- * the rule maps, the scheme each one selects, a value arriving through a {@code const} field, the
- * inline form written inside the export call, keyword arguments out of declared order, and an
- * iteration count that only the caller knows.
+ * Covers {@code new PbeParameters(...)} and {@code ExportPkcs12(Pkcs12ExportPbeParameters, ...)}:
+ * each cipher and the scheme it selects, constants, an inline object, keyword arguments and values
+ * only the caller knows.
  *
- * <p>The AES members must yield PBES2 and {@code TripleDes3KeyPkcs12} must yield the PKCS#12
- * scheme, because the cipher is what decides the scheme. The last case asserts the iteration count
- * is absent rather than guessed, while the scheme and the hash are still reported.
+ * <p>Unresolvable values are left off, not guessed: an unknown iteration count, and {@code
+ * Pkcs12ExportPbeParameters.Default}, which gives no scheme.
  */
 class DotNetPbeParametersTest extends TestBase {
 
@@ -65,8 +63,7 @@ class DotNetPbeParametersTest extends TestBase {
             @Nonnull List<INode> nodes) {
         assertThat(detectionStore.getDetectionValueContext()).isInstanceOf(KeyContext.class);
         if (findingId == 9) {
-            // Pkcs12ExportPbeParameters.Default selects a scheme that depends on the .NET version,
-            // so no scheme may be reported for it
+            // Pkcs12ExportPbeParameters.Default depends on the .NET version: no scheme
             assertThat(nodes).isEmpty();
             return;
         }
@@ -89,8 +86,7 @@ class DotNetPbeParametersTest extends TestBase {
             case 5 -> assertScheme(node, "PBES2", "AES-256-CBC", "SHA-256", 50000);
             // iteration count is a method parameter: absent, the rest still reported
             case 6 -> assertScheme(node, "PBES2", "AES-256-CBC", "SHA-256", null);
-            // cert.ExportPkcs12(Pkcs12ExportPbeParameters.Pbes2Aes256Sha256, ...): the enum member
-            // names cipher and hash, but not an iteration count
+            // ExportPkcs12(Pbes2Aes256Sha256): cipher and hash, but no iteration count
             case 7 -> assertScheme(node, "PBES2", "AES-256-CBC", "SHA-256", null);
             case 8 -> assertScheme(node, "PKCS12", "DESede168-CBC", "SHA-1", null);
             default -> throw new IllegalStateException("Unexpected findingId: " + findingId);
