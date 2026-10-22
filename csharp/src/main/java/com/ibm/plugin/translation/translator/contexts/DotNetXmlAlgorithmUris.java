@@ -20,6 +20,7 @@
 package com.ibm.plugin.translation.translator.contexts;
 
 import com.ibm.mapper.model.INode;
+import com.ibm.mapper.model.MessageDigest;
 import com.ibm.mapper.model.algorithms.AES;
 import com.ibm.mapper.model.algorithms.DES;
 import com.ibm.mapper.model.algorithms.DESede;
@@ -138,8 +139,7 @@ public final class DotNetXmlAlgorithmUris {
 
     @Nonnull
     private static Optional<INode> rsa(
-            @Nonnull com.ibm.mapper.model.MessageDigest digest,
-            @Nonnull DetectionLocation location) {
+            @Nonnull MessageDigest digest, @Nonnull DetectionLocation location) {
         final Sign sign = new Sign(location);
         sign.put(digest);
         sign.put(new PKCS1(location));
@@ -148,8 +148,7 @@ public final class DotNetXmlAlgorithmUris {
 
     @Nonnull
     private static Optional<INode> signing(
-            @Nonnull com.ibm.mapper.model.MessageDigest digest,
-            @Nonnull DetectionLocation location) {
+            @Nonnull MessageDigest digest, @Nonnull DetectionLocation location) {
         final Sign sign = new Sign(location);
         sign.put(digest);
         return Optional.of(sign);

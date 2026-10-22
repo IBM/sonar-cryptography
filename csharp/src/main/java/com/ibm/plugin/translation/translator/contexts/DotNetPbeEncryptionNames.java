@@ -53,21 +53,16 @@ public final class DotNetPbeEncryptionNames {
             case "Aes128Cbc" -> Optional.of(pbes2WithAes(128, detectionLocation));
             case "Aes192Cbc" -> Optional.of(pbes2WithAes(192, detectionLocation));
             case "Aes256Cbc" -> Optional.of(pbes2WithAes(256, detectionLocation));
-            case "TripleDes3KeyPkcs12" -> {
-                final PKCS12PBE scheme = new PKCS12PBE(detectionLocation);
-                scheme.put(new DESede(168, new CBC(detectionLocation), detectionLocation));
-                yield Optional.of(scheme);
-            }
+            case "TripleDes3KeyPkcs12" -> Optional.of(pkcs12WithTripleDes(detectionLocation));
             // Pkcs12ExportPbeParameters names the hash too. Default is left out: it depends on the
             // .NET version.
             case "Pbes2Aes256Sha256" -> {
-                final INode scheme = pbes2WithAes(256, detectionLocation);
+                final PBES2 scheme = pbes2WithAes(256, detectionLocation);
                 scheme.put(new SHA2(256, detectionLocation));
                 yield Optional.of(scheme);
             }
             case "Pkcs12TripleDesSha1" -> {
-                final PKCS12PBE scheme = new PKCS12PBE(detectionLocation);
-                scheme.put(new DESede(168, new CBC(detectionLocation), detectionLocation));
+                final PKCS12PBE scheme = pkcs12WithTripleDes(detectionLocation);
                 scheme.put(new SHA(detectionLocation));
                 yield Optional.of(scheme);
             }
@@ -76,9 +71,16 @@ public final class DotNetPbeEncryptionNames {
     }
 
     @Nonnull
-    private static INode pbes2WithAes(int keyBits, @Nonnull DetectionLocation detectionLocation) {
+    private static PBES2 pbes2WithAes(int keyBits, @Nonnull DetectionLocation detectionLocation) {
         final PBES2 scheme = new PBES2(detectionLocation);
         scheme.put(new AES(keyBits, new CBC(detectionLocation), detectionLocation));
+        return scheme;
+    }
+
+    @Nonnull
+    private static PKCS12PBE pkcs12WithTripleDes(@Nonnull DetectionLocation detectionLocation) {
+        final PKCS12PBE scheme = new PKCS12PBE(detectionLocation);
+        scheme.put(new DESede(168, new CBC(detectionLocation), detectionLocation));
         return scheme;
     }
 }
