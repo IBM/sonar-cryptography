@@ -1037,16 +1037,20 @@ public final class CSharpTreeConverter {
                 return null;
             }
 
-            // Property-setter form: `obj.Property = value;` — exactly one member_access, no method
-            // invocation — synthesized as `set_<Property>(value)`, mirroring CLR accessor
-            // semantics.
+            // Property-setter form: `obj.Property = value;` becomes `set_<Property>(value)`.
+            // A chain such as `a.b.Property = value;` is converted too, with the receiver `a.b`
+            // instead of `a`. That text never equals a variable name, so setters attached to a
+            // tracked variable ignore it: `rsa.Options.KeySize = 1` must not change `rsa`.
             String propertyName = null;
+            int memberAccesses = 0;
+            StringBuilder receiverPath = new StringBuilder(simpleCtx.identifier().getText());
             for (int i = 1; i < children.size(); i++) {
                 if (children.get(i) instanceof CSharpParser.Member_accessContext memberCtx) {
                     if (propertyName != null) {
-                        return null; // chained access like a.b.c — skip
+                        receiverPath.append('.').append(propertyName);
                     }
                     propertyName = memberCtx.identifier().getText();
+                    memberAccesses++;
                 } else if (children.get(i) instanceof CSharpParser.Method_invocationContext) {
                     return null; // method call, not a property assignment
                 }
@@ -1054,7 +1058,15 @@ public final class CSharpTreeConverter {
             if (propertyName == null) {
                 return null;
             }
-            String variableName = simpleCtx.identifier().getText();
+            if (memberAccesses > 1) {
+                // A chain may only contain member accesses (no index, no null-conditional).
+                for (int i = 1; i < children.size(); i++) {
+                    if (!(children.get(i) instanceof CSharpParser.Member_accessContext)) {
+                        return null;
+                    }
+                }
+            }
+            String receiver = receiverPath.toString();
             String setterName = "set_" + propertyName;
             CSharpTree rhsTree = convertExpression(rhs, currentScope);
             List<CSharpArgument> args =
@@ -1065,7 +1077,7 @@ public final class CSharpTreeConverter {
                     new CSharpMethodInvocationTree(
                             ctx.getStart().getLine(),
                             ctx.getStart().getCharPositionInLine(),
-                            variableName,
+                            receiver,
                             setterName,
                             args,
                             null,
