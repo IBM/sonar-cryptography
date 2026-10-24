@@ -110,7 +110,12 @@ issues on the scanned code. Future updates may introduce additional rules to exp
 ### Scan Source Code
 
 Now you can follow the [SonarQube documentation](https://docs.sonarqube.org/latest/analyzing-source-code/overview/)
-to start your first scan.
+to start your first scan. See [_Running the Plugin with SonarQube_](./docs/RUNNING_WITH_SONARQUBE.md)
+for a local setup and the scan settings of each language.
+
+> [!IMPORTANT]
+> The scanner must run on Java 21 (see [Prerequisites](./docs/RUNNING_WITH_SONARQUBE.md#prerequisites)).
+> A C/C++ scan requires `sonar.cxx.file.suffixes`.
 
 ### Configuration
 
