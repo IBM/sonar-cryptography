@@ -62,10 +62,9 @@
         <sonar.go.source.origin-revision>f05477beb84a17dfed5c3ffbe57038b1fa260702</sonar.go.source.origin-revision>
         <sonar.analyzer-commons.version>2.30.0.5193</sonar.analyzer-commons.version>
         <!-- sonar-cxx (community plugin), built via JitPack from a commit of
-             chmodshubham/sonar-cxx@symbol-resol-hardening for testing only. Replace it with the
-             official version once the changes are merged upstream. -->
-        <sonar.cxx.groupId>com.github.chmodshubham.sonar-cxx</sonar.cxx.groupId>
-        <sonar.cxx.version>1bb3452bb043d9c28593a9adf84fff15b15142a8</sonar.cxx.version>
+             SonarOpenCommunity/sonar-cxx. -->
+        <sonar.cxx.groupId>com.github.SonarOpenCommunity.sonar-cxx</sonar.cxx.groupId>
+        <sonar.cxx.version>4d3b01d807dac4b487ca7bbe0fb7ab067eba45f3</sonar.cxx.version>
 
         <google-java-format.version>1.28.0</google-java-format.version>
         <logback.version>1.6.3</logback.version>
